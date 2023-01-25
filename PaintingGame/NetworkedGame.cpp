@@ -68,7 +68,7 @@ void NetworkedGame::UpdateGame(float dt) {
 		StartAsClient(127,0,0,1);
 	}
 
-	SampleGame::UpdateGame(dt);
+	PaintingGame::UpdateGame(dt);
 }
 
 void NetworkedGame::UpdateAsServer(float dt) {

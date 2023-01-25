@@ -1,10 +1,10 @@
-#include "SampleGame.h"
+#include "PaintingGame.h"
 #include <Terrain.h>
 
 using namespace NCL;
 using namespace CSC8503;
 
-SampleGame::SampleGame() {
+PaintingGame::PaintingGame() {
 	world = new GameWorld();
 #ifdef USEVULKAN
 	renderer = new GameTechVulkanRenderer(*world);
@@ -29,7 +29,7 @@ and the same texture and shader. There's no need to ever load in anything else
 for this module, even in the coursework, but you can add it if you like!
 
 */
-void SampleGame::InitialiseAssets() {
+void PaintingGame::InitialiseAssets() {
 	meshes.insert(std::make_pair("cubeMesh", renderer->LoadMesh("cube.msh")));
 	meshes.insert(std::make_pair("sphereMesh", renderer->LoadMesh("sphere.msh")));
 	meshes.insert(std::make_pair("goatMesh", renderer->LoadMesh("goat.msh")));
@@ -67,7 +67,7 @@ void SampleGame::InitialiseAssets() {
 	InitCamera();
 }
 
-SampleGame::~SampleGame() {
+PaintingGame::~PaintingGame() {
 	for (auto const& [key, val] : meshes) {
 		delete val;
 	}
@@ -92,7 +92,7 @@ SampleGame::~SampleGame() {
 	delete world;
 }
 
-void SampleGame::UpdateGame(float dt) {
+void PaintingGame::UpdateGame(float dt) {
 
 	world->GetMainCamera()->UpdateCamera(dt);
 
@@ -106,14 +106,14 @@ void SampleGame::UpdateGame(float dt) {
 	Debug::UpdateRenderables(dt);
 }
 
-void SampleGame::InitCamera() {
+void PaintingGame::InitCamera() {
 	world->GetMainCamera()->SetBasicCameraParameters(-15.0f, 315.0f, Vector3(-60, 40, 60), 0.1f, 500.0f);
 	world->GetMainCamera()->SetFirstPersonCamera(); 
 	world->GetMainCamera()->SetPerspectiveCameraParameters(Window::GetWindow()->GetScreenAspect());
 	lockedObject = nullptr;
 }
 
-void SampleGame::InitWorld() {
+void PaintingGame::InitWorld() {
 	world->ClearAndErase();
 	physics->Clear();
 	if (!hedgeMaze) delete hedgeMaze;
@@ -136,7 +136,7 @@ void SampleGame::InitWorld() {
 A single function to add a large immoveable cube to the bottom of our world
 
 */
-GameObject* SampleGame::AddFloorToWorld(const Vector3& position) {
+GameObject* PaintingGame::AddFloorToWorld(const Vector3& position) {
 	GameObject* floor = new GameObject("Floor");
 
 	Vector3 floorSize = Vector3(200, 2, 200);
@@ -171,7 +171,7 @@ rigid body representation. This and the cube function will let you build a lot o
 physics worlds. You'll probably need another function for the creation of OBB cubes too.
 
 */
-GameObject* SampleGame::AddSphereToWorld(const Vector3& position, float radius, float inverseMass) {
+GameObject* PaintingGame::AddSphereToWorld(const Vector3& position, float radius, float inverseMass) {
 	GameObject* sphere = new GameObject("Sphere");
 
 	Vector3 sphereSize = Vector3(radius, radius, radius);
@@ -195,7 +195,7 @@ GameObject* SampleGame::AddSphereToWorld(const Vector3& position, float radius, 
 	return sphere;
 }
 
-GameObject* SampleGame::AddCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass) {
+GameObject* PaintingGame::AddCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass) {
 	GameObject* cube = new GameObject("Cube");
 
 	AABBVolume* volume = new AABBVolume(dimensions);
@@ -227,12 +227,12 @@ GameObject* SampleGame::AddCubeToWorld(const Vector3& position, Vector3 dimensio
 	return cube;
 }
 
-//void SampleGame::AddCoinsToWorld(const Vector3& position) {
+//void PaintingGame::AddCoinsToWorld(const Vector3& position) {
 //	world->AddGameObject(new Coin(position, meshes.at("coinMesh"), textures.at("coinTex"), shaders.at("basicShader")));
 //}
 
 
-//StateGameObject* SampleGame::AddStateObjectToWorld(const Vector3& position) {
+//StateGameObject* PaintingGame::AddStateObjectToWorld(const Vector3& position) {
 //	float meshSize = 3.0f;
 //	float inverseMass = 0.5f;
 //
@@ -258,16 +258,16 @@ GameObject* SampleGame::AddCubeToWorld(const Vector3& position, Vector3 dimensio
 //	return character;
 //}
 
-void SampleGame::InitDefaultFloor() {
+void PaintingGame::InitDefaultFloor() {
 	AddFloorToWorld(Vector3(140, -20, 130));
 }
 
-void SampleGame::InitGameExamples() {
+void PaintingGame::InitGameExamples() {
 	//AddPlayerToWorld(Vector3(15, 5, 0));
 	//AddCoinsToWorld(Vector3(5, -15, 0));
 }
 
-void SampleGame::InitSphereGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing, float radius) {
+void PaintingGame::InitSphereGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing, float radius) {
 	for (int x = 0; x < numCols; ++x) {
 		for (int z = 0; z < numRows; ++z) {
 			Vector3 position = Vector3(x * colSpacing, 10.0f, z * rowSpacing);
@@ -277,7 +277,7 @@ void SampleGame::InitSphereGridWorld(int numRows, int numCols, float rowSpacing,
 	AddFloorToWorld(Vector3(0, -2, 0));
 }
 
-void SampleGame::InitMixedGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing) {
+void PaintingGame::InitMixedGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing) {
 	float sphereRadius = 1.0f;
 	Vector3 cubeDims = Vector3(1, 1, 1);
 
@@ -295,7 +295,7 @@ void SampleGame::InitMixedGridWorld(int numRows, int numCols, float rowSpacing, 
 	}
 }
 
-void SampleGame::InitCubeGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing, const Vector3& cubeDims) {
+void PaintingGame::InitCubeGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing, const Vector3& cubeDims) {
 	for (int x = 1; x < numCols + 1; ++x) {
 		for (int z = 1; z < numRows + 1; ++z) {
 			Vector3 position = Vector3(x * colSpacing, 10.0f, z * rowSpacing);
@@ -311,7 +311,7 @@ manipulated later. Pressing Q will let you toggle between this behaviour and ins
 letting you move the camera around.
 
 */
-bool SampleGame::SelectObject() {
+bool PaintingGame::SelectObject() {
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::Q)) {
 		inSelectionMode = !inSelectionMode;
 		if (inSelectionMode) {
@@ -368,7 +368,7 @@ added linear motion into our physics system. After the second tutorial, objects 
 line - after the third, they'll be able to twist under torque aswell.
 */
 
-void SampleGame::MoveSelectedObject() {
+void PaintingGame::MoveSelectedObject() {
 	Debug::Print("Click Force:" + std::to_string(forceMagnitude), Vector2(5, 90));
 	forceMagnitude += Window::GetMouse()->GetWheelMovement() * 100.0f;
 

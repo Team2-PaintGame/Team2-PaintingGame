@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16.0 FATAL_ERROR)
 
 set(CMAKE_SYSTEM_VERSION 10.0 CACHE STRING "" FORCE)
 
-project(SampleGame CXX)
+project(PaintingGame CXX)
 
 ################################################################################
 # Set target arch type if empty. Visual studio solution generator provides it.
@@ -70,8 +70,8 @@ endif()
 add_subdirectory(GameEngine)
 add_subdirectory(Networking)
 add_subdirectory(OpenGLRendering)
-add_subdirectory(SampleGame)
+add_subdirectory(PaintingGame)
 if(USE_VULKAN)
     add_subdirectory(VulkanRendering)
 endif()
-set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT SampleGame)
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT PaintingGame)

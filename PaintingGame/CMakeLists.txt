@@ -1,4 +1,4 @@
-set(PROJECT_NAME SampleGame)
+set(PROJECT_NAME PaintingGame)
 
 ################################################################################
 # Source groups
@@ -6,7 +6,7 @@ set(PROJECT_NAME SampleGame)
 set(Header_Files
     "NetworkedGame.h"
     "NetworkPlayer.h"
-    "SampleGame.h"
+    "PaintingGame.h"
 )
 source_group("Header Files" FILES ${Header_Files})
 
@@ -14,7 +14,7 @@ set(Source_Files
     "Main.cpp"
     "NetworkedGame.cpp"
     "NetworkPlayer.cpp"
-    "SampleGame.cpp"
+    "PaintingGame.cpp"
 )
 
 if(USE_VULKAN)
@@ -84,7 +84,7 @@ endif()
 add_executable(${PROJECT_NAME}  ${ALL_FILES})
 
 use_props(${PROJECT_NAME} "${CMAKE_CONFIGURATION_TYPES}" "${DEFAULT_CXX_PROPS}")
-set(ROOT_NAMESPACE SampleGame)
+set(ROOT_NAMESPACE PaintingGame)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
     VS_GLOBAL_KEYWORD "Win32Proj"

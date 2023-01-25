@@ -16,10 +16,10 @@
 
 namespace NCL {
 	namespace CSC8503 {
-		class SampleGame {
+		class PaintingGame {
 		public:
-			SampleGame();
-			~SampleGame();
+			PaintingGame();
+			~PaintingGame();
 
 			virtual void UpdateGame(float dt);
 

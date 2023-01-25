@@ -1,5 +1,5 @@
 #include <Window.h>
-#include "SampleGame.h"
+#include "PaintingGame.h"
 
 using namespace NCL;
 using namespace CSC8503;
@@ -14,7 +14,7 @@ int main() {
 	w->ShowOSPointer(true);
 	w->LockMouseToWindow(true);
 
-	SampleGame g;
+	PaintingGame g;
 	w->GetTimer()->GetTimeDeltaSeconds(); //Clear the timer so we don't get a larget first dt!
 	while (w->UpdateWindow() && !Window::GetKeyboard()->KeyDown(KeyboardKeys::ESCAPE)) {
 		float time = w->GetTimer()->GetTotalTimeSeconds();

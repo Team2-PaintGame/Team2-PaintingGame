@@ -1,5 +1,5 @@
 #pragma once
-#include "SampleGame.h"
+#include "PaintingGame.h"
 #include <NetworkBase.h>
 #include <NetworkObject.h>
 
@@ -9,7 +9,7 @@ namespace NCL {
 		class GameClient;
 		class NetworkPlayer;
 
-		class NetworkedGame : public SampleGame, public PacketReceiver {
+		class NetworkedGame : public PaintingGame, public PacketReceiver {
 		public:
 			NetworkedGame();
 			~NetworkedGame();
