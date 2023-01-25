@@ -8,7 +8,7 @@
 
 using namespace NCL;
 using namespace Maths;
-using namespace CSC8503;
+using namespace CSC8508;
 
 PositionConstraint::PositionConstraint(GameObject* a, GameObject* b, float d)
 {

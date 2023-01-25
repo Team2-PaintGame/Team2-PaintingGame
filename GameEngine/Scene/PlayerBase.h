@@ -3,7 +3,7 @@
 
 namespace NCL {
 	
-	using namespace CSC8503;
+	using namespace CSC8508;
 	class PlayerBase : public GameObject {
 		PlayerBase() = default;
 		virtual void Update(float dt) {}

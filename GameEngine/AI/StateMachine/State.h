@@ -2,7 +2,7 @@
 #include <functional>
 
 namespace NCL {
-	namespace CSC8503 {
+	namespace CSC8508 {
 		typedef std::function<void(float)> StateUpdateFunction;
 
 		class  State		{

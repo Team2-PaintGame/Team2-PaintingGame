@@ -7,7 +7,7 @@
 
 namespace NCL {
 	using namespace NCL::Maths;
-	namespace CSC8503 {
+	namespace CSC8508 {
 		template<class T>
 		class QuadTree;
 
@@ -111,7 +111,7 @@ namespace NCL {
 
 namespace NCL {
 	using namespace NCL::Maths;
-	namespace CSC8503 {
+	namespace CSC8508 {
 		template<class T>
 		class QuadTree
 		{

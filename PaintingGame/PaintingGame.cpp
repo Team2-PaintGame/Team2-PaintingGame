@@ -2,7 +2,7 @@
 #include <Terrain.h>
 
 using namespace NCL;
-using namespace CSC8503;
+using namespace CSC8508;
 
 PaintingGame::PaintingGame() {
 	world = new GameWorld();

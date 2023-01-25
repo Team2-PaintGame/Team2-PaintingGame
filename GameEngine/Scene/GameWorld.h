@@ -8,7 +8,7 @@
 namespace NCL {
 		class Camera;
 		using Maths::Ray;
-	namespace CSC8503 {
+	namespace CSC8508 {
 		class GameObject;
 		class Constraint;
 

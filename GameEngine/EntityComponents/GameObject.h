@@ -6,7 +6,7 @@
 
 using std::vector;
 
-namespace NCL::CSC8503 {
+namespace NCL::CSC8508 {
 	class NetworkObject;
 	class RenderObject;
 	class PhysicsObject;

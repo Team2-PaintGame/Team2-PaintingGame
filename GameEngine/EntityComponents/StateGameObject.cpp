@@ -5,7 +5,7 @@
 #include "PhysicsObject.h"
 
 using namespace NCL;
-using namespace CSC8503;
+using namespace CSC8508;
 
 StateGameObject::StateGameObject() {
 	counter = 2.0f;

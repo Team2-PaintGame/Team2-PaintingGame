@@ -2,7 +2,7 @@
 #include "Constraint.h"
 
 namespace NCL {
-	namespace CSC8503 {
+	namespace CSC8508 {
 		class GameObject;
 
 		class PositionConstraint : public Constraint	{

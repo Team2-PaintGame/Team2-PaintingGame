@@ -5,7 +5,7 @@
 #include <atomic>
 
 namespace NCL {
-	namespace CSC8503 {
+	namespace CSC8508 {
 		class GameObject;
 		class GameClient : public NetworkBase {
 		public:

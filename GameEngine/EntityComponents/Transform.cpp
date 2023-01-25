@@ -1,6 +1,6 @@
 #include "Transform.h"
 
-using namespace NCL::CSC8503;
+using namespace NCL::CSC8508;
 
 Transform::Transform()	{
 	scale = Vector3(1, 1, 1);
@@ -35,13 +35,13 @@ Transform& Transform::SetOrientation(const Quaternion& worldOrientation) {
 	return *this;
 }
 
-void NCL::CSC8503::Transform::IncreasePosition(float speed) {
+void NCL::CSC8508::Transform::IncreasePosition(float speed) {
 	//position += worldPos;
 	position += Matrix3(orientation) * Vector3(0.0f, 0.0f, speed);
 	UpdateMatrix();
 }
 
-void NCL::CSC8503::Transform::IncreaseRotation(const Vector3& axis, float degrees) {
+void NCL::CSC8508::Transform::IncreaseRotation(const Vector3& axis, float degrees) {
 	orientation = Quaternion::AxisAngleToQuaterion(axis, degrees) * orientation;
 	UpdateMatrix();
 }

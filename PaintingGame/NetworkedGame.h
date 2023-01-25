@@ -4,7 +4,7 @@
 #include <NetworkObject.h>
 
 namespace NCL {
-	namespace CSC8503 {
+	namespace CSC8508 {
 		class GameServer;
 		class GameClient;
 		class NetworkPlayer;

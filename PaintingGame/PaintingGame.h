@@ -15,7 +15,7 @@
 
 
 namespace NCL {
-	namespace CSC8503 {
+	namespace CSC8508 {
 		class PaintingGame {
 		public:
 			PaintingGame();

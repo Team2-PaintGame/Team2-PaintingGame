@@ -4,7 +4,7 @@
 #include <map>
 
 using namespace NCL;
-using namespace CSC8503;
+using namespace CSC8508;
 
 const int LEFT_NODE		= 0;
 const int RIGHT_NODE	= 1;
@@ -168,7 +168,7 @@ bool NavigationGrid::FindPath(const Vector3& from, const Vector3& to, Navigation
 	return false; //open list emptied out with no path!
 }
 
-Vector3 NCL::CSC8503::NavigationGrid::GetGridPosition(const Vector3& worldPos) {
+Vector3 NCL::CSC8508::NavigationGrid::GetGridPosition(const Vector3& worldPos) {
 	int y = 0;
 	for (; y < gridHeight; ++y) {
 		if (((worldPos.z + nodeSize / 2) - (y * nodeSize)) < nodeSize)

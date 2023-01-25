@@ -2,7 +2,7 @@
 #include "NetworkedGame.h"
 
 using namespace NCL;
-using namespace CSC8503;
+using namespace CSC8508;
 
 NetworkPlayer::NetworkPlayer(NetworkedGame* game, int num)	{
 	this->game = game;

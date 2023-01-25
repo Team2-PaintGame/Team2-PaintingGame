@@ -3,7 +3,7 @@
 #include "CollisionVolume.h"
 #include "Matrix3.h"
 
-using namespace NCL::CSC8503;
+using namespace NCL::CSC8508;
 using namespace NCL::Maths;
 
 namespace NCL {

@@ -5,7 +5,7 @@
 #include "NetworkObject.h"
 #include <Debug.h>
 
-using namespace NCL::CSC8503;
+using namespace NCL::CSC8508;
 
 GameObject::GameObject(string objectName)	{
 	name			= objectName;

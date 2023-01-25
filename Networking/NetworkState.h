@@ -4,7 +4,7 @@
 
 namespace NCL {
 	using namespace Maths;
-	namespace CSC8503 {
+	namespace CSC8508 {
 		//class GameObject;
 		class NetworkState	{
 		public:

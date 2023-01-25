@@ -11,7 +11,7 @@
 namespace NCL {
 	using namespace NCL::Rendering;
 
-	namespace CSC8503 {
+	namespace CSC8508 {
 		class Transform;
 
 		using namespace Maths;

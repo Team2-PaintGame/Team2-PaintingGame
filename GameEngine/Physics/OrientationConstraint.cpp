@@ -3,7 +3,7 @@
 #include "PhysicsObject.h"
 using namespace NCL;
 using namespace Maths;
-using namespace CSC8503;
+using namespace CSC8508;
 
 OrientationConstraint::OrientationConstraint(GameObject* a, GameObject* b)
 {

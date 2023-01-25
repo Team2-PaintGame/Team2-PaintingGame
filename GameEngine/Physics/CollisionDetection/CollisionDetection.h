@@ -14,7 +14,7 @@
 
 using NCL::Camera;
 using namespace NCL::Maths;
-using namespace NCL::CSC8503;
+using namespace NCL::CSC8508;
 namespace NCL {
 	class CollisionDetection
 	{

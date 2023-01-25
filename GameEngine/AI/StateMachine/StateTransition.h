@@ -2,7 +2,7 @@
 #include <functional>
 
 namespace NCL {
-	namespace CSC8503 {
+	namespace CSC8508 {
 		class State;
 		typedef std::function<bool()> StateTransitionFunction;
 		class StateTransition	{

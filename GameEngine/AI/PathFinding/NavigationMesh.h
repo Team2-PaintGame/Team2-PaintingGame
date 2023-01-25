@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 namespace NCL {
-	namespace CSC8503 {
+	namespace CSC8508 {
 		class NavigationMesh : public NavigationMap	{
 		public:
 			NavigationMesh();

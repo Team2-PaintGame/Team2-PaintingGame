@@ -2,7 +2,7 @@
 #include <stack>
 
 namespace NCL {
-	namespace CSC8503 {
+	namespace CSC8508 {
 		class PushdownState;
 
 		class PushdownMachine

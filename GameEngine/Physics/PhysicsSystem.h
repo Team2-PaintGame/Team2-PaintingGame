@@ -4,7 +4,7 @@
 #include <set>
 
 namespace NCL {
-	namespace CSC8503 {
+	namespace CSC8508 {
 		class PhysicsSystem	{
 		public:
 			PhysicsSystem(GameWorld& g);

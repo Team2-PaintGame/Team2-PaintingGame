@@ -6,7 +6,7 @@
 #include <chrono>
 
 using namespace NCL;
-using namespace NCL::CSC8503;
+using namespace NCL::CSC8508;
 
 GameWorld::GameWorld()	{
 	mainCamera = new Camera();

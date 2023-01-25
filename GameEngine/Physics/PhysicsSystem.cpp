@@ -12,7 +12,7 @@
 #include "Layer.h"
 
 using namespace NCL;
-using namespace CSC8503;
+using namespace CSC8508;
 
 PhysicsSystem::PhysicsSystem(GameWorld& g) : gameWorld(g)	{
 	applyGravity	= false;

@@ -9,7 +9,7 @@
 
 namespace NCL {
 	using namespace Maths;
-	using namespace CSC8503;
+	using namespace CSC8508;
 	using namespace Rendering;
 
 	class Terrain: public GameObject {

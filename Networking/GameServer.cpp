@@ -2,7 +2,7 @@
 #include "GameWorld.h"
 #include "./enet/enet.h"
 using namespace NCL;
-using namespace CSC8503;
+using namespace CSC8508;
 
 GameServer::GameServer(int onPort, int maxClients)	{
 	port		= onPort;

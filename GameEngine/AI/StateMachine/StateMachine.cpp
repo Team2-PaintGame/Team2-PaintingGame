@@ -2,7 +2,7 @@
 #include "State.h"
 #include "StateTransition.h"
 
-using namespace NCL::CSC8503;
+using namespace NCL::CSC8508;
 
 StateMachine::StateMachine()	{
 	activeState = nullptr;

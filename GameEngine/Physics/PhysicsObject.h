@@ -7,7 +7,7 @@ using namespace NCL::Maths;
 namespace NCL {
 	class CollisionVolume;
 	
-	namespace CSC8503 {
+	namespace CSC8508 {
 		class Transform;
 
 		class PhysicsObject	{

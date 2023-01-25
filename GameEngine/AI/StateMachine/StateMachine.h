@@ -3,7 +3,7 @@
 #include <map>
 
 namespace NCL {
-	namespace CSC8503 {
+	namespace CSC8508 {
 		class State;
 		class StateTransition;
 

@@ -2,7 +2,7 @@
 #include <GameObject.h>
 
 namespace NCL {
-	namespace CSC8503 {
+	namespace CSC8508 {
 		class NetworkedGame;
 
 		class NetworkPlayer : public GameObject {

@@ -2,7 +2,7 @@
 #include "NetworkBase.h"
 
 namespace NCL {
-	namespace CSC8503 {
+	namespace CSC8508 {
 		class GameWorld;
 		class GameServer : public NetworkBase {
 		public:

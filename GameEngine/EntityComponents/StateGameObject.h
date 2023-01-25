@@ -2,7 +2,7 @@
 #include "GameObject.h"
 
 namespace NCL {
-    namespace CSC8503 {
+    namespace CSC8508 {
         class StateMachine;
         class StateGameObject : public GameObject  {
         public:

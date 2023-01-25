@@ -2,7 +2,7 @@
 #include "PhysicsSystem.h"
 #include "Transform.h"
 using namespace NCL;
-using namespace CSC8503;
+using namespace CSC8508;
 
 PhysicsObject::PhysicsObject(Transform* parentTransform, const CollisionVolume* parentVolume)	{
 	transform	= parentTransform;
