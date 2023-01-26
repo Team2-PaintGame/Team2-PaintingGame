@@ -11,9 +11,13 @@ namespace NCL {
 	public:
 		PlayerBase() = default;
 		PlayerBase(Vector3 position, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, int size);
-		virtual void Update(float dt) {}
+		virtual void Update(float dt);
 		virtual ~PlayerBase() {}
 	protected:
+		float runSpeed = 50;	// unit: m/s
+		float turnSpeed = 100.0f; // unit: degrees/s
+		float currentRunSpeed = 0.0f;
+		float currentTurnSpeed = 0.0f;
 	};
 }
 

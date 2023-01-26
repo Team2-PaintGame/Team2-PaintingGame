@@ -105,7 +105,7 @@ void PaintingGame::UpdateGame(float dt) {
 
 void PaintingGame::InitCamera() {
 	world->GetMainCamera()->SetBasicCameraParameters(-15.0f, 315.0f, Vector3(-60, 40, 60), 0.1f, 500.0f);
-	world->GetMainCamera()->SetFirstPersonCamera(); 
+	world->GetMainCamera()->SetThirdPersonCamera(player);
 	world->GetMainCamera()->SetPerspectiveCameraParameters(Window::GetWindow()->GetScreenAspect());
 }
 
@@ -123,7 +123,8 @@ void PaintingGame::InitWorld() {
 }
 
 void PaintingGame::InitiliazePlayer() {
-	world->AddGameObject(new PlayerBase(Vector3(0, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 3));
+	player = new PlayerBase(Vector3(0, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 3);
+	world->AddGameObject(player);
 }
 
 
