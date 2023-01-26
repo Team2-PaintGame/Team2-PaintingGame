@@ -124,8 +124,8 @@ void NetworkedGame::UpdateMinimumState() {
 	int maxID = 0; //we could use this to see if a player is lagging behind?
 
 	for (auto i : stateIDs) {
-		minID = min(minID, i.second);
-		maxID = max(maxID, i.second);
+		minID = std::min(minID, i.second);
+		maxID = std::max(maxID, i.second);
 	}
 	//every client has acknowledged reaching at least state minID
 	//so we can get rid of any old states!

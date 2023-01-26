@@ -13,6 +13,7 @@
 #include <RenderObject.h>
 #include <PhysicsObject.h>
 #include <PlayerBase.h>
+#include <reactphysics3d/reactphysics3d.h>
 
 namespace NCL {
 	namespace CSC8508 {

@@ -245,6 +245,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 target_compile_definitions(${PROJECT_NAME} PRIVATE
     "_CRT_SECURE_NO_WARNINGS;"
     "_MBCS"
+    "NOMINMAX"
     # ";"
     #"UNICODE"
     #"_UNICODE"

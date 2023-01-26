@@ -104,6 +104,7 @@ if(MSVC)
         "_WINSOCKAPI_"   
         "_WINSOCK2API_"
         "_WINSOCK_DEPRECATED_NO_WARNINGS"
+        "NOMINMAX"
     )
 endif()
 
