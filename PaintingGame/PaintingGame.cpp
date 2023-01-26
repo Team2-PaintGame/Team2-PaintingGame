@@ -118,6 +118,12 @@ void PaintingGame::InitWorld() {
 	TerrainTexturePack terrainTexturePack(textures.at("terrainSplatMap"), textures.at("terrainRTex"), textures.at("terrainGTex"), textures.at("terrainBTex"), textures.at("terrainBgTex"));
 	world->AddGameObject(new Terrain(Vector2(), meshes.at("terrainMesh"), terrainTexturePack, shaders.at("terrainShader")));
 	world->AddGameObject(new Terrain(Vector2(0, 1), meshes.at("terrainMesh"), terrainTexturePack, shaders.at("terrainShader")));
+
+	InitiliazePlayer();
+}
+
+void PaintingGame::InitiliazePlayer() {
+	world->AddGameObject(new PlayerBase(Vector3(0, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 3));
 }
 
 

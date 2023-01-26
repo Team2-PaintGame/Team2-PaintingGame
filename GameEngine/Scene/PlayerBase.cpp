@@ -18,6 +18,7 @@ PlayerBase::PlayerBase(Vector3 position, MeshGeometry* mesh, TextureBase* textur
 	for (int i = 0; i < meshLayers; i++) {
 		renderObject->AddTexture(i, material->GetMaterialForLayer(i)->GetEntry("Diffuse"), "mainTex");
 	}*/
+
 }
 
 

@@ -12,7 +12,7 @@
 #include <Vector3.h>
 #include <RenderObject.h>
 #include <PhysicsObject.h>
-
+#include <PlayerBase.h>
 
 namespace NCL {
 	namespace CSC8508 {
@@ -25,7 +25,7 @@ namespace NCL {
 			void InitialiseAssets();
 			void InitCamera();
 			void InitWorld();
-
+			void InitiliazePlayer();
 #ifdef USEVULKAN
 			GameTechVulkanRenderer* renderer;
 #else
@@ -34,7 +34,7 @@ namespace NCL {
 			PhysicsSystem* physics;
 			GameWorld* world;
 
-			bool useGravity = true;
+			bool useGravity = false;
 			bool useFog = true;
 
 			float		forceMagnitude;
@@ -48,7 +48,7 @@ namespace NCL {
 
 			//Coursework Additional functionality	
 			float remainingTime = 30;
-
+			PlayerBase* player = NULL;
 		};
 	}
 }

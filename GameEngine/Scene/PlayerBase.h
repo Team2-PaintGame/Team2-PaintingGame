@@ -8,10 +8,12 @@ namespace NCL {
 	using namespace Rendering;
 	using namespace CSC8508;
 	class PlayerBase : public GameObject {
+	public:
 		PlayerBase() = default;
 		PlayerBase(Vector3 position, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, int size);
 		virtual void Update(float dt) {}
 		virtual ~PlayerBase() {}
+	protected:
 	};
 }
 
