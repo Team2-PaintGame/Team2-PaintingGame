@@ -282,6 +282,13 @@ if(MSVC)
     )
 endif()
 
+if(WIN32) 
+  list(APPEND CMAKE_PREFIX_PATH "C:\\Program Files (x86)\\ReactPhysics3D") 
+endif() 
+
+#Import the ReactPhysics3D library 
+find_package(ReactPhysics3D REQUIRED)
+
 #include_directories("./")
 include_directories("Maths/")
 include_directories("WindowingAndInput/")
@@ -304,5 +311,9 @@ include_directories("AI/PushdownAutomata/")
 include_directories("AI/StateMachine/")
 include_directories("../OpenGLRendering/")
 
+set(ADDITIONAL_LIBRARY_DEPENDENCIES
+    "ReactPhysics3D::ReactPhysics3D"
+)
 
+target_link_libraries(${PROJECT_NAME} PUBLIC "${ADDITIONAL_LIBRARY_DEPENDENCIES}")
 
