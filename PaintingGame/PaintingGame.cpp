@@ -126,21 +126,21 @@ void PaintingGame::InitWorld() {
 
 	InitiliazePlayer();
 
-	/*Create a rigid body in the world 
+	//Create a rigid body in the world 
 	reactphysics3d::Vector3 position(0, 20, 0);
 	reactphysics3d::Quaternion orientation = reactphysics3d::Quaternion::identity();
 	reactphysics3d::Transform transform(position, orientation);
 	reactphysics3d::RigidBody* body = p_world->createRigidBody(transform); 
 	const reactphysics3d::decimal timeStep = 1.0f / 60.0f;
-	Step the simulation a few steps 
+	//Step the simulation a few steps 
 	for (int i = 0; i < 20; i++) {
 		p_world->update(timeStep); 
-		Get the updated position of the body 
+		//Get the updated position of the body 
 		const reactphysics3d::Transform& transform = body->getTransform(); 
 		const reactphysics3d::Vector3& position = transform.getPosition(); 
-		Display the position of the body 
+		//Display the position of the body 
 		std::cout << "BodyPosition:( " << position.x << ", " << position.y << "," << position.z << ")" <<std::endl; 
-	}*/
+	}
 }
 
 void PaintingGame::InitiliazePlayer() {
