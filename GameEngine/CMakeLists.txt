@@ -283,12 +283,12 @@ if(MSVC)
     )
 endif()
 
-# if(WIN32) 
-#   list(APPEND CMAKE_PREFIX_PATH "C:\\Users\\aiman\\Downloads\\ReactPhysics3D") 
-# endif() 
+if(WIN32) 
+    list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../ReactPhysics3D") 
+endif() 
 
 #Import the ReactPhysics3D library 
-find_package(ReactPhysics3D REQUIRED PATH "${CMAKE_CURRENT_LIST_DIR}/../ReactPhysics3D/")
+find_package(ReactPhysics3D REQUIRED)
 
 #include_directories("./")
 include_directories("Maths/")
