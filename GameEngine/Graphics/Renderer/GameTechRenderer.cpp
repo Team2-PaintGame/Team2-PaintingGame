@@ -342,7 +342,7 @@ void GameTechRenderer::RenderCamera() {
 
 			//for the current submesh, get the vector of textures and send them to shader
 			std::vector<std::pair<std::string, TextureBase*>> subMeshTextures = i->GetTextures(index);
-			int texUnit = 1;
+			int texUnit = 2;
 			for (const auto& texturePairs : subMeshTextures) {
 				BindTextureToShader(texturePairs.second, texturePairs.first, texUnit);
 				texUnit++;
