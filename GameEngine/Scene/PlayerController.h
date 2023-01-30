@@ -13,11 +13,12 @@ namespace NCL {
 
 		void Update(float dt);
 
+	protected:
 		void UpdateKeys();
 
 	protected:
 		Camera* camera;
-		GameObject* player;
+		GameObject* player_object;
 	};
 }
 

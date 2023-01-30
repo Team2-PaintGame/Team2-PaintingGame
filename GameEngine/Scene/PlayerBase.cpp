@@ -33,7 +33,7 @@ PlayerBase::PlayerBase(Vector3 position, MeshGeometry* mesh, TextureBase* textur
 }
 
 void PlayerBase::Update(float dt) {
-
+	/*
 	//Window::GetMouse()->GetWindowPosition()
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::W)) {
 		currentRunSpeed = -runSpeed;
@@ -56,7 +56,7 @@ void PlayerBase::Update(float dt) {
 	}
 
 	transform.IncreaseRotation(Vector3(0, 1, 0), currentTurnSpeed * dt);
-	transform.IncreasePosition(currentRunSpeed * dt);
+	transform.IncreasePosition(currentRunSpeed * dt);*/
 }
 
 
