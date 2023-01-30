@@ -34,7 +34,9 @@ void PlayerBase::Update(float dt) {
 }
 
 PlayerBase::~PlayerBase() {
-	physicsWorld->destroyRigidBody(dynamic_cast<rp3d::RigidBody*>(collisionBody));
+	if (collisionBody) {
+		physicsWorld->destroyRigidBody(dynamic_cast<rp3d::RigidBody*>(collisionBody));
+	}
 	physicsCommon.destroyBoxShape(boundingVolume);
 }
 
