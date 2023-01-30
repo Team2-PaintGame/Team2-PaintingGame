@@ -2,7 +2,6 @@
 
 #include <GameObject.h>
 #include <GameTechRenderer.h>
-#include <PhysicsSystem.h>
 #include <GameWorld.h>
 #include <map>
 #include <MeshMaterial.h>
@@ -11,7 +10,6 @@
 #include <Vector4.h>
 #include <Vector3.h>
 #include <RenderObject.h>
-#include <PhysicsObject.h>
 #include <PlayerBase.h>
 #include <reactphysics3d/reactphysics3d.h>
 
@@ -32,7 +30,7 @@ namespace NCL {
 #else
 			GameTechRenderer* renderer;
 #endif
-			PhysicsSystem* physics;
+			//PhysicsSystem* physics;
 			GameWorld* world;
 
 			bool useGravity = false;
@@ -53,7 +51,7 @@ namespace NCL {
 			
 			//Create a physics world 
 			reactphysics3d::PhysicsCommon* physicsCommon = NULL;
-			reactphysics3d::PhysicsWorld* p_world = NULL; 
+			reactphysics3d::PhysicsWorld* physicsWorld = NULL; 
 		};
 	}
 }
