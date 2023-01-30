@@ -1,7 +1,5 @@
 #include "GameWorld.h"
 #include "GameObject.h"
-#include "Constraint.h"
-#include "CollisionDetection.h"
 #include "Camera.h"
 #include <chrono>
 
@@ -18,6 +16,7 @@ GameWorld::GameWorld()	{
 }
 
 GameWorld::~GameWorld()	{
+	delete mainCamera;
 }
 
 void GameWorld::Clear() {
@@ -80,69 +79,9 @@ void GameWorld::UpdateWorld(float dt) {
 	}
 	for (const auto& object : gameObjects) {
 		object->Update(dt);
+		object->UpdateTransform();
 	}
 }
-
-bool GameWorld::Raycast(Ray& r, RayCollision& closestCollision, bool closestObject, GameObject* ignoreThis, int layerMask) const {
-
-	std::vector<int> activeLayers;
-	int layer = 0; // start at bit index 0
-
-	while (layerMask != 0) { // If the number is 0, no bits are set
-
-		// check if the bit at the current index 0 is set
-		if ((layerMask & 1) == 1) {
-			activeLayers.push_back(layer);
-		}
-
-		// advance to the next bit position to check
-		layerMask = layerMask >> 1; // shift all bits one position to the right
-		layer = layer + 1;              // so we are now looking at the next index.
-	}
-
-	//The simplest raycast just goes through each object and sees if there's a collision
-	RayCollision collision;
-
-	for (auto& i : gameObjects) {
-
-		//checking if the ray can interact with this game object
-		if (!(std::count(activeLayers.begin(), activeLayers.end(), (int)i->GetLayer())) && layerMask) {
-			continue;
-		}
-		if (!i->GetBoundingVolume()) { //objects might not be collideable etc...
-			continue;
-		}
-		if (i == ignoreThis) {
-			continue;
-		}
-		RayCollision thisCollision;
-		if (CollisionDetection::RayIntersection(r, *i, thisCollision)) {
-				
-			if (!closestObject) {	
-				closestCollision		= collision;
-				closestCollision.node = i;
-				return true;
-			}
-			else {
-				if (thisCollision.rayDistance < collision.rayDistance) {
-					thisCollision.node = i;
-					collision = thisCollision;
-				}
-			}
-		}
-	}
-	if (collision.node) {
-		closestCollision		= collision;
-		closestCollision.node	= collision.node;
-		return true;
-	}
-	return false;
-}
-
-
-/*
-Constraint Tutorial Stuff
-*/
 
 void GameWorld::AddConstraint(Constraint* c) {
 	constraints.emplace_back(c);

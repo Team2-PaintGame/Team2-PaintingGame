@@ -10,6 +10,7 @@ https://research.ncl.ac.uk/game/
 #include <cmath>
 #include <iostream>
 #include <algorithm>
+#include <reactphysics3d/reactphysics3d.h>
 
 namespace NCL::Maths {
 	class Vector2;
@@ -32,10 +33,17 @@ namespace NCL::Maths {
 
 		constexpr Vector3(float xVal, float yVal, float zVal) : x(xVal), y(yVal), z(zVal) {}
 
+		Vector3(const reactphysics3d::Vector3& v) : x(v.x), y(v.y), z(v.z) {}
 		Vector3(const Vector2& v2, float z = 0.0f);
 		Vector3(const Vector4& v4);
 
 		~Vector3(void) = default;
+
+		inline void operator=(const reactphysics3d::Vector3& v) {
+			this->x = v.x;
+			this->y = v.y;
+			this->z = v.z;
+		}
 
 		Vector3 Normalised() const {
 			Vector3 temp(*this);

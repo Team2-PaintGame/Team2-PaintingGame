@@ -4,7 +4,7 @@
 using namespace NCL;
 using namespace CSC8508;
 
-NetworkPlayer::NetworkPlayer(NetworkedGame* game, int num)	{
+NetworkPlayer::NetworkPlayer(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, NetworkedGame* game, int num) : GameObject(physicsCommon, physicsWorld) {
 	this->game = game;
 	playerNum  = num;
 }

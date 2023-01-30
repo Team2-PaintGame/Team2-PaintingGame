@@ -5,6 +5,7 @@
 #include <ShaderBase.h>
 #include <TextureBase.h>
 #include <GameWorld.h>
+#include <map>
 
 namespace NCL {
 	using namespace Rendering;

@@ -137,35 +137,6 @@ set(Maths
 )
 source_group("Maths" FILES ${Maths})
 
-set(Physics
-    "./Physics/constraint.h"  
-    "./Physics/constraint.h"  
-    "./Physics/PositionConstraint.cpp"
-    "./Physics/PositionConstraint.h"
-    "./Physics/OrientationConstraint.cpp"
-    "./Physics/OrientationConstraint.h"
-    "./Physics/PhysicsObject.cpp"
-    "./Physics/PhysicsObject.h"
-    "./Physics/PhysicsSystem.cpp"
-    "./Physics/PhysicsSystem.h"
-)
-source_group("Physics" FILES ${Physics})
-
-set(Physics_Collision_Detection
-    "./Physics/CollisionDetection/AABBVolume.h"
-    "./Physics/CollisionDetection/CapsuleVolume.h"  
-    "./Physics/CollisionDetection/CapsuleVolume.cpp"
-    "./Physics/CollisionDetection/CollisionDetection.h"
-    "./Physics/CollisionDetection/CollisionDetection.cpp"
-    "./Physics/CollisionDetection/CollisionVolume.h"
-    "./Physics/CollisionDetection/OBBVolume.h"
-    "./Physics/CollisionDetection/QuadTree.h"
-    "./Physics/CollisionDetection/QuadTree.cpp"
-    "./Physics/CollisionDetection/Ray.h"
-    "./Physics/CollisionDetection/SphereVolume.h"
-)
-source_group("Physics\\Collision Detection" FILES ${Physics_Collision_Detection})
-
 set(Scene
     "./Scene/GameWorld.h"
     "./Scene/GameWorld.cpp" 
@@ -218,8 +189,8 @@ set(ALL_FILES
     ${Maths}
     #${Networking}
     #${Networking_enet_Files}
-    ${Physics}
-    ${Physics_Collision_Detection}
+    #${Physics}
+    #${Physics_Collision_Detection}
     ${Scene}
     ${Scene_Terrain}
     ${Windowing_and_Input}

@@ -3,6 +3,8 @@
 #include "RenderObject.h"
 #include "Camera.h"
 #include "TextureLoader.h"
+#include "Debug.h"
+
 using namespace NCL;
 using namespace Rendering;
 using namespace CSC8508;
