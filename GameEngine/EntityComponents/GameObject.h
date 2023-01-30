@@ -1,8 +1,6 @@
 #pragma once
 #include "Transform.h"
-#include "CollisionVolume.h"
 #include "Layer.h"
-#include "Ray.h"
 #include <reactphysics3d/reactphysics3d.h>
 
 using std::vector;

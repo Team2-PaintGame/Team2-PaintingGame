@@ -1,13 +1,10 @@
 #pragma once
 #include <random>
-
-#include "Ray.h"
-#include "CollisionDetection.h"
-#include "QuadTree.h"
+#include <functional>
+#include "Camera.h"
 
 namespace NCL {
 		class Camera;
-		using Maths::Ray;
 	namespace CSC8508 {
 		class GameObject;
 		class Constraint;

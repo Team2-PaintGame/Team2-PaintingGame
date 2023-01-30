@@ -1,7 +1,5 @@
 #include "Terrain.h"
 #include "RenderObject.h"
-#include "PhysicsObject.h"
-#include "SphereVolume.h"
 
 using namespace NCL;
 using namespace Rendering;

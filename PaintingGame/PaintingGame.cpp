@@ -1,5 +1,6 @@
 #include "PaintingGame.h"
 #include <Terrain.h>
+#include <Debug.h>
 
 using namespace NCL;
 using namespace CSC8508;

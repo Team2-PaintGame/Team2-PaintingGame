@@ -1,6 +1,4 @@
 #include "GameObject.h"
-#include "CollisionDetection.h"
-#include "PhysicsObject.h"
 #include "RenderObject.h"
 #include "NetworkObject.h"
 #include <Debug.h>
