@@ -89,9 +89,6 @@ namespace NCL::CSC8508 {
 		/// Body used to simulate the dynamics of the box
 		reactphysics3d::CollisionBody* collisionBody;
 
-		/// Previous transform of the body (for interpolation)
-		//reactphysics3d::Transform previoustransform;
-		reactphysics3d::Transform rp3d_transform;
 		Transform			transform;
 
 		RenderObject*		renderObject;
