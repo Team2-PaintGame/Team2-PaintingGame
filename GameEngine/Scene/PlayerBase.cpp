@@ -16,10 +16,9 @@ PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysic
 	renderObject->AddTexture(0, texture, "mainTex");
 
 	boundingVolume = physicsCommon.createBoxShape(rp3d::Vector3(size, size, size));
-	
-	rp3d_transform
-		.setPosition(rp3d::Vector3(position.x, position.y, position.x));
 
+	reactphysics3d::Transform rp3d_transform(rp3d::Vector3(position.x, position.y, position.x), rp3d::Quaternion::identity());
+	
 	// Create a rigid body in the physics world
 	collisionBody = physicsWorld->createRigidBody(rp3d_transform);
 	collisionBody->addCollider(boundingVolume, rp3d_transform); //collider
@@ -30,34 +29,11 @@ PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysic
 	for (int i = 0; i < meshLayers; i++) {
 		renderObject->AddTexture(i, material->GetMaterialForLayer(i)->GetEntry("Diffuse"), "mainTex");
 	}*/
-
 }
 
 void PlayerBase::Update(float dt) {
-
-	//Window::GetMouse()->GetWindowPosition()
-	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::W)) {
-		currentRunSpeed = -runSpeed;
-	}
-	else if (Window::GetKeyboard()->KeyDown(KeyboardKeys::S)) {
-		currentRunSpeed = runSpeed;
-	}
-	else {
-		currentRunSpeed = 0;
-	}
-
-	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::A)) {
-		currentTurnSpeed = turnSpeed;
-	}
-	else if (Window::GetKeyboard()->KeyDown(KeyboardKeys::D)) {
-		currentTurnSpeed = -turnSpeed;
-	}
-	else {
-		currentTurnSpeed = 0;
-	}
-
-	//transform.IncreaseRotation(Vector3(0, 1, 0), currentTurnSpeed * dt);
-	//transform.IncreasePosition(currentRunSpeed * dt);
+	transform.SetPosition(collisionBody->getTransform().getPosition());
+	transform.SetOrientation(collisionBody->getTransform().getOrientation());
 }
 
 PlayerBase::~PlayerBase() {
