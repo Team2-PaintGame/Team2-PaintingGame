@@ -57,39 +57,6 @@ void Camera::UpdateCamera(float dt) {
 	pitch = std::min(pitch, 90.0f);
 	pitch = std::max(pitch, -90.0f);
 
-	if (viewType == ViewType::FirstPerson) {
-		CalculateFirstPersonView();
-	}
-	else if (viewType == ViewType::ThirdPerson) {
-		CalculateThirdPersonView();
-	}
-
-	Matrix4 rotation = Matrix4::Rotation(yaw, Vector3(0, 1, 0));
-	Vector3 forward = rotation * Vector3(0, 0, -1);
-	Vector3 right = rotation * Vector3(1, 0, 0);
-	float speed = 10.0f * dt;
-
-	if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::W)) {
-		position += forward * speed;
-	}
-	if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::S)) {
-		position -= forward * speed;
-	}
-	if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::A)) {
-		position -= right * speed;
-	}
-	if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::D)) {
-		position += right * speed;
-	}
-	if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::SHIFT)) {
-		position.y += speed;
-	}
-	if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::SPACE)) {
-		position.y -= speed;
-	}
-}
-
-void Camera::CalculateFirstPersonView() {
 	yaw -= (Window::GetMouse()->GetRelativePosition().x);
 	if (yaw < 0) {
 		yaw += 360.0f;
@@ -97,37 +64,42 @@ void Camera::CalculateFirstPersonView() {
 	if (yaw > 360.0f) {
 		yaw -= 360.0f;
 	}
+	
+	if (viewType == ViewType::ThirdPerson) {
+		CalculateThirdPersonView();
+	}
+
+	Matrix4 rotation = Matrix4::Rotation(yaw, Vector3(0, 1, 0));
+	Vector3 forward = rotation * Vector3(0, 0, -1);
+	Vector3 right = rotation * Vector3(1, 0, 0);
+	float speed = 10.0f * dt;
 }
 
-void Camera::CalculateThirdPersonView(bool init) {
-	distanceFromPlayer -= Window::GetMouse()->GetWheelMovement() * 0.1f;
-	angleAroundPlayer -= Window::GetMouse()->GetRelativePosition().x;
-	
-	float vDist = distanceFromPlayer * cos(Maths::DegreesToRadians(pitch));
-	float hDist = distanceFromPlayer * sin(Maths::DegreesToRadians(pitch));
+void Camera::CalculateFirstPersonView() {
+}
 
-	//euler angles (x => pitch, y => yaw, z => roll)
-	//yaw angle is the rotation around y axis
+void Camera::CalculateThirdPersonView(bool init) 
+{
+	Matrix4 rotation = Matrix4::Rotation(yaw, { 0, 1, 0 }) ;
 
-	float theta = Maths::DegreesToRadians(player->GetTransform().GetOrientation().ToEuler().y + angleAroundPlayer);
-	float xOffset = hDist * sin(theta);
-	float zOffset = hDist * cos(theta);
+	Vector3 rotated_offset = rotation * Matrix4::Rotation(pitch, { 1, 0, 0 })* offsetFromPlayer;
 
-	Vector3 playerPosition = player->GetTransform().GetPosition();
+	Vector3 objPos = player->GetTransform().GetPosition();
 
-	position.x = playerPosition.x - xOffset;
-	position.z = playerPosition.z - zOffset;
-	position.y = playerPosition.y + vDist + 14;
+	Vector3 camPos = objPos + rotated_offset;
 
-	Matrix4 temp = Matrix4::BuildViewMatrix(position, playerPosition, Vector3(0, 1, 0));
+	Matrix4 temp = Matrix4::BuildViewMatrix(camPos, objPos, Vector3(0, 1, 0));
 
 	Matrix4 modelMat = temp.Inverse();
 
 	Quaternion q(modelMat);
 	Vector3 angles = q.ToEuler();
-	if (init) pitch = angles.x;
-	
-	yaw = angles.y;
+
+
+	Quaternion p(rotation);
+	player->GetTransform().SetOrientation(p);
+
+	position = camPos;
 }
 
 /*

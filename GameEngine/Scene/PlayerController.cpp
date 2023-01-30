@@ -12,21 +12,6 @@ PlayerController::PlayerController(Camera* cam, GameObject* player) : camera(cam
 
 void PlayerController::Update(float dt)
 {
-	Vector3 lo = Matrix4::Rotation(player_object->GetTransform().GetOrientation().ToEuler().y, { 0, 1, 0 }) * Vector3(0, 3.5f, 13); // *lockedOffset;
-
-	Vector3 objPos = player_object->GetTransform().GetPosition();
-
-	Vector3 camPos = objPos + lo;
-
-	Matrix4 temp = Matrix4::BuildViewMatrix(camPos, objPos, Vector3(0, 1, 0));
-
-	Matrix4 modelMat = temp.Inverse();
-
-	Quaternion q(modelMat);
-	Vector3 angles = q.ToEuler();
-
-	camera->SetBasicCameraParameters(angles.x + 10, angles.y, camPos);
-
 	UpdateKeys();
 }
 
@@ -55,11 +40,11 @@ void PlayerController::UpdateKeys()
 	}
 
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::A)) {
-		player_object->GetPhysicsObject()->AddTorque({ 0, 5, 0 });
+		player_object->GetPhysicsObject()->AddForce(-rightAxis * 30);
 	}
 
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::D)) {
-		player_object->GetPhysicsObject()->AddTorque({ 0, -5, 0 });
+		player_object->GetPhysicsObject()->AddForce(rightAxis * 30);
 	}
 }
 

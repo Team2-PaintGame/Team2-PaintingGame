@@ -45,6 +45,9 @@ namespace NCL {
 		virtual Matrix4 BuildProjectionMatrix() const;
 		virtual Matrix4 GenerateInverseProjection() const;
 
+		float GetPitch() { return pitch;	}
+		float GetYaw()	 { return yaw;		}
+
 		//Gets position in world space
 		Vector3 GetPosition() const { return position; }
 	protected:
@@ -70,5 +73,7 @@ namespace NCL {
 		float distanceFromPlayer = 10.0f;
 		float angleAroundPlayer = 180.0f; 
 		PlayerBase* player = NULL;
+
+		Vector3 offsetFromPlayer = Vector3(0, 3.0f, 13);
 	};
 }

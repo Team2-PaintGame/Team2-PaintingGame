@@ -97,7 +97,7 @@ PaintingGame::~PaintingGame() {
 void PaintingGame::UpdateGame(float dt) 
 {
 
-	//world->GetMainCamera()->UpdateCamera(dt);
+	world->GetMainCamera()->UpdateCamera(dt);
 
 	player_controller->Update(dt);
 
