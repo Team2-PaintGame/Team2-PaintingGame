@@ -41,8 +41,6 @@ namespace NCL {
 				shuffleObjects = state;
 			}
 
-			//bool Raycast(Ray& r, RayCollision& closestCollision, bool closestObject = false, GameObject* ignore = nullptr, int layerMask = 0) const;
-
 			virtual void UpdateWorld(float dt);
 
 			void OperateOnContents(GameObjectFunc f);

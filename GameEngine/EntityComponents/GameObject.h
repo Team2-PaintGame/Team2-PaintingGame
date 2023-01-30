@@ -65,9 +65,6 @@ namespace NCL::CSC8508 {
 			//std::cout << "OnCollisionEnd event occured!\n";
 		}
 
-		//bool GetBroadphaseAABB(Vector3&outsize) const;
-
-		//void UpdateBroadphaseAABB();
 
 		void SetWorldID(int newID) {
 			worldID = newID;
@@ -79,7 +76,6 @@ namespace NCL::CSC8508 {
 
 		virtual void Update(float dt) {}
 		void UpdateTransform();
-		//bool Raycast(RayCollision& closestCollision, GameObject* target) const;
 
 
 	protected:

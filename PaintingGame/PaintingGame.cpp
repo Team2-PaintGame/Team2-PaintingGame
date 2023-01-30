@@ -11,16 +11,13 @@ PaintingGame::PaintingGame() {
 #else 
 	renderer = new GameTechRenderer(*world);
 #endif
-	//physics = new PhysicsSystem(*world);
-
 	forceMagnitude = 10.0f;
 
 	physicsCommon = new reactphysics3d::PhysicsCommon();
 	physicsWorld = physicsCommon->createPhysicsWorld();
 
 	InitialiseAssets();
-	//physics->UseGravity(useGravity);
-	physicsWorld->setIsGravityEnabled(true);
+	physicsWorld->setIsGravityEnabled(useGravity);
 	renderer->UseFog(useFog);
 }
 
@@ -88,7 +85,6 @@ PaintingGame::~PaintingGame() {
 	for (const auto& [key, val] : meshAnimations) {
 		delete val;
 	}
-	//delete physics;
 	delete renderer;
 	delete world;
 
@@ -102,8 +98,6 @@ void PaintingGame::UpdateGame(float dt) {
 	renderer->Render();
 	world->UpdateWorld(dt);
 	renderer->Update(dt);
-
-	//physics->Update(dt);
 	physicsWorld->update(dt);
 
 	remainingTime = remainingTime - dt;
@@ -118,7 +112,6 @@ void PaintingGame::InitCamera() {
 
 void PaintingGame::InitWorld() {
 	world->ClearAndErase();
-	//physics->Clear();
 
 	remainingTime = 2 * 60;
 

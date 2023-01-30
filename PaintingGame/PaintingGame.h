@@ -30,10 +30,9 @@ namespace NCL {
 #else
 			GameTechRenderer* renderer;
 #endif
-			//PhysicsSystem* physics;
 			GameWorld* world;
 
-			bool useGravity = false;
+			bool useGravity = true;
 			bool useFog = true;
 
 			float		forceMagnitude;
