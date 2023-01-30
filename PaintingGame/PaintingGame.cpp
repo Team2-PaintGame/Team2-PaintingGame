@@ -106,11 +106,6 @@ void PaintingGame::UpdateGame(float dt) {
 	//physics->Update(dt);
 	physicsWorld->update(dt);
 
-	const reactphysics3d::Transform& transform = player->GetCollisionBody()->getTransform();
-	const reactphysics3d::Vector3& position = transform.getPosition();
-	//Display the position of the body 
-	std::cout << "BodyPosition:( " << position.x << ", " << position.y << "," << position.z << ")" << std::endl;
-
 	remainingTime = remainingTime - dt;
 	Debug::UpdateRenderables(dt);
 }
