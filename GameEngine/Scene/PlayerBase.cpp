@@ -20,14 +20,10 @@ PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysic
 	rp3d_transform
 		.setPosition(rp3d::Vector3(position.x, position.y, position.x));
 
-	rp3d::Quaternion orientation = rp3d::Quaternion::identity();
-	rp3d_transform
-		.setOrientation(orientation);
-
 	// Create a rigid body in the physics world
 	collisionBody = physicsWorld->createRigidBody(rp3d_transform);
-	//collisionBody->addCollider(boundingVolume, rp3d_transform); //collider
-	//dynamic_cast<rp3d::RigidBody*>(collisionBody)->updateMassPropertiesFromColliders();
+	collisionBody->addCollider(boundingVolume, rp3d_transform); //collider
+	dynamic_cast<rp3d::RigidBody*>(collisionBody)->updateMassPropertiesFromColliders();
 
 	//in case of material
 	/*int meshLayers = mesh->GetSubMeshCount();
