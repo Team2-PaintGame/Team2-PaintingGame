@@ -20,6 +20,13 @@ GameObject::~GameObject()	{
 	delete networkObject;
 }
 
+void GameObject::UpdateTransform() {
+	if (collisionBody) {
+		transform.SetPosition(collisionBody->getTransform().getPosition());
+		transform.SetOrientation(collisionBody->getTransform().getOrientation());
+	}
+}
+
 //bool GameObject::GetBroadphaseAABB(Vector3&outSize) const {
 //	if (!boundingVolume) {
 //		return false;

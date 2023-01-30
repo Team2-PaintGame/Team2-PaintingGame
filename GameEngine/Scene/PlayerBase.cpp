@@ -32,8 +32,7 @@ PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysic
 }
 
 void PlayerBase::Update(float dt) {
-	transform.SetPosition(collisionBody->getTransform().getPosition());
-	transform.SetOrientation(collisionBody->getTransform().getOrientation());
+	
 }
 
 PlayerBase::~PlayerBase() {

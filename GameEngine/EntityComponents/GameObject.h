@@ -78,6 +78,7 @@ namespace NCL::CSC8508 {
 		}
 
 		virtual void Update(float dt) {}
+		void UpdateTransform();
 		//bool Raycast(RayCollision& closestCollision, GameObject* target) const;
 
 

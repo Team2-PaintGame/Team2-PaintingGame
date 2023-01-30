@@ -81,6 +81,7 @@ void GameWorld::UpdateWorld(float dt) {
 	}
 	for (const auto& object : gameObjects) {
 		object->Update(dt);
+		object->UpdateTransform();
 	}
 }
 
