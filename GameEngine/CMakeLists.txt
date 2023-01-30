@@ -171,6 +171,8 @@ set(Scene
     "./Scene/GameWorld.cpp" 
     "./Scene/PlayerBase.h" 
     "./Scene/PlayerBase.cpp" 
+    "./Scene/PlayerController.h" 
+    "./Scene/PlayerController.cpp" 
 )
 source_group("Scene" FILES ${Scene})
 
