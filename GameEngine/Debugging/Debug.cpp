@@ -39,6 +39,12 @@ void Debug::DrawLine(const Vector3& startpoint, const Vector3& endpoint, const V
 	lineEntries.emplace_back(newEntry);
 }
 
+void Debug::DrawTriangle(const Vector3& v1, const Vector3& v2, const Vector3& v3, const Vector4& colour, float time) {
+	Debug::DrawLine(v1, v2, colour, time);
+	Debug::DrawLine(v2, v3, colour, time);
+	Debug::DrawLine(v3, v1, colour, time);
+}
+
 void Debug::DrawAxisLines(const Matrix4& modelMatrix, float scaleBoost, float time) {
 	Matrix4 local = modelMatrix;
 	local.SetPositionVector({ 0, 0, 0 });
