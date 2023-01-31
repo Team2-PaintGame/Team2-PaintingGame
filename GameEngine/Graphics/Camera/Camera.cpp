@@ -63,12 +63,34 @@ void Camera::UpdateCamera(float dt) {
 	
 	if (viewType == ViewType::ThirdPerson) {
 		CalculateThirdPersonView();
-	}
+	} 
+	else
+	{
+		//Freecam
+		Matrix4 rotation = Matrix4::Rotation(yaw, Vector3(0, 1, 0));
+		Vector3 forward = rotation * Vector3(0, 0, -1);
+		Vector3 right = rotation * Vector3(1, 0, 0);
+		float speed = 10.0f * dt;
 
-	Matrix4 rotation = Matrix4::Rotation(yaw, Vector3(0, 1, 0));
-	Vector3 forward = rotation * Vector3(0, 0, -1);
-	Vector3 right = rotation * Vector3(1, 0, 0);
-	float speed = 10.0f * dt;
+		if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::W)) {
+			position += forward * speed;
+		}
+		if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::S)) {
+			position -= forward * speed;
+		}
+		if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::A)) {
+			position -= right * speed;
+		}
+		if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::D)) {
+			position += right * speed;
+		}
+		if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::SHIFT)) {
+			position.y += speed;
+		}
+		if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::SPACE)) {
+			position.y -= speed;
+		}
+	}
 }
 
 void Camera::CalculateFirstPersonView() {
