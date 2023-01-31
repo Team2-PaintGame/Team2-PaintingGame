@@ -1,6 +1,5 @@
 #include "PlayerController.h"
 #include "Window.h"
-#include "PhysicsObject.h"
 #include "Vector4.h"
 
 using namespace NCL;
@@ -32,19 +31,19 @@ void PlayerController::UpdateKeys()
 
 
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::W)) {
-		player_object->GetPhysicsObject()->AddForce(fwdAxis * 50);
+		//player_object->GetPhysicsObject()->AddForce(fwdAxis * 50);
 	}
 
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::S)) {
-		player_object->GetPhysicsObject()->AddForce(-fwdAxis * 50);
+		//player_object->GetPhysicsObject()->AddForce(-fwdAxis * 50);
 	}
 
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::A)) {
-		player_object->GetPhysicsObject()->AddForce(-rightAxis * 30);
+		//player_object->GetPhysicsObject()->AddForce(-rightAxis * 30);
 	}
 
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::D)) {
-		player_object->GetPhysicsObject()->AddForce(rightAxis * 30);
+		//player_object->GetPhysicsObject()->AddForce(rightAxis * 30);
 	}
 }
 
