@@ -25,14 +25,14 @@ namespace NCL {
 			reactphysics3d::Transform rp3d_transform(rp3d::Vector3(position.x, position.y, position.x), rp3d::Quaternion::identity());
 
 			// Create a rigid body in the physics world
-			collisionBody = physicsWorld->createRigidBody(rp3d_transform);
-			collisionBody->addCollider(boundingVolume, rp3d_transform); //collider
-			dynamic_cast<rp3d::RigidBody*>(collisionBody)->setType(reactphysics3d::BodyType::STATIC);
-			dynamic_cast<rp3d::RigidBody*>(collisionBody)->updateMassPropertiesFromColliders();
+			rigidBody = physicsWorld->createRigidBody(rp3d_transform);
+			rigidBody->addCollider(boundingVolume, rp3d_transform); //collider
+			rigidBody->setType(reactphysics3d::BodyType::STATIC);
+			rigidBody->updateMassPropertiesFromColliders();
 		}
 		virtual ~Floor() {
-			if (collisionBody) {
-				physicsWorld->destroyRigidBody(dynamic_cast<rp3d::RigidBody*>(collisionBody));
+			if (rigidBody) {
+				physicsWorld->destroyRigidBody(rigidBody);
 			}
 			physicsCommon.destroyBoxShape(boundingVolume);
 		}

@@ -27,8 +27,8 @@ namespace NCL::CSC8508 {
 			return transform;
 		}
 
-		reactphysics3d::CollisionBody* GetCollisionBody() {
-			return collisionBody;
+		reactphysics3d::RigidBody* GetRigidBody() {
+			return rigidBody;
 		}
 
 		RenderObject* GetRenderObject() const {
@@ -82,7 +82,7 @@ namespace NCL::CSC8508 {
 		reactphysics3d::PhysicsWorld* physicsWorld;
 
 		/// Body used to simulate the dynamics of the box
-		reactphysics3d::CollisionBody* collisionBody;
+		reactphysics3d::RigidBody* rigidBody;
 
 		Transform			transform;
 

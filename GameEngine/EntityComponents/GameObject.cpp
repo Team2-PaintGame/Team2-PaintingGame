@@ -19,8 +19,8 @@ GameObject::~GameObject()	{
 }
 
 void GameObject::UpdateTransform() {
-	if (collisionBody) {
-		transform.SetPosition(collisionBody->getTransform().getPosition());
-		transform.SetOrientation(collisionBody->getTransform().getOrientation());
+	if (rigidBody) {
+		transform.SetPosition(rigidBody->getTransform().getPosition());
+		transform.SetOrientation(rigidBody->getTransform().getOrientation());
 	}
 }
