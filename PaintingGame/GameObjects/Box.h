@@ -30,9 +30,6 @@ namespace NCL {
 			rigidBody->updateMassPropertiesFromColliders();
 		}
 		virtual ~Box() {
-			if (rigidBody) {
-				physicsWorld->destroyRigidBody(rigidBody);
-			}
 			physicsCommon.destroyBoxShape(boundingVolume);
 		}
 	protected:

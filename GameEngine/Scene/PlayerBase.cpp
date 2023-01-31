@@ -34,9 +34,6 @@ void PlayerBase::Update(float dt) {
 }
 
 PlayerBase::~PlayerBase() {
-	if (rigidBody) {
-		physicsWorld->destroyRigidBody(rigidBody);
-	}
 	physicsCommon.destroyBoxShape(boundingVolume);
 }
 
