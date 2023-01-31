@@ -23,9 +23,16 @@ endif()
 
 source_group("Source Files" FILES ${Source_Files})
 
+set(GameObjects
+    "./GameObjects/Box.h"
+    "./GameObjects/Floor.h"
+)
+source_group("Game Objects" FILES ${GameObjects})
+
 set(ALL_FILES
     ${Header_Files}
     ${Source_Files}
+    ${GameObjects}
 )
 
 if(USE_VULKAN)
@@ -173,6 +180,7 @@ if(MSVC)
     target_link_libraries(${PROJECT_NAME} LINK_PUBLIC  "Winmm.lib")
 endif()
 
+include_directories("./GameObjects")
 include_directories("../OpenGLRendering/")
 include_directories("../Networking/")
 include_directories("../GameEngine/")

@@ -1,5 +1,8 @@
 #include "PaintingGame.h"
 #include <Terrain.h>
+#include <Debug.h>
+#include "Box.h"
+#include "Floor.h"
 
 using namespace NCL;
 using namespace CSC8508;
@@ -11,15 +14,13 @@ PaintingGame::PaintingGame() {
 #else 
 	renderer = new GameTechRenderer(*world);
 #endif
-	physics = new PhysicsSystem(*world);
-
 	forceMagnitude = 10.0f;
 
 	physicsCommon = new reactphysics3d::PhysicsCommon();
-	p_world = physicsCommon->createPhysicsWorld();
+	physicsWorld = physicsCommon->createPhysicsWorld();
 
 	InitialiseAssets();
-	physics->UseGravity(useGravity);
+	physicsWorld->setIsGravityEnabled(useGravity);
 	renderer->UseFog(useFog);
 }
 
@@ -87,7 +88,6 @@ PaintingGame::~PaintingGame() {
 	for (const auto& [key, val] : meshAnimations) {
 		delete val;
 	}
-	delete physics;
 	delete renderer;
 	delete world;
 
@@ -104,8 +104,7 @@ void PaintingGame::UpdateGame(float dt)
 	renderer->Render();
 	world->UpdateWorld(dt);
 	renderer->Update(dt);
-
-	physics->Update(dt);
+	physicsWorld->update(dt);
 
 	remainingTime = remainingTime - dt;
 	Debug::UpdateRenderables(dt);
@@ -113,41 +112,30 @@ void PaintingGame::UpdateGame(float dt)
 
 void PaintingGame::InitCamera() {
 	world->GetMainCamera()->SetBasicCameraParameters(-15.0f, 315.0f, Vector3(-60, 40, 60), 0.1f, 500.0f);
-	world->GetMainCamera()->SetThirdPersonCamera(player);
+	world->GetMainCamera()->SetFirstPersonCamera();
 	world->GetMainCamera()->SetPerspectiveCameraParameters(Window::GetWindow()->GetScreenAspect());
 }
 
 void PaintingGame::InitWorld() {
 	world->ClearAndErase();
-	physics->Clear();
 
 	remainingTime = 2 * 60;
 
-	TerrainTexturePack terrainTexturePack(textures.at("terrainSplatMap"), textures.at("terrainRTex"), textures.at("terrainGTex"), textures.at("terrainBTex"), textures.at("terrainBgTex"));
-	world->AddGameObject(new Terrain(Vector2(), meshes.at("terrainMesh"), terrainTexturePack, shaders.at("terrainShader")));
-	world->AddGameObject(new Terrain(Vector2(0, 1), meshes.at("terrainMesh"), terrainTexturePack, shaders.at("terrainShader")));
+	//TerrainTexturePack terrainTexturePack(textures.at("terrainSplatMap"), textures.at("terrainRTex"), textures.at("terrainGTex"), textures.at("terrainBTex"), textures.at("terrainBgTex"));
+	//world->AddGameObject(new Terrain(*physicsCommon, physicsWorld, Vector2(), meshes.at("terrainMesh"), terrainTexturePack, shaders.at("terrainShader")));
+	//world->AddGameObject(new Terrain(*physicsCommon, physicsWorld, Vector2(0, 1), meshes.at("terrainMesh"), terrainTexturePack, shaders.at("terrainShader")));
 
 	InitiliazePlayer();
 
-	//Create a rigid body in the world 
-	reactphysics3d::Vector3 position(0, 20, 0);
-	reactphysics3d::Quaternion orientation = reactphysics3d::Quaternion::identity();
-	reactphysics3d::Transform transform(position, orientation);
-	reactphysics3d::RigidBody* body = p_world->createRigidBody(transform); 
-	const reactphysics3d::decimal timeStep = 1.0f / 60.0f;
-	//Step the simulation a few steps 
-	for (int i = 0; i < 20; i++) {
-		p_world->update(timeStep); 
-		//Get the updated position of the body 
-		const reactphysics3d::Transform& transform = body->getTransform(); 
-		const reactphysics3d::Vector3& position = transform.getPosition(); 
-		//Display the position of the body 
-		std::cout << "BodyPosition:( " << position.x << ", " << position.y << "," << position.z << ")" <<std::endl; 
+	world->AddGameObject(new Floor(*physicsCommon, physicsWorld, Vector3(0, 0, 0), meshes.at("cubeMesh"), textures.at("basicTex"), shaders.at("basicShader"), 200));
+
+	for (int x = 0; x < 15; ++x) {
+		world->AddGameObject(new Box(*physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 2));
 	}
 }
 
 void PaintingGame::InitiliazePlayer() {
-	player = new PlayerBase(Vector3(0, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 3);
+	player = new PlayerBase(*physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 3);
 	world->AddGameObject(player);
 
 	player_controller = new PlayerController(world->GetMainCamera(), player);

@@ -6,7 +6,7 @@ namespace NCL {
         class StateMachine;
         class StateGameObject : public GameObject  {
         public:
-            StateGameObject();
+            StateGameObject(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld);
             ~StateGameObject();
 
             virtual void Update(float dt);

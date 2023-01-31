@@ -1,12 +1,10 @@
 #include "PlayerBase.h"
 #include "RenderObject.h"
-#include "PhysicsObject.h"
-#include "AABBVolume.h"
 #include "Window.h"
 
 using namespace NCL;
 
-PlayerBase::PlayerBase(Vector3 position, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, int size) {
+PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, int size): GameObject(physicsCommon, physicsWorld) {
 	name = "BasePlayer";
 	transform
 		.SetScale(Vector3(size))
@@ -15,48 +13,31 @@ PlayerBase::PlayerBase(Vector3 position, MeshGeometry* mesh, TextureBase* textur
 	renderObject = new RenderObject(&transform, mesh, shader);
 	renderObject->AddTexture(0, texture, "mainTex");
 
-	float inverseMass = 0.5f;
+	boundingVolume = physicsCommon.createBoxShape(rp3d::Vector3(size, size, size));
 
-	AABBVolume* volume = new AABBVolume(Vector3(size/2));
+	reactphysics3d::Transform rp3d_transform(rp3d::Vector3(position.x, position.y, position.x), rp3d::Quaternion::identity());
+	
+	// Create a rigid body in the physics world
+	collisionBody = physicsWorld->createRigidBody(rp3d_transform);
+	collisionBody->addCollider(boundingVolume, rp3d_transform); //collider
+	dynamic_cast<rp3d::RigidBody*>(collisionBody)->updateMassPropertiesFromColliders();
 
-	boundingVolume = (CollisionVolume*)volume;
-	physicsObject = new PhysicsObject(&transform, boundingVolume);
-
-	physicsObject->SetInverseMass(inverseMass);
-	physicsObject->InitSphereInertia();
 	//in case of material
 	/*int meshLayers = mesh->GetSubMeshCount();
 	for (int i = 0; i < meshLayers; i++) {
 		renderObject->AddTexture(i, material->GetMaterialForLayer(i)->GetEntry("Diffuse"), "mainTex");
 	}*/
-
 }
 
 void PlayerBase::Update(float dt) {
-	/*
-	//Window::GetMouse()->GetWindowPosition()
-	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::W)) {
-		currentRunSpeed = -runSpeed;
-	}
-	else if (Window::GetKeyboard()->KeyDown(KeyboardKeys::S)) {
-		currentRunSpeed = runSpeed;
-	}
-	else {
-		currentRunSpeed = 0;
-	}
+	
+}
 
-	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::A)) {
-		currentTurnSpeed = turnSpeed;
+PlayerBase::~PlayerBase() {
+	if (collisionBody) {
+		physicsWorld->destroyRigidBody(dynamic_cast<rp3d::RigidBody*>(collisionBody));
 	}
-	else if (Window::GetKeyboard()->KeyDown(KeyboardKeys::D)) {
-		currentTurnSpeed = -turnSpeed;
-	}
-	else {
-		currentTurnSpeed = 0;
-	}
-
-	transform.IncreaseRotation(Vector3(0, 1, 0), currentTurnSpeed * dt);
-	transform.IncreasePosition(currentRunSpeed * dt);*/
+	physicsCommon.destroyBoxShape(boundingVolume);
 }
 
 

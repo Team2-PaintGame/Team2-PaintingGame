@@ -8,6 +8,7 @@ https://research.ncl.ac.uk/game/
 */
 #pragma once
 #include <iostream>
+#include <reactphysics3d/reactphysics3d.h>
 
 namespace NCL::Maths {
 	class Matrix3;
@@ -34,6 +35,8 @@ namespace NCL::Maths {
 		Quaternion(const Matrix3 &m);
 		Quaternion(const Matrix4 &m);
 
+		Quaternion(const reactphysics3d::Quaternion& q) : x(q.x), y(q.y), z(q.z), w(q.w) {}
+
 		~Quaternion(void) = default;
 
 		void		Normalise(); 
@@ -51,6 +54,13 @@ namespace NCL::Maths {
 
 		static Quaternion EulerAnglesToQuaternion(float pitch, float yaw, float roll);
 		static Quaternion AxisAngleToQuaterion(const Vector3& vector, float degrees);
+
+		inline void operator=(const reactphysics3d::Quaternion& q) {
+			this->x = q.x;
+			this->y = q.y;
+			this->z = q.z;
+			this->w = q.w;
+		}
 
 		inline bool  operator ==(const Quaternion &from)	const {
 			if (x != from.x || y != from.y || z != from.z || w != from.w) {

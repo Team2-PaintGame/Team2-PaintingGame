@@ -1,8 +1,7 @@
 #pragma once
 #include "Transform.h"
-#include "CollisionVolume.h"
 #include "Layer.h"
-#include "Ray.h"
+#include <reactphysics3d/reactphysics3d.h>
 
 using std::vector;
 
@@ -13,16 +12,8 @@ namespace NCL::CSC8508 {
 
 	class GameObject	{
 	public:
-		GameObject(std::string name = "");
+		GameObject(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, std::string name = "");
 		virtual ~GameObject();
-
-		void SetBoundingVolume(CollisionVolume* vol) {
-			boundingVolume = vol;
-		}
-
-		const CollisionVolume* GetBoundingVolume() const {
-			return boundingVolume;
-		}
 
 		bool IsActive() const {
 			return isActive;
@@ -36,12 +27,12 @@ namespace NCL::CSC8508 {
 			return transform;
 		}
 
-		RenderObject* GetRenderObject() const {
-			return renderObject;
+		reactphysics3d::CollisionBody* GetCollisionBody() {
+			return collisionBody;
 		}
 
-		PhysicsObject* GetPhysicsObject() const {
-			return physicsObject;
+		RenderObject* GetRenderObject() const {
+			return renderObject;
 		}
 
 		NetworkObject* GetNetworkObject() const {
@@ -50,10 +41,6 @@ namespace NCL::CSC8508 {
 
 		void SetRenderObject(RenderObject* newObject) {
 			renderObject = newObject;
-		}
-
-		void SetPhysicsObject(PhysicsObject* newObject) {
-			physicsObject = newObject;
 		}
 
 		void SetLayer(Layer l) {
@@ -76,9 +63,6 @@ namespace NCL::CSC8508 {
 			//std::cout << "OnCollisionEnd event occured!\n";
 		}
 
-		bool GetBroadphaseAABB(Vector3&outsize) const;
-
-		void UpdateBroadphaseAABB();
 
 		void SetWorldID(int newID) {
 			worldID = newID;
@@ -89,14 +73,19 @@ namespace NCL::CSC8508 {
 		}
 
 		virtual void Update(float dt) {}
-		bool Raycast(RayCollision& closestCollision, GameObject* target) const;
+		void UpdateTransform();
 
 
 	protected:
+		/// Reference to the physics common object
+		reactphysics3d::PhysicsCommon& physicsCommon;
+		reactphysics3d::PhysicsWorld* physicsWorld;
+
+		/// Body used to simulate the dynamics of the box
+		reactphysics3d::CollisionBody* collisionBody;
+
 		Transform			transform;
 
-		CollisionVolume*	boundingVolume;
-		PhysicsObject*		physicsObject;
 		RenderObject*		renderObject;
 		NetworkObject*		networkObject;
 

@@ -1,6 +1,8 @@
 #include "GameServer.h"
 #include "GameWorld.h"
 #include "./enet/enet.h"
+#include <iostream>
+
 using namespace NCL;
 using namespace CSC8508;
 
