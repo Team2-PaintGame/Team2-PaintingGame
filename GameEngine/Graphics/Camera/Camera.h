@@ -70,10 +70,7 @@ namespace NCL {
 		CameraType camType = CameraType::Perspective;
 
 		//third person camera params
-		float distanceFromPlayer = 10.0f;
-		float angleAroundPlayer = 180.0f; 
-		PlayerBase* player = NULL;
-
 		Vector3 offsetFromPlayer = Vector3(0, 3.0f, 13);
+		PlayerBase* player = NULL;
 	};
 }

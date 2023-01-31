@@ -14,8 +14,6 @@ void Camera::SetBasicCameraParameters(float pitch, float yaw, const Vector3& pos
 
 void Camera::SetFirstPersonCamera() {
 	viewType = ViewType::FirstPerson;
-	distanceFromPlayer = 0.0f;
-	angleAroundPlayer = 0.0f;
 
 	CalculateFirstPersonView();
 }
@@ -23,8 +21,6 @@ void Camera::SetFirstPersonCamera() {
 void Camera::SetThirdPersonCamera(PlayerBase* player, float angleAroundPlayer, float distanceFromPlayer) {
 	viewType = ViewType::ThirdPerson;
 	this->player = player;
-	this->distanceFromPlayer = distanceFromPlayer;
-	this->angleAroundPlayer = angleAroundPlayer;
 
 	CalculateThirdPersonView(true);
 }
@@ -80,26 +76,17 @@ void Camera::CalculateFirstPersonView() {
 
 void Camera::CalculateThirdPersonView(bool init) 
 {
+	// Clamp the pitch value further
+	pitch = std::clamp(pitch, -25.0f, 25.0f);
+
 	Matrix4 rotation = Matrix4::Rotation(yaw, { 0, 1, 0 }) ;
 
 	Vector3 rotated_offset = rotation * Matrix4::Rotation(pitch, { 1, 0, 0 })* offsetFromPlayer;
 
-	Vector3 objPos = player->GetTransform().GetPosition();
+	Quaternion player_orientation(rotation);
+	player->GetTransform().SetOrientation(player_orientation);
 
-	Vector3 camPos = objPos + rotated_offset;
-
-	Matrix4 temp = Matrix4::BuildViewMatrix(camPos, objPos, Vector3(0, 1, 0));
-
-	Matrix4 modelMat = temp.Inverse();
-
-	Quaternion q(modelMat);
-	Vector3 angles = q.ToEuler();
-
-
-	Quaternion p(rotation);
-	player->GetTransform().SetOrientation(p);
-
-	position = camPos;
+	position = player->GetTransform().GetPosition() + rotated_offset;
 }
 
 /*
@@ -109,7 +96,7 @@ straight to the shader...it's already an 'inverse camera' matrix.
 Matrix4 Camera::BuildViewMatrix() const {
 	//Why do a complicated matrix inversion, when we can just generate the matrix
 	//using the negative values ;). The matrix multiplication order is important!
-	return	Matrix4::Translation(-Vector3(0, 0, distanceFromPlayer)) *
+	return	Matrix4::Translation(-offsetFromPlayer) *
 		Matrix4::Rotation(-pitch, Vector3(1, 0, 0)) *
 		Matrix4::Rotation(-yaw, Vector3(0, 1, 0)) *
 		Matrix4::Translation(-position);
@@ -124,7 +111,7 @@ Matrix4 Camera::GenerateInverseView() const {
 		Matrix4::Translation(position) *
 		Matrix4::Rotation(yaw, Vector3(0, 1, 0)) *
 		Matrix4::Rotation(pitch, Vector3(1, 0, 0)) * 
-		Matrix4::Translation(Vector3(0, 0, distanceFromPlayer));
+		Matrix4::Translation(offsetFromPlayer);
 
 	return iview;
 }
