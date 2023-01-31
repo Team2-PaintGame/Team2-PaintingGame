@@ -28,7 +28,7 @@ namespace NCL::Maths {
 
 	public:
 		constexpr Vector4(void) : x(0.0f), y(0.0f), z(0.0f), w(0.0f) {}
-
+		constexpr Vector4(float val) : x(val), y(val), z(val), w(val) {}
 		constexpr Vector4(float xVal, float yVal, float zVal, float wVal) : x(xVal), y(yVal), z(zVal), w(wVal) {}
 
 		Vector4(const Vector3& v3, float w = 0.0f);
