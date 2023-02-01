@@ -35,6 +35,7 @@ namespace NCL {
 
 			bool useGravity = true;
 			bool useFog = true;
+			bool thirdPersonCamera;
 
 			float		forceMagnitude;
 

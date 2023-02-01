@@ -17,6 +17,8 @@ PaintingGame::PaintingGame() {
 	settings.isSleepingEnabled = false; 
 	settings.gravity = Vector3(0,-9.81, 0);
 	*/
+	thirdPersonCamera = false;
+
 	physicsWorld = physicsCommon.createPhysicsWorld(/*settings*/);
 
 #ifdef USEVULKAN
@@ -120,7 +122,14 @@ void PaintingGame::UpdateGame(float dt) {
 
 void PaintingGame::InitCamera() {
 	world->GetMainCamera()->SetBasicCameraParameters(-15.0f, 315.0f, Vector3(-60, 40, 60), 0.1f, 500.0f);
-	world->GetMainCamera()->SetFirstPersonCamera();
+
+	if (thirdPersonCamera) {
+		world->GetMainCamera()->SetThirdPersonCamera(player);
+	}
+	else {
+		world->GetMainCamera()->SetFirstPersonCamera();
+	}
+
 	world->GetMainCamera()->SetPerspectiveCameraParameters(Window::GetWindow()->GetScreenAspect());
 }
 
