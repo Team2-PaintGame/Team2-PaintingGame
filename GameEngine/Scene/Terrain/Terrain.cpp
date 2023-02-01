@@ -1,5 +1,6 @@
 #include "Terrain.h"
 #include "RenderObject.h"
+#include "Utils.h"
 
 using namespace NCL;
 using namespace Rendering;
@@ -17,7 +18,7 @@ Terrain::Terrain(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::P
 	renderObject->AddTexture(texturePack.splatMap, "splatMapTex");
 
 	//boundingVolume = physicsCommon.createHeightFieldShape(/* IMPORTANT: set params*/);
-	/*reactphysics3d::Transform rp3d_transform(rp3d::Vector3(position.x, position.y, position.z), rp3d::Quaternion::identity());
+	/*reactphysics3d::Transform rp3d_transform(~position, rp3d::Quaternion::identity());
 
 	// Create a rigid body in the physics world
 	rigidBody = physicsWorld->createRigidBody(rp3d_transform);
