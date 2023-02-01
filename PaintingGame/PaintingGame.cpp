@@ -26,6 +26,7 @@ PaintingGame::PaintingGame() {
 
 	renderer->settings.SetIsDebugRenderingModeEnabled(isDebugRenderingEnabed);
 	renderer->settings.debugRendererSettings.SetIsCollisionShapeDisplayed(true);
+	renderer->settings.debugRendererSettings.SetIsBroadPhaseAABBDisplayed(true);
 }
 
 /*

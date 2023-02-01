@@ -234,12 +234,23 @@ void GameTechRenderer::RenderHUD() {
 
 void GameTechRenderer::RenderDebugInformation() {
 	if (settings.GetIsDebugRenderingModeEnabled()) {
+		//render triangles
 		int numTri = settings.debugRendererSettings.debugRenderer.getNbTriangles();
 		if (numTri) {
 			const reactphysics3d::DebugRenderer::DebugTriangle* tri = settings.debugRendererSettings.debugRenderer.getTrianglesArray();
 			for (int i = 0; i < numTri; i++) {
-				Debug::DrawTriangle(tri->point1, tri->point2, tri->point3, Vector4(tri->color1, tri->color2, tri->color3, 1.0f));
+				Debug::DrawTriangle(tri->point1, tri->point2, tri->point3, Debug::YELLOW);
 				tri++;
+			}
+		}
+
+		//render lines
+		int numLines = settings.debugRendererSettings.debugRenderer.getNbLines();
+		if (numLines) {
+			const reactphysics3d::DebugRenderer::DebugLine* line = settings.debugRendererSettings.debugRenderer.getLinesArray();
+			for (int i = 0; i < numLines; i++) {
+				Debug::DrawLine(line->point1, line->point2, Debug::CYAN);
+				line++;
 			}
 		}
 	}
