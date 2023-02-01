@@ -269,7 +269,7 @@ endif()
 #Import the ReactPhysics3D library 
 find_package(ReactPhysics3D REQUIRED)
 
-#include_directories("./")
+include_directories("./")
 include_directories("Maths/")
 include_directories("WindowingAndInput/")
 include_directories("WindowingAndInput/Win32/")
