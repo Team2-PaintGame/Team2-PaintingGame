@@ -4,8 +4,7 @@
 
 using namespace NCL;
 
-PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, int size): GameObject(physicsCommon, physicsWorld) {
-	name = "BasePlayer";
+PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, int size): GameObject(physicsCommon, physicsWorld, "BasePlayer") {
 	transform
 		.SetScale(Vector3(size))
 		.SetPosition(position);
@@ -20,16 +19,9 @@ PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysic
 	rigidBody = physicsWorld->createRigidBody(rp3d_transform);
 	rigidBody->addCollider(boundingVolume, rp3d::Transform::identity()); //collider
 	rigidBody->updateMassPropertiesFromColliders();
-	//in case of material
-	/*int meshLayers = mesh->GetSubMeshCount();
-	for (int i = 0; i < meshLayers; i++) {
-		renderObject->AddTexture(i, material->GetMaterialForLayer(i)->GetEntry("Diffuse"), "mainTex");
-	}*/
 }
 
-void PlayerBase::Update(float dt) {
-	
-}
+void PlayerBase::Update(float dt) {}
 
 PlayerBase::~PlayerBase() {
 	physicsCommon.destroyBoxShape(boundingVolume);

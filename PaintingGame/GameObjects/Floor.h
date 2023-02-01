@@ -11,8 +11,7 @@ namespace NCL {
 	class Floor : public GameObject {
 	public:
 		Floor() = default;
-		Floor(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, int size) : GameObject(physicsCommon, physicsWorld) {
-			name = "Floor";
+		Floor(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, int size) : GameObject(physicsCommon, physicsWorld, "Floor") {
 			transform
 				.SetScale(Vector3(size, 1, size))
 				.SetPosition(position);
