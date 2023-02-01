@@ -34,6 +34,7 @@ namespace NCL {
 
 			bool useGravity = true;
 			bool useFog = true;
+			bool isDebugRenderingEnabed = true;
 
 			float		forceMagnitude;
 

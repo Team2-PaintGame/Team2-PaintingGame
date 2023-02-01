@@ -9,19 +9,23 @@ using namespace CSC8508;
 
 PaintingGame::PaintingGame() {
 	world = new GameWorld();
-#ifdef USEVULKAN
-	renderer = new GameTechVulkanRenderer(*world);
-#else 
-	renderer = new GameTechRenderer(*world);
-#endif
-	forceMagnitude = 10.0f;
 
 	physicsCommon = new reactphysics3d::PhysicsCommon();
 	physicsWorld = physicsCommon->createPhysicsWorld();
 
+#ifdef USEVULKAN
+	renderer = new GameTechVulkanRenderer(*world);
+#else 
+	renderer = new GameTechRenderer(*world, physicsWorld);
+#endif
+	forceMagnitude = 10.0f;
+
 	InitialiseAssets();
 	physicsWorld->setIsGravityEnabled(useGravity);
 	renderer->UseFog(useFog);
+
+	renderer->settings.SetIsDebugRenderingModeEnabled(isDebugRenderingEnabed);
+	renderer->settings.debugRendererSettings.SetIsCollisionShapeDisplayed(true);
 }
 
 /*
@@ -132,7 +136,7 @@ void PaintingGame::InitWorld() {
 }
 
 void PaintingGame::InitiliazePlayer() {
-	player = new PlayerBase(*physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 3);
+	player = new PlayerBase(*physicsCommon, physicsWorld, Vector3(0, 50, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 5);
 	world->AddGameObject(player);
 }
 
