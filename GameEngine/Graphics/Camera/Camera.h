@@ -28,7 +28,7 @@ namespace NCL {
 		Camera(void) = default;
 		void SetBasicCameraParameters(float pitch, float yaw, const Vector3& position, float znear = 1.0f, float zfar = 100.0f);
 		void SetFirstPersonCamera();
-		void SetThirdPersonCamera(PlayerBase* player, float angleAroundPlayer = 180.0f, float distanceFromPlayer = 10.0f);
+		void SetThirdPersonCamera(PlayerBase* player);
 		void SetPerspectiveCameraParameters(float aspect, float fov = 45.0f);
 		void SetOrthographicCameraParameters(float right, float left, float top, float bottom);
 		~Camera(void) = default;

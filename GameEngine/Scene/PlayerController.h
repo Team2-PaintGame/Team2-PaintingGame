@@ -18,7 +18,7 @@ namespace NCL {
 
 	protected:
 		Camera* camera;
-		GameObject* player_object;
+		GameObject* playerObject;
 	};
 }
 

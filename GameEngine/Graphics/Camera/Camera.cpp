@@ -18,7 +18,7 @@ void Camera::SetFirstPersonCamera() {
 	CalculateFirstPersonView();
 }
 
-void Camera::SetThirdPersonCamera(PlayerBase* player, float angleAroundPlayer, float distanceFromPlayer) {
+void Camera::SetThirdPersonCamera(PlayerBase* player) {
 	viewType = ViewType::ThirdPerson;
 	this->player = player;
 
