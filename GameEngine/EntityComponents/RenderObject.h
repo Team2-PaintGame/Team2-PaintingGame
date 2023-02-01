@@ -30,7 +30,7 @@ namespace NCL {
 				return texture;
 			}*/
 
-			void AddTexture(int subMeshIndex, TextureBase* t, std::string uniform) {
+			void AddTexture(TextureBase* t, std::string uniform = "mainTex", int subMeshIndex = 0) {
 				if (t) {
 					if (subMeshTextures.count(subMeshIndex)) {
 						//if this submesh pair already exists, add to the inner map

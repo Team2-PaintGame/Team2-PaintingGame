@@ -10,11 +10,11 @@ Terrain::Terrain(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::P
 	transform.SetScale(Vector3(size, 1, size));
 	
 	renderObject = new RenderObject(&transform, mesh, shader);
-	renderObject->AddTexture(0, texturePack.rTex, "rTex");
-	renderObject->AddTexture(0, texturePack.gTex, "gTex");
-	renderObject->AddTexture(0, texturePack.bTex, "bTex");
-	renderObject->AddTexture(0, texturePack.bgTex, "bgTex");
-	renderObject->AddTexture(0, texturePack.splatMap, "splatMapTex");
+	renderObject->AddTexture(texturePack.rTex, "rTex");
+	renderObject->AddTexture(texturePack.gTex, "gTex");
+	renderObject->AddTexture(texturePack.bTex, "bTex");
+	renderObject->AddTexture(texturePack.bgTex, "bgTex");
+	renderObject->AddTexture(texturePack.splatMap, "splatMapTex");
 
 	/*boundingVolume = physicsCommon.createBoxShape(rp3d::Vector3(size / 2.0f, size / 2.0f, size / 2.0f));
 	reactphysics3d::Transform rp3d_transform(rp3d::Vector3(position.x, position.y, position.z), rp3d::Quaternion::identity());
