@@ -10,8 +10,7 @@ using namespace CSC8508;
 PaintingGame::PaintingGame() {
 	world = new GameWorld();
 
-	physicsCommon = new reactphysics3d::PhysicsCommon();
-	physicsWorld = physicsCommon->createPhysicsWorld();
+	physicsWorld = physicsCommon.createPhysicsWorld();
 
 #ifdef USEVULKAN
 	renderer = new GameTechVulkanRenderer(*world);
@@ -95,8 +94,6 @@ PaintingGame::~PaintingGame() {
 	}
 	delete renderer;
 	delete world;
-
-	delete physicsCommon;
 }
 
 void PaintingGame::UpdateGame(float dt) {
@@ -131,15 +128,15 @@ void PaintingGame::InitWorld() {
 
 	InitiliazePlayer();
 
-	world->AddGameObject(new Floor(*physicsCommon, physicsWorld, Vector3(0, 0, 0), meshes.at("cubeMesh"), textures.at("basicTex"), shaders.at("basicShader"), 200));
+	world->AddGameObject(new Floor(physicsCommon, physicsWorld, Vector3(0, 0, 0), meshes.at("cubeMesh"), textures.at("basicTex"), shaders.at("basicShader"), 200));
 
 	for (int x = 0; x < 15; ++x) {
-		world->AddGameObject(new Box(*physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 2));
+		world->AddGameObject(new Box(physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 2));
 	}
 }
 
 void PaintingGame::InitiliazePlayer() {
-	player = new PlayerBase(*physicsCommon, physicsWorld, Vector3(0, 50, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 5);
+	player = new PlayerBase(physicsCommon, physicsWorld, Vector3(0, 50, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 5);
 	world->AddGameObject(player);
 
 	playerController = new PlayerController(world->GetMainCamera(), player);

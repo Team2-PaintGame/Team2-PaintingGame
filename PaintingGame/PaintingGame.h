@@ -51,7 +51,7 @@ namespace NCL {
 			PlayerController* playerController;
 			
 			//Create a physics world 
-			reactphysics3d::PhysicsCommon* physicsCommon = NULL;
+			reactphysics3d::PhysicsCommon physicsCommon;
 			reactphysics3d::PhysicsWorld* physicsWorld = NULL; 
 		};
 	}
