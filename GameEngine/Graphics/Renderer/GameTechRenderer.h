@@ -17,7 +17,43 @@ namespace NCL {
 
 		class GameTechRenderer : public OGLRenderer	{
 		public:
-			GameTechRenderer(GameWorld& world);
+
+			class RendererSettings {
+			public:
+				class DebugRendererSettings {
+				public:
+					DebugRendererSettings(reactphysics3d::PhysicsWorld* physicsWorld) : debugRenderer(physicsWorld->getDebugRenderer()) {}
+					void SetIsCollisionShapeDisplayed(bool boolean) {
+						debugRenderer.setIsDebugItemDisplayed(reactphysics3d::DebugRenderer::DebugItem::COLLISION_SHAPE, boolean);
+					}
+					void SetIsBroadPhaseAABBDisplayed(bool boolean) {
+						debugRenderer.setIsDebugItemDisplayed(reactphysics3d::DebugRenderer::DebugItem::COLLIDER_BROADPHASE_AABB, boolean);
+					}
+					reactphysics3d::DebugRenderer& debugRenderer;
+				private:
+					bool isCollisionShapeEnabled = false;
+					bool isBroadPhaseAABBEnabled = false;
+				};
+				RendererSettings(reactphysics3d::PhysicsWorld* physicsWorld) : physicsWorld(physicsWorld), debugRendererSettings(physicsWorld) {};
+
+				void SetIsWireFrameModeEnabled(bool boolean) {
+					isWireFrameModeEnabled = boolean;
+				}
+				void SetIsDebugRenderingModeEnabled(bool boolean) {
+					physicsWorld->setIsDebugRenderingEnabled(boolean);
+				}
+				bool GetIsWireFrameModeEnabled() {
+					return isWireFrameModeEnabled;
+				}
+				bool GetIsDebugRenderingModeEnabled() {
+					return physicsWorld->getIsDebugRenderingEnabled();
+				}
+				DebugRendererSettings debugRendererSettings;
+			private:
+				bool isWireFrameModeEnabled = false;
+				reactphysics3d::PhysicsWorld* physicsWorld;
+			};
+			GameTechRenderer(GameWorld& world, reactphysics3d::PhysicsWorld* physicsWorld);
 			~GameTechRenderer();
 			virtual void Update(float dt);
 			
@@ -29,6 +65,8 @@ namespace NCL {
 			void AddHudTextures(const string& name, const Vector2& position, const Vector2& scale);
 
 			void UseFog(bool val) { useFog = val; }
+
+			RendererSettings settings;
 		protected:
 			void NewRenderLines();
 			void NewRenderText();
@@ -46,6 +84,7 @@ namespace NCL {
 			void RenderSkybox();
 			void RenderSky();
 			void RenderHUD();
+			void RenderDebugInformation(); 
 
 			void SetDebugStringBufferSizes(size_t newVertCount);
 			void SetDebugLineBufferSizes(size_t newVertCount);

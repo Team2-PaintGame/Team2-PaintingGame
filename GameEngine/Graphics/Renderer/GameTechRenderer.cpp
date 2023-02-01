@@ -13,7 +13,7 @@ using namespace CSC8508;
 
 Matrix4 biasMatrix = Matrix4::Translation(Vector3(0.5f, 0.5f, 0.5f)) * Matrix4::Scale(Vector3(0.5f, 0.5f, 0.5f));
 
-GameTechRenderer::GameTechRenderer(GameWorld& world) : OGLRenderer(*Window::GetWindow()), gameWorld(world)	{
+GameTechRenderer::GameTechRenderer(GameWorld& world, reactphysics3d::PhysicsWorld* physicsWorld) : OGLRenderer(*Window::GetWindow()), gameWorld(world), settings(physicsWorld) {
 
 	skybox = new OGLSkybox();
 
@@ -88,19 +88,11 @@ void GameTechRenderer::RenderFrame() {
 	SortObjectList();
 	RenderShadowMap();
 	RenderSkybox();
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	RenderCamera();
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	RenderDebugInformation();
 	RenderHUD();
-	glDisable(GL_CULL_FACE); //Todo - text indices are going the wrong way...
-	glDisable(GL_BLEND);
-	glDisable(GL_DEPTH_TEST);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	NewRenderLines();
 	NewRenderText();
-	glDisable(GL_BLEND);
-	glEnable(GL_DEPTH_TEST);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void GameTechRenderer::Update(float dt) {
@@ -240,7 +232,38 @@ void GameTechRenderer::RenderHUD() {
 	}
 }
 
+void GameTechRenderer::RenderDebugInformation() {
+	if (settings.GetIsDebugRenderingModeEnabled()) {
+		//render triangles
+		int numTri = settings.debugRendererSettings.debugRenderer.getNbTriangles();
+		if (numTri) {
+			const reactphysics3d::DebugRenderer::DebugTriangle* tri = settings.debugRendererSettings.debugRenderer.getTrianglesArray();
+			for (int i = 0; i < numTri; i++) {
+				Debug::DrawTriangle(tri->point1, tri->point2, tri->point3, Debug::YELLOW);
+				tri++;
+			}
+		}
+
+		//render lines
+		int numLines = settings.debugRendererSettings.debugRenderer.getNbLines();
+		if (numLines) {
+			const reactphysics3d::DebugRenderer::DebugLine* line = settings.debugRendererSettings.debugRenderer.getLinesArray();
+			for (int i = 0; i < numLines; i++) {
+				Debug::DrawLine(line->point1, line->point2, Debug::CYAN);
+				line++;
+			}
+		}
+	}
+
+}
+
 void GameTechRenderer::RenderCamera() {
+	if (settings.GetIsWireFrameModeEnabled()) {
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	}
+	else {
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
 	//float screenAspect = (float)windowWidth / (float)windowHeight;
 	Matrix4 viewMatrix = gameWorld.GetMainCamera()->BuildViewMatrix();
 	Matrix4 projMatrix = gameWorld.GetMainCamera()->BuildProjectionMatrix();
@@ -357,6 +380,7 @@ void GameTechRenderer::RenderCamera() {
 			glUniformMatrix4fv(jointsLocation, frameMatrices.size(), false, (float*)frameMatrices.data());
 		}
 	}
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
 MeshGeometry* GameTechRenderer::LoadMesh(const string& name) {

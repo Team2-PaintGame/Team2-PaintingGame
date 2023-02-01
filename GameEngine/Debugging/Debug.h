@@ -27,6 +27,7 @@ namespace NCL {
 
 		static void Print(const std::string& text, const Vector2& pos, const Vector4& colour = Vector4(1, 1, 1, 1));
 		static void DrawLine(const Vector3& startpoint, const Vector3& endpoint, const Vector4& colour = Vector4(1, 1, 1, 1), float time = 0.0f);
+		static void DrawTriangle(const Vector3& v1, const Vector3& v2, const Vector3& v3, const Vector4& colour = Vector4(1, 1, 1, 1), float time = 0.0f);
 
 		static void DrawAxisLines(const Matrix4& modelMatrix, float scaleBoost = 1.0f, float time = 0.0f);
 

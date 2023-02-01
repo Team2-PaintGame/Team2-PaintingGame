@@ -48,7 +48,7 @@ namespace NCL {
 			//Coursework Additional functionality	
 			float remainingTime = 30;
 			PlayerBase* player = NULL;
-			PlayerController* player_controller;
+			PlayerController* playerController;
 			
 			//Create a physics world 
 			reactphysics3d::PhysicsCommon* physicsCommon = NULL;
