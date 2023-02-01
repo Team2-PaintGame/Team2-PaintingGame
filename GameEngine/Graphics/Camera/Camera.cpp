@@ -14,8 +14,6 @@ void Camera::SetBasicCameraParameters(float pitch, float yaw, const Vector3& pos
 
 void Camera::SetFirstPersonCamera() {
 	viewType = ViewType::FirstPerson;
-	distanceFromPlayer = 0.0f;
-	angleAroundPlayer = 0.0f;
 
 	CalculateFirstPersonView();
 }
@@ -23,8 +21,6 @@ void Camera::SetFirstPersonCamera() {
 void Camera::SetThirdPersonCamera(PlayerBase* player, float angleAroundPlayer, float distanceFromPlayer) {
 	viewType = ViewType::ThirdPerson;
 	this->player = player;
-	this->distanceFromPlayer = distanceFromPlayer;
-	this->angleAroundPlayer = angleAroundPlayer;
 
 	CalculateThirdPersonView(true);
 }
@@ -57,39 +53,6 @@ void Camera::UpdateCamera(float dt) {
 	pitch = std::min(pitch, 90.0f);
 	pitch = std::max(pitch, -90.0f);
 
-	if (viewType == ViewType::FirstPerson) {
-		CalculateFirstPersonView();
-	}
-	else if (viewType == ViewType::ThirdPerson) {
-		CalculateThirdPersonView();
-	}
-
-	Matrix4 rotation = Matrix4::Rotation(yaw, Vector3(0, 1, 0));
-	Vector3 forward = rotation * Vector3(0, 0, -1);
-	Vector3 right = rotation * Vector3(1, 0, 0);
-	float speed = 10.0f * dt;
-
-	if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::W)) {
-		position += forward * speed;
-	}
-	if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::S)) {
-		position -= forward * speed;
-	}
-	if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::A)) {
-		position -= right * speed;
-	}
-	if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::D)) {
-		position += right * speed;
-	}
-	if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::SHIFT)) {
-		position.y += speed;
-	}
-	if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::SPACE)) {
-		position.y -= speed;
-	}
-}
-
-void Camera::CalculateFirstPersonView() {
 	yaw -= (Window::GetMouse()->GetRelativePosition().x);
 	if (yaw < 0) {
 		yaw += 360.0f;
@@ -97,37 +60,55 @@ void Camera::CalculateFirstPersonView() {
 	if (yaw > 360.0f) {
 		yaw -= 360.0f;
 	}
+	
+	if (viewType == ViewType::ThirdPerson) {
+		CalculateThirdPersonView();
+	} 
+	else
+	{
+		//Freecam
+		Matrix4 rotation = Matrix4::Rotation(yaw, Vector3(0, 1, 0));
+		Vector3 forward = rotation * Vector3(0, 0, -1);
+		Vector3 right = rotation * Vector3(1, 0, 0);
+		float speed = 10.0f * dt;
+
+		if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::W)) {
+			position += forward * speed;
+		}
+		if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::S)) {
+			position -= forward * speed;
+		}
+		if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::A)) {
+			position -= right * speed;
+		}
+		if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::D)) {
+			position += right * speed;
+		}
+		if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::SHIFT)) {
+			position.y += speed;
+		}
+		if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::SPACE)) {
+			position.y -= speed;
+		}
+	}
 }
 
-void Camera::CalculateThirdPersonView(bool init) {
-	distanceFromPlayer -= Window::GetMouse()->GetWheelMovement() * 0.1f;
-	angleAroundPlayer -= Window::GetMouse()->GetRelativePosition().x;
-	
-	float vDist = distanceFromPlayer * cos(Maths::DegreesToRadians(pitch));
-	float hDist = distanceFromPlayer * sin(Maths::DegreesToRadians(pitch));
+void Camera::CalculateFirstPersonView() {
+}
 
-	//euler angles (x => pitch, y => yaw, z => roll)
-	//yaw angle is the rotation around y axis
+void Camera::CalculateThirdPersonView(bool init) 
+{
+	// Clamp the pitch value further
+	pitch = std::clamp(pitch, -25.0f, 25.0f);
 
-	float theta = Maths::DegreesToRadians(player->GetTransform().GetOrientation().ToEuler().y + angleAroundPlayer);
-	float xOffset = hDist * sin(theta);
-	float zOffset = hDist * cos(theta);
+	Matrix4 rotation = Matrix4::Rotation(yaw, { 0, 1, 0 }) ;
 
-	Vector3 playerPosition = player->GetTransform().GetPosition();
+	Vector3 rotated_offset = rotation * Matrix4::Rotation(pitch, { 1, 0, 0 })* offsetFromPlayer;
 
-	position.x = playerPosition.x - xOffset;
-	position.z = playerPosition.z - zOffset;
-	position.y = playerPosition.y + vDist + 14;
+	Quaternion player_orientation(rotation);
+	player->GetTransform().SetOrientation(player_orientation);
 
-	Matrix4 temp = Matrix4::BuildViewMatrix(position, playerPosition, Vector3(0, 1, 0));
-
-	Matrix4 modelMat = temp.Inverse();
-
-	Quaternion q(modelMat);
-	Vector3 angles = q.ToEuler();
-	if (init) pitch = angles.x;
-	
-	yaw = angles.y;
+	position = player->GetTransform().GetPosition() + rotated_offset;
 }
 
 /*
@@ -137,7 +118,7 @@ straight to the shader...it's already an 'inverse camera' matrix.
 Matrix4 Camera::BuildViewMatrix() const {
 	//Why do a complicated matrix inversion, when we can just generate the matrix
 	//using the negative values ;). The matrix multiplication order is important!
-	return	Matrix4::Translation(-Vector3(0, 0, distanceFromPlayer)) *
+	return	Matrix4::Translation(-offsetFromPlayer) *
 		Matrix4::Rotation(-pitch, Vector3(1, 0, 0)) *
 		Matrix4::Rotation(-yaw, Vector3(0, 1, 0)) *
 		Matrix4::Translation(-position);
@@ -152,7 +133,7 @@ Matrix4 Camera::GenerateInverseView() const {
 		Matrix4::Translation(position) *
 		Matrix4::Rotation(yaw, Vector3(0, 1, 0)) *
 		Matrix4::Rotation(pitch, Vector3(1, 0, 0)) * 
-		Matrix4::Translation(Vector3(0, 0, distanceFromPlayer));
+		Matrix4::Translation(offsetFromPlayer);
 
 	return iview;
 }

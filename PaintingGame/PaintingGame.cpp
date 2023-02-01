@@ -103,6 +103,8 @@ void PaintingGame::UpdateGame(float dt) {
 
 	world->GetMainCamera()->UpdateCamera(dt);
 
+	playerController->Update(dt);
+
 	renderer->Render();
 	world->UpdateWorld(dt);
 	renderer->Update(dt);
@@ -139,6 +141,8 @@ void PaintingGame::InitWorld() {
 void PaintingGame::InitiliazePlayer() {
 	player = new PlayerBase(*physicsCommon, physicsWorld, Vector3(0, 50, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 5);
 	world->AddGameObject(player);
+
+	playerController = new PlayerController(world->GetMainCamera(), player);
 }
 
 

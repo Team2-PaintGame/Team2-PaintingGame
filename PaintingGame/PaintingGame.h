@@ -11,6 +11,7 @@
 #include <Vector3.h>
 #include <RenderObject.h>
 #include <PlayerBase.h>
+#include <PlayerController.h>
 #include <reactphysics3d/reactphysics3d.h>
 
 namespace NCL {
@@ -47,6 +48,7 @@ namespace NCL {
 			//Coursework Additional functionality	
 			float remainingTime = 30;
 			PlayerBase* player = NULL;
+			PlayerController* playerController;
 			
 			//Create a physics world 
 			reactphysics3d::PhysicsCommon* physicsCommon = NULL;
