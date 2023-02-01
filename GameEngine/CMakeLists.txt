@@ -176,6 +176,11 @@ set(Windowing_and_Input__Win32
 )
 source_group("Windowing and Input\\Win32" FILES ${Windowing_and_Input__Win32})
 
+set(Utils
+    "Utils.h"
+)
+source_group("Utils" FILES ${Utils})
+
 set(ALL_FILES
     ${AI_Behaviour_Tree}
     ${AI_Pushdown_Automata}
@@ -197,6 +202,7 @@ set(ALL_FILES
     ${Scene_Terrain}
     ${Windowing_and_Input}
     ${Windowing_and_Input__Win32}
+    ${Utils}
 )
 
 #set_source_files_properties(${ALL_FILES} PROPERTIES LANGUAGE CXX)
