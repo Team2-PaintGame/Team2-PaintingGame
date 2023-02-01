@@ -109,7 +109,10 @@ void PaintingGame::UpdateGame(float dt) {
 
 	world->GetMainCamera()->UpdateCamera(dt);
 
-	playerController->Update(dt);
+	if (thirdPersonCamera)
+	{
+		playerController->Update(dt);
+	}
 
 	renderer->Render();
 	world->UpdateWorld(dt);
