@@ -19,6 +19,7 @@ PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysic
 	rigidBody = physicsWorld->createRigidBody(rp3d_transform);
 	rigidBody->addCollider(boundingVolume, rp3d::Transform::identity()); //collider
 	rigidBody->updateMassPropertiesFromColliders();
+	rigidBody->setLinearDamping(1.5f);
 }
 
 void PlayerBase::Update(float dt) {}
