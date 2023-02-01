@@ -4,7 +4,7 @@
 
 using namespace NCL;
 
-PlayerController::PlayerController(Camera* cam, GameObject* player) : camera(cam), player_object(player)
+PlayerController::PlayerController(Camera* cam, GameObject* player) : camera(cam), playerObject(player)
 {
 
 }
@@ -36,19 +36,19 @@ void PlayerController::UpdateKeys()
 	float side_damping = 0.33f;
 
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::W)) {
-		player_object->GetRigidBody()->applyWorldForceAtCenterOfMass( fwdAxis * force);
+		playerObject->GetRigidBody()->applyWorldForceAtCenterOfMass( fwdAxis * force);
 	}
 
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::S)) {
-		player_object->GetRigidBody()->applyWorldForceAtCenterOfMass(-fwdAxis * force);
+		playerObject->GetRigidBody()->applyWorldForceAtCenterOfMass(-fwdAxis * force);
 	}
 
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::A)) {
-		player_object->GetRigidBody()->applyWorldForceAtCenterOfMass(-rightAxis3d * force * (1 - side_damping));
+		playerObject->GetRigidBody()->applyWorldForceAtCenterOfMass(-rightAxis3d * force * (1 - side_damping));
 	}
 
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::D)) {
-		player_object->GetRigidBody()->applyWorldForceAtCenterOfMass(rightAxis3d * force * (1 - side_damping));
+		playerObject->GetRigidBody()->applyWorldForceAtCenterOfMass(rightAxis3d * force * (1 - side_damping));
 	}
 }
 
