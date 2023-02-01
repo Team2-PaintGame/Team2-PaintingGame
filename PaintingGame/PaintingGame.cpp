@@ -10,7 +10,14 @@ using namespace CSC8508;
 PaintingGame::PaintingGame() {
 	world = new GameWorld();
 
-	physicsWorld = physicsCommon.createPhysicsWorld();
+	/* Code for changing physics system paramaters
+	// Create the world settings 
+	PhysicsWorld::WorldSettings settings; 
+	settings.defaultVelocitySolverNbIterations = 20; 
+	settings.isSleepingEnabled = false; 
+	settings.gravity = Vector3(0,-9.81, 0);
+	*/
+	physicsWorld = physicsCommon.createPhysicsWorld(/*settings*/);
 
 #ifdef USEVULKAN
 	renderer = new GameTechVulkanRenderer(*world);
