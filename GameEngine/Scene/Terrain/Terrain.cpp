@@ -16,11 +16,15 @@ Terrain::Terrain(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::P
 	renderObject->AddTexture(texturePack.bgTex, "bgTex");
 	renderObject->AddTexture(texturePack.splatMap, "splatMapTex");
 
-	/*boundingVolume = physicsCommon.createBoxShape(rp3d::Vector3(size / 2.0f, size / 2.0f, size / 2.0f));
-	reactphysics3d::Transform rp3d_transform(rp3d::Vector3(position.x, position.y, position.z), rp3d::Quaternion::identity());
+	//boundingVolume = physicsCommon.createHeightFieldShape(/* IMPORTANT: set params*/);
+	/*reactphysics3d::Transform rp3d_transform(rp3d::Vector3(position.x, position.y, position.z), rp3d::Quaternion::identity());
 
 	// Create a rigid body in the physics world
 	rigidBody = physicsWorld->createRigidBody(rp3d_transform);
 	rigidBody->addCollider(boundingVolume, rp3d::Transform::identity()); //collider
 	rigidBody->updateMassPropertiesFromColliders();*/
+}
+
+Terrain::~Terrain(void) {
+	//physicsCommon.destroyHeightFieldShape(boundingVolume);
 }

@@ -15,9 +15,9 @@ namespace NCL {
 	class Terrain: public GameObject {
 	public:
 		Terrain(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector2 gridPosition, MeshGeometry* mesh, TerrainTexturePack texturePack, ShaderBase* shader, int size = 200);
-		~Terrain(void) {
-		};
+		~Terrain(void);
 	protected:
+		rp3d::HeightFieldShape* boundingVolume;
 	};
 };
 
