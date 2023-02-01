@@ -26,16 +26,12 @@ namespace NCL {
 					void SetIsCollisionShapeDisplayed(bool boolean) {
 						debugRenderer.setIsDebugItemDisplayed(reactphysics3d::DebugRenderer::DebugItem::COLLISION_SHAPE, boolean);
 					}
-					void SetIsContactPointDisplayed(bool boolean) {
-						debugRenderer.setIsDebugItemDisplayed(reactphysics3d::DebugRenderer::DebugItem::CONTACT_POINT, boolean);
-					}
 					void SetIsBroadPhaseAABBDisplayed(bool boolean) {
 						debugRenderer.setIsDebugItemDisplayed(reactphysics3d::DebugRenderer::DebugItem::COLLIDER_BROADPHASE_AABB, boolean);
 					}
 					reactphysics3d::DebugRenderer& debugRenderer;
 				private:
 					bool isCollisionShapeEnabled = false;
-					bool isContactPointEnabled = false;
 					bool isBroadPhaseAABBEnabled = false;
 				};
 				RendererSettings(reactphysics3d::PhysicsWorld* physicsWorld) : physicsWorld(physicsWorld), debugRendererSettings(physicsWorld) {};
