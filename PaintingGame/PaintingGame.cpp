@@ -33,7 +33,7 @@ PaintingGame::PaintingGame() {
 	physicsWorld->setIsGravityEnabled(useGravity);
 	renderer->UseFog(useFog);
 
-	renderer->settings.SetIsDebugRenderingModeEnabled(false);
+	renderer->settings.SetIsDebugRenderingModeEnabled(true);
 	renderer->settings.debugRendererSettings.SetIsCollisionShapeDisplayed(true);
 	renderer->settings.debugRendererSettings.SetIsBroadPhaseAABBDisplayed(true);
 }
@@ -163,4 +163,10 @@ PlayerBase* PaintingGame::InitiliazePlayer() {
 	return player;
 }
 
+PlayerBase* PaintingGame::InitialiseNetworkPlayer() {
+	
+	netPlayer = new PlayerBase(physicsCommon, physicsWorld, Vector3(0, 50, 10), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 5);
+	world->AddGameObject(netPlayer);
+	return netPlayer;
+}
 

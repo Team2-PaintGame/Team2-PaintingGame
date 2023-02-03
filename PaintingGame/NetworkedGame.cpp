@@ -53,79 +53,107 @@ void NetworkedGame::StartAsClient(char a, char b, char c, char d) {
 	thisClient->RegisterPacketHandler(Full_State, this);
 	thisClient->RegisterPacketHandler(Player_Connected, this);
 	thisClient->RegisterPacketHandler(Player_Disconnected, this);
+	thisClient->RegisterPacketHandler(Spawn_Player, this);
 
 	thisClient->RegisterPacketHandler(Confirm_Spawn, this);
 	thisClient->RegisterPacketHandler(Server_Update, this);
 	thisClient->RegisterPacketHandler(String_Message, this);
 
-	// Send packet to Server to create character
-
-	StartLevel();
 }
 
 void NetworkedGame::UpdateGame(float dt) {
 	timeToNextPacket -= dt;
 	if (timeToNextPacket < 0) {
 		if (thisServer) {
-			StringPacket serverPacket = "Server says hello!" + std::to_string(1);
-			thisServer->SendGlobalPacket(serverPacket);
+			/*StringPacket serverPacket = "Server says hello!" + std::to_string(1);
+			thisServer->SendGlobalPacket(serverPacket);*/
 			std::cout << "Server: sending packet" << std::endl;
 			UpdateAsServer(dt);
 		}
 		else if (thisClient) {
-			StringPacket clientPacket = "Client says hello!" + std::to_string(1);
-			thisClient->SendPacket(clientPacket);
+			/*StringPacket clientPacket = "Client says hello!" + std::to_string(1);
+			thisClient->SendPacket(clientPacket);*/
 			std::cout << "Client: sending packet" << std::endl;
 			UpdateAsClient(dt);
 		}
 		timeToNextPacket += 1.0f / 60.0f; //60hz server/client update
 	}
 
+	if((thisClient && connected) || thisServer)
 	PaintingGame::UpdateGame(dt);
 }
 
 void NetworkedGame::UpdateAsServer(float dt) {
-	packetsToSnapshot--;
-	if (packetsToSnapshot < 0) {
-		BroadcastSnapshot(false);
-		packetsToSnapshot = 5;
-	}
-	else {
-		BroadcastSnapshot(true);
-	}
+	//packetsToSnapshot--;
+	//if (packetsToSnapshot < 0) {
+	//	BroadcastSnapshot(false);
+	//	packetsToSnapshot = 5;
+	//}
+	//else {
+	//	BroadcastSnapshot(true);
+	//}
+	ServerPacket packet;
+	packet.orientation = ServerPlayer->GetTransform().GetOrientation();
+	packet.position = ServerPlayer->GetTransform().GetPosition();
+	packet.playerID = ServerPlayerID;
+	thisServer->SendGlobalPacket(packet);
 	thisServer->UpdateServer();
 }
 
 void NetworkedGame::UpdateAsClient(float dt) {
-
-	//if (ClientPlayerID != -1)
-	//{
-		ClientPacket newPacket(ClientPlayerID, ClientPlayer->GetTransform().GetPosition());
-		thisClient->SendPacket(newPacket);
-	//}
-
+	if (thisClient->okToSpawn)
+	{
+		StartLevel();
+		thisClient->okToSpawn = false;
+		connected = true;
+	}
+	else if(connected) {
+		ClientPacket packet;
+		packet.orientation = ClientPlayer->GetTransform().GetOrientation();
+		packet.position = ClientPlayer->GetTransform().GetPosition();
+		packet.playerID = ClientPlayerID;
+		thisClient->SendPacket(packet);
+	}
 	thisClient->UpdateClient();
 }
 
-void NetworkedGame::ServerCreateClientPlayer()
+void NetworkedGame::ServerCreateClientPlayer(SpawnPacket* payload)
 {
 	// Server create client player and send packet
 	// back to client to create server character
+	ClientPlayer = InitialiseNetworkPlayer();
+	ClientPlayer->GetTransform().SetPosition(payload->position);
+	ClientPlayerID = payload->playerID;
+	SpawnPacket packet;
+	packet.playerID = ServerPlayerID;
+	packet.position = ServerPlayer->GetTransform().GetPosition();
+	thisServer->SendGlobalPacket(packet);
+	thisServer->UpdateServer();
 }
 
-void NetworkedGame::ClientCreateServerPlayer(ConfSpawnPacket* payload)
+void NetworkedGame::ClientCreateServerPlayer(SpawnPacket* payload)
 {
 	// client creates server player
+	ServerPlayer = InitialiseNetworkPlayer();
+	ServerPlayerID = payload->playerID;
 }
 
-void NetworkedGame::EnactClientUpdatesOnServer()
+void NetworkedGame::EnactClientUpdatesOnServer(ClientPacket* payload)
 {
 	// any changes to server character or other objects to update client
+	if (ClientPlayer) {
+		ClientPlayer->GetTransform().SetOrientation(payload->orientation);
+		ClientPlayer->GetTransform().SetPosition(payload->position);
+	}
 }
 
-void NetworkedGame::EnactServerUpdatesOnClient()
+void NetworkedGame::EnactServerUpdatesOnClient(ServerPacket* payload)
 {
 	// any changes from client to update server
+	if (ServerPlayer) {
+		ServerPlayer->GetTransform().SetOrientation(payload->orientation);
+		ServerPlayer->GetTransform().SetPosition(payload->position);
+	}
 }
 
 void NetworkedGame::BroadcastSnapshot(bool deltaFrame) {
@@ -182,11 +210,14 @@ void NetworkedGame::SpawnPlayer() {
 		// send to server that player has been spawned
 		ClientPlayer = InitiliazePlayer();
 		ClientPlayerID = 2;
+		SpawnPacket packet;
+		packet.position = ClientPlayer->GetTransform().GetPosition();
+		packet.playerID = ClientPlayerID;
+		thisClient->SendPacket(packet);
 	}
 }
 
 void NetworkedGame::StartLevel() {
-	//InitialiseAssets();
 	SpawnPlayer();
 	if (thisServer) {
 		world->GetMainCamera()->SetThirdPersonCamera(ServerPlayer);
@@ -207,24 +238,24 @@ void NetworkedGame::ReceivePacket(int type, GamePacket* payload, int source) {
 		return;
 	}
 	if (thisServer) {
+		std::cout << "Server: " << payload->type << std::endl;
 		switch (payload->type) {
 		case Spawn_Player:
-			ServerCreateClientPlayer();
+			ServerCreateClientPlayer((SpawnPacket*) payload);
+			std::cout << "SPAWN Packet recieved ))))))))))))))";
 			break;
 		case Client_Update:
-			int id = ((ClientPacket*)payload)->GetPlayerID();
-			Vector3 pos = ((ClientPacket*)payload)->GetPosition();
-			EnactClientUpdatesOnServer();
+			EnactClientUpdatesOnServer((ClientPacket*) payload);
 			break;
 		}
 	}
 	else if (thisClient) {
 		switch (payload->type) {
-		case Confirm_Spawn:
-			ClientCreateServerPlayer((ConfSpawnPacket*) payload);
+		case Spawn_Player:
+			ClientCreateServerPlayer((SpawnPacket*) payload);
 			break;
 		case Server_Update:
-			EnactServerUpdatesOnClient();
+			EnactServerUpdatesOnClient((ServerPacket*) payload);
 			break;
 		case Full_State:
 			// something here

@@ -26,6 +26,7 @@ namespace NCL {
 			void InitCamera();
 			void InitWorld();
 			PlayerBase* InitiliazePlayer();
+			PlayerBase* InitialiseNetworkPlayer();
 #ifdef USEVULKAN
 			GameTechVulkanRenderer* renderer;
 #else
@@ -51,6 +52,7 @@ namespace NCL {
 			//Coursework Additional functionality	
 			float remainingTime = 30;
 			PlayerBase* player = NULL;
+			PlayerBase* netPlayer = NULL;
 			PlayerController* playerController;
 			
 			//Create a physics world 

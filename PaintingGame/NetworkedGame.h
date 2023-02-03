@@ -33,13 +33,13 @@ namespace NCL {
 			void UpdateAsServer(float dt);
 			void UpdateAsClient(float dt);
 
-			void ServerCreateClientPlayer();
+			void ServerCreateClientPlayer(SpawnPacket* payload);
 
-			void ClientCreateServerPlayer(ConfSpawnPacket* payload);
+			void ClientCreateServerPlayer(SpawnPacket* payload);
 
-			void EnactClientUpdatesOnServer();
+			void EnactClientUpdatesOnServer(ClientPacket* payload);
 
-			void EnactServerUpdatesOnClient();
+			void EnactServerUpdatesOnClient(ServerPacket* payload);
 
 
 			void BroadcastSnapshot(bool deltaFrame);
@@ -58,6 +58,8 @@ namespace NCL {
 			PlayerBase* ClientPlayer;
 			int ServerPlayerID;
 			int ClientPlayerID;
+
+			bool connected = false;
 		};
 	}
 }
