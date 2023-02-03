@@ -1,8 +1,11 @@
 #include <Window.h>
+#include "Debug.h"
+
 #include "PaintingGame.h"
 #include <imgui_impl_win32.h>
 #include <imgui_impl_opengl3.h>
 #include <Win32Window.h>
+#include "NetworkedGame.h"
 
 using namespace NCL;
 using namespace CSC8508;
@@ -16,6 +19,20 @@ int main() {
 
 	w->ShowOSPointer(true);
 	w->LockMouseToWindow(true);
+	w->GetTimer()->GetTimeDeltaSeconds(); //Clear the timer so we don't get a larget first dt!
+
+	bool started = false;
+	NetworkedGame g;
+	while (w->UpdateWindow() && !started) {
+		if (w->GetKeyboard()->KeyPressed(KeyboardKeys::NUM1)) {
+			g.StartAsClient(127, 0, 0, 1);
+			started = true;
+		}
+		if (w->GetKeyboard()->KeyPressed(KeyboardKeys::NUM3)) {
+			g.StartAsServer();
+			started = true;
+		}
+	}
 
 	PaintingGame g;
 	w->GetTimer()->GetTimeDeltaSeconds(); //Clear the timer so we don't get a larget first dt!

@@ -15,9 +15,13 @@ enum BasicNetworkMessages {
 	Delta_State,	//1 byte per channel since the last state
 	Full_State,		//Full transform etc
 	Received_State, //received from a client, informs that its received packet n
-	Player_Connected,
+	Player_Connected,// client connected
 	Player_Disconnected,
-	Shutdown
+	Shutdown,
+	Spawn_Player,
+	Confirm_Spawn,
+	Client_Update,
+	Server_Update,
 };
 
 struct GamePacket {

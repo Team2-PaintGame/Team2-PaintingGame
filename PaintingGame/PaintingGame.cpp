@@ -30,6 +30,8 @@ PaintingGame::PaintingGame() {
 
 	InitialiseAssets();
 	physicsWorld->setIsGravityEnabled(useGravity);
+	physics->UseGravity(useGravity);
+	physics->UseGravity(useGravity);
 	renderer->UseFog(useFog);
 
 	renderer->settings.SetIsDebugRenderingModeEnabled(false);
@@ -77,9 +79,8 @@ void PaintingGame::InitialiseAssets() {
 	//renderer->AddHudTextures("wolf_color.png", Vector2(0.5,0.5), Vector2(0.25,0.25));
 	//renderer->AddHudTextures("wolf_color.png", Vector2(-0.5, 0.5), Vector2(0.25, 0.25));
 
-
-	InitWorld();
 	InitCamera();
+	InitWorld();
 }
 
 PaintingGame::~PaintingGame() {
@@ -123,8 +124,6 @@ void PaintingGame::UpdateGame(float dt) {
 	Debug::UpdateRenderables(dt);
 }
 
-void PaintingGame::InitCamera() {
-	world->GetMainCamera()->SetBasicCameraParameters(-15.0f, 315.0f, Vector3(-60, 40, 60), 0.1f, 500.0f);
 
 	if (thirdPersonCamera) {
 		world->GetMainCamera()->SetThirdPersonCamera(player);
@@ -133,6 +132,8 @@ void PaintingGame::InitCamera() {
 		world->GetMainCamera()->SetFirstPersonCamera();
 	}
 
+	world->GetMainCamera()->SetBasicCameraParameters(-15.0f, 315.0f, Vector3(-60, 40, 60), 0.1f, 500.0f);
+	world->GetMainCamera()->SetThirdPersonCamera(player);
 	world->GetMainCamera()->SetPerspectiveCameraParameters(Window::GetWindow()->GetScreenAspect());
 }
 
@@ -145,20 +146,23 @@ void PaintingGame::InitWorld() {
 	//world->AddGameObject(new Terrain(*physicsCommon, physicsWorld, Vector2(), meshes.at("terrainMesh"), terrainTexturePack, shaders.at("terrainShader")));
 	//world->AddGameObject(new Terrain(*physicsCommon, physicsWorld, Vector2(0, 1), meshes.at("terrainMesh"), terrainTexturePack, shaders.at("terrainShader")));
 
-	InitiliazePlayer();
+	//InitiliazePlayer();
 
 	world->AddGameObject(new Floor(physicsCommon, physicsWorld, Vector3(0, 0, 0), meshes.at("cubeMesh"), textures.at("basicTex"), shaders.at("basicShader"), 200));
 
 	for (int x = 0; x < 15; ++x) {
 		world->AddGameObject(new Box(physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 2));
 	}
-}
-
 void PaintingGame::InitiliazePlayer() {
 	player = new PlayerBase(physicsCommon, physicsWorld, Vector3(0, 50, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 5);
-	world->AddGameObject(player);
+PlayerBase* PaintingGame::InitiliazePlayer() {
+	player = new PlayerBase(Vector3(0, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 3);
+void PaintingGame::InitiliazePlayer() {
 
 	playerController = new PlayerController(world->GetMainCamera(), player);
+	return player;
+	player = new PlayerBase(Vector3(0, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 3);
+	world->AddGameObject(player);
 }
 
 
