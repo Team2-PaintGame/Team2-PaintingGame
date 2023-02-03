@@ -29,7 +29,7 @@ int main() {
 
 	//Init OpenGL Imgui Implementation
 	ImGui_ImplOpenGL3_Init();
-	kk
+
 	// Setup style
 	ImGui::StyleColorsClassic();
 
