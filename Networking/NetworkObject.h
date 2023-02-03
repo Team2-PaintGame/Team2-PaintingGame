@@ -30,10 +30,51 @@ namespace NCL::CSC8508 {
 
 	struct ClientPacket : public GamePacket {
 		int		lastID;
-		char	buttonstates[8];
+		int playerID;
+		Vector3	position;
 
-		ClientPacket() {
+		ClientPacket(int id, Vector3 pos) {
+			playerID = id;
+			position = pos;
+			type = Client_Update;
 			size = sizeof(ClientPacket);
+		}
+
+		Vector3 GetPosition() {
+			return position;
+		}
+
+		int GetPlayerID() {
+			return playerID;
+		}
+	};
+
+	struct ConfSpawnPacket : public GamePacket {
+		int lastID;
+		int playerID;
+		Vector3	position;
+
+		std::vector<int> existingPlayers;
+
+		ConfSpawnPacket(int id) {
+			playerID = id;
+			type = Confirm_Spawn;
+			size = sizeof(ConfSpawnPacket);
+		}
+
+		int GetID() {
+			return playerID;
+		}
+	};
+
+	struct ServerPacket : public GamePacket {
+		int lastID;
+		int playerID;
+		Vector3 playerPos;
+
+		ServerPacket() {
+			type = Server_Update;
+			size = sizeof(ServerPacket);
 		}
 	};
 

@@ -26,7 +26,7 @@ namespace NCL {
 			void InitialiseAssets();
 			void InitCamera();
 			void InitWorld();
-			void InitiliazePlayer();
+			PlayerBase* InitiliazePlayer();
 #ifdef USEVULKAN
 			GameTechVulkanRenderer* renderer;
 #else

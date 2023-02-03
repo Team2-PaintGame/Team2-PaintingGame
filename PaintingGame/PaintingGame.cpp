@@ -18,7 +18,6 @@ PaintingGame::PaintingGame() {
 	physicsCommon = new reactphysics3d::PhysicsCommon();
 	p_world = physicsCommon->createPhysicsWorld();
 
-	InitialiseAssets();
 	physics->UseGravity(useGravity);
 	renderer->UseFog(useFog);
 }
@@ -63,9 +62,8 @@ void PaintingGame::InitialiseAssets() {
 	//renderer->AddHudTextures("wolf_color.png", Vector2(0.5,0.5), Vector2(0.25,0.25));
 	//renderer->AddHudTextures("wolf_color.png", Vector2(-0.5, 0.5), Vector2(0.25, 0.25));
 
-
-	InitWorld();
 	InitCamera();
+	InitWorld();
 }
 
 PaintingGame::~PaintingGame() {
@@ -110,7 +108,6 @@ void PaintingGame::UpdateGame(float dt) {
 
 void PaintingGame::InitCamera() {
 	world->GetMainCamera()->SetBasicCameraParameters(-15.0f, 315.0f, Vector3(-60, 40, 60), 0.1f, 500.0f);
-	world->GetMainCamera()->SetThirdPersonCamera(player);
 	world->GetMainCamera()->SetPerspectiveCameraParameters(Window::GetWindow()->GetScreenAspect());
 }
 
@@ -124,7 +121,7 @@ void PaintingGame::InitWorld() {
 	world->AddGameObject(new Terrain(Vector2(), meshes.at("terrainMesh"), terrainTexturePack, shaders.at("terrainShader")));
 	world->AddGameObject(new Terrain(Vector2(0, 1), meshes.at("terrainMesh"), terrainTexturePack, shaders.at("terrainShader")));
 
-	InitiliazePlayer();
+	//InitiliazePlayer();
 
 	//Create a rigid body in the world 
 	reactphysics3d::Vector3 position(0, 20, 0);
@@ -143,9 +140,10 @@ void PaintingGame::InitWorld() {
 	}
 }
 
-void PaintingGame::InitiliazePlayer() {
+PlayerBase* PaintingGame::InitiliazePlayer() {
 	player = new PlayerBase(Vector3(0, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 3);
 	world->AddGameObject(player);
+	return player;
 }
 
 

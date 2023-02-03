@@ -2,6 +2,8 @@
 #include "PaintingGame.h"
 #include <NetworkBase.h>
 #include <NetworkObject.h>
+#include "GameClient.h"
+#include "GameServer.h"
 
 namespace NCL {
 	namespace CSC8508 {
@@ -31,6 +33,15 @@ namespace NCL {
 			void UpdateAsServer(float dt);
 			void UpdateAsClient(float dt);
 
+			void ServerCreateClientPlayer();
+
+			void ClientCreateServerPlayer(ConfSpawnPacket* payload);
+
+			void EnactClientUpdatesOnServer();
+
+			void EnactServerUpdatesOnClient();
+
+
 			void BroadcastSnapshot(bool deltaFrame);
 			void UpdateMinimumState();
 			std::map<int, int> stateIDs;
@@ -43,7 +54,10 @@ namespace NCL {
 			std::vector<NetworkObject*> networkObjects;
 
 			std::map<int, GameObject*> serverPlayers;
-			GameObject* localPlayer;
+			PlayerBase* ServerPlayer;
+			PlayerBase* ClientPlayer;
+			int ServerPlayerID;
+			int ClientPlayerID;
 		};
 	}
 }
