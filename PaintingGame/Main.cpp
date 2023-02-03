@@ -34,7 +34,7 @@ int main() {
 		}
 	}
 
-	PaintingGame g;
+	//PaintingGame g;
 	w->GetTimer()->GetTimeDeltaSeconds(); //Clear the timer so we don't get a larget first dt!
 
 	IMGUI_CHECKVERSION();

@@ -17,9 +17,12 @@ struct MessagePacket : public GamePacket {
 	}
 };
 
-NetworkedGame::NetworkedGame()	{
+NetworkedGame::NetworkedGame() {
 	thisServer = nullptr;
 	thisClient = nullptr;
+
+	is_Networked = true;
+	thirdPersonCamera = true;
 
 	NetworkBase::Initialise();
 	timeToNextPacket  = 0.0f;
@@ -183,7 +186,7 @@ void NetworkedGame::SpawnPlayer() {
 }
 
 void NetworkedGame::StartLevel() {
-	InitialiseAssets();
+	//InitialiseAssets();
 	SpawnPlayer();
 	if (thisServer) {
 		world->GetMainCamera()->SetThirdPersonCamera(ServerPlayer);
@@ -211,20 +214,21 @@ void NetworkedGame::ReceivePacket(int type, GamePacket* payload, int source) {
 		case Client_Update:
 			int id = ((ClientPacket*)payload)->GetPlayerID();
 			Vector3 pos = ((ClientPacket*)payload)->GetPosition();
-			EnactClientUpdates();
+			EnactClientUpdatesOnServer();
 			break;
 		}
 	}
 	else if (thisClient) {
 		switch (payload->type) {
 		case Confirm_Spawn:
-			ClientCreateServerPlayer();
+			ClientCreateServerPlayer((ConfSpawnPacket*) payload);
 			break;
 		case Server_Update:
-			EnactServerUpdates();
+			EnactServerUpdatesOnClient();
 			break;
 		case Full_State:
 			// something here
+			break;
 		}
 	}
 }

@@ -37,6 +37,8 @@ namespace NCL {
 			bool useFog = true;
 			bool thirdPersonCamera;
 
+			bool is_Networked;
+
 			float		forceMagnitude;
 
 			std::map<std::string, MeshGeometry*> meshes;

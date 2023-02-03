@@ -95,7 +95,7 @@ void GameTechRenderer::RenderFrame() {
 	RenderHUD();
 	NewRenderLines();
 	NewRenderText();
-	RenderGUI();
+	//RenderGUI();
 }
 
 void GameTechRenderer::Update(float dt) {

@@ -18,6 +18,7 @@ PaintingGame::PaintingGame() {
 	settings.gravity = Vector3(0,-9.81, 0);
 	*/
 	thirdPersonCamera = false;
+	is_Networked = false;
 
 	physicsWorld = physicsCommon.createPhysicsWorld(/*settings*/);
 
@@ -30,8 +31,6 @@ PaintingGame::PaintingGame() {
 
 	InitialiseAssets();
 	physicsWorld->setIsGravityEnabled(useGravity);
-	physics->UseGravity(useGravity);
-	physics->UseGravity(useGravity);
 	renderer->UseFog(useFog);
 
 	renderer->settings.SetIsDebugRenderingModeEnabled(false);
@@ -79,6 +78,7 @@ void PaintingGame::InitialiseAssets() {
 	//renderer->AddHudTextures("wolf_color.png", Vector2(0.5,0.5), Vector2(0.25,0.25));
 	//renderer->AddHudTextures("wolf_color.png", Vector2(-0.5, 0.5), Vector2(0.25, 0.25));
 
+
 	InitCamera();
 	InitWorld();
 }
@@ -124,16 +124,16 @@ void PaintingGame::UpdateGame(float dt) {
 	Debug::UpdateRenderables(dt);
 }
 
-
+void PaintingGame::InitCamera()
+{
 	if (thirdPersonCamera) {
-		world->GetMainCamera()->SetThirdPersonCamera(player);
+		//world->GetMainCamera()->SetThirdPersonCamera(player);
 	}
 	else {
 		world->GetMainCamera()->SetFirstPersonCamera();
 	}
 
 	world->GetMainCamera()->SetBasicCameraParameters(-15.0f, 315.0f, Vector3(-60, 40, 60), 0.1f, 500.0f);
-	world->GetMainCamera()->SetThirdPersonCamera(player);
 	world->GetMainCamera()->SetPerspectiveCameraParameters(Window::GetWindow()->GetScreenAspect());
 }
 
@@ -153,16 +153,14 @@ void PaintingGame::InitWorld() {
 	for (int x = 0; x < 15; ++x) {
 		world->AddGameObject(new Box(physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 2));
 	}
-void PaintingGame::InitiliazePlayer() {
-	player = new PlayerBase(physicsCommon, physicsWorld, Vector3(0, 50, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 5);
-PlayerBase* PaintingGame::InitiliazePlayer() {
-	player = new PlayerBase(Vector3(0, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 3);
-void PaintingGame::InitiliazePlayer() {
+}
 
+
+PlayerBase* PaintingGame::InitiliazePlayer() {
+	player = new PlayerBase(physicsCommon, physicsWorld, Vector3(0, 50, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 5);
+	world->AddGameObject(player);
 	playerController = new PlayerController(world->GetMainCamera(), player);
 	return player;
-	player = new PlayerBase(Vector3(0, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 3);
-	world->AddGameObject(player);
 }
 
 
