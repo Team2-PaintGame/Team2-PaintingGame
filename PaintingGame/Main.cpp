@@ -56,8 +56,8 @@ int main() {
 	}
 	
 	// Cleanup
-	Window::DestroyGameWindow();
-	/*ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
-	ImGui_ImplWin32_Shutdown();*/
+	Window::DestroyGameWindow();
 }
