@@ -109,10 +109,9 @@ void Camera::CalculateThirdPersonView(bool init)
 	Quaternion player_orientation(rotation);
 	player->GetTransform().SetOrientation(player_orientation);
 
-	reactphysics3d::Transform tr =  player->GetRigidBody()->getTransform();
-	reactphysics3d::Transform tr2 = reactphysics3d::Transform(tr.getPosition(), ~player_orientation);
-
-	player->GetRigidBody()->setTransform(tr2);
+	// Change the bounding volume orientation as well
+	reactphysics3d::Transform newRBTransform = reactphysics3d::Transform(player->GetRigidBody()->getTransform().getPosition(), ~player_orientation);
+	player->GetRigidBody()->setTransform(newRBTransform);
 
 	position = player->GetTransform().GetPosition() + rotated_offset;
 }
