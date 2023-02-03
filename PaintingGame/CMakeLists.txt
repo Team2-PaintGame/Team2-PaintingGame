@@ -29,10 +29,31 @@ set(GameObjects
 )
 source_group("Game Objects" FILES ${GameObjects})
 
+set(ImGui
+    "../Middleware/ImGui/imgui.cpp"
+    "../Middleware/ImGui/imgui.h"
+    "../Middleware/ImGui/imgui_demo.cpp"
+    "../Middleware/ImGui/imgui_draw.cpp"
+    "../Middleware/ImGui/imgui_impl_opengl3.cpp"
+    "../Middleware/ImGui/imgui_impl_opengl3.h"
+    "../Middleware/ImGui/imgui_impl_opengl3_loader.h"
+    "../Middleware/ImGui/imgui_impl_win32.cpp"
+    "../Middleware/ImGui/imgui_impl_win32.h"
+    "../Middleware/ImGui/imgui_internal.h"
+    "../Middleware/ImGui/imgui_widgets.cpp" 
+    "../Middleware/ImGui/imgui_tables.cpp" 
+    "../Middleware/ImGui/imstb_rectpack.h" 
+    "../Middleware/ImGui/imstb_textedit.h" 
+    "../Middleware/ImGui/imstb_truetype.h" 
+     "../Middleware/ImGui/imconfig.h" 
+)
+source_group("ImGui Files" FILES ${ImGui})
+
 set(ALL_FILES
     ${Header_Files}
     ${Source_Files}
     ${GameObjects}
+    ${ImGui}
 )
 
 if(USE_VULKAN)
@@ -112,6 +133,7 @@ if(MSVC)
         "_WINSOCK2API_"
         "_WINSOCK_DEPRECATED_NO_WARNINGS"
         "NOMINMAX"
+        "_CRT_SECURE_NO_WARNINGS;"
     )
 endif()
 
@@ -202,6 +224,7 @@ include_directories("../GameEngine/AI/BehaviorTrees/")
 include_directories("../GameEngine/AI/PathFinding/")
 include_directories("../GameEngine/AI/PushdownAutomata/")
 include_directories("../GameEngine/AI/StateMachine/")
+include_directories("../Middleware/ImGui/")
 
 target_link_libraries(${PROJECT_NAME} LINK_PUBLIC GameEngine)
 target_link_libraries(${PROJECT_NAME} LINK_PUBLIC OpenGLRendering)

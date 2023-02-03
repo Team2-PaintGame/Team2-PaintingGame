@@ -1,5 +1,8 @@
 #include <Window.h>
 #include "PaintingGame.h"
+#include <imgui_impl_win32.h>
+#include <imgui_impl_opengl3.h>
+#include <Win32Window.h>
 
 using namespace NCL;
 using namespace CSC8508;
@@ -16,6 +19,20 @@ int main() {
 
 	PaintingGame g;
 	w->GetTimer()->GetTimeDeltaSeconds(); //Clear the timer so we don't get a larget first dt!
+
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+
+	//Init Win32
+	ImGui_ImplWin32_Init(dynamic_cast<NCL::Win32Code::Win32Window*>(w)->GetHandle());
+
+	//Init OpenGL Imgui Implementation
+	ImGui_ImplOpenGL3_Init();
+
+	// Setup style
+	ImGui::StyleColorsClassic();
+
 	while (w->UpdateWindow() && !Window::GetKeyboard()->KeyDown(KeyboardKeys::ESCAPE)) {
 		float time = w->GetTimer()->GetTotalTimeSeconds();
 		float dt = w->GetTimer()->GetTimeDeltaSeconds();
@@ -35,9 +52,12 @@ int main() {
 		}
 
 		w->SetTitle("Gametech frame time:" + std::to_string(1000.0f * dt));
-
 		g.UpdateGame(dt);
-		//g.menuSystem.Update(dt);
 	}
+	
+	// Cleanup
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
 	Window::DestroyGameWindow();
 }

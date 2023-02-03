@@ -263,7 +263,7 @@ if(MSVC)
 endif()
 
 if(WIN32) 
-    list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../ReactPhysics3D") 
+    list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../Middleware/ReactPhysics3D") 
 endif() 
 
 #Import the ReactPhysics3D library 
@@ -290,6 +290,7 @@ include_directories("AI/PathFinding/")
 include_directories("AI/PushdownAutomata/")
 include_directories("AI/StateMachine/")
 include_directories("../OpenGLRendering/")
+include_directories("../Middleware/ImGui/")
 
 set(ADDITIONAL_LIBRARY_DEPENDENCIES
     "ReactPhysics3D::ReactPhysics3D"

@@ -85,6 +85,7 @@ namespace NCL {
 			void RenderSky();
 			void RenderHUD();
 			void RenderDebugInformation(); 
+			void RenderGUI(bool showWindow = true);
 
 			void SetDebugStringBufferSizes(size_t newVertCount);
 			void SetDebugLineBufferSizes(size_t newVertCount);

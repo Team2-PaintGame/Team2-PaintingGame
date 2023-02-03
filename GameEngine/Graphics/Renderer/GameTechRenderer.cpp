@@ -4,6 +4,8 @@
 #include "Camera.h"
 #include "TextureLoader.h"
 #include "Debug.h"
+#include <imgui_impl_win32.h>
+#include <imgui_impl_opengl3.h>
 
 using namespace NCL;
 using namespace Rendering;
@@ -93,6 +95,7 @@ void GameTechRenderer::RenderFrame() {
 	RenderHUD();
 	NewRenderLines();
 	NewRenderText();
+	RenderGUI();
 }
 
 void GameTechRenderer::Update(float dt) {
@@ -255,6 +258,21 @@ void GameTechRenderer::RenderDebugInformation() {
 		}
 	}
 
+}
+
+void GameTechRenderer::RenderGUI(bool showWindow) {
+	// Start the Dear ImGui frame
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+	
+	//show Main Window
+	ImGui::ShowDemoWindow(&showWindow);
+	ImGui::EndFrame();
+	
+	// Rendering
+	ImGui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
 void GameTechRenderer::RenderCamera() {
