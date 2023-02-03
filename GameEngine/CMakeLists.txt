@@ -290,6 +290,7 @@ include_directories("AI/PathFinding/")
 include_directories("AI/PushdownAutomata/")
 include_directories("AI/StateMachine/")
 include_directories("../OpenGLRendering/")
+include_directories("../Middleware/ImGui/")
 
 set(ADDITIONAL_LIBRARY_DEPENDENCIES
     "ReactPhysics3D::ReactPhysics3D"
