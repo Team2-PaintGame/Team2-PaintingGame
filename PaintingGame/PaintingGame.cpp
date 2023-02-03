@@ -32,7 +32,7 @@ PaintingGame::PaintingGame() {
 	physicsWorld->setIsGravityEnabled(useGravity);
 	renderer->UseFog(useFog);
 
-	renderer->settings.SetIsDebugRenderingModeEnabled(true);
+	renderer->settings.SetIsDebugRenderingModeEnabled(false);
 	renderer->settings.debugRendererSettings.SetIsCollisionShapeDisplayed(true);
 	renderer->settings.debugRendererSettings.SetIsBroadPhaseAABBDisplayed(true);
 }
