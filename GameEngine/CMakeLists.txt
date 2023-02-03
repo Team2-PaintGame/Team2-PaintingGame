@@ -70,6 +70,8 @@ set(Entity_Components
     "./EntityComponents/Transform.cpp"
     "./EntityComponents/Transform.h"
     "./EntityComponents/Layer.h"
+    "./EntityComponents/ParticleSystem.h"
+    "./EntityComponents/ParticleSystem.cpp"
 )
 source_group("Entity Components" FILES ${Entity_Components})
 
