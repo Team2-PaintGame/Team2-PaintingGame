@@ -3,6 +3,7 @@
 #include <Debug.h>
 #include "Box.h"
 #include "Floor.h"
+#include "Bullet.h"
 
 using namespace NCL;
 using namespace CSC8508;
@@ -114,6 +115,10 @@ void PaintingGame::UpdateGame(float dt) {
 		playerController->Update(dt);
 	}
 
+	if ((Window::GetKeyboard()->KeyDown(KeyboardKeys::SPACE))) {
+		ShootBullet();
+	}
+
 	renderer->Render();
 	world->UpdateWorld(dt);
 	renderer->Update(dt);
@@ -159,6 +164,23 @@ void PaintingGame::InitiliazePlayer() {
 	world->AddGameObject(player);
 
 	playerController = new PlayerController(world->GetMainCamera(), player);
+}
+
+void PaintingGame::ShootBullet() {
+	timeSinceLastShot = 0.0f;
+	GameObject* bullet = new PlayerBase(physicsCommon, physicsWorld, player->GetTransform().GetPosition(), meshes.at("sphereMesh"), textures.at("basicTex"), shaders.at("basicShader"), 1);
+	//GameObject* bullet = new Bullet(player->GetTransform().GetPosition(), meshes.at("sphereMesh"), textures.at("basicTex"), shaders.at("basicShader"), 1);
+	reactphysics3d::SphereShape* bulletShape = physicsCommon.createSphereShape(0.5f);
+	reactphysics3d::Transform rp3d_transform(~player->GetTransform().GetPosition(), rp3d::Quaternion::identity());
+	reactphysics3d::RigidBody* bulletRigidBody = physicsWorld->createRigidBody(rp3d_transform);
+	bulletRigidBody->addCollider(bulletShape, rp3d::Transform::identity());
+	bulletRigidBody->updateMassPropertiesFromColliders();
+
+	Vector3 force = gunDirection * forceMagnitude; 
+	bulletRigidBody->setLinearVelocity(~force);
+	world->AddGameObject(bullet);
+
+
 }
 
 

@@ -26,6 +26,7 @@ namespace NCL {
 			void InitCamera();
 			void InitWorld();
 			void InitiliazePlayer();
+			void ShootBullet();
 #ifdef USEVULKAN
 			GameTechVulkanRenderer* renderer;
 #else
@@ -48,6 +49,8 @@ namespace NCL {
 
 			//Coursework Additional functionality	
 			float remainingTime = 30;
+			float timeSinceLastShot;
+			Vector3 gunDirection;
 			PlayerBase* player = NULL;
 			PlayerController* playerController;
 			

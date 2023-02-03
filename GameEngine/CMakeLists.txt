@@ -144,6 +144,8 @@ set(Scene
     "./Scene/PlayerBase.cpp" 
     "./Scene/PlayerController.h" 
     "./Scene/PlayerController.cpp" 
+    "./Scene/Bullet.h" 
+    "./Scene/Bullet.cpp" 
 )
 source_group("Scene" FILES ${Scene})
 
