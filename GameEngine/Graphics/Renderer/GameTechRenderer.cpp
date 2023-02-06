@@ -84,18 +84,91 @@ GameTechRenderer::~GameTechRenderer()	{
 }
 
 void GameTechRenderer::RenderFrame() {
+	
+	if (!bUseSplitScreen) {
+		RenderInSingleViewport();
+	}
+	else {
+		RenderFirstFrame();
+		RenderSecondFrame();
+	}
+}
+
+void NCL::CSC8508::GameTechRenderer::RenderInSingleViewport()
+{
 	glEnable(GL_CULL_FACE);
 	glClearColor(1, 1, 1, 1);
 	BuildObjectList();
 	SortObjectList();
 	RenderShadowMap();
-	RenderSkybox();
-	RenderCamera();
-	RenderDebugInformation();
+	glViewport(0, 0, windowWidth, windowHeight);
+	RenderSkybox(*gameWorld.GetMainCamera());
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	RenderCamera(*gameWorld.GetMainCamera());
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	RenderHUD();
-	NewRenderLines();
+	glDisable(GL_CULL_FACE); //Todo - text indices are going the wrong way...
+	glDisable(GL_BLEND);
+	glDisable(GL_DEPTH_TEST);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	NewRenderLines(*gameWorld.GetMainCamera());
 	NewRenderText();
-	//RenderGUI();
+	glDisable(GL_BLEND);
+	glEnable(GL_DEPTH_TEST);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
+
+void NCL::CSC8508::GameTechRenderer::RenderFirstFrame()
+{
+	glEnable(GL_CULL_FACE);
+	glClearColor(1, 1, 1, 1);
+	BuildObjectList();
+	SortObjectList();
+	RenderShadowMap();
+	glViewport(0, 0, windowWidth / 2, windowHeight);
+	RenderSkybox(*gameWorld.GetMainCamera());
+
+	glViewport(windowWidth / 2, 0, windowWidth / 2, windowHeight);
+	RenderSkybox(*gameWorld.GetSecondCamera());
+	glViewport(0, 0, windowWidth / 2, windowHeight);
+
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	RenderCamera(*gameWorld.GetMainCamera());
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	RenderHUD();
+	glDisable(GL_CULL_FACE); //Todo - text indices are going the wrong way...
+	glDisable(GL_BLEND);
+	glDisable(GL_DEPTH_TEST);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	NewRenderLines(*gameWorld.GetMainCamera());
+	NewRenderText();
+	glDisable(GL_BLEND);
+	glEnable(GL_DEPTH_TEST);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
+
+void NCL::CSC8508::GameTechRenderer::RenderSecondFrame()
+{
+	glEnable(GL_CULL_FACE);
+	glClearColor(1, 1, 1, 1);
+	BuildObjectList();
+	SortObjectList();
+	RenderShadowMap();
+	glViewport(windowWidth / 2, 0, windowWidth / 2, windowHeight);
+
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	RenderCamera(*gameWorld.GetSecondCamera());
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	RenderHUD();
+	glDisable(GL_CULL_FACE); //Todo - text indices are going the wrong way...
+	glDisable(GL_BLEND);
+	glDisable(GL_DEPTH_TEST);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	NewRenderLines(*gameWorld.GetSecondCamera());
+	NewRenderText();
+	glDisable(GL_BLEND);
+	glEnable(GL_DEPTH_TEST);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void GameTechRenderer::Update(float dt) {
@@ -157,14 +230,14 @@ void GameTechRenderer::RenderShadowMap() {
 	glCullFace(GL_BACK);
 }
 
-void GameTechRenderer::RenderSky() {
+void GameTechRenderer::RenderSky(Camera& cam) {
 	glDisable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
 	glDisable(GL_DEPTH_TEST);
 
 	//float screenAspect = (float)windowWidth / (float)windowHeight;
-	Matrix4 viewMatrix = gameWorld.GetMainCamera()->BuildViewMatrix();
-	Matrix4 projMatrix = gameWorld.GetMainCamera()->BuildProjectionMatrix();
+	Matrix4 viewMatrix = cam.BuildViewMatrix();
+	Matrix4 projMatrix = cam.BuildProjectionMatrix();
 	Matrix4 transformationMatrix = skybox->GetTransformationMatrix();
 
 
@@ -204,15 +277,15 @@ void GameTechRenderer::RenderSky() {
 	glEnable(GL_DEPTH_TEST);
 }
 
-void GameTechRenderer::RenderSkybox() {
+void GameTechRenderer::RenderSkybox(Camera& cam) {
 	glBindFramebuffer(GL_FRAMEBUFFER, skybox->GetFBO());
-	glClear(GL_COLOR_BUFFER_BIT);
-	RenderSky();
+	//glClear(GL_COLOR_BUFFER_BIT);
+	RenderSky(cam);
 	// ----------------------------------------------------------------------------------------------------
 	
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glClear(GL_COLOR_BUFFER_BIT);
-	RenderSky();
+	//glClear(GL_COLOR_BUFFER_BIT);
+	RenderSky(cam);
 }
 
 void GameTechRenderer::RenderHUD() {
@@ -275,7 +348,7 @@ void GameTechRenderer::RenderGUI(bool showWindow) {
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-void GameTechRenderer::RenderCamera() {
+void GameTechRenderer::RenderCamera(Camera& cam) {
 	if (settings.GetIsWireFrameModeEnabled()) {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
@@ -283,8 +356,8 @@ void GameTechRenderer::RenderCamera() {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 	//float screenAspect = (float)windowWidth / (float)windowHeight;
-	Matrix4 viewMatrix = gameWorld.GetMainCamera()->BuildViewMatrix();
-	Matrix4 projMatrix = gameWorld.GetMainCamera()->BuildProjectionMatrix();
+	Matrix4 viewMatrix = cam.BuildViewMatrix();
+	Matrix4 projMatrix = cam.BuildProjectionMatrix();
 
 	OGLShader* activeShader = nullptr;
 	int projLocation	= 0;
@@ -338,7 +411,7 @@ void GameTechRenderer::RenderCamera() {
 			cameraLocation = glGetUniformLocation(shader->GetProgramID(), "cameraPos");
 			jointsLocation = glGetUniformLocation(shader->GetProgramID(), "joints");
 
-			Vector3 camPos = gameWorld.GetMainCamera()->GetPosition();
+			Vector3 camPos = cam.GetPosition();
 			glUniform3fv(cameraLocation, 1, camPos.array);
 
 			glUniformMatrix4fv(projLocation, 1, false, (float*)&projMatrix);
@@ -416,14 +489,14 @@ MeshGeometry* GameTechRenderer::LoadHeightMap(const std::string& filename, int h
 	return OGLMesh::GenerateHeightMap(filename, heightMultiplier);
 }
 
-void GameTechRenderer::NewRenderLines() {
+void GameTechRenderer::NewRenderLines(Camera& cam) {
 	const std::vector<Debug::DebugLineEntry>& lines = Debug::GetDebugLines();
 	if (lines.empty()) {
 		return;
 	}
 	//float screenAspect = (float)windowWidth / (float)windowHeight;
-	Matrix4 viewMatrix = gameWorld.GetMainCamera()->BuildViewMatrix();
-	Matrix4 projMatrix = gameWorld.GetMainCamera()->BuildProjectionMatrix();
+	Matrix4 viewMatrix = cam.BuildViewMatrix();
+	Matrix4 projMatrix = cam.BuildProjectionMatrix();
 	
 	Matrix4 viewProj  = projMatrix * viewMatrix;
 

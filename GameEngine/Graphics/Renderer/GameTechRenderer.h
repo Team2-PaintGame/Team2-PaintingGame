@@ -65,13 +65,17 @@ namespace NCL {
 			void AddHudTextures(const string& name, const Vector2& position, const Vector2& scale);
 
 			void UseFog(bool val) { useFog = val; }
+			void UseSplitScreen(bool IsSplitScreen) { bUseSplitScreen = IsSplitScreen; }
 
 			RendererSettings settings;
 		protected:
-			void NewRenderLines();
+			void NewRenderLines(Camera& cam);
 			void NewRenderText();
 
 			void RenderFrame()	override;
+			void RenderInSingleViewport();
+			void RenderFirstFrame();
+			void RenderSecondFrame();
 
 			OGLShader*		defaultShader;
 
@@ -80,9 +84,9 @@ namespace NCL {
 			void BuildObjectList();
 			void SortObjectList();
 			void RenderShadowMap();
-			void RenderCamera(); 
-			void RenderSkybox();
-			void RenderSky();
+			void RenderCamera(Camera& cam); 
+			void RenderSkybox(Camera& cam);
+			void RenderSky(Camera& cam);
 			void RenderHUD();
 			void RenderDebugInformation(); 
 			void RenderGUI(bool showWindow = true);
@@ -128,6 +132,9 @@ namespace NCL {
 			vector<TextureHUD> hudTextures;
 			bool useFog = false;
 			Vector3 fogColour = Vector3(0.6706f, 0.6824f, 0.6902f); //removing alpha value of fog colour to preserve the original transparency value of the fragment
+
+			//SplitScreen thing
+			bool bUseSplitScreen = false;
 		};
 	}
 }

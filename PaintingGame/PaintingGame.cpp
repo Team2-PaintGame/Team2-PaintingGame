@@ -32,6 +32,7 @@ PaintingGame::PaintingGame(bool online) {
 	InitialiseAssets();
 	physicsWorld->setIsGravityEnabled(useGravity);
 	renderer->UseFog(useFog);
+	renderer->UseSplitScreen(false);
 
 	renderer->settings.SetIsDebugRenderingModeEnabled(true);
 	renderer->settings.debugRendererSettings.SetIsCollisionShapeDisplayed(true);
@@ -111,6 +112,7 @@ PaintingGame::~PaintingGame() {
 void PaintingGame::UpdateGame(float dt) {
 
 	world->GetMainCamera()->UpdateCamera(dt);
+	world->GetSecondCamera()->UpdateCamera(dt);
 
 	if (thirdPersonCamera)
 	{
@@ -138,6 +140,16 @@ void PaintingGame::InitCamera()
 
 	world->GetMainCamera()->SetBasicCameraParameters(-15.0f, 315.0f, Vector3(-60, 40, 60), 0.1f, 500.0f);
 	world->GetMainCamera()->SetPerspectiveCameraParameters(Window::GetWindow()->GetScreenAspect());
+
+	if (thirdPersonCamera) {
+		world->GetSecondCamera()->SetThirdPersonCamera(player);
+	}
+	else {
+		world->GetSecondCamera()->SetFirstPersonCamera();
+	}
+
+	world->GetSecondCamera()->SetBasicCameraParameters(-15.0f, 315.0f, Vector3(-60, 40, 60), 0.1f, 500.0f);
+	world->GetSecondCamera()->SetPerspectiveCameraParameters(Window::GetWindow()->GetScreenAspect());
 }
 
 void PaintingGame::InitWorld() {

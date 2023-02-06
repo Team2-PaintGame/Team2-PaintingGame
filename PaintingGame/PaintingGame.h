@@ -36,6 +36,7 @@ namespace NCL {
 
 			bool useGravity = true;
 			bool useFog = true;
+			bool useSplitScreen = false;
 			bool thirdPersonCamera;
 
 			bool is_Networked;
