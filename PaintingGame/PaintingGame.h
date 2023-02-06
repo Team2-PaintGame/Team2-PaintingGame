@@ -18,7 +18,7 @@ namespace NCL {
 	namespace CSC8508 {
 		class PaintingGame {
 		public:
-			PaintingGame();
+			PaintingGame(bool online = false);
 			~PaintingGame();
 			virtual void UpdateGame(float dt);
 		protected:

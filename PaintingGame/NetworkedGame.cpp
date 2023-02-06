@@ -19,7 +19,7 @@ struct MessagePacket : public GamePacket {
 	}
 };
 
-NetworkedGame::NetworkedGame() {
+NetworkedGame::NetworkedGame() : PaintingGame(true) {
 	thisServer = nullptr;
 	thisClient = nullptr;
 
@@ -227,13 +227,7 @@ void NetworkedGame::SpawnPlayer() {
 
 void NetworkedGame::StartLevel() {
 	SpawnPlayer();
-	if (thisServer) {
-		world->GetMainCamera()->SetThirdPersonCamera(ServerPlayer);
-	}
-	else if (thisClient) {
-		world->GetMainCamera()->SetThirdPersonCamera(ClientPlayer);
-	}
-	
+	InitCamera();
 }
 
 void NetworkedGame::ReceivePacket(int type, GamePacket* payload, int source) {

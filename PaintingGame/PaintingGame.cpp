@@ -7,7 +7,7 @@
 using namespace NCL;
 using namespace CSC8508;
 
-PaintingGame::PaintingGame() {
+PaintingGame::PaintingGame(bool online) {
 	world = new GameWorld();
 
 	/* Code for changing physics system paramaters
@@ -17,8 +17,8 @@ PaintingGame::PaintingGame() {
 	settings.isSleepingEnabled = false; 
 	settings.gravity = Vector3(0,-9.81, 0);
 	*/
-	thirdPersonCamera = false;
-	is_Networked = false;
+	thirdPersonCamera = true;
+	is_Networked = online;
 
 	physicsWorld = physicsCommon.createPhysicsWorld(/*settings*/);
 
@@ -78,9 +78,11 @@ void PaintingGame::InitialiseAssets() {
 	//renderer->AddHudTextures("wolf_color.png", Vector2(0.5,0.5), Vector2(0.25,0.25));
 	//renderer->AddHudTextures("wolf_color.png", Vector2(-0.5, 0.5), Vector2(0.25, 0.25));
 
-
-	InitCamera();
 	InitWorld();
+	if (!is_Networked) // networked game handles cameras itself
+	{
+		InitCamera();
+	}
 }
 
 PaintingGame::~PaintingGame() {
@@ -126,8 +128,9 @@ void PaintingGame::UpdateGame(float dt) {
 
 void PaintingGame::InitCamera()
 {
+
 	if (thirdPersonCamera) {
-		//world->GetMainCamera()->SetThirdPersonCamera(player);
+		world->GetMainCamera()->SetThirdPersonCamera(player);
 	}
 	else {
 		world->GetMainCamera()->SetFirstPersonCamera();
@@ -146,7 +149,10 @@ void PaintingGame::InitWorld() {
 	//world->AddGameObject(new Terrain(*physicsCommon, physicsWorld, Vector2(), meshes.at("terrainMesh"), terrainTexturePack, shaders.at("terrainShader")));
 	//world->AddGameObject(new Terrain(*physicsCommon, physicsWorld, Vector2(0, 1), meshes.at("terrainMesh"), terrainTexturePack, shaders.at("terrainShader")));
 
-	//InitiliazePlayer();
+	if (!is_Networked) // Networked Game handles its own player init
+	{
+		InitiliazePlayer();
+	}
 
 	world->AddGameObject(new Floor(physicsCommon, physicsWorld, Vector3(0, 0, 0), meshes.at("cubeMesh"), textures.at("basicTex"), shaders.at("basicShader"), 200));
 

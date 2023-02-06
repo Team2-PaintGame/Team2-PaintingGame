@@ -7,6 +7,8 @@
 #include <Win32Window.h>
 #include "NetworkedGame.h"
 
+#define NETWORKING_ENABLED	(0)	// (0) - off, (1) - on
+
 using namespace NCL;
 using namespace CSC8508;
 
@@ -21,6 +23,8 @@ int main() {
 	w->LockMouseToWindow(true);
 	w->GetTimer()->GetTimeDeltaSeconds(); //Clear the timer so we don't get a larget first dt!
 
+#if NETWORKING_ENABLED // For now, hiding network code behind this flag - Dovy
+
 	bool started = false;
 	NetworkedGame g;
 	while (w->UpdateWindow() && !started) {
@@ -33,8 +37,10 @@ int main() {
 			started = true;
 		}
 	}
+#else
+	PaintingGame g;
+#endif
 
-	//PaintingGame g;
 	w->GetTimer()->GetTimeDeltaSeconds(); //Clear the timer so we don't get a larget first dt!
 
 	IMGUI_CHECKVERSION();
