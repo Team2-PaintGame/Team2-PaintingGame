@@ -268,11 +268,35 @@ void GameTechRenderer::RenderGUI(bool showWindow) {
 	
 	//show Main Window
 	ImGui::ShowDemoWindow(&showWindow);
+	ShowMainMenuWindow();
 	ImGui::EndFrame();
 	
 	// Rendering
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
+void GameTechRenderer::ShowMainMenuWindow() {
+	bool showSplatMainMenu = true;
+	ImGui::Begin("Splat Main Menu", &showSplatMainMenu);
+	ImGui::Text("This is going to be the splat main menu!");
+	if (ImGui::Button("Exit"))
+	{
+		showSplatMainMenu = false;
+	}
+	if (ImGui::Button("Single Player"))
+	{
+		showSplatMainMenu = false;
+	}
+	if (ImGui::Button("Split Screen"))
+	{
+		showSplatMainMenu = false;
+	}
+	if (ImGui::Button("LAN"))
+	{
+		showSplatMainMenu = false;
+	}
+	ImGui::End();
 }
 
 void GameTechRenderer::RenderCamera() {

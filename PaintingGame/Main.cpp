@@ -4,8 +4,23 @@
 #include <imgui_impl_opengl3.h>
 #include <Win32Window.h>
 
+#include "PushdownMachine.h"
+#include "IntroScreen.h"
+
 using namespace NCL;
 using namespace CSC8508;
+
+void PushdownAutomata(Window* window, PaintingGame* paintingGame) {
+	PushdownMachine machine(new IntroScreen(window, paintingGame));
+	while (window->UpdateWindow()) {
+		float time = window->GetTimer()->GetTotalTimeSeconds();
+		float dt = window->GetTimer()->GetTimeDeltaSeconds();
+		if (!machine.Update(dt)) {
+			return;
+		}
+	}
+
+}
 
 int main() {
 	Window* w = Window::CreateGameWindow("CSC8508 Game technology!", 1280, 720);
@@ -15,9 +30,10 @@ int main() {
 	}
 
 	w->ShowOSPointer(true);
-	w->LockMouseToWindow(true);
+//	w->LockMouseToWindow(true);
 
 	PaintingGame g;
+	PaintingGame* paintingGame = &g;
 	w->GetTimer()->GetTimeDeltaSeconds(); //Clear the timer so we don't get a larget first dt!
 
 	IMGUI_CHECKVERSION();
@@ -33,6 +49,8 @@ int main() {
 	// Setup style
 	ImGui::StyleColorsClassic();
 
+	PushdownAutomata(w, paintingGame);
+	/*
 	while (w->UpdateWindow() && !Window::GetKeyboard()->KeyDown(KeyboardKeys::ESCAPE)) {
 		float time = w->GetTimer()->GetTotalTimeSeconds();
 		float dt = w->GetTimer()->GetTimeDeltaSeconds();
@@ -54,7 +72,8 @@ int main() {
 		w->SetTitle("Gametech frame time:" + std::to_string(1000.0f * dt));
 		g.UpdateGame(dt);
 	}
-	
+	*/
+
 	// Cleanup
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplWin32_Shutdown();

@@ -30,6 +30,7 @@ namespace NCL {
 						debugRenderer.setIsDebugItemDisplayed(reactphysics3d::DebugRenderer::DebugItem::COLLIDER_BROADPHASE_AABB, boolean);
 					}
 					reactphysics3d::DebugRenderer& debugRenderer;
+					
 				private:
 					bool isCollisionShapeEnabled = false;
 					bool isBroadPhaseAABBEnabled = false;
@@ -70,6 +71,7 @@ namespace NCL {
 		protected:
 			void NewRenderLines();
 			void NewRenderText();
+			void ShowMainMenuWindow();
 
 			void RenderFrame()	override;
 

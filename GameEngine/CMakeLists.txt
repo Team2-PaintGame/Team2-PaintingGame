@@ -19,6 +19,16 @@ set(AI_Pushdown_Automata
     "./AI/PushdownAutomata/PushdownMachine.cpp"
     "./AI/PushdownAutomata/PushdownState.h"
     "./AI/PushdownAutomata/PushdownState.cpp"
+    "./AI/PushdownAutomata/IntroScreen.h"
+    "./AI/PushdownAutomata/IntroScreen.cpp"
+    "./AI/PushdownAutomata/SinglePlayerScreen.h"
+    "./AI/PushdownAutomata/SinglePlayerScreen.cpp"
+    "./AI/PushdownAutomata/SplitScreen.h"
+    "./AI/PushdownAutomata/SplitScreen.cpp"
+    "./AI/PushdownAutomata/LanScreen.h"
+    "./AI/PushdownAutomata/LanScreen.cpp"
+    "./AI/PushdownAutomata/PauseScreen.h"
+    "./AI/PushdownAutomata/PauseScreen.cpp"   
 )
 source_group("AI\\Pushdown Automata" FILES ${AI_Pushdown_Automata})
 
