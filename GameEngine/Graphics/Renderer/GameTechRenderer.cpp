@@ -392,6 +392,51 @@ void GameTechRenderer::RenderCamera(Camera& cam) {
 			BindTextureToShader(texture, "mainTex", 0);
 		}*/
 
+		/////////
+		if ((*i).GetNoiseTex()) {
+			BindTextureToShader((OGLTexture*)(*i).GetNoiseTex(), "noiseTex", 2, true);
+			glUniform1f(glGetUniformLocation(shader->GetProgramID(), "globalTimer"), runTime);
+			Vector3 facingDir = i->GetTransform()->GetOrientation() * Vector3 { 0, 0, -1 };
+			Vector3 leftDir = i->GetTransform()->GetOrientation() * Vector3 { -1, 0, 0 };
+			Vector3 centre = i->GetTransform()->GetPosition();
+			glUniform3fv(glGetUniformLocation(shader->GetProgramID(), "facingDir"), 1, (float*)&facingDir);
+			glUniform3fv(glGetUniformLocation(shader->GetProgramID(), "leftDir"), 1, (float*)&leftDir);
+			glUniform3fv(glGetUniformLocation(shader->GetProgramID(), "centre"), 1, (float*)&centre);
+			Vector3 dimension = i->GetDimension();
+			glUniform3fv(glGetUniformLocation(shader->GetProgramID(), "dimension"), 1, (float*)&dimension);
+			// Debug::DrawLine(centre, centre + facingDir * 15.0f, Vector4(0, 1, 0, 1));	// Marker for the far face
+
+
+			/*Vector2 result;
+			Vector3 faceOrigin = centre + Maths::Vector3::Cross(facingDir,leftDir) * abs(dimension.y) - facingDir * abs(dimension.z) - leftDir * abs(dimension.x);
+			Vector3 faceXAxis = (centre + Maths::Vector3::Cross(facingDir, leftDir) * abs(dimension.y) - facingDir * abs(dimension.z) - faceOrigin).Normalised();
+			Vector3 faceYAxis = (centre - leftDir * abs(dimension.x) + Maths::Vector3::Cross(facingDir, leftDir) * abs(dimension.y) - faceOrigin).Normalised();
+			Vector3 faceVector = Vector3{0,0,0} - faceOrigin;
+			float faceVectorX = Maths::Vector3::Dot(faceVector, faceXAxis);
+			float faceVectorY = Maths::Vector3::Dot(faceVector, faceYAxis);
+
+			result.x = (0.5f * faceVectorX) / dimension.x;
+			result.y = (0.5f * faceVectorY) / dimension.z;
+
+			std::cout << result << std::endl;*/
+
+			/*Vector3 e{ 10,10,0 };
+			glUniform3fv(glGetUniformLocation(shader->GetProgramID(), "testingPoint"), 1, (float*)&e);*/
+
+			/*int n = 1;
+			glUniform1i(glGetUniformLocation(shader->GetProgramID(), "numOfNodesInTrace"), 1);*/
+
+			
+			
+				/*Vector3 e{ 0,10,0 };
+				glUniform3fv(glGetUniformLocation(shader->GetProgramID(), "testingPoint"), 1, (float*)&e);
+				glUniform1i(glGetUniformLocation(shader->GetProgramID(), "numOfNodesInTrace"), 1);*/
+
+			glUniform1i(glGetUniformLocation(shader->GetProgramID(), "numOfNodesInTrace"), 0);
+			
+
+		}
+
 		if (activeShader != shader) {
 			projLocation	= glGetUniformLocation(shader->GetProgramID(), "projMatrix");
 			viewLocation	= glGetUniformLocation(shader->GetProgramID(), "viewMatrix");

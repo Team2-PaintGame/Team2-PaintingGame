@@ -135,6 +135,8 @@ namespace NCL {
 
 			//SplitScreen thing
 			bool bUseSplitScreen = false;
+
+			float runTime = 0.0f;
 		};
 	}
 }

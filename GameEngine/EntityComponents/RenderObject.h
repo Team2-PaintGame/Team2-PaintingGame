@@ -20,6 +20,7 @@ namespace NCL {
 		{
 		public:
 			RenderObject(Transform* parentTransform, MeshGeometry* mesh, ShaderBase* shader);
+			RenderObject(Transform* parentTransform, MeshGeometry* mesh, TextureBase* tex, ShaderBase* shader, TextureBase* noiseTex);
 			~RenderObject();
 
 			/*void SetDefaultTexture(TextureBase* t) {
@@ -74,6 +75,14 @@ namespace NCL {
 				return rigged;
 			}
 
+			TextureBase* GetNoiseTex() const {		/////////
+				return noiseTexture;
+			}
+
+			Vector3 GetDimension() const {			/////////
+				return dimension;
+			}
+
 			void GetFrameMatrices(vector<Matrix4>& frameMatrices) const {
 				const std::vector<Matrix4> invBindPose = mesh->GetInverseBindPose();
 				const Matrix4* frameData = animation->GetJointData(currentFrame);
@@ -90,6 +99,10 @@ namespace NCL {
 		protected:
 			MeshGeometry*	mesh;
 			std::map<int, std::vector<std::pair<std::string, TextureBase*>>> subMeshTextures;
+
+			TextureBase* texture;
+			TextureBase* noiseTexture = nullptr;
+			Vector3			dimension = Vector3{ -1,-1,-1 };
 
 			//std::vector<TextureBase*>	textures;
 			ShaderBase*		shader;

@@ -64,6 +64,7 @@ void PaintingGame::InitialiseAssets() {
 	textures.insert(std::make_pair("floorTex", renderer->LoadTexture("ground.png")));
 	textures.insert(std::make_pair("goatTex", renderer->LoadTexture("goat1.jpg")));
 	textures.insert(std::make_pair("doorTex", renderer->LoadTexture("door.jpg")));
+	textures.insert(std::make_pair("testTex", renderer->LoadTexture("Perlin.png")));
 
 	textures.insert(std::make_pair("terrainSplatMap", renderer->LoadTexture("Terrain/splatmap.png")));
 	textures.insert(std::make_pair("terrainRTex", renderer->LoadTexture("Terrain/rTex_mud.jpg")));
@@ -75,6 +76,7 @@ void PaintingGame::InitialiseAssets() {
 	shaders.insert(std::make_pair("basicShader", renderer->LoadShader("scene.vert", "scene.frag")));
 	shaders.insert(std::make_pair("terrainShader", renderer->LoadShader("terrain.vert", "terrain.frag")));
 	shaders.insert(std::make_pair("skinningShader", renderer->LoadShader("skinning.vert", "scene.frag")));
+	shaders.insert(std::make_pair("testShader", renderer->LoadShader("test.vert", "test.frag")));
 
 	//renderer->AddHudTextures("wolf_color.png", Vector2(0.5,0.5), Vector2(0.25,0.25));
 	//renderer->AddHudTextures("wolf_color.png", Vector2(-0.5, 0.5), Vector2(0.25, 0.25));
@@ -166,7 +168,8 @@ void PaintingGame::InitWorld() {
 		InitiliazePlayer();
 	}
 
-	world->AddGameObject(new Floor(physicsCommon, physicsWorld, Vector3(0, 0, 0), meshes.at("cubeMesh"), textures.at("basicTex"), shaders.at("basicShader"), 200));
+	//world->AddGameObject(new Floor(physicsCommon, physicsWorld, Vector3(0, 0, 0), meshes.at("cubeMesh"), textures.at("basicTex"), shaders.at("basicShader"), 200));
+	world->AddGameObject(new Floor(physicsCommon, physicsWorld, Vector3(0, 0, 0), meshes.at("cubeMesh"), textures.at("basicTex"), shaders.at("testShader"), textures.at("testTex"),200));
 
 	for (int x = 0; x < 15; ++x) {
 		world->AddGameObject(new Box(physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 2));

@@ -163,7 +163,7 @@ void OGLRenderer::DrawBoundMesh(int subLayer, int numInstances) {
 	glBindVertexArray(0);
 }
 
-void OGLRenderer::BindTextureToShader(const TextureBase*t, const std::string& uniform, int texUnit) const{
+void OGLRenderer::BindTextureToShader(const TextureBase*t, const std::string& uniform, int texUnit, bool repeat) const{
 	GLint texID = 0;
 
 	if (!boundShader) {
