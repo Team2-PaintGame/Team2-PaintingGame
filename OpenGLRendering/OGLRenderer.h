@@ -78,7 +78,7 @@ namespace NCL {
 			void BindShader(ShaderBase*s);
 			void BindTextureToShader(const TextureBase*t, const std::string& uniform, int texUnit) const;
 			void BindMesh(MeshGeometry*m);
-			void DrawBoundMesh(int subLayer = 0, int numInstances = 1);
+			void DrawBoundMesh(int subLayer = 0);
 #ifdef _WIN32
 			void InitWithWin32(Window& w);
 			void DestroyWithWin32();

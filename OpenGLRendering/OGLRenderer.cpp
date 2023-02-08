@@ -118,7 +118,7 @@ void OGLRenderer::BindMesh(MeshGeometry*m) {
 	}
 }
 
-void OGLRenderer::DrawBoundMesh(int subLayer, int numInstances) {
+void OGLRenderer::DrawBoundMesh(int subLayer) {
 	if (!boundMesh) {
 		std::cout << __FUNCTION__ << " has been called without a bound mesh!" << std::endl;
 		return;
@@ -155,10 +155,20 @@ void OGLRenderer::DrawBoundMesh(int subLayer, int numInstances) {
 	}
 
 	if (boundMesh->GetIndexCount() > 0) {
-		glDrawElements(mode, count, GL_UNSIGNED_INT, (const GLvoid*)(offset * sizeof(unsigned int)));
+		if (boundMesh->GetInstanceCount() > 0) {
+			glDrawElementsInstanced(mode, count, GL_UNSIGNED_INT, (const GLvoid*)(offset * sizeof(unsigned int)), boundMesh->GetInstanceCount());
+		}
+		else {
+			glDrawElements(mode, count, GL_UNSIGNED_INT, (const GLvoid*)(offset * sizeof(unsigned int)));
+		}
 	}
 	else {
-		glDrawArrays(mode, 0, count);
+		if (boundMesh->GetInstanceCount() > 0) {
+			glDrawArraysInstanced(mode, 0, count, boundMesh->GetInstanceCount());
+		}
+		else {
+			glDrawArrays(mode, 0, count);
+		}
 	}
 	glBindVertexArray(0);
 }

@@ -289,8 +289,9 @@ void OGLMesh::UpdateGPUBuffers(unsigned int startVertex, unsigned int vertexCoun
 
 void OGLMesh::UploadInstancedModelMatricesToGPU(int numInstances, const std::vector<Matrix4>& instancedModelMatrices) {
 	if (numInstances > 0) {
+		this->numInstances = numInstances;
 		glBindVertexArray(vao);
-		CreateVertexBuffer(attributeBuffers[VertexAttribute::InstancedModelMatrices], numInstances * sizeof(Matrix4), (float*)instancedModelMatrices.data());
+		CreateVertexBuffer(attributeBuffers[VertexAttribute::InstancedModelMatrices], numInstances * sizeof(Matrix4), (float*)&instancedModelMatrices);
 		BindVertexAttributeInstanced(VertexAttribute::InstancedModelMatrices, attributeBuffers[VertexAttribute::InstancedModelMatrices], VertexAttribute::InstancedModelMatrices, 16, sizeof(Matrix4), 0, 1);
 		glBindVertexArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
