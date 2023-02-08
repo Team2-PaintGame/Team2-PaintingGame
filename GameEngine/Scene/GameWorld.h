@@ -30,6 +30,10 @@ namespace NCL {
 				return mainCamera;
 			}
 
+			Camera* GetSecondCamera() const {
+				return secondCamera;
+			}
+
 			void ShuffleConstraints(bool state) {
 				shuffleConstraints = state;
 			}
@@ -59,6 +63,7 @@ namespace NCL {
 			std::vector<Constraint*> constraints;
 
 			Camera* mainCamera;
+			Camera* secondCamera;
 
 			bool shuffleConstraints;
 			bool shuffleObjects;

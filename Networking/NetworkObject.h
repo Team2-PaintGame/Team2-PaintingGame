@@ -17,8 +17,8 @@ namespace NCL::CSC8508 {
 	};
 
 	struct DeltaPacket : public GamePacket {
-		int		fullID		= -1;
-		int		objectID	= -1;
+		int		fullID = -1;
+		int		objectID = -1;
 		char	pos[3];
 		char	orientation[4];
 
@@ -30,14 +30,48 @@ namespace NCL::CSC8508 {
 
 	struct ClientPacket : public GamePacket {
 		int		lastID;
-		char	buttonstates[8];
+		int playerID;
+		Quaternion orientation;
+		Vector3 position;
 
 		ClientPacket() {
-			size = sizeof(ClientPacket);
+			type = Client_Update;
+			size = sizeof(ClientPacket) - sizeof(GamePacket);
+		}
+
+		int GetPlayerID() {
+			return playerID;
 		}
 	};
 
-	class NetworkObject		{
+	struct SpawnPacket : public GamePacket {
+		int lastID;
+		int playerID;
+		Vector3	position;
+
+		SpawnPacket() {
+			type = Spawn_Player;
+			size = sizeof(SpawnPacket) - sizeof(GamePacket);
+		}
+
+		int GetID() {
+			return playerID;
+		}
+	};
+
+	struct ServerPacket : public GamePacket {
+		int lastID;
+		int playerID;
+		Quaternion orientation;
+		Vector3 position;
+
+		ServerPacket() {
+			type = Server_Update;
+			size = sizeof(ServerPacket) - sizeof(GamePacket);
+		}
+	};
+
+	class NetworkObject {
 	public:
 		NetworkObject(GameObject& o, int id);
 		virtual ~NetworkObject();
@@ -55,11 +89,11 @@ namespace NCL::CSC8508 {
 
 		bool GetNetworkState(int frameID, NetworkState& state);
 
-		virtual bool ReadDeltaPacket(DeltaPacket &p);
-		virtual bool ReadFullPacket(FullPacket &p);
+		virtual bool ReadDeltaPacket(DeltaPacket& p);
+		virtual bool ReadFullPacket(FullPacket& p);
 
-		virtual bool WriteDeltaPacket(GamePacket**p, int stateID);
-		virtual bool WriteFullPacket(GamePacket**p);
+		virtual bool WriteDeltaPacket(GamePacket** p, int stateID);
+		virtual bool WriteFullPacket(GamePacket** p);
 
 		GameObject& object;
 

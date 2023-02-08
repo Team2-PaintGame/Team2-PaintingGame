@@ -7,7 +7,7 @@
 using namespace NCL;
 using namespace CSC8508;
 
-PaintingGame::PaintingGame() {
+PaintingGame::PaintingGame(bool online) {
 	world = new GameWorld();
 
 	/* Code for changing physics system paramaters
@@ -17,7 +17,8 @@ PaintingGame::PaintingGame() {
 	settings.isSleepingEnabled = false; 
 	settings.gravity = Vector3(0,-9.81, 0);
 	*/
-	thirdPersonCamera = false;
+	thirdPersonCamera = true;
+	is_Networked = online;
 
 	physicsWorld = physicsCommon.createPhysicsWorld(/*settings*/);
 
@@ -31,8 +32,9 @@ PaintingGame::PaintingGame() {
 	InitialiseAssets();
 	physicsWorld->setIsGravityEnabled(useGravity);
 	renderer->UseFog(useFog);
+	renderer->UseSplitScreen(false);
 
-	renderer->settings.SetIsDebugRenderingModeEnabled(false);
+	renderer->settings.SetIsDebugRenderingModeEnabled(true);
 	renderer->settings.debugRendererSettings.SetIsCollisionShapeDisplayed(true);
 	renderer->settings.debugRendererSettings.SetIsBroadPhaseAABBDisplayed(true);
 }
@@ -77,9 +79,11 @@ void PaintingGame::InitialiseAssets() {
 	//renderer->AddHudTextures("wolf_color.png", Vector2(0.5,0.5), Vector2(0.25,0.25));
 	//renderer->AddHudTextures("wolf_color.png", Vector2(-0.5, 0.5), Vector2(0.25, 0.25));
 
-
 	InitWorld();
-	InitCamera();
+	if (!is_Networked) // networked game handles cameras itself
+	{
+		InitCamera();
+	}
 }
 
 PaintingGame::~PaintingGame() {
@@ -108,6 +112,7 @@ PaintingGame::~PaintingGame() {
 void PaintingGame::UpdateGame(float dt) {
 
 	world->GetMainCamera()->UpdateCamera(dt);
+	world->GetSecondCamera()->UpdateCamera(dt);
 
 	if (thirdPersonCamera)
 	{
@@ -123,8 +128,8 @@ void PaintingGame::UpdateGame(float dt) {
 	Debug::UpdateRenderables(dt);
 }
 
-void PaintingGame::InitCamera() {
-	world->GetMainCamera()->SetBasicCameraParameters(-15.0f, 315.0f, Vector3(-60, 40, 60), 0.1f, 500.0f);
+void PaintingGame::InitCamera()
+{
 
 	if (thirdPersonCamera) {
 		world->GetMainCamera()->SetThirdPersonCamera(player);
@@ -133,7 +138,18 @@ void PaintingGame::InitCamera() {
 		world->GetMainCamera()->SetFirstPersonCamera();
 	}
 
+	world->GetMainCamera()->SetBasicCameraParameters(-15.0f, 315.0f, Vector3(-60, 40, 60), 0.1f, 500.0f);
 	world->GetMainCamera()->SetPerspectiveCameraParameters(Window::GetWindow()->GetScreenAspect());
+
+	if (thirdPersonCamera) {
+		world->GetSecondCamera()->SetThirdPersonCamera(player);
+	}
+	else {
+		world->GetSecondCamera()->SetFirstPersonCamera();
+	}
+
+	world->GetSecondCamera()->SetBasicCameraParameters(-15.0f, 315.0f, Vector3(-60, 40, 60), 0.1f, 500.0f);
+	world->GetSecondCamera()->SetPerspectiveCameraParameters(Window::GetWindow()->GetScreenAspect());
 }
 
 void PaintingGame::InitWorld() {
@@ -145,7 +161,10 @@ void PaintingGame::InitWorld() {
 	//world->AddGameObject(new Terrain(*physicsCommon, physicsWorld, Vector2(), meshes.at("terrainMesh"), terrainTexturePack, shaders.at("terrainShader")));
 	//world->AddGameObject(new Terrain(*physicsCommon, physicsWorld, Vector2(0, 1), meshes.at("terrainMesh"), terrainTexturePack, shaders.at("terrainShader")));
 
-	InitiliazePlayer();
+	if (!is_Networked) // Networked Game handles its own player init
+	{
+		InitiliazePlayer();
+	}
 
 	world->AddGameObject(new Floor(physicsCommon, physicsWorld, Vector3(0, 0, 0), meshes.at("cubeMesh"), textures.at("basicTex"), shaders.at("basicShader"), 200));
 
@@ -154,11 +173,18 @@ void PaintingGame::InitWorld() {
 	}
 }
 
-void PaintingGame::InitiliazePlayer() {
+
+PlayerBase* PaintingGame::InitiliazePlayer() {
 	player = new PlayerBase(physicsCommon, physicsWorld, Vector3(0, 50, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 5);
 	world->AddGameObject(player);
-
 	playerController = new PlayerController(world->GetMainCamera(), player);
+	return player;
 }
 
+PlayerBase* PaintingGame::InitialiseNetworkPlayer() {
+	
+	netPlayer = new PlayerBase(physicsCommon, physicsWorld, Vector3(0, 50, 10), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 5);
+	world->AddGameObject(netPlayer);
+	return netPlayer;
+}
 

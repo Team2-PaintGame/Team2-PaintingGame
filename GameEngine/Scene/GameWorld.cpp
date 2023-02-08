@@ -8,6 +8,7 @@ using namespace NCL::CSC8508;
 
 GameWorld::GameWorld()	{
 	mainCamera = new Camera();
+	secondCamera = new Camera();
 
 	shuffleConstraints	= false;
 	shuffleObjects		= false;
@@ -17,6 +18,7 @@ GameWorld::GameWorld()	{
 
 GameWorld::~GameWorld()	{
 	delete mainCamera;
+	delete secondCamera;
 }
 
 void GameWorld::Clear() {

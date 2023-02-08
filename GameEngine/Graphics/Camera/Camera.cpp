@@ -2,6 +2,7 @@
 #include "Window.h"
 #include <algorithm>
 #include <math.h>
+#include "Utils.h"
 
 using namespace NCL;
 void Camera::SetBasicCameraParameters(float pitch, float yaw, const Vector3& position, float znear, float zfar) {
@@ -107,6 +108,10 @@ void Camera::CalculateThirdPersonView(bool init)
 
 	Quaternion player_orientation(rotation);
 	player->GetTransform().SetOrientation(player_orientation);
+
+	// Change the bounding volume orientation as well
+	reactphysics3d::Transform newRBTransform = reactphysics3d::Transform(player->GetRigidBody()->getTransform().getPosition(), ~player_orientation);
+	player->GetRigidBody()->setTransform(newRBTransform);
 
 	position = player->GetTransform().GetPosition() + rotated_offset;
 }

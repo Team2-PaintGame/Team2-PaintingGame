@@ -18,14 +18,15 @@ namespace NCL {
 	namespace CSC8508 {
 		class PaintingGame {
 		public:
-			PaintingGame();
+			PaintingGame(bool online = false);
 			~PaintingGame();
 			virtual void UpdateGame(float dt);
 		protected:
 			void InitialiseAssets();
 			void InitCamera();
 			void InitWorld();
-			void InitiliazePlayer();
+			PlayerBase* InitiliazePlayer();
+			PlayerBase* InitialiseNetworkPlayer();
 #ifdef USEVULKAN
 			GameTechVulkanRenderer* renderer;
 #else
@@ -35,7 +36,10 @@ namespace NCL {
 
 			bool useGravity = true;
 			bool useFog = true;
+			bool useSplitScreen = false;
 			bool thirdPersonCamera;
+
+			bool is_Networked;
 
 			float		forceMagnitude;
 
@@ -49,6 +53,7 @@ namespace NCL {
 			//Coursework Additional functionality	
 			float remainingTime = 30;
 			PlayerBase* player = NULL;
+			PlayerBase* netPlayer = NULL;
 			PlayerController* playerController;
 			
 			//Create a physics world 
