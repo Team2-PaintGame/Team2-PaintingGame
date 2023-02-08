@@ -117,7 +117,11 @@ void PaintingGame::UpdateGame(float dt) {
 	}
 	if (thirdPersonCamera)
 	{
-		playerController->Update(dt);
+		for (int i = 0; i < 2; i++)
+		{
+			playerController[i]->Update(dt);
+		}
+	
 	}
 	renderer->Render();
 	world->UpdateWorld(dt);
@@ -132,7 +136,7 @@ void PaintingGame::InitCamera()
 	float aspect_divide = renderer->GetIsSplitScreen() ? 2.0f : 1.0f;
 
 	if (thirdPersonCamera) {
-		world->GetMainCamera()->SetThirdPersonCamera(player);
+		world->GetMainCamera()->SetThirdPersonCamera(player[0]);
 	}
 	else {
 		world->GetMainCamera()->SetFirstPersonCamera();
@@ -142,7 +146,7 @@ void PaintingGame::InitCamera()
 	world->GetMainCamera()->SetPerspectiveCameraParameters(Window::GetWindow()->GetScreenAspect() / aspect_divide);
 
 	if (thirdPersonCamera) {
-		world->GetSecondCamera()->SetThirdPersonCamera(player);
+		world->GetSecondCamera()->SetThirdPersonCamera(player[1]);
 	}
 	else {
 		world->GetSecondCamera()->SetFirstPersonCamera();
@@ -173,10 +177,15 @@ void PaintingGame::InitWorld() {
 
 
 PlayerBase* PaintingGame::InitiliazePlayer() {
-	player = new PlayerBase(physicsCommon, physicsWorld, Vector3(0, 50, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 5);
-	world->AddGameObject(player);
-	playerController = new PlayerController(world->GetMainCamera(), player);
-	return player;
+	player[0] = new PlayerBase(physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 5);
+	world->AddGameObject(player[0]);
+	playerController[0] = new PlayerController(world->GetMainCamera(), player[0]);
+
+	player[1] = new PlayerBase(physicsCommon, physicsWorld, Vector3(10, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 5);
+	world->AddGameObject(player[1]);
+	playerController[1] = new PlayerController(world->GetSecondCamera(), player[1]);
+
+	return player[0];
 }
 
 PlayerBase* PaintingGame::InitialiseNetworkPlayer() {

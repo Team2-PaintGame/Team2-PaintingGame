@@ -52,9 +52,9 @@ namespace NCL {
 			std::map<std::string, ShaderBase*> shaders;
 
 			//Coursework Additional functionality	
-			PlayerBase* player = NULL;
+			PlayerBase* player[2] = { NULL };
 			PlayerBase* netPlayer = NULL;
-			PlayerController* playerController;
+			PlayerController* playerController[2] = {NULL};
 			
 			//Create a physics world 
 			reactphysics3d::PhysicsCommon physicsCommon;
