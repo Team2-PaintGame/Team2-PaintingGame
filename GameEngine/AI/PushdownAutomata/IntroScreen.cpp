@@ -2,6 +2,7 @@
 #include "SinglePlayerScreen.h"
 #include "SplitScreen.h"
 #include "LanScreen.h"
+#include "GameTechRenderer.h"
 #include <iostream>
 
 namespace NCL {
@@ -12,6 +13,12 @@ namespace NCL {
 			this->window = window;
 			this->paintingGame = paintingGame;
 		}
+		IntroScreen::IntroScreen(Window* window)
+		{
+			isLanScreen = false;
+			this->window = window;
+
+		}
 		IntroScreen::~IntroScreen()
 		{
 
@@ -19,12 +26,58 @@ namespace NCL {
 		PushdownState::PushdownResult IntroScreen::OnUpdate(float dt, PushdownState** newState)
 		{
 			paintingGame->UpdateGame(dt);
-		//	std::cout << "isMainMenu: " << paintingGame->GetGameTechRenderer()->GetIsMainMenu() << "\n";
+			GameTechRenderer::GameState gameState = paintingGame->GetGameTechRenderer()->GetGameState();
+			switch (gameState) {
+
+				case GameTechRenderer::GameState::SinglePlayer: {
+					*newState = new SinglePlayerScreen(window, paintingGame);
+					return PushdownResult::Push;
+				}	break;
+
+				case GameTechRenderer::GameState::SplitScreen: {
+					*newState = new SplitScreen(window, paintingGame);
+					return PushdownResult::Push;
+				}break;
+
+				case GameTechRenderer::GameState::LAN: {
+					*newState = new LanScreen();
+					return PushdownResult::Push;
+				}break;
+
+				case GameTechRenderer::GameState::ExitGame: {
+					return PushdownResult::Pop;
+				}break;
+
+				case GameTechRenderer::GameState::MainMenu: {
+					return PushdownResult::NoChange;
+				}break;
+
+			}
+		}
+
+		void IntroScreen::OnAwake()
+		{
+
+
+		}
+
+
+
+
+	}
+}
+
+
+/*
+
+		PushdownState::PushdownResult IntroScreen::OnUpdate(float dt, PushdownState** newState)
+		{
+			paintingGame->UpdateGame(dt);
 			if (paintingGame->GetGameTechRenderer()->GetIsSinglePlayer() )
 			{
 				*newState = new SinglePlayerScreen(window, paintingGame);
 				paintingGame->GetGameTechRenderer()->ToggleIsMainMenu();
-				
+
 				return PushdownResult::Push;
 			}
 			if (paintingGame->GetGameTechRenderer()->GetIsSplitScreen())
@@ -45,21 +98,5 @@ namespace NCL {
 			}
 			return PushdownResult::NoChange;
 		}
-		void IntroScreen::OnAwake()
-		{
-			// ImGui Main Menu
 
-			std::cout << "IntroScreen:\n"
-				<< "isSinglePlayer: " << paintingGame->GetGameTechRenderer()->GetIsSinglePlayer() << "\n"
-				<< "isMainMenu: " << paintingGame->GetGameTechRenderer()->GetIsMainMenu() << "\n"
-				<< "isPauseMenu: " << paintingGame->GetGameTechRenderer()->GetIsPauseMenu() << "\n"
-				<< "isExitPauseMenu: " << paintingGame->GetGameTechRenderer()->GetIsExitPauseMenu() << "\n"
-				<< "isExitPaintGame: " << paintingGame->GetGameTechRenderer()->GetIsExitPaintGame() << "\n"
-				<< "isSplitScreen: " << paintingGame->GetGameTechRenderer()->GetIsSplitScreen() << "\n\n";
-				
-
-		}
-
-
-	}
-}
+*/

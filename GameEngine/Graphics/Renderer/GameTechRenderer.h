@@ -17,7 +17,14 @@ namespace NCL {
 
 		class GameTechRenderer : public OGLRenderer	{
 		public:
-
+			enum GameState {
+				MainMenu,
+				SinglePlayer,
+				SplitScreen,
+				LAN,
+				PauseMenu,
+				ExitGame
+			};
 			class RendererSettings {
 			public:
 				class DebugRendererSettings {
@@ -30,11 +37,15 @@ namespace NCL {
 						debugRenderer.setIsDebugItemDisplayed(reactphysics3d::DebugRenderer::DebugItem::COLLIDER_BROADPHASE_AABB, boolean);
 					}
 					reactphysics3d::DebugRenderer& debugRenderer;
-					
+
+
 				private:
 					bool isCollisionShapeEnabled = false;
 					bool isBroadPhaseAABBEnabled = false;
 				};
+
+				
+
 				RendererSettings(reactphysics3d::PhysicsWorld* physicsWorld) : physicsWorld(physicsWorld), debugRendererSettings(physicsWorld) {};
 
 				void SetIsWireFrameModeEnabled(bool boolean) {
@@ -57,6 +68,15 @@ namespace NCL {
 			GameTechRenderer(GameWorld& world, reactphysics3d::PhysicsWorld* physicsWorld);
 			~GameTechRenderer();
 			virtual void Update(float dt);
+
+			GameState gameState = MainMenu;
+			GameState previousGameState;
+			GameState GetGameState() { return gameState; }
+			void SetGameState(GameState gameState) { 
+				previousGameState = this->gameState;
+				this->gameState = gameState; 
+				std::cout << "gameState: " << gameState << "prevGameState: " << previousGameState << "\n";
+			}
 			
 			MeshGeometry*	LoadMesh(const string& name);
 			MeshGeometry* LoadFlatMesh(int hVertexCount = 128, int wVertexCount = 128);

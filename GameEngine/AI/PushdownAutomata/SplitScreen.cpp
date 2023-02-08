@@ -33,22 +33,29 @@ namespace NCL {
 				if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::T)) {
 					window->SetWindowPosition(0, 0);
 				}
+
+				if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::ESCAPE)) {
+					paintingGame->GetGameTechRenderer()->SetGameState(GameTechRenderer::GameState::PauseMenu);
+				}
 				window->SetTitle("Gametech frame time:" + std::to_string(1000.0f * dt));
 				paintingGame->UpdateGame(dt);
-				if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::ESCAPE))
-				{
-					paintingGame->GetGameTechRenderer()->ToggleIsPauseMenu();
-					*newState = new PauseScreen( paintingGame);
-					return PushdownResult::Push;
-				}
-				if (paintingGame->GetGameTechRenderer()->GetIsExitPauseMenu())
-				{
-					paintingGame->GetGameTechRenderer()->ToggleIsMainMenu();
-					paintingGame->GetGameTechRenderer()->ToggleIsExitPauseMenu();
-					paintingGame->GetGameTechRenderer()->ToggleIsSplitScreen();
+
+				GameTechRenderer::GameState gameState = paintingGame->GetGameTechRenderer()->GetGameState();
+				switch (gameState) {
+				case GameTechRenderer::GameState::SplitScreen: {
+					return PushdownResult::NoChange;
+				}	break;
+
+				case GameTechRenderer::GameState::MainMenu: {
 					return PushdownResult::Pop;
+				}break;
+
+				case GameTechRenderer::GameState::PauseMenu: {
+					*newState = new PauseScreen(paintingGame);
+					return PushdownResult::Push;
+				}break;
+
 				}
-				return PushdownResult::NoChange;
 			}
 		}
 		void SplitScreen::OnAwake()

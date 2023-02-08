@@ -10,7 +10,7 @@ namespace NCL {
 		public:
 			PushdownMachine(PushdownState* initialState);
 			~PushdownMachine();
-
+			void Reset();
 			bool Update(float dt);
 
 		protected:

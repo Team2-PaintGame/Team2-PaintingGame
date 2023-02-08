@@ -18,13 +18,11 @@ using namespace CSC8508;
 void PushdownAutomata(Window* window, PaintingGame* paintingGame) {
 	PushdownMachine machine(new IntroScreen(window, paintingGame));
 	while (window->UpdateWindow()) {
-		float time = window->GetTimer()->GetTotalTimeSeconds();
 		float dt = window->GetTimer()->GetTimeDeltaSeconds();
 		if (!machine.Update(dt)) {
 			return;
 		}
 	}
-
 }
 
 int main() {
