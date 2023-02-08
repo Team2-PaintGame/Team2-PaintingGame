@@ -52,7 +52,6 @@ namespace NCL {
 			std::map<std::string, ShaderBase*> shaders;
 
 			//Coursework Additional functionality	
-			float remainingTime = 30;
 			PlayerBase* player = NULL;
 			PlayerBase* netPlayer = NULL;
 			PlayerController* playerController;

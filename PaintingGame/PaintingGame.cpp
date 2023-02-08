@@ -32,7 +32,6 @@ PaintingGame::PaintingGame(bool online) {
 	InitialiseAssets();
 	physicsWorld->setIsGravityEnabled(useGravity);
 	renderer->UseFog(useFog);
-	renderer->UseSplitScreen(false);
 
 	renderer->settings.SetIsDebugRenderingModeEnabled(true);
 	renderer->settings.debugRendererSettings.SetIsCollisionShapeDisplayed(true);
@@ -111,7 +110,11 @@ PaintingGame::~PaintingGame() {
 
 void PaintingGame::UpdateGame(float dt) {
 	world->GetMainCamera()->UpdateCamera(dt);
-	world->GetSecondCamera()->UpdateCamera(dt);
+
+	if (renderer->GetIsSplitScreen())
+	{
+		world->GetSecondCamera()->UpdateCamera(dt);
+	}
 	if (thirdPersonCamera)
 	{
 		playerController->Update(dt);
@@ -120,13 +123,13 @@ void PaintingGame::UpdateGame(float dt) {
 	world->UpdateWorld(dt);
 	renderer->Update(dt);
 	physicsWorld->update(dt);
-	remainingTime = remainingTime - dt;
 	Debug::UpdateRenderables(dt);
 
 }
 
 void PaintingGame::InitCamera()
 {
+	float aspect_divide = renderer->GetIsSplitScreen() ? 2.0f : 1.0f;
 
 	if (thirdPersonCamera) {
 		world->GetMainCamera()->SetThirdPersonCamera(player);
@@ -136,7 +139,7 @@ void PaintingGame::InitCamera()
 	}
 
 	world->GetMainCamera()->SetBasicCameraParameters(-15.0f, 315.0f, Vector3(-60, 40, 60), 0.1f, 500.0f);
-	world->GetMainCamera()->SetPerspectiveCameraParameters(Window::GetWindow()->GetScreenAspect());
+	world->GetMainCamera()->SetPerspectiveCameraParameters(Window::GetWindow()->GetScreenAspect() / aspect_divide);
 
 	if (thirdPersonCamera) {
 		world->GetSecondCamera()->SetThirdPersonCamera(player);
@@ -146,13 +149,11 @@ void PaintingGame::InitCamera()
 	}
 
 	world->GetSecondCamera()->SetBasicCameraParameters(-15.0f, 315.0f, Vector3(-60, 40, 60), 0.1f, 500.0f);
-	world->GetSecondCamera()->SetPerspectiveCameraParameters(Window::GetWindow()->GetScreenAspect());
+	world->GetSecondCamera()->SetPerspectiveCameraParameters(Window::GetWindow()->GetScreenAspect() / aspect_divide);
 }
 
 void PaintingGame::InitWorld() {
 	world->ClearAndErase();
-
-	remainingTime = 2 * 60;
 
 	//TerrainTexturePack terrainTexturePack(textures.at("terrainSplatMap"), textures.at("terrainRTex"), textures.at("terrainGTex"), textures.at("terrainBTex"), textures.at("terrainBgTex"));
 	//world->AddGameObject(new Terrain(*physicsCommon, physicsWorld, Vector2(), meshes.at("terrainMesh"), terrainTexturePack, shaders.at("terrainShader")));
