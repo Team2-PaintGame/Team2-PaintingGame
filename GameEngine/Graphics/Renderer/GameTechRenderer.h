@@ -67,15 +67,29 @@ namespace NCL {
 
 			void UseFog(bool val) { useFog = val; }
 			void UseSplitScreen(bool IsSplitScreen) { bUseSplitScreen = IsSplitScreen; }
-
+			void ToggleIsMainMenu(){ isMainMenu = !isMainMenu; }
+			bool GetIsMainMenu() { return isMainMenu; }
+			void ToggleIsSinglePlayer() { isSinglePlayer = !isSinglePlayer; }
+			bool GetIsSinglePlayer() { return isSinglePlayer; }
+			void ToggleIsPauseMenu() { isPauseMenu = !isPauseMenu; }
+			bool GetIsPauseMenu() { return isPauseMenu; }
+			void ToggleIsExitPauseMenu() { isExitPauseMenu = !isExitPauseMenu; }
+			bool GetIsExitPauseMenu() { return isExitPauseMenu; }
+			void ToggleIsExitPaintGame() { isExitPaintGame = !isExitPaintGame; }
+			bool GetIsExitPaintGame() { return isExitPaintGame; }
+			void ToggleIsSplitScreen() { isSplitScreen = !isSplitScreen; }
+			bool GetIsSplitScreen() { return isSplitScreen; }
+			
 			RendererSettings settings;
 		protected:
 			void NewRenderLines(Camera& cam);
 			void NewRenderText();
 			void ShowMainMenuWindow();
+			void ShowPauseMenuWindow();
 
 			void RenderFrame()	override;
 			void RenderInSingleViewport();
+			void RenderMainMenu();
 			void RenderFirstFrame();
 			void RenderSecondFrame();
 
@@ -95,6 +109,7 @@ namespace NCL {
 
 			void SetDebugStringBufferSizes(size_t newVertCount);
 			void SetDebugLineBufferSizes(size_t newVertCount);
+			
 
 			vector<const RenderObject*> activeObjects;
 
@@ -137,6 +152,13 @@ namespace NCL {
 
 			//SplitScreen thing
 			bool bUseSplitScreen = false;
+			//Pushdown Automata Booleans
+			bool isSinglePlayer = false;
+			bool isMainMenu = true;
+			bool isPauseMenu = false;
+			bool isExitPauseMenu = false;
+			bool isExitPaintGame = false;
+			bool isSplitScreen = false;
 		};
 	}
 }

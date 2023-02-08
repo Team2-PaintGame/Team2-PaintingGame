@@ -15,7 +15,7 @@ namespace NCL {
 			void OnAwake() override;
 			void ExitGame();
 		protected:
-			bool isPauseScreen, isExitGame, isPlayingGame;
+			bool isPlayingGame;
 			Window* window;
 			PaintingGame* paintingGame;
 		};

@@ -1,5 +1,7 @@
 #pragma once
 #include "PushdownState.h"
+#include <Window.h>
+#include "../../../../PaintingGame/PaintingGame.h"
 
 namespace NCL {
 	namespace CSC8508 {
@@ -7,12 +9,14 @@ namespace NCL {
 		class IntroScreen : public PushdownState
 		{
 		public:
-			IntroScreen();
+			IntroScreen(Window* window, PaintingGame* paintingGame);
 			~IntroScreen();
 			PushdownResult OnUpdate(float dt, PushdownState** newState) override;
 			void OnAwake() override;
 		protected:
-			bool isSinglePlayer, isSplitScreen, isLanScreen, isExit;
+			bool isLanScreen;
+			Window* window;
+			PaintingGame* paintingGame;
 		};
 
 	}

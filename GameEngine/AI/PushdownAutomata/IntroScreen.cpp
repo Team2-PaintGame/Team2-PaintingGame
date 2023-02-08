@@ -6,45 +6,58 @@
 
 namespace NCL {
 	namespace CSC8508 {
-		IntroScreen::IntroScreen() 
+		IntroScreen::IntroScreen(Window* window, PaintingGame* paintingGame)
 		{
-			isSinglePlayer, isSplitScreen, isLanScreen, isExit = false;
+			isLanScreen = false;
+			this->window = window;
+			this->paintingGame = paintingGame;
 		}
 		IntroScreen::~IntroScreen()
 		{
 
 		}
-		PushdownState::PushdownResult IntroScreen::OnUpdate(float dt, PushdownState** newState)  
+		PushdownState::PushdownResult IntroScreen::OnUpdate(float dt, PushdownState** newState)
 		{
-			if (isSinglePlayer)
+			paintingGame->UpdateGame(dt);
+		//	std::cout << "isMainMenu: " << paintingGame->GetGameTechRenderer()->GetIsMainMenu() << "\n";
+			if (paintingGame->GetGameTechRenderer()->GetIsSinglePlayer() )
 			{
-				*newState = new SinglePlayerScreen();
-				isSinglePlayer = !isSinglePlayer;
+				*newState = new SinglePlayerScreen(window, paintingGame);
+				paintingGame->GetGameTechRenderer()->ToggleIsMainMenu();
+				
 				return PushdownResult::Push;
 			}
-			if (isSplitScreen)
+			if (paintingGame->GetGameTechRenderer()->GetIsSplitScreen())
 			{
-				*newState = new SplitScreen();
-				isSplitScreen = !isSplitScreen;
+				*newState = new SplitScreen(window, paintingGame);
+				paintingGame->GetGameTechRenderer()->ToggleIsMainMenu();
 				return PushdownResult::Push;
 			}
 			if (isLanScreen)
 			{
 				*newState = new LanScreen();
-				isLanScreen = !isLanScreen;
+				paintingGame->GetGameTechRenderer()->ToggleIsMainMenu();
 				return PushdownResult::Push;
 			}
-			if (isExit)
+			if (paintingGame->GetGameTechRenderer()->GetIsExitPaintGame())
 			{
-				isExit = !isExit;
 				return PushdownResult::Pop;
 			}
 			return PushdownResult::NoChange;
 		}
-		void IntroScreen::OnAwake() 
+		void IntroScreen::OnAwake()
 		{
 			// ImGui Main Menu
-			std::cout << "Welcome to Splat at the Museum\n";
+
+			std::cout << "IntroScreen:\n"
+				<< "isSinglePlayer: " << paintingGame->GetGameTechRenderer()->GetIsSinglePlayer() << "\n"
+				<< "isMainMenu: " << paintingGame->GetGameTechRenderer()->GetIsMainMenu() << "\n"
+				<< "isPauseMenu: " << paintingGame->GetGameTechRenderer()->GetIsPauseMenu() << "\n"
+				<< "isExitPauseMenu: " << paintingGame->GetGameTechRenderer()->GetIsExitPauseMenu() << "\n"
+				<< "isExitPaintGame: " << paintingGame->GetGameTechRenderer()->GetIsExitPaintGame() << "\n"
+				<< "isSplitScreen: " << paintingGame->GetGameTechRenderer()->GetIsSplitScreen() << "\n\n";
+				
+
 		}
 
 

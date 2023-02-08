@@ -110,22 +110,19 @@ PaintingGame::~PaintingGame() {
 }
 
 void PaintingGame::UpdateGame(float dt) {
-
 	world->GetMainCamera()->UpdateCamera(dt);
 	world->GetSecondCamera()->UpdateCamera(dt);
-
 	if (thirdPersonCamera)
 	{
 		playerController->Update(dt);
 	}
-
 	renderer->Render();
 	world->UpdateWorld(dt);
 	renderer->Update(dt);
 	physicsWorld->update(dt);
-
 	remainingTime = remainingTime - dt;
 	Debug::UpdateRenderables(dt);
+
 }
 
 void PaintingGame::InitCamera()
@@ -186,5 +183,10 @@ PlayerBase* PaintingGame::InitialiseNetworkPlayer() {
 	netPlayer = new PlayerBase(physicsCommon, physicsWorld, Vector3(0, 50, 10), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 5);
 	world->AddGameObject(netPlayer);
 	return netPlayer;
+}
+
+GameTechRenderer* PaintingGame::GetGameTechRenderer()
+{
+	return renderer;
 }
 

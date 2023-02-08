@@ -21,6 +21,7 @@ namespace NCL {
 			PaintingGame(bool online = false);
 			~PaintingGame();
 			virtual void UpdateGame(float dt);
+			GameTechRenderer* GetGameTechRenderer();
 		protected:
 			void InitialiseAssets();
 			void InitCamera();
