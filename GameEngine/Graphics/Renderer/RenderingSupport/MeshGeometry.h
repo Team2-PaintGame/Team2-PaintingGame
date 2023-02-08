@@ -56,7 +56,8 @@ namespace NCL {
 		std::string("Normals"),
 		std::string("Tangents"),
 		std::string("Joint Weights"),
-		std::string("Joint Indices")
+		std::string("Joint Indices"),
+		std::string("Instanced Model Matrices")
 	};
 
 	struct SubMesh {
@@ -88,6 +89,10 @@ namespace NCL {
 
 		unsigned int GetIndexCount()  const {
 			return (unsigned int)indices.size();
+		}
+
+		unsigned int GetInstanceCount()  const {
+			return (unsigned int)numInstances;
 		}
 
 		unsigned int GetJointCount() const {
@@ -222,5 +227,6 @@ namespace NCL {
 
 		std::vector<int>			bindPoseIndices; //New!
 		std::vector<SubMeshPoses>	bindPoseStates;  //New!
+		int numInstances = 0;
 	};
 }
