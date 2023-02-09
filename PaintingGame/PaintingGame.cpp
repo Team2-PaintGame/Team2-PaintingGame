@@ -142,7 +142,7 @@ void PaintingGame::UpdateGame(float dt) {
 	physicsWorld->update(dt);
 	Debug::UpdateRenderables(dt);
 
-	if (!gamepad->Refresh())
+	/*if (!gamepad->Refresh())
 	{
 		if (wasConnected)
 		{
@@ -159,7 +159,7 @@ void PaintingGame::UpdateGame(float dt) {
 
 			std::cout << "Controller connected on port " << gamepad->GetPort() << std::endl;
 		}
-	}
+	}*/
 }
 
 void PaintingGame::InitCamera()
