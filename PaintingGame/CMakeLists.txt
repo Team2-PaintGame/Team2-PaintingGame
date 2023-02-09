@@ -200,6 +200,7 @@ endif()
 ################################################################################
 if(MSVC)
     target_link_libraries(${PROJECT_NAME} LINK_PUBLIC  "Winmm.lib")
+    target_link_libraries(${PROJECT_NAME} LINK_PUBLIC  "xinput.lib")
 endif()
 
 include_directories("./GameObjects")
