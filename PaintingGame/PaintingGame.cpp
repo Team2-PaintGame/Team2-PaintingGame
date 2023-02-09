@@ -3,6 +3,7 @@
 #include <Debug.h>
 #include "Box.h"
 #include "Floor.h"
+#include "ParticleSystem.h"
 
 using namespace NCL;
 using namespace CSC8508;
@@ -46,6 +47,8 @@ for this module, even in the coursework, but you can add it if you like!
 */
 void PaintingGame::InitialiseAssets() {
 	meshes.insert(std::make_pair("cubeMesh", renderer->LoadMesh("cube.msh")));
+	meshes.insert(std::make_pair("cubeMesh2", renderer->LoadMesh("cube.msh")));
+
 	meshes.insert(std::make_pair("sphereMesh", renderer->LoadMesh("sphere.msh")));
 	meshes.insert(std::make_pair("goatMesh", renderer->LoadMesh("goat.msh")));
 	meshes.insert(std::make_pair("enemyMesh", renderer->LoadMesh("Keeper.msh")));
@@ -71,6 +74,8 @@ void PaintingGame::InitialiseAssets() {
 
 
 	shaders.insert(std::make_pair("basicShader", renderer->LoadShader("scene.vert", "scene.frag")));
+	shaders.insert(std::make_pair("instancedShader", renderer->LoadShader("sceneInstanced.vert", "scene.frag")));
+
 	shaders.insert(std::make_pair("terrainShader", renderer->LoadShader("terrain.vert", "terrain.frag")));
 	shaders.insert(std::make_pair("skinningShader", renderer->LoadShader("skinning.vert", "scene.frag")));
 
@@ -152,6 +157,8 @@ void PaintingGame::InitWorld() {
 	for (int x = 0; x < 15; ++x) {
 		world->AddGameObject(new Box(physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 2));
 	}
+
+	world->AddGameObject(new ParticleSystem(physicsCommon, physicsWorld, meshes.at("cubeMesh2"), textures.at("grassTex"), shaders.at("instancedShader")));
 }
 
 void PaintingGame::InitiliazePlayer() {
