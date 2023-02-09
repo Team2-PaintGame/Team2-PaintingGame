@@ -14,6 +14,8 @@
 #include <PlayerController.h>
 #include <reactphysics3d/reactphysics3d.h>
 
+class Gamepad;
+
 namespace NCL {
 	namespace CSC8508 {
 		class PaintingGame {
@@ -65,6 +67,9 @@ namespace NCL {
 			reactphysics3d::PhysicsWorld* physicsWorld = NULL; 
 
 			int numberOfPlayerControllers = 1;
+
+			Gamepad* gamepad = NULL;
+			bool wasConnected = true;
 		};
 	}
 }

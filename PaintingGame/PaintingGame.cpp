@@ -3,12 +3,14 @@
 #include <Debug.h>
 #include "Box.h"
 #include "Floor.h"
+#include "InputController.h"
 
 using namespace NCL;
 using namespace CSC8508;
 
 PaintingGame::PaintingGame(bool online) {
 	world = new GameWorld();
+	gamepad = new Gamepad();
 
 	/* Code for changing physics system paramaters
 	// Create the world settings 
@@ -140,6 +142,24 @@ void PaintingGame::UpdateGame(float dt) {
 	physicsWorld->update(dt);
 	Debug::UpdateRenderables(dt);
 
+	if (!gamepad->Refresh())
+	{
+		if (wasConnected)
+		{
+			wasConnected = false;
+
+			std::cout << "Please connect an Xbox 360 controller." << std::endl;
+		}
+	}
+	else
+	{
+		if (!wasConnected)
+		{
+			wasConnected = true;
+
+			std::cout << "Controller connected on port " << gamepad->GetPort() << std::endl;
+		}
+	}
 }
 
 void PaintingGame::InitCamera()

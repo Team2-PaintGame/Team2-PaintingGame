@@ -1,5 +1,4 @@
 #include"InputController.h"
-#include<iostream>
 
 
 using namespace std;

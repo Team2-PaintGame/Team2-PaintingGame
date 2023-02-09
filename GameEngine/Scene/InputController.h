@@ -1,9 +1,7 @@
+#include<iostream>
 #include<Windows.h>
 #include<Xinput.h>
 
-//struct XINPUT_STATE {};
-//struct XINPUT_GAMEPAD;
-//typedef unsigned short WORD;
 
 class Gamepad
 {
