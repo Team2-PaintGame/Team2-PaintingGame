@@ -187,12 +187,19 @@ void OGLMesh::BindVertexAttribute_i(int attribSlot, int buffer, int bindingID, i
 }
 
 void OGLMesh::BindVertexAttributeInstanced(int attribSlot, int buffer, int bindingID, int elementCount, int elementSize, int elementOffset, int divisor) {
-	glEnableVertexAttribArray(attribSlot);
-	glVertexAttribFormat(attribSlot, elementCount, GL_FLOAT, false, 0);
-	glVertexAttribBinding(attribSlot, bindingID);
+	int floatsPerRow = 4;
+	int bytesPerRow = floatsPerRow * sizeof(float); // 16
+	int bytesPerMatrix = bytesPerRow * 4; //64
+	for (int i = 0; i < 4; i++) {
+		int rowOffset = bytesPerRow * i;
+		glEnableVertexAttribArray(attribSlot + i);
+		glVertexAttribPointer(attribSlot + i, 4, GL_FLOAT, GL_FALSE, sizeof(Matrix4), (void*)(sizeof(Vector4) * i));
+		/*glVertexAttribFormat(attribSlot + i, 4, GL_FLOAT, false, sizeof(float) * i * 4); //correct
+		glVertexAttribBinding(attribSlot + i, bindingID + i);
 
-	glBindVertexBuffer(bindingID, buffer, elementOffset, elementSize);
-	glVertexAttribDivisor(attribSlot, divisor);
+		glBindVertexBuffer(bindingID + i, buffer, elementOffset, sizeof(Matrix4));*/
+		glVertexAttribDivisor(attribSlot + i, divisor);
+	}
 }
 
 void OGLMesh::UploadToGPU(Rendering::RendererBase* renderer) {
@@ -291,8 +298,8 @@ void OGLMesh::UploadInstancedModelMatricesToGPU(int numInstances, const std::vec
 	if (numInstances > 0) {
 		this->numInstances = numInstances;
 		glBindVertexArray(vao);
-		CreateVertexBuffer(attributeBuffers[VertexAttribute::InstancedModelMatrices], numInstances * sizeof(Matrix4), (float*)&instancedModelMatrices);
-		BindVertexAttributeInstanced(VertexAttribute::InstancedModelMatrices, attributeBuffers[VertexAttribute::InstancedModelMatrices], VertexAttribute::InstancedModelMatrices, 16, sizeof(Matrix4), 0, 1);
+		CreateVertexBuffer(attributeBuffers[VertexAttribute::InstancedModelMatrices], numInstances * sizeof(Matrix4), (float*)instancedModelMatrices.data());
+		BindVertexAttributeInstanced(VertexAttribute::InstancedModelMatrices, attributeBuffers[VertexAttribute::InstancedModelMatrices], VertexAttribute::InstancedModelMatrices, 4, 64, 0, 1);
 		glBindVertexArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
