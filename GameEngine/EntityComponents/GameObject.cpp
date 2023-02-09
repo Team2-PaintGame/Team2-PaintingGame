@@ -11,6 +11,7 @@ GameObject::GameObject(reactphysics3d::PhysicsCommon& physicsCommon, reactphysic
 	isActive		= true;
 	renderObject	= nullptr;
 	networkObject	= nullptr;
+	rigidBody		= nullptr;
 }
 
 GameObject::~GameObject()	{
