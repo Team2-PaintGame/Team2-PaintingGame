@@ -103,54 +103,65 @@ PaintingGame::~PaintingGame() {
 	for (const auto& [key, val] : meshAnimations) {
 		delete val;
 	}
+	for (auto& pc : playerControllers)
+	{
+		if (pc)	delete pc;
+	}
+
 	delete renderer;
 	delete world;
 }
 
 void PaintingGame::UpdateGame(float dt) {
 	world->GetMainCamera()->UpdateCamera(dt);
-	world->GetSecondCamera()->UpdateCamera(dt);
+
+	if (renderer->GetIsSplitScreen())
+	{
+		world->GetSecondCamera()->UpdateCamera(dt);
+	}
 	if (thirdPersonCamera)
 	{
-		playerController->Update(dt);
+		for (int i = 0; i < 2; i++)
+		{
+			playerControllers[i]->Update(dt);
+		}
+	
 	}
 	renderer->Render();
 	world->UpdateWorld(dt);
 	renderer->Update(dt);
 	physicsWorld->update(dt);
-	remainingTime = remainingTime - dt;
 	Debug::UpdateRenderables(dt);
 
 }
 
 void PaintingGame::InitCamera()
 {
+	float aspect_divide = renderer->GetIsSplitScreen() ? 2.0f : 1.0f;
 
 	if (thirdPersonCamera) {
-		world->GetMainCamera()->SetThirdPersonCamera(player);
+		world->GetMainCamera()->SetThirdPersonCamera(players[0]);
 	}
 	else {
 		world->GetMainCamera()->SetFirstPersonCamera();
 	}
 
 	world->GetMainCamera()->SetBasicCameraParameters(-15.0f, 315.0f, Vector3(-60, 40, 60), 0.1f, 500.0f);
-	world->GetMainCamera()->SetPerspectiveCameraParameters(Window::GetWindow()->GetScreenAspect());
+	world->GetMainCamera()->SetPerspectiveCameraParameters(Window::GetWindow()->GetScreenAspect() / aspect_divide);
 
 	if (thirdPersonCamera) {
-		world->GetSecondCamera()->SetThirdPersonCamera(player);
+		world->GetSecondCamera()->SetThirdPersonCamera(players[1]);
 	}
 	else {
 		world->GetSecondCamera()->SetFirstPersonCamera();
 	}
 
 	world->GetSecondCamera()->SetBasicCameraParameters(-15.0f, 315.0f, Vector3(-60, 40, 60), 0.1f, 500.0f);
-	world->GetSecondCamera()->SetPerspectiveCameraParameters(Window::GetWindow()->GetScreenAspect());
+	world->GetSecondCamera()->SetPerspectiveCameraParameters(Window::GetWindow()->GetScreenAspect() / aspect_divide);
 }
 
 void PaintingGame::InitWorld() {
 	world->ClearAndErase();
-
-	remainingTime = 2 * 60;
 
 	//TerrainTexturePack terrainTexturePack(textures.at("terrainSplatMap"), textures.at("terrainRTex"), textures.at("terrainGTex"), textures.at("terrainBTex"), textures.at("terrainBgTex"));
 	//world->AddGameObject(new Terrain(*physicsCommon, physicsWorld, Vector2(), meshes.at("terrainMesh"), terrainTexturePack, shaders.at("terrainShader")));
@@ -170,10 +181,15 @@ void PaintingGame::InitWorld() {
 
 
 PlayerBase* PaintingGame::InitiliazePlayer() {
-	player = new PlayerBase(physicsCommon, physicsWorld, Vector3(0, 50, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 5);
-	world->AddGameObject(player);
-	playerController = new PlayerController(world->GetMainCamera(), player);
-	return player;
+	players[0] = new PlayerBase(physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 5);
+	world->AddGameObject(players[0]);
+	playerControllers[0] = new PlayerController(world->GetMainCamera(), players[0]);
+
+	players[1] = new PlayerBase(physicsCommon, physicsWorld, Vector3(10, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 5);
+	world->AddGameObject(players[1]);
+	playerControllers[1] = new PlayerController(world->GetSecondCamera(), players[1]);
+
+	return players[0];
 }
 
 PlayerBase* PaintingGame::InitialiseNetworkPlayer() {
