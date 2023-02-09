@@ -45,7 +45,6 @@ namespace NCL {
 		Tangents,
 		JointWeights,
 		JointIndices,
-		InstancedModelMatrices,
 		MAX_ATTRIBUTES
 	};
 
@@ -57,7 +56,6 @@ namespace NCL {
 		std::string("Tangents"),
 		std::string("Joint Weights"),
 		std::string("Joint Indices"),
-		std::string("Instanced Model Matrices")
 	};
 
 	struct SubMesh {
@@ -182,7 +180,6 @@ namespace NCL {
 		void SetDebugName(const std::string& debugName);
 
 		virtual void UploadToGPU(Rendering::RendererBase* renderer = nullptr) = 0;
-		virtual void UploadInstancedModelMatricesToGPU(int numInstances = 0, const std::vector<Matrix4>& instancedModelMatrices = std::vector<Matrix4>()) = 0;
 		static MeshGeometry* GenerateTriangle(MeshGeometry* input);
 
 	protected:

@@ -186,22 +186,6 @@ void OGLMesh::BindVertexAttribute_i(int attribSlot, int buffer, int bindingID, i
 	glBindVertexBuffer(bindingID, buffer, elementOffset, elementSize);
 }
 
-void OGLMesh::BindVertexAttributeInstanced(int attribSlot, int buffer, int bindingID, int elementCount, int elementSize, int elementOffset, int divisor) {
-	int floatsPerRow = 4;
-	int bytesPerRow = floatsPerRow * sizeof(float); // 16
-	int bytesPerMatrix = bytesPerRow * 4; //64
-	for (int i = 0; i < 4; i++) {
-		int rowOffset = bytesPerRow * i;
-		glEnableVertexAttribArray(attribSlot + i);
-		glVertexAttribPointer(attribSlot + i, 4, GL_FLOAT, GL_FALSE, sizeof(Matrix4), (void*)(sizeof(Vector4) * i));
-		/*glVertexAttribFormat(attribSlot + i, 4, GL_FLOAT, false, sizeof(float) * i * 4); //correct
-		glVertexAttribBinding(attribSlot + i, bindingID + i);
-
-		glBindVertexBuffer(bindingID + i, buffer, elementOffset, sizeof(Matrix4));*/
-		glVertexAttribDivisor(attribSlot + i, divisor);
-	}
-}
-
 void OGLMesh::UploadToGPU(Rendering::RendererBase* renderer) {
 	if (!ValidateMeshData()) {
 		return;
@@ -293,19 +277,6 @@ void OGLMesh::UpdateGPUBuffers(unsigned int startVertex, unsigned int vertexCoun
 	}
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
-
-void OGLMesh::UploadInstancedModelMatricesToGPU(int numInstances, const std::vector<Matrix4>& instancedModelMatrices) {
-	if (numInstances > 0) {
-		this->numInstances = numInstances;
-		glBindVertexArray(vao);
-		CreateVertexBuffer(attributeBuffers[VertexAttribute::InstancedModelMatrices], numInstances * sizeof(Matrix4), (float*)instancedModelMatrices.data());
-		BindVertexAttributeInstanced(VertexAttribute::InstancedModelMatrices, attributeBuffers[VertexAttribute::InstancedModelMatrices], VertexAttribute::InstancedModelMatrices, 4, 64, 0, 1);
-		glBindVertexArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	}
-}
-
 
 void OGLMesh::RecalculateNormals() {
 	normals.clear();

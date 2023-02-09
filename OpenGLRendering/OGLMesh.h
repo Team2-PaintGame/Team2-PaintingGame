@@ -9,7 +9,6 @@ https://research.ncl.ac.uk/game/
 #pragma once
 #include "MeshGeometry.h"
 #include "glad\gl.h"
-#include "Matrix4.h"
 #include <string>
 
 namespace NCL {
@@ -32,12 +31,10 @@ namespace NCL {
 
 			void UploadToGPU(Rendering::RendererBase* renderer = nullptr) override;
 			void UpdateGPUBuffers(unsigned int startVertex, unsigned int vertexCount);
-			virtual void UploadInstancedModelMatricesToGPU(int numInstances = 0, const std::vector<Matrix4>& instancedModelMatrices = std::vector<Matrix4>());
 		protected:
 			GLuint	GetVAO()			const { return vao;			}
 			void BindVertexAttribute(int attribSlot, int bufferID, int bindingID, int elementCount, int elementSize, int elementOffset);
 			void BindVertexAttribute_i(int attribSlot, int bufferID, int bindingID, int elementCount, int elementSize, int elementOffset);
-			void BindVertexAttributeInstanced(int attribSlot, int bufferID, int bindingID, int elementCount, int elementSize, int elementOffset, int divisor);
 
 			int		subCount;
 
