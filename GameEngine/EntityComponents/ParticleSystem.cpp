@@ -14,5 +14,5 @@ ParticleSystem::ParticleSystem(reactphysics3d::PhysicsCommon& physicsCommon, rea
 
 	renderObject = new RenderObject(transforms, mesh, shader);
 	renderObject->AddTexture(texture);
-	mesh->SetInstanceCount(numParticles);
+	renderObject->SetInstanceCount(numParticles);
 }

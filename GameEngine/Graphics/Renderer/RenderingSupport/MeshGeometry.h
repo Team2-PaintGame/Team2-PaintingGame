@@ -89,14 +89,6 @@ namespace NCL {
 			return (unsigned int)indices.size();
 		}
 
-		unsigned int GetInstanceCount()  const {
-			return (unsigned int)numInstances;
-		}
-
-		void SetInstanceCount(unsigned int num) {
-			numInstances = num;
-		}
-
 		unsigned int GetJointCount() const {
 			return (unsigned int)jointNames.size();
 		}
@@ -228,6 +220,5 @@ namespace NCL {
 
 		std::vector<int>			bindPoseIndices; //New!
 		std::vector<SubMeshPoses>	bindPoseStates;  //New!
-		unsigned int numInstances = 0;
 	};
 }

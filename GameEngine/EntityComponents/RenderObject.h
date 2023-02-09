@@ -41,6 +41,14 @@ namespace NCL {
 				return subMeshTextures.at(subMeshIndex);
 			}
 
+			unsigned int GetInstanceCount()  const {
+				return (unsigned int)numInstances;
+			}
+
+			void SetInstanceCount(unsigned int num) {
+				numInstances = num;
+			}
+
 			MeshGeometry*	GetMesh() const {
 				return mesh;
 			}
@@ -96,6 +104,7 @@ namespace NCL {
 			std::vector<Transform*> transforms;
 			Vector4			colour;
 			bool	rigged = false;
+			unsigned int numInstances = 0;
 		};
 	}
 }

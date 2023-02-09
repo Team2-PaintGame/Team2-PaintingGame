@@ -140,7 +140,7 @@ void GameTechRenderer::RenderShadowMap() {
 	shadowMatrix = biasMatrix * mvMatrix; //we'll use this one later on
 
 	for (const auto&i : activeObjects) {
-		unsigned int numInstances = i->GetMesh()->GetInstanceCount();
+		unsigned int numInstances = i->GetInstanceCount();
 		if (numInstances == 0) {
 			Matrix4 modelMatrix = (*i).GetTransform()->GetMatrix();
 			Matrix4 mvpMatrix = mvMatrix * modelMatrix;
@@ -148,7 +148,7 @@ void GameTechRenderer::RenderShadowMap() {
 			BindMesh((*i).GetMesh());
 			int layerCount = (*i).GetMesh()->GetSubMeshCount();
 			for (int i = 0; i < layerCount; ++i) {
-				DrawBoundMesh(i);
+				DrawBoundMesh(i, numInstances);
 			}
 		}
 	}
@@ -368,7 +368,7 @@ void GameTechRenderer::RenderCamera() {
 			activeShader = shader;
 		}
 
-		unsigned int numInstances = i->GetMesh()->GetInstanceCount();
+		unsigned int numInstances = i->GetInstanceCount();
 		if (numInstances > 0) {
 			std::vector<Transform*> transforms = i->GetTransforms();
 			for (int i = 0; i < numInstances; i++) {
@@ -410,7 +410,7 @@ void GameTechRenderer::RenderCamera() {
 				BindTextureToShader(texturePairs.second, texturePairs.first, texUnit);
 				texUnit++;
 			}
-			DrawBoundMesh(index);
+			DrawBoundMesh(index, numInstances);
 		}
 		if (i->IsRigged()) {
 			vector<Matrix4> frameMatrices;
