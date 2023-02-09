@@ -17,7 +17,8 @@ namespace NCL {
 		{
 			isLanScreen = false;
 			this->window = window;
-
+			PaintingGame g(false);
+			paintingGame = &g;
 		}
 		IntroScreen::~IntroScreen()
 		{
@@ -40,8 +41,8 @@ namespace NCL {
 				}break;
 
 				case GameTechRenderer::GameState::LAN: {
-					*newState = new LanScreen();
-					return PushdownResult::Push;
+					*newState = new LanScreen(window, paintingGame);
+					return PushdownResult::Push; // Add in when we have LAN game created
 				}break;
 
 				case GameTechRenderer::GameState::ExitGame: {
@@ -54,49 +55,11 @@ namespace NCL {
 
 			}
 		}
-
 		void IntroScreen::OnAwake()
 		{
 
 
 		}
-
-
-
-
 	}
 }
 
-
-/*
-
-		PushdownState::PushdownResult IntroScreen::OnUpdate(float dt, PushdownState** newState)
-		{
-			paintingGame->UpdateGame(dt);
-			if (paintingGame->GetGameTechRenderer()->GetIsSinglePlayer() )
-			{
-				*newState = new SinglePlayerScreen(window, paintingGame);
-				paintingGame->GetGameTechRenderer()->ToggleIsMainMenu();
-
-				return PushdownResult::Push;
-			}
-			if (paintingGame->GetGameTechRenderer()->GetIsSplitScreen())
-			{
-				*newState = new SplitScreen(window, paintingGame);
-				paintingGame->GetGameTechRenderer()->ToggleIsMainMenu();
-				return PushdownResult::Push;
-			}
-			if (isLanScreen)
-			{
-				*newState = new LanScreen();
-				paintingGame->GetGameTechRenderer()->ToggleIsMainMenu();
-				return PushdownResult::Push;
-			}
-			if (paintingGame->GetGameTechRenderer()->GetIsExitPaintGame())
-			{
-				return PushdownResult::Pop;
-			}
-			return PushdownResult::NoChange;
-		}
-
-*/

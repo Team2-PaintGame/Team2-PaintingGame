@@ -29,11 +29,9 @@ namespace NCL {
 				if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::NEXT)) {
 					window->ShowConsole(false);
 				}
-
 				if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::T)) {
 					window->SetWindowPosition(0, 0);
 				}
-
 				if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::ESCAPE)) {
 					paintingGame->GetGameTechRenderer()->SetGameState(GameTechRenderer::GameState::PauseMenu);
 				}
@@ -60,13 +58,7 @@ namespace NCL {
 		}
 		void SplitScreen::OnAwake()
 		{
-			std::cout<<"Split Screen: \n"
-			<< "isSinglePlayer: " << paintingGame->GetGameTechRenderer()->GetIsSinglePlayer() << "\n"
-				<< "isMainMenu: " << paintingGame->GetGameTechRenderer()->GetIsMainMenu() << "\n"
-				<< "isPauseMenu: " << paintingGame->GetGameTechRenderer()->GetIsPauseMenu() << "\n"
-				<< "isExitPauseMenu: " << paintingGame->GetGameTechRenderer()->GetIsExitPauseMenu() << "\n"
-				<< "isExitPaintGame: " << paintingGame->GetGameTechRenderer()->GetIsExitPaintGame() << "\n"
-				<< "isSplitScreen: " << paintingGame->GetGameTechRenderer()->GetIsSplitScreen() << "\n\n";
+
 		}
 
 	}

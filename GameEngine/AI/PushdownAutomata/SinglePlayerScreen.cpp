@@ -12,7 +12,6 @@ namespace NCL {
 			isPlayingGame = true;
 			this->window = window;
 			this->paintingGame = paintingGame;
-		//	paintingGame
 		}
 		SinglePlayerScreen::~SinglePlayerScreen()
 		{
@@ -26,18 +25,15 @@ namespace NCL {
 					std::cout << "Skipping large time delta" << std::endl;
 					continue; //must have hit a breakpoint or something to have a 1 second frame time!
 				}
-
 				if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::PRIOR)) {
 					window->ShowConsole(true);
 				}
 				if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::NEXT)) {
 					window->ShowConsole(false);
 				}
-
 				if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::T)) {
 					window->SetWindowPosition(0, 0);
 				}
-
 				if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::ESCAPE)){
 					paintingGame->GetGameTechRenderer()->SetGameState(GameTechRenderer::GameState::PauseMenu);
 				}

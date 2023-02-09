@@ -13,7 +13,6 @@ namespace NCL {
 			~SinglePlayerScreen();
 			PushdownResult OnUpdate(float dt, PushdownState** newState) override;
 			void OnAwake() override;
-			void ExitGame();
 		protected:
 			bool isPlayingGame;
 			Window* window;

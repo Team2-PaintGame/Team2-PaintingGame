@@ -23,7 +23,7 @@ namespace NCL {
 			case GameTechRenderer::GameState::PauseMenu: {
 				return PushdownResult::NoChange;
 			}break;
-
+	
 			case GameTechRenderer::GameState::SplitScreen: {
 				return PushdownResult::Pop;
 			}break;

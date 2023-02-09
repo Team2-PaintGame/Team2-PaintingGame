@@ -15,6 +15,29 @@
 using namespace NCL;
 using namespace CSC8508;
 
+void GameLoop(Window* window, PaintingGame paintingGame) {
+	while (window->UpdateWindow() && !Window::GetKeyboard()->KeyDown(KeyboardKeys::ESCAPE)) {
+		float time = window->GetTimer()->GetTotalTimeSeconds();
+		float dt = window->GetTimer()->GetTimeDeltaSeconds();
+		if (dt > 0.1f) {
+			std::cout << "Skipping large time delta" << std::endl;
+			continue; //must have hit a breakpoint or something to have a 1 second frame time!
+		}
+		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::PRIOR)) {
+			window->ShowConsole(true);
+		}
+		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::NEXT)) {
+			window->ShowConsole(false);
+		}
+
+		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::T)) {
+			window->SetWindowPosition(0, 0);
+		}
+		window->SetTitle("Gametech frame time:" + std::to_string(1000.0f * dt));
+		paintingGame.UpdateGame(dt);
+	}
+}
+
 void PushdownAutomata(Window* window, PaintingGame* paintingGame) {
 	PushdownMachine machine(new IntroScreen(window, paintingGame));
 	while (window->UpdateWindow()) {
@@ -60,41 +83,16 @@ int main() {
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
-
 	//Init Win32
 	ImGui_ImplWin32_Init(dynamic_cast<NCL::Win32Code::Win32Window*>(w)->GetHandle());
-
 	//Init OpenGL Imgui Implementation
 	ImGui_ImplOpenGL3_Init();
-
 	// Setup style
 	ImGui::StyleColorsClassic();
 
 	PushdownAutomata(w, paintingGame);
-	/*
-	while (w->UpdateWindow() && !Window::GetKeyboard()->KeyDown(KeyboardKeys::ESCAPE)) {
-		float time = w->GetTimer()->GetTotalTimeSeconds();
-		float dt = w->GetTimer()->GetTimeDeltaSeconds();
-		if (dt > 0.1f) {
-			std::cout << "Skipping large time delta" << std::endl;
-			continue; //must have hit a breakpoint or something to have a 1 second frame time!
-		}
-		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::PRIOR)) {
-			w->ShowConsole(true);
-		}
-		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::NEXT)) {
-			w->ShowConsole(false);
-		}
-
-		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::T)) {
-			w->SetWindowPosition(0, 0);
-		}
-
-		w->SetTitle("Gametech frame time:" + std::to_string(1000.0f * dt));
-		g.UpdateGame(dt);
-	}
-	*/
-
+	
+//	GameLoop(); 
 	// Cleanup
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplWin32_Shutdown();
