@@ -115,7 +115,7 @@ PaintingGame::~PaintingGame() {
 void PaintingGame::UpdateGame(float dt) {
 	world->GetMainCamera()->UpdateCamera(dt);
 
-	if (renderer->GetIsSplitScreen())
+	if (renderer->GetGameState() == GameTechRenderer::GameState::SplitScreen)
 	{
 		world->GetSecondCamera()->UpdateCamera(dt);
 	}
@@ -137,7 +137,7 @@ void PaintingGame::UpdateGame(float dt) {
 
 void PaintingGame::InitCamera()
 {
-	float aspect_divide = renderer->GetIsSplitScreen() ? 2.0f : 1.0f;
+	float aspect_divide = (renderer->GetGameState() == GameTechRenderer::GameState::SplitScreen) ? 2.0f : 1.0f;
 
 	if (thirdPersonCamera) {
 		world->GetMainCamera()->SetThirdPersonCamera(players[0]);
