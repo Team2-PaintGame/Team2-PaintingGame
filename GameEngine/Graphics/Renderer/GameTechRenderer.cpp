@@ -95,7 +95,7 @@ void GameTechRenderer::RenderFrame() {
 	RenderHUD();
 	NewRenderLines();
 	NewRenderText();
-	RenderGUI();
+	//RenderGUI();
 }
 
 void GameTechRenderer::Update(float dt) {
@@ -140,13 +140,16 @@ void GameTechRenderer::RenderShadowMap() {
 	shadowMatrix = biasMatrix * mvMatrix; //we'll use this one later on
 
 	for (const auto&i : activeObjects) {
-		Matrix4 modelMatrix = (*i).GetTransform()->GetMatrix();
-		Matrix4 mvpMatrix	= mvMatrix * modelMatrix;
-		glUniformMatrix4fv(mvpLocation, 1, false, (float*)&mvpMatrix);
-		BindMesh((*i).GetMesh());
-		int layerCount = (*i).GetMesh()->GetSubMeshCount();
-		for (int i = 0; i < layerCount; ++i) {
-			DrawBoundMesh(i);
+		unsigned int numInstances = i->GetMesh()->GetInstanceCount();
+		if (numInstances == 0) {
+			Matrix4 modelMatrix = (*i).GetTransform()->GetMatrix();
+			Matrix4 mvpMatrix = mvMatrix * modelMatrix;
+			glUniformMatrix4fv(mvpLocation, 1, false, (float*)&mvpMatrix);
+			BindMesh((*i).GetMesh());
+			int layerCount = (*i).GetMesh()->GetSubMeshCount();
+			for (int i = 0; i < layerCount; ++i) {
+				DrawBoundMesh(i);
+			}
 		}
 	}
 
@@ -365,11 +368,28 @@ void GameTechRenderer::RenderCamera() {
 			activeShader = shader;
 		}
 
-		Matrix4 modelMatrix = (*i).GetTransform()->GetMatrix();
-		glUniformMatrix4fv(modelLocation, 1, false, (float*)&modelMatrix);			
-		
-		Matrix4 fullShadowMat = shadowMatrix * modelMatrix;
-		glUniformMatrix4fv(shadowLocation, 1, false, (float*)&fullShadowMat);
+		unsigned int numInstances = i->GetMesh()->GetInstanceCount();
+		if (numInstances > 0) {
+			std::vector<Transform*> transforms = i->GetTransforms();
+			for (int i = 0; i < numInstances; i++) {
+				std::string index = std::to_string(i);
+				Matrix4 modelMatrix = transforms[i]->GetMatrix();
+				int modelArrayLocation = glGetUniformLocation(shader->GetProgramID(), ("modelMatrices[" + index + "]").c_str());
+				glUniformMatrix4fv(modelArrayLocation, 1, false, (float*)&modelMatrix);
+
+				Matrix4 fullShadowMat = shadowMatrix * modelMatrix;
+				int shadowArrayLocation = glGetUniformLocation(shader->GetProgramID(), ("shadowMatrices[" + index + "]").c_str());
+				glUniformMatrix4fv(shadowArrayLocation, 1, false, (float*)&fullShadowMat);
+			}
+		}
+		else {
+			Matrix4 modelMatrix = (*i).GetTransform()->GetMatrix();
+			glUniformMatrix4fv(modelLocation, 1, false, (float*)&modelMatrix);
+
+			Matrix4 fullShadowMat = shadowMatrix * modelMatrix;
+			glUniformMatrix4fv(shadowLocation, 1, false, (float*)&fullShadowMat);
+		}
+	
 
 		Vector4 colour = i->GetColour();
 		glUniform4fv(colourLocation, 1, colour.array);
