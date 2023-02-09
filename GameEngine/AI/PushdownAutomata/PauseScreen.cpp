@@ -16,26 +16,36 @@ namespace NCL {
 		PushdownState::PushdownResult PauseScreen::OnUpdate(float dt, PushdownState** newState)
 		{
 			paintingGame->GetGameTechRenderer()->Render();
-			if (paintingGame->GetGameTechRenderer()->GetIsExitPauseMenu()) // Exit to main Menu
-			{
-				//paintingGame->GetGameTechRenderer()->ToggleIsExitPauseMenu();
-				std::cout << "isExitPauseMenu: " << paintingGame->GetGameTechRenderer()->GetIsExitPauseMenu() << "\n";
+			GameTechRenderer::GameState gameState = paintingGame->GetGameTechRenderer()->GetGameState();
+
+			switch (gameState) {
+
+			case GameTechRenderer::GameState::PauseMenu: {
+				return PushdownResult::NoChange;
+			}break;
+	
+			case GameTechRenderer::GameState::SplitScreen: {
 				return PushdownResult::Pop;
-			}
-			if (!paintingGame->GetGameTechRenderer()->GetIsPauseMenu()) { // Resume Game
+			}break;
+
+			case GameTechRenderer::GameState::SinglePlayer: {
 				return PushdownResult::Pop;
+			}break;
+
+			case GameTechRenderer::GameState::LAN: {
+				return PushdownResult::Pop;
+			}break;
+
+			case GameTechRenderer::GameState::MainMenu: {
+				return PushdownResult::Pop;
+			}break;
+
 			}
-			return PushdownResult::NoChange;
+			
 		}
 		void PauseScreen::OnAwake()
 		{
-			std::cout << "Pause Menu\n"
-				<< "isSinglePlayer: " << paintingGame->GetGameTechRenderer()->GetIsSinglePlayer() << "\n"
-				<< "isMainMenu: " << paintingGame->GetGameTechRenderer()->GetIsMainMenu() << "\n"
-				<< "isPauseMenu: " << paintingGame->GetGameTechRenderer()->GetIsPauseMenu() << "\n"
-				<< "isExitPauseMenu: " << paintingGame->GetGameTechRenderer()->GetIsExitPauseMenu() << "\n"
-				<< "isExitPaintGame: " << paintingGame->GetGameTechRenderer()->GetIsExitPaintGame() << "\n"
-				<< "isSplitScreen: " << paintingGame->GetGameTechRenderer()->GetIsSplitScreen() << "\n\n";
+
 		}
 
 	}

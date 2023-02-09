@@ -84,15 +84,16 @@ GameTechRenderer::~GameTechRenderer()	{
 }
 
 void GameTechRenderer::RenderFrame() {
-	if (isMainMenu) {
+
+	if (gameState == MainMenu) {
 		RenderMainMenu();
 		return;
 	}
-	if (isSinglePlayer) {
+	if (gameState == SinglePlayer || (previousGameState == SinglePlayer && gameState == PauseMenu)) {
 		RenderInSingleViewport();
 		return;
 	}
-	if(isSplitScreen){
+	if (gameState == SplitScreen || (previousGameState == SplitScreen && gameState == PauseMenu)) {
 		RenderFirstFrame();
 		RenderSecondFrame();
 		return;
@@ -106,6 +107,7 @@ void NCL::CSC8508::GameTechRenderer::RenderInSingleViewport()
 	BuildObjectList();
 	SortObjectList();
 	RenderShadowMap();
+	RenderDebugInformation(isDebugInfo);
 	glViewport(0, 0, windowWidth, windowHeight);
 	RenderSkybox(*gameWorld.GetMainCamera());
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -118,7 +120,8 @@ void NCL::CSC8508::GameTechRenderer::RenderInSingleViewport()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	NewRenderLines(*gameWorld.GetMainCamera());
 	NewRenderText();
-	RenderGUI(isPauseMenu);
+
+	RenderGUI(gameState == PauseMenu);
 	glDisable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -130,7 +133,7 @@ void GameTechRenderer::RenderMainMenu()
 	glClearColor(1, 1, 1, 1);
 	glViewport(0, 0, windowWidth, windowHeight);
 	RenderSkybox(*gameWorld.GetMainCamera());
-	RenderGUI(isMainMenu);
+	RenderGUI(gameState == MainMenu);
 	glDisable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -144,6 +147,7 @@ void NCL::CSC8508::GameTechRenderer::RenderFirstFrame()
 	BuildObjectList();
 	SortObjectList();
 	RenderShadowMap();
+	RenderDebugInformation(isDebugInfo);
 	glViewport(0, 0, windowWidth / 2, windowHeight);
 	RenderSkybox(*gameWorld.GetMainCamera());
 
@@ -174,6 +178,7 @@ void NCL::CSC8508::GameTechRenderer::RenderSecondFrame()
 	BuildObjectList();
 	SortObjectList();
 	RenderShadowMap();
+	RenderDebugInformation(isDebugInfo);
 	glViewport(windowWidth / 2, 0, windowWidth / 2, windowHeight);
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -186,7 +191,8 @@ void NCL::CSC8508::GameTechRenderer::RenderSecondFrame()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	NewRenderLines(*gameWorld.GetSecondCamera());
 	NewRenderText();
-	RenderGUI(isPauseMenu);
+
+	RenderGUI(gameState == PauseMenu);
 	glDisable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -329,7 +335,8 @@ void GameTechRenderer::RenderHUD() {
 	}
 }
 
-void GameTechRenderer::RenderDebugInformation() {
+void GameTechRenderer::RenderDebugInformation(bool isDebugInfo) {
+	if (isDebugInfo == false) { return; }
 	if (settings.GetIsDebugRenderingModeEnabled()) {
 		//render triangles
 		int numTri = settings.debugRendererSettings.debugRenderer.getNbTriangles();
@@ -359,12 +366,11 @@ void GameTechRenderer::RenderGUI(bool showWindow) {
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
-	//show Main Window
 //	ImGui::ShowDemoWindow(&showWindow);
-	if (isMainMenu) {
+	if (gameState == MainMenu) {
 		ShowMainMenuWindow();
 	}
-	if (isPauseMenu) {
+	if (gameState == PauseMenu) {
 		ShowPauseMenuWindow();
 	}
 	ImGui::EndFrame();
@@ -375,39 +381,44 @@ void GameTechRenderer::RenderGUI(bool showWindow) {
 }
 
 void GameTechRenderer::ShowPauseMenuWindow() {
+	bool isMainMenu = (gameState == MainMenu);
 	ImGui::Begin("Pause Menu", &isMainMenu);
 	if (ImGui::Button("Resume"))
 	{
-		ToggleIsPauseMenu();
+		SetGameState(previousGameState);
+	}
+	if (ImGui::Button("Toggle Debug Info"))
+	{
+		ToggleDebugInfo();
 	}
 	if (ImGui::Button("Exit to Main Menu"))
 	{
-		ToggleIsPauseMenu();
-		ToggleIsExitPauseMenu();
+		SetGameState(MainMenu);
 	}
 	ImGui::End();
 }
 
 void GameTechRenderer::ShowMainMenuWindow() {
+	bool isMainMenu = (gameState == MainMenu);
 
 	ImGui::Begin("Splat Main Menu", &isMainMenu);
 	ImGui::Text("This is going to be the splat main menu!");
 
 	if (ImGui::Button("Single Player"))
 	{
-		ToggleIsSinglePlayer();
+		SetGameState(SinglePlayer);
 	}
 	if (ImGui::Button("Split Screen"))
 	{
-		ToggleIsSplitScreen();
+		SetGameState(SplitScreen);
 	}
 	if (ImGui::Button("LAN"))
 	{
-
+		//SetGameState(LAN);
 	}
 	if (ImGui::Button("Exit"))
 	{
-		ToggleIsExitPaintGame();
+		SetGameState(ExitGame);
 	}
 	ImGui::End();
 }
@@ -640,8 +651,6 @@ void GameTechRenderer::NewRenderText() {
 	glBindVertexArray(0);
 }
 
-
-
 TextureBase* GameTechRenderer::LoadTexture(const string& name) {
 	return TextureLoader::LoadAPITexture(name);
 }
@@ -719,5 +728,20 @@ void GameTechRenderer::SetDebugLineBufferSizes(size_t newVertCount) {
 
 		glBindVertexArray(0);
 	}
+}
+
+GameTechRenderer::GameState GameTechRenderer::GetGameState() 
+{ 
+	return gameState; 
+}
+
+void GameTechRenderer::SetGameState(GameState gameState) 
+{
+	previousGameState = this->gameState;
+	this->gameState = gameState;
+}
+
+void GameTechRenderer::ToggleDebugInfo() {
+	isDebugInfo = !isDebugInfo;
 }
 

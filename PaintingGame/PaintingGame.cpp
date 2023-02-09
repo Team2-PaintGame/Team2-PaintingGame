@@ -32,7 +32,6 @@ PaintingGame::PaintingGame(bool online) {
 	InitialiseAssets();
 	physicsWorld->setIsGravityEnabled(useGravity);
 	renderer->UseFog(useFog);
-
 	renderer->settings.SetIsDebugRenderingModeEnabled(true);
 	renderer->settings.debugRendererSettings.SetIsCollisionShapeDisplayed(true);
 	renderer->settings.debugRendererSettings.SetIsBroadPhaseAABBDisplayed(true);
@@ -204,4 +203,5 @@ GameTechRenderer* PaintingGame::GetGameTechRenderer()
 {
 	return renderer;
 }
+
 

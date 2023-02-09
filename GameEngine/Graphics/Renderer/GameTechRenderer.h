@@ -30,11 +30,11 @@ namespace NCL {
 						debugRenderer.setIsDebugItemDisplayed(reactphysics3d::DebugRenderer::DebugItem::COLLIDER_BROADPHASE_AABB, boolean);
 					}
 					reactphysics3d::DebugRenderer& debugRenderer;
-					
 				private:
 					bool isCollisionShapeEnabled = false;
 					bool isBroadPhaseAABBEnabled = false;
-				};
+				};	
+				//----------------------------- RendererSettings:
 				RendererSettings(reactphysics3d::PhysicsWorld* physicsWorld) : physicsWorld(physicsWorld), debugRendererSettings(physicsWorld) {};
 
 				void SetIsWireFrameModeEnabled(bool boolean) {
@@ -54,9 +54,22 @@ namespace NCL {
 				bool isWireFrameModeEnabled = false;
 				reactphysics3d::PhysicsWorld* physicsWorld;
 			};
+
+			//----------------------------- GameTechRenderer:
+			enum GameState {
+				MainMenu,
+				SinglePlayer,
+				SplitScreen,
+				LAN,
+				PauseMenu,
+				ExitGame
+			};
 			GameTechRenderer(GameWorld& world, reactphysics3d::PhysicsWorld* physicsWorld);
 			~GameTechRenderer();
 			virtual void Update(float dt);
+
+			GameState GetGameState();
+			void SetGameState(GameState gameState);
 			
 			MeshGeometry*	LoadMesh(const string& name);
 			MeshGeometry* LoadFlatMesh(int hVertexCount = 128, int wVertexCount = 128);
@@ -66,32 +79,19 @@ namespace NCL {
 			void AddHudTextures(const string& name, const Vector2& position, const Vector2& scale);
 
 			void UseFog(bool val) { useFog = val; }
-			void UseSplitScreen(bool IsSplitScreen) { bUseSplitScreen = IsSplitScreen; }
-			void ToggleIsMainMenu(){ isMainMenu = !isMainMenu; }
-			bool GetIsMainMenu() { return isMainMenu; }
-			void ToggleIsSinglePlayer() { isSinglePlayer = !isSinglePlayer; }
-			bool GetIsSinglePlayer() { return isSinglePlayer; }
-			void ToggleIsPauseMenu() { isPauseMenu = !isPauseMenu; }
-			bool GetIsPauseMenu() { return isPauseMenu; }
-			void ToggleIsExitPauseMenu() { isExitPauseMenu = !isExitPauseMenu; }
-			bool GetIsExitPauseMenu() { return isExitPauseMenu; }
-			void ToggleIsExitPaintGame() { isExitPaintGame = !isExitPaintGame; }
-			bool GetIsExitPaintGame() { return isExitPaintGame; }
-			void ToggleIsSplitScreen() { isSplitScreen = !isSplitScreen; }
-			bool GetIsSplitScreen() { return isSplitScreen; }
-			
 			RendererSettings settings;
+
 		protected:
 			void NewRenderLines(Camera& cam);
 			void NewRenderText();
 			void ShowMainMenuWindow();
 			void ShowPauseMenuWindow();
-
 			void RenderFrame()	override;
 			void RenderInSingleViewport();
 			void RenderMainMenu();
 			void RenderFirstFrame();
 			void RenderSecondFrame();
+			void ToggleDebugInfo();
 
 			OGLShader*		defaultShader;
 
@@ -104,13 +104,12 @@ namespace NCL {
 			void RenderSkybox(Camera& cam);
 			void RenderSky(Camera& cam);
 			void RenderHUD();
-			void RenderDebugInformation(); 
+			void RenderDebugInformation(bool isDebugInfo);
 			void RenderGUI(bool showWindow = true);
 
 			void SetDebugStringBufferSizes(size_t newVertCount);
 			void SetDebugLineBufferSizes(size_t newVertCount);
 			
-
 			vector<const RenderObject*> activeObjects;
 
 			OGLShader*  debugShader;
@@ -128,7 +127,6 @@ namespace NCL {
 
 			//Debug data storage things
 			vector<Vector3> debugLineData;
-
 			vector<Vector3> debugTextPos;
 			vector<Vector4> debugTextColours;
 			vector<Vector2> debugTextUVs;
@@ -150,15 +148,12 @@ namespace NCL {
 			bool useFog = false;
 			Vector3 fogColour = Vector3(0.6706f, 0.6824f, 0.6902f); //removing alpha value of fog colour to preserve the original transparency value of the fragment
 
-			//SplitScreen thing
-			bool bUseSplitScreen = false;
-			//Pushdown Automata Booleans
-			bool isSinglePlayer = false;
-			bool isMainMenu = true;
-			bool isPauseMenu = false;
-			bool isExitPauseMenu = false;
-			bool isExitPaintGame = false;
-			bool isSplitScreen = false;
+			//Pushdown Automata Game States
+			GameState gameState = MainMenu;
+			GameState previousGameState = MainMenu;
+
+			bool isDebugInfo = false;
+
 		};
 	}
 }

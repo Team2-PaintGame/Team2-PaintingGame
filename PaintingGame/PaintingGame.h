@@ -40,6 +40,7 @@ namespace NCL {
 			bool useSplitScreen = false;
 			bool thirdPersonCamera;
 
+
 			bool is_Networked;
 
 			float		forceMagnitude;
