@@ -20,15 +20,10 @@ namespace NCL {
 		{
 		public:
 			RenderObject(Transform* parentTransform, MeshGeometry* mesh, ShaderBase* shader);
+
+			//constructor for instanced render objects using the same mesh and shader with different transforms
+			RenderObject(std::vector<Transform*>& parentTransforms, MeshGeometry* mesh, ShaderBase* shader);
 			~RenderObject();
-
-			/*void SetDefaultTexture(TextureBase* t) {
-				texture = t;
-			}
-
-			TextureBase* GetDefaultTexture() const {
-				return texture;
-			}*/
 
 			void AddTexture(TextureBase* t, std::string uniform = "mainTex", int subMeshIndex = 0) {
 				if (t) {
@@ -52,6 +47,10 @@ namespace NCL {
 
 			Transform*		GetTransform() const {
 				return transform;
+			}
+
+			std::vector<Transform*> GetTransforms() const {
+				return transforms;
 			}
 
 			ShaderBase*		GetShader() const {
@@ -94,6 +93,7 @@ namespace NCL {
 			//std::vector<TextureBase*>	textures;
 			ShaderBase*		shader;
 			Transform*		transform;
+			std::vector<Transform*> transforms;
 			Vector4			colour;
 			bool	rigged = false;
 		};
