@@ -32,9 +32,11 @@ PaintingGame::PaintingGame(bool online) {
 	InitialiseAssets();
 	physicsWorld->setIsGravityEnabled(useGravity);
 	renderer->UseFog(useFog);
+
 	renderer->settings.SetIsDebugRenderingModeEnabled(true);
 	renderer->settings.debugRendererSettings.SetIsCollisionShapeDisplayed(true);
 	renderer->settings.debugRendererSettings.SetIsBroadPhaseAABBDisplayed(true);
+
 }
 
 /*
@@ -117,11 +119,16 @@ void PaintingGame::UpdateGame(float dt) {
 
 	if (renderer->GetGameState() == GameTechRenderer::GameState::SplitScreen)
 	{
+		numberOfPlayerControllers = 2;
 		world->GetSecondCamera()->UpdateCamera(dt);
 	}
+	else if (renderer->GetGameState() == GameTechRenderer::GameState::SinglePlayer) {
+		numberOfPlayerControllers = 1;
+	}
+
 	if (thirdPersonCamera)
 	{
-		for (int i = 0; i < 2; i++)
+		for (int i = 0; i < numberOfPlayerControllers; i++)
 		{
 			playerControllers[i]->Update(dt);
 		}
@@ -137,7 +144,7 @@ void PaintingGame::UpdateGame(float dt) {
 
 void PaintingGame::InitCamera()
 {
-	float aspect_divide = (renderer->GetGameState() == GameTechRenderer::GameState::SplitScreen) ? 2.0f : 1.0f;
+	//float aspect_divide = renderer->GetGameState() == GameTechRenderer::GameState::SplitScreen ? 2.0f : 1.0f;
 
 	if (thirdPersonCamera) {
 		world->GetMainCamera()->SetThirdPersonCamera(players[0]);
@@ -147,17 +154,9 @@ void PaintingGame::InitCamera()
 	}
 
 	world->GetMainCamera()->SetBasicCameraParameters(-15.0f, 315.0f, Vector3(-60, 40, 60), 0.1f, 500.0f);
-	world->GetMainCamera()->SetPerspectiveCameraParameters(Window::GetWindow()->GetScreenAspect() / aspect_divide);
+	world->GetMainCamera()->SetPerspectiveCameraParameters(Window::GetWindow()->GetScreenAspect());
 
-	if (thirdPersonCamera) {
-		world->GetSecondCamera()->SetThirdPersonCamera(players[1]);
-	}
-	else {
-		world->GetSecondCamera()->SetFirstPersonCamera();
-	}
-
-	world->GetSecondCamera()->SetBasicCameraParameters(-15.0f, 315.0f, Vector3(-60, 40, 60), 0.1f, 500.0f);
-	world->GetSecondCamera()->SetPerspectiveCameraParameters(Window::GetWindow()->GetScreenAspect() / aspect_divide);
+	
 }
 
 void PaintingGame::InitWorld() {
@@ -185,10 +184,6 @@ PlayerBase* PaintingGame::InitiliazePlayer() {
 	world->AddGameObject(players[0]);
 	playerControllers[0] = new PlayerController(world->GetMainCamera(), players[0]);
 
-	players[1] = new PlayerBase(physicsCommon, physicsWorld, Vector3(10, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 5);
-	world->AddGameObject(players[1]);
-	playerControllers[1] = new PlayerController(world->GetSecondCamera(), players[1]);
-
 	return players[0];
 }
 
@@ -202,6 +197,33 @@ PlayerBase* PaintingGame::InitialiseNetworkPlayer() {
 GameTechRenderer* PaintingGame::GetGameTechRenderer()
 {
 	return renderer;
+}
+
+PlayerBase* PaintingGame::InitSecondPlayer() {
+	players[1] = new PlayerBase(physicsCommon, physicsWorld, Vector3(10, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 5);
+	world->AddGameObject(players[1]);
+	playerControllers[1] = new PlayerController(world->GetSecondCamera(), players[1]);
+
+	return players[1];
+}
+
+void PaintingGame::InitSecondCamera() {
+
+	if (thirdPersonCamera) {
+		world->GetSecondCamera()->SetThirdPersonCamera(players[1]);
+	}
+	else {
+		world->GetSecondCamera()->SetFirstPersonCamera();
+	}
+
+	world->GetSecondCamera()->SetBasicCameraParameters(-15.0f, 315.0f, Vector3(-60, 40, 60), 0.1f, 500.0f);
+	world->GetSecondCamera()->SetPerspectiveCameraParameters(Window::GetWindow()->GetScreenAspect() / 2.0f);
+}
+
+void PaintingGame::DestroySecondPlayer() {
+
+	players[1]->~PlayerBase();
+	world->GetSecondCamera()->~Camera();
 }
 
 

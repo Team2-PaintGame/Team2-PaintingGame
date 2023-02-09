@@ -22,6 +22,10 @@ namespace NCL {
 			~PaintingGame();
 			virtual void UpdateGame(float dt);
 			GameTechRenderer* GetGameTechRenderer();
+			PlayerBase* InitSecondPlayer();
+			void InitSecondCamera();
+			void DestroySecondPlayer();
+
 		protected:
 			void InitialiseAssets();
 			void InitCamera();
@@ -39,7 +43,6 @@ namespace NCL {
 			bool useFog = true;
 			bool useSplitScreen = false;
 			bool thirdPersonCamera;
-
 
 			bool is_Networked;
 
@@ -60,6 +63,8 @@ namespace NCL {
 			//Create a physics world 
 			reactphysics3d::PhysicsCommon physicsCommon;
 			reactphysics3d::PhysicsWorld* physicsWorld = NULL; 
+
+			int numberOfPlayerControllers = 1;
 		};
 	}
 }

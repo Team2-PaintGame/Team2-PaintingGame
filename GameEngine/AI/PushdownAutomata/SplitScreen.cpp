@@ -58,6 +58,11 @@ namespace NCL {
 		}
 		void SplitScreen::OnAwake()
 		{
+			paintingGame->InitSecondPlayer();
+			paintingGame->InitSecondCamera();
+		}
+
+		void SplitScreen::OnSleep() {
 
 		}
 

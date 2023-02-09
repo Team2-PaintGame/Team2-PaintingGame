@@ -13,6 +13,7 @@ namespace NCL {
 			~SplitScreen();
 			PushdownResult OnUpdate(float dt, PushdownState** newState) override;
 			void OnAwake() override;
+			void OnSleep() override;
 		protected:
 			Window* window;
 			PaintingGame* paintingGame;
