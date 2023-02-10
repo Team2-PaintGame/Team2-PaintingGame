@@ -125,6 +125,12 @@ set(Graphics_Renderering_Support
 )
 source_group("Graphics\\Renderer\\Rendering Support" FILES ${Graphics_Renderering_Support})
 
+set(Graphics_UI
+    "./Graphics/UI/UIHandler.h"
+    "./Graphics/UI/UIHandler.cpp"
+)
+source_group("Graphics\\UI" FILES ${Graphics_UI})
+
 set(Maths
     "./Maths/Maths.cpp"
     "./Maths/Maths.h"
@@ -205,6 +211,7 @@ set(ALL_FILES
     ${Graphics_Lights}
     ${Graphics_Renderer}
     ${Graphics_Renderering_Support}
+	${Graphics_UI}
     ${Maths}
     #${Networking}
     #${Networking_enet_Files}
@@ -292,6 +299,7 @@ include_directories("Scene/Terrain")
 include_directories("../Networking/")
 include_directories("Graphics/Renderer/")
 include_directories("Graphics/Renderer/RenderingSupport/")
+include_directories("Graphics/UI/")
 include_directories("Graphics/Camera/")
 include_directories("Graphics/Lights/")
 include_directories("EntityComponents/")
