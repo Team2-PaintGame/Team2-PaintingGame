@@ -3,6 +3,8 @@
 #include "Camera.h"
 #include "PlayerBase.h"
 
+class Gamepad;
+
 namespace NCL {
 	using namespace Rendering;
 	using namespace CSC8508;
@@ -15,10 +17,15 @@ namespace NCL {
 
 	protected:
 		void UpdateKeys();
+		void ConnectGamePad();
+		void UpdateGamePad();
 
 	protected:
 		Camera* camera;
 		GameObject* playerObject;
+
+		Gamepad* gamepad = NULL;
+		bool wasConnected = true;
 	};
 }
 
