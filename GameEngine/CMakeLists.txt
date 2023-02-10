@@ -126,8 +126,8 @@ set(Graphics_Renderering_Support
 source_group("Graphics\\Renderer\\Rendering Support" FILES ${Graphics_Renderering_Support})
 
 set(Graphics_UI
-    "./Graphics/UI/UIHandler.h"
-    "./Graphics/UI/UIHandler.cpp"
+    "./Graphics/UI/MenuHandler.h"
+    "./Graphics/UI/MenuHandler.cpp"
 )
 source_group("Graphics\\UI" FILES ${Graphics_UI})
 
