@@ -15,7 +15,7 @@ namespace NCL {
 		virtual ~Particle();
 	
 	protected:
-		Vector3 velocity;
+		Vector3 velocity = Vector3(10.0f);
 		float lifeSpan = 3.0f;
 		float elapsedTime = 0.0f;
 		rp3d::SphereShape* boundingVolume;

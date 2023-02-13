@@ -1,4 +1,5 @@
 #include "ParticleSystem.h"
+#include "Utils.h"
 
 using namespace NCL;
 
@@ -52,12 +53,14 @@ Particle::Particle(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d:
 	rigidBody = physicsWorld->createRigidBody(rp3d_transform);
 	rigidBody->addCollider(boundingVolume, rp3d::Transform::identity()); 
 	rigidBody->updateMassPropertiesFromColliders();
-	rigidBody->setType(reactphysics3d::BodyType::STATIC);
+	rigidBody->enableGravity(false);
 }
 
 void Particle::Update(float dt) {
 	//need to call this here because particles itself are not part of game world
 	GameObject::UpdateTransform();
+
+	rigidBody->applyLocalForceAtCenterOfMass(~(transform.GetOrientation() * velocity));
 	elapsedTime += dt;
 
 	if (elapsedTime >= lifeSpan) {
