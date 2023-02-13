@@ -3,7 +3,7 @@
 
 using namespace NCL;
 
-ParticleSystem::ParticleSystem(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, int startSize, float startLifetime, float startSpeed, std::string name) : GameObject(physicsCommon, physicsWorld, name) {
+ParticleSystem::ParticleSystem(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, float startSize, float startLifetime, float startSpeed, std::string name) : GameObject(physicsCommon, physicsWorld, name) {
 	this->startSize = startSize;
 	this->startLifetime = startSize;
 	this->startSpeed = startSize;

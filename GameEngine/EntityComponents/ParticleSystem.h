@@ -17,14 +17,14 @@ namespace NCL {
 	protected:
 		float speed;
 		float lifeSpan;
-		float startSpeed = 10.0f;
+		Vector3 direction = Vector3(1, 0, 0);
 		float elapsedTime = 0.0f;
 		rp3d::SphereShape* boundingVolume;
 	};
 	
 	class ParticleSystem : public GameObject {
 	public:
-		ParticleSystem(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, int startSize = 1, float startLifetime = 4.0f, float startSpeed = 10.0f, std::string name = "Particle System");
+		ParticleSystem(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, float startSize = 1, float startLifetime = 4.0f, float startSpeed = 10.0f, std::string name = "Particle System");
 		virtual void Update(float dt);		
 		virtual ~ParticleSystem();
 		
