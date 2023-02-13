@@ -54,6 +54,7 @@ void PaintingGame::InitialiseAssets() {
 	meshes.insert(std::make_pair("coinMesh", renderer->LoadMesh("coin.msh")));
 	meshes.insert(std::make_pair("capsuleMesh", renderer->LoadMesh("capsule.msh")));
 	meshes.insert(std::make_pair("terrainMesh", renderer->LoadHeightMap("noise.png")));
+	meshes.insert(std::make_pair("quadMesh", renderer->LoadQuad()));
 
 	meshMaterials.insert(std::make_pair("goatMat", new MeshMaterial("goat.mat")));
 	//meshMaterials.at("goatMat")->LoadTextures();
@@ -157,7 +158,7 @@ void PaintingGame::InitWorld() {
 		world->AddGameObject(new Box(physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 2));
 	}
 
-	world->AddGameObject(new ParticleSystem(physicsCommon, physicsWorld, Vector3(0, 0, 0), meshes.at("sphereMesh"), textures.at("grassTex"), shaders.at("instancedShader"), 1));
+	world->AddGameObject(new ParticleSystem(physicsCommon, physicsWorld, Vector3(10, 10, 0), meshes.at("quadMesh"), meshes.at("sphereMesh"), textures.at("grassTex"), shaders.at("instancedShader"), 1));
 }
 
 void PaintingGame::InitiliazePlayer() {
