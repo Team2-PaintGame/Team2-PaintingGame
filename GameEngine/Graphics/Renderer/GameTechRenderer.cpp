@@ -141,7 +141,7 @@ void GameTechRenderer::RenderShadowMap() {
 
 	for (const auto&i : activeObjects) {
 		unsigned int numInstances = i->GetInstanceCount();
-		if (numInstances == 0) {
+		if (!i->GetIsInstanced()) {
 			Matrix4 modelMatrix = (*i).GetTransform()->GetMatrix();
 			Matrix4 mvpMatrix = mvMatrix * modelMatrix;
 			glUniformMatrix4fv(mvpLocation, 1, false, (float*)&mvpMatrix);
@@ -369,7 +369,10 @@ void GameTechRenderer::RenderCamera() {
 		}
 
 		unsigned int numInstances = i->GetInstanceCount();
-		if (numInstances > 0) {
+		if (i->GetIsInstanced()) {
+			if (numInstances == 0) {
+				continue;
+			}
 			std::vector<Transform*> transforms = i->GetTransforms();
 			for (int i = 0; i < numInstances; i++) {
 				std::string index = std::to_string(i);
