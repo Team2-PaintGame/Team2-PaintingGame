@@ -431,6 +431,10 @@ MeshGeometry* GameTechRenderer::LoadMesh(const string& name) {
 	return mesh;
 }
 
+MeshGeometry* GameTechRenderer::LoadQuad() {
+	return OGLMesh::GenerateQuad();
+}
+
 MeshGeometry* GameTechRenderer::LoadFlatMesh(int hVertexCount, int wVertexCount) {
 	return OGLMesh::GenerateFlatMesh(hVertexCount, wVertexCount);
 }
