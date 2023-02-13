@@ -6,16 +6,24 @@
 
 using namespace NCL;
 
-PlayerController::PlayerController(Camera* cam, GameObject* player) : camera(cam), playerObject(player)
+PlayerController::PlayerController(Camera* cam, GameObject* player, Gamepad* gamepad) : camera(cam), playerObject(player), gamePad(gamepad)
 {
-	gamepad = new Gamepad();
+	
 }
 
 void PlayerController::Update(float dt)
 {
-	ConnectGamePad();
-	UpdateGamePad();
-	//UpdateKeys();
+	if (gamePad == NULL) {
+		std::cout << "GAMEPAD IS NULL." << "\n";
+		std::cout << "Use Keyboard." << "\n";
+		UpdateKeys();
+	}
+	else {
+		ConnectGamePad();
+		UpdateGamePad();
+	}
+	
+	
 
 }
 
@@ -66,7 +74,8 @@ void PlayerController::UpdateKeys()
 
 void NCL::PlayerController::ConnectGamePad()
 {
-	if (!gamepad->Refresh())
+
+	if (!gamePad->Refresh())
 	{
 		if (wasConnected)
 		{
@@ -78,7 +87,7 @@ void NCL::PlayerController::ConnectGamePad()
 	else if (!wasConnected)
 	{
 		wasConnected = true;
-		std::cout << "Controller connected on port " << gamepad->GetPort() << std::endl;
+		std::cout << "Controller connected on port " << gamePad->GetPort() << std::endl;
 	}
 }
 
@@ -104,32 +113,28 @@ void NCL::PlayerController::UpdateGamePad()
 	float force = 5000.f;
 	float side_damping = 0.33f;
 
-	if (gamepad->leftStickY > 0.0f) {
+	if (gamePad->leftStickY > 0.0f) {
 		playerObject->GetRigidBody()->applyWorldForceAtCenterOfMass(fwdAxis * force);
-		std::cout << "X" << fwdAxis.x << "Y" << fwdAxis.y << fwdAxis.z << "\n";
 	}
 
-	if (gamepad->leftStickY < 0.0f) {
+	if (gamePad->leftStickY < 0.0f) {
 		playerObject->GetRigidBody()->applyWorldForceAtCenterOfMass(-fwdAxis * force);
-		std::cout << "X" << fwdAxis.x << "Y" << fwdAxis.y << fwdAxis.z << "\n";
 	}
 
-	if (gamepad->leftStickX < 0.0f) {
+	if (gamePad->leftStickX < 0.0f) {
 		playerObject->GetRigidBody()->applyWorldForceAtCenterOfMass(-rightAxis3d * force * (1 - side_damping));
-		std::cout << rightAxis3d.x << rightAxis3d.y << rightAxis3d.z << "\n";
 	}
 
-	if (gamepad->leftStickX > 0.0f) {
+	if (gamePad->leftStickX > 0.0f) {
 		playerObject->GetRigidBody()->applyWorldForceAtCenterOfMass(rightAxis3d * force * (1 - side_damping));
-		std::cout << rightAxis3d.x << rightAxis3d.y << rightAxis3d.z << "\n";
 	}
 
 	
-		std::cout << "Left thumb stick: (" << gamepad->leftStickX << ", " << gamepad->leftStickY << ")   Right thumb stick : (" << gamepad->rightStickX << ", " << gamepad->rightStickY << ")" << std::endl;
+		//std::cout << "Left thumb stick: (" << gamePad->leftStickX << ", " << gamePad->leftStickY << ")   Right thumb stick : (" << gamePad->rightStickX << ", " << gamePad->rightStickY << ")" << std::endl;
 
-		std::cout << "Left analog trigger: " << gamepad->leftTrigger << "   Right analog trigger: " << gamepad->rightTrigger << std::endl;
+		//std::cout << "Left analog trigger: " << gamePad->leftTrigger << "   Right analog trigger: " << gamePad->rightTrigger << std::endl;
 
-		if (gamepad->IsPressed(XINPUT_GAMEPAD_A)) {
+		if (gamePad->IsPressed(XINPUT_GAMEPAD_A)) {
 			std::cout << "(A) button pressed" << std::endl;
 		}
 

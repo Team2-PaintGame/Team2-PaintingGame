@@ -10,7 +10,7 @@ using namespace CSC8508;
 
 PaintingGame::PaintingGame(bool online) {
 	world = new GameWorld();
-
+	gamePad = new Gamepad();
 	/* Code for changing physics system paramaters
 	// Create the world settings 
 	PhysicsWorld::WorldSettings settings; 
@@ -118,6 +118,15 @@ PaintingGame::~PaintingGame() {
 void PaintingGame::UpdateGame(float dt) {
 	world->GetMainCamera()->UpdateCamera(dt);
 
+	if (thirdPersonCamera)
+	{
+		for (int i = 0; i < numberOfPlayerControllers; i++)
+		{
+			playerControllers[i]->Update(dt);
+		}
+
+	}
+
 	if (renderer->GetGameState() == GameTechRenderer::GameState::SplitScreen)
 	{
 		numberOfPlayerControllers = 2;
@@ -127,14 +136,7 @@ void PaintingGame::UpdateGame(float dt) {
 		numberOfPlayerControllers = 1;
 	}
 
-	if (thirdPersonCamera)
-	{
-		for (int i = 0; i < numberOfPlayerControllers; i++)
-		{
-			playerControllers[i]->Update(dt);
-		}
 	
-	}
 	renderer->Render();
 	world->UpdateWorld(dt);
 	renderer->Update(dt);
@@ -182,7 +184,7 @@ void PaintingGame::InitWorld() {
 PlayerBase* PaintingGame::InitiliazePlayer() {
 	players[0] = new PlayerBase(physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 5);
 	world->AddGameObject(players[0]);
-	playerControllers[0] = new PlayerController(world->GetMainCamera(), players[0]);
+	playerControllers[0] = new PlayerController(world->GetMainCamera(), players[0],NULL);
 
 	return players[0];
 }
@@ -202,7 +204,7 @@ GameTechRenderer* PaintingGame::GetGameTechRenderer()
 PlayerBase* PaintingGame::InitSecondPlayer() {
 	players[1] = new PlayerBase(physicsCommon, physicsWorld, Vector3(10, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 5);
 	world->AddGameObject(players[1]);
-	playerControllers[1] = new PlayerController(world->GetSecondCamera(), players[1]);
+	playerControllers[1] = new PlayerController(world->GetSecondCamera(), players[1], gamePad);
 
 	return players[1];
 }
@@ -211,6 +213,7 @@ void PaintingGame::InitSecondCamera() {
 
 	if (thirdPersonCamera) {
 		world->GetSecondCamera()->SetThirdPersonCamera(players[1]);
+		world->GetSecondCamera()->SetGamePad(gamePad);
 	}
 	else {
 		world->GetSecondCamera()->SetFirstPersonCamera();

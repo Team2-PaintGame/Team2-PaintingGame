@@ -14,6 +14,7 @@
 #include <PlayerController.h>
 #include <reactphysics3d/reactphysics3d.h>
 
+class Gamepad;
 
 namespace NCL {
 	namespace CSC8508 {
@@ -66,6 +67,7 @@ namespace NCL {
 			reactphysics3d::PhysicsWorld* physicsWorld = NULL; 
 
 			int numberOfPlayerControllers = 1;
+			Gamepad* gamePad = NULL;
 		};
 	}
 }

@@ -11,7 +11,7 @@ namespace NCL {
 
 	class PlayerController {
 	public:
-		PlayerController(Camera* cam, GameObject* player);
+		PlayerController(Camera* cam, GameObject* player,Gamepad* gamepad);
 
 		void Update(float dt);
 
@@ -23,8 +23,9 @@ namespace NCL {
 	protected:
 		Camera* camera;
 		GameObject* playerObject;
+		Gamepad* gamePad = NULL;
 
-		Gamepad* gamepad = NULL;
+		//Gamepad* gamepad = NULL;
 		bool wasConnected = true;
 	};
 }
