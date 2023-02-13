@@ -10,7 +10,7 @@ namespace NCL {
 
 	class Particle : public GameObject {
 	public:
-		Particle(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, int size);
+		Particle(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 emitterPosition, int size);
 		void Update(float dt);
 		virtual ~Particle();
 	
@@ -18,17 +18,17 @@ namespace NCL {
 		Vector3 velocity;
 		float lifeSpan = 3.0f;
 		float elapsedTime = 0.0f;
-		rp3d::BoxShape* boundingVolume;
+		rp3d::SphereShape* boundingVolume;
 	};
 	
 	class ParticleSystem : public GameObject {
 	public:
-		ParticleSystem(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, int size = 1, std::string name = "Particle System");
+		ParticleSystem(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, int size = 1, std::string name = "Particle System");
 		void Update(float dt);		
 		virtual ~ParticleSystem();
 		
 	protected:
-		unsigned int numParticles = 100;
+		unsigned int numParticles = 14;
 		std::vector<Particle*> particles;
 	};
 }

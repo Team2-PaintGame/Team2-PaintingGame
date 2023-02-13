@@ -2,9 +2,9 @@
 
 using namespace NCL;
 
-ParticleSystem::ParticleSystem(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, int size, std::string name) : GameObject(physicsCommon, physicsWorld, name) {
+ParticleSystem::ParticleSystem(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, int size, std::string name) : GameObject(physicsCommon, physicsWorld, name) {
 	for (int i = 0; i < numParticles; i++) {
-		particles.push_back(new Particle(physicsCommon, physicsWorld, size));
+		particles.push_back(new Particle(physicsCommon, physicsWorld, position, size));
 	}
 
 	std::vector<Transform*> transforms;
@@ -29,19 +29,19 @@ ParticleSystem::~ParticleSystem() {
 	}
 }
 
-Particle::Particle(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, int size) : GameObject(physicsCommon, physicsWorld) {
-	Vector3 position = Vector3(rand() % 50, 10, rand() % 50);
-
+Particle::Particle(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 emitterPosition, int size) : GameObject(physicsCommon, physicsWorld) {
+	Vector3 position = Vector3(rand() % 15 + 10, 10, rand() % 15);
 	transform
-		.SetPosition(position)
+		.SetPosition(position + emitterPosition)
 		.SetScale(Vector3(size));
 
-	boundingVolume = physicsCommon.createBoxShape(~transform.GetScale() / 2.0f);
-	reactphysics3d::Transform rp3d_transform(~position, rp3d::Quaternion::identity());
+	boundingVolume = physicsCommon.createSphereShape(size);
+	reactphysics3d::Transform rp3d_transform(~transform.GetPosition(), rp3d::Quaternion::identity());
 
 	rigidBody = physicsWorld->createRigidBody(rp3d_transform);
 	rigidBody->addCollider(boundingVolume, rp3d::Transform::identity()); 
 	rigidBody->updateMassPropertiesFromColliders();
+	rigidBody->setType(reactphysics3d::BodyType::STATIC);
 }
 
 void Particle::Update(float dt) {
@@ -52,6 +52,6 @@ void Particle::Update(float dt) {
 }
 
 Particle::~Particle() {
-	physicsCommon.destroyBoxShape(boundingVolume);
+	physicsCommon.destroySphereShape(boundingVolume);
 }
 
