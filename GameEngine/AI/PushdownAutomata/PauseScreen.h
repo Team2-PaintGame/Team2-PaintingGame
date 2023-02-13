@@ -4,6 +4,7 @@
 #include "../../../../PaintingGame/PaintingGame.h"
 
 namespace NCL {
+	class MenuHandler;
 	namespace CSC8508 {
 
 		class PauseScreen : public PushdownState
@@ -16,6 +17,7 @@ namespace NCL {
 		protected:
 			bool selectExitOption;
 			PaintingGame* paintingGame;
+			MenuHandler* menuHandler;
 		};
 
 	}

@@ -85,15 +85,15 @@ GameTechRenderer::~GameTechRenderer()	{
 
 void GameTechRenderer::RenderFrame() {
 
-	if (gameState == MainMenu) {
+	if (renderMode == RenderMode::MainMenu) {
 		RenderMainMenu();
 		return;
 	}
-	if (gameState == SinglePlayer || (previousGameState == SinglePlayer && gameState == PauseMenu)) {
+	if (renderMode == RenderMode::SingleViewport) {
 		RenderInSingleViewport();
 		return;
 	}
-	if (gameState == SplitScreen || (previousGameState == SplitScreen && gameState == PauseMenu)) {
+	if (renderMode == RenderMode::SplitScreen) {
 		RenderFirstFrame();
 		RenderSecondFrame();
 		return;
@@ -121,7 +121,7 @@ void NCL::CSC8508::GameTechRenderer::RenderInSingleViewport()
 	NewRenderLines(*gameWorld.GetMainCamera());
 	NewRenderText();
 
-	RenderGUI(gameState == PauseMenu);
+	RenderGUI();
 	glDisable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -133,7 +133,7 @@ void GameTechRenderer::RenderMainMenu()
 	glClearColor(1, 1, 1, 1);
 	glViewport(0, 0, windowWidth, windowHeight);
 	RenderSkybox(*gameWorld.GetMainCamera());
-	RenderGUI(gameState == MainMenu);
+	//RenderGUI(gameState == MainMenu);
 	glDisable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -192,7 +192,7 @@ void NCL::CSC8508::GameTechRenderer::RenderSecondFrame()
 	NewRenderLines(*gameWorld.GetSecondCamera());
 	NewRenderText();
 
-	RenderGUI(gameState == PauseMenu);
+	RenderGUI();
 	glDisable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -362,65 +362,9 @@ void GameTechRenderer::RenderDebugInformation(bool isDebugInfo) {
 }
 
 void GameTechRenderer::RenderGUI(bool showWindow) {
-	// Start the Dear ImGui frame
-	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
-//	ImGui::ShowDemoWindow(&showWindow);
-	if (gameState == MainMenu) {
-		ShowMainMenuWindow();
-	}
-	if (gameState == PauseMenu) {
-		ShowPauseMenuWindow();
-	}
-	ImGui::EndFrame();
-	
 	// Rendering
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-}
-
-void GameTechRenderer::ShowPauseMenuWindow() {
-	bool isMainMenu = (gameState == MainMenu);
-	ImGui::Begin("Pause Menu", &isMainMenu);
-	if (ImGui::Button("Resume"))
-	{
-		SetGameState(previousGameState);
-	}
-	if (ImGui::Button("Toggle Debug Info"))
-	{
-		ToggleDebugInfo();
-	}
-	if (ImGui::Button("Exit to Main Menu"))
-	{
-		SetGameState(MainMenu);
-	}
-	ImGui::End();
-}
-
-void GameTechRenderer::ShowMainMenuWindow() {
-	bool isMainMenu = (gameState == MainMenu);
-
-	ImGui::Begin("Splat Main Menu", &isMainMenu);
-	ImGui::Text("This is going to be the splat main menu!");
-
-	if (ImGui::Button("Single Player"))
-	{
-		SetGameState(SinglePlayer);
-	}
-	if (ImGui::Button("Split Screen"))
-	{
-		SetGameState(SplitScreen);
-	}
-	if (ImGui::Button("LAN"))
-	{
-		//SetGameState(LAN);
-	}
-	if (ImGui::Button("Exit"))
-	{
-		SetGameState(ExitGame);
-	}
-	ImGui::End();
 }
 
 void GameTechRenderer::RenderCamera(Camera& cam) {
@@ -730,15 +674,9 @@ void GameTechRenderer::SetDebugLineBufferSizes(size_t newVertCount) {
 	}
 }
 
-GameTechRenderer::GameState GameTechRenderer::GetGameState() 
-{ 
-	return gameState; 
-}
-
-void GameTechRenderer::SetGameState(GameState gameState) 
+void GameTechRenderer::SetRenderMode(RenderMode mode)
 {
-	previousGameState = this->gameState;
-	this->gameState = gameState;
+	renderMode = mode;
 }
 
 void GameTechRenderer::ToggleDebugInfo() {

@@ -4,6 +4,7 @@
 #include "../../../../PaintingGame/PaintingGame.h"
 
 namespace NCL {
+	class MenuHandler;
 	namespace CSC8508 {
 
 		class SinglePlayerScreen : public PushdownState
@@ -17,6 +18,7 @@ namespace NCL {
 			bool isPlayingGame;
 			Window* window;
 			PaintingGame* paintingGame;
+			MenuHandler* menuHandler;
 		};
 	}
 }

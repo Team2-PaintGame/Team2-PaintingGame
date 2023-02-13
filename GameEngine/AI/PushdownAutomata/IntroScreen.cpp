@@ -4,6 +4,8 @@
 #include "LanScreen.h"
 #include "GameTechRenderer.h"
 #include <iostream>
+#include "MenuHandler.h"
+
 
 namespace NCL {
 	namespace CSC8508 {
@@ -27,29 +29,29 @@ namespace NCL {
 		PushdownState::PushdownResult IntroScreen::OnUpdate(float dt, PushdownState** newState)
 		{
 			paintingGame->UpdateGame(dt);
-			GameTechRenderer::GameState gameState = paintingGame->GetGameTechRenderer()->GetGameState();
+			NCL::GameState gameState = menuHandler->GetGameState();
 			switch (gameState) {
 
-				case GameTechRenderer::GameState::SinglePlayer: {
+				case GameState::SinglePlayer: {
 					*newState = new SinglePlayerScreen(window, paintingGame);
 					return PushdownResult::Push;
 				}	break;
 
-				case GameTechRenderer::GameState::SplitScreen: {
+				case GameState::SplitScreen: {
 					*newState = new SplitScreen(window, paintingGame);
 					return PushdownResult::Push;
 				}break;
 
-				case GameTechRenderer::GameState::LAN: {
+				case GameState::LAN: {
 					*newState = new LanScreen(window, paintingGame);
 					return PushdownResult::Push; // Add in when we have LAN game created
 				}break;
 
-				case GameTechRenderer::GameState::ExitGame: {
+				case GameState::ExitGame: {
 					return PushdownResult::Pop;
 				}break;
 
-				case GameTechRenderer::GameState::MainMenu: {
+				case GameState::MainMenu: {
 					return PushdownResult::NoChange;
 				}break;
 

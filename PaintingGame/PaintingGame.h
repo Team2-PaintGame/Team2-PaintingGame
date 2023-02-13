@@ -17,6 +17,7 @@
 class Gamepad;
 
 namespace NCL {
+	class MenuHandler;
 	namespace CSC8508 {
 		class PaintingGame {
 		public:
@@ -70,6 +71,9 @@ namespace NCL {
 
 			Gamepad* gamepad = NULL;
 			bool wasConnected = true;
+
+			//UI
+			MenuHandler* menuHandler;
 		};
 	}
 }

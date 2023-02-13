@@ -3,6 +3,7 @@
 #include <imgui_impl_win32.h>
 #include <imgui_impl_opengl3.h>
 #include <iostream>
+#include "MenuHandler.h"
 
 namespace NCL {
 	namespace CSC8508 {
@@ -35,21 +36,21 @@ namespace NCL {
 					window->SetWindowPosition(0, 0);
 				}
 				if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::ESCAPE)){
-					paintingGame->GetGameTechRenderer()->SetGameState(GameTechRenderer::GameState::PauseMenu);
+					menuHandler->SetGameState(GameState::PauseMenu);
 				}
 				window->SetTitle("Gametech frame time:" + std::to_string(1000.0f * dt));
 				paintingGame->UpdateGame(dt);
-				GameTechRenderer::GameState gameState = paintingGame->GetGameTechRenderer()->GetGameState();
+				GameState gameState = menuHandler->GetGameState();
 				switch (gameState) {
-					case GameTechRenderer::GameState::SinglePlayer: {
+					case GameState::SinglePlayer: {
 						return PushdownResult::NoChange;
 					}	break;
 
-					case GameTechRenderer::GameState::MainMenu: {
+					case GameState::MainMenu: {
 						return PushdownResult::Pop;
 					}break;
 
-					case GameTechRenderer::GameState::PauseMenu: {
+					case GameState::PauseMenu: {
 						*newState = new PauseScreen(paintingGame);
 						return PushdownResult::Push;
 					}break;

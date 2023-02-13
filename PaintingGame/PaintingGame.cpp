@@ -4,6 +4,7 @@
 #include "Box.h"
 #include "Floor.h"
 #include "InputController.h"
+#include "MenuHandler.h"
 
 using namespace NCL;
 using namespace CSC8508;
@@ -119,12 +120,12 @@ PaintingGame::~PaintingGame() {
 void PaintingGame::UpdateGame(float dt) {
 	world->GetMainCamera()->UpdateCamera(dt);
 
-	if (renderer->GetGameState() == GameTechRenderer::GameState::SplitScreen)
+	if (menuHandler->GetGameState() == GameState::SplitScreen)
 	{
 		numberOfPlayerControllers = 2;
 		world->GetSecondCamera()->UpdateCamera(dt);
 	}
-	else if (renderer->GetGameState() == GameTechRenderer::GameState::SinglePlayer) {
+	else if (menuHandler->GetGameState() == GameState::SinglePlayer) {
 		numberOfPlayerControllers = 1;
 	}
 

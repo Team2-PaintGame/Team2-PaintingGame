@@ -3,7 +3,12 @@
 #include <Window.h>
 #include "../../../../PaintingGame/PaintingGame.h"
 
+
+
 namespace NCL {
+
+	class MenuHandler;
+
 	namespace CSC8508 {
 
 		class IntroScreen : public PushdownState
@@ -18,6 +23,8 @@ namespace NCL {
 			bool isLanScreen;
 			Window* window;
 			PaintingGame* paintingGame;
+
+			MenuHandler* menuHandler;
 		};
 
 	}

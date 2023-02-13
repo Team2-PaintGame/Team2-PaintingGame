@@ -1,5 +1,6 @@
 #include "SplitScreen.h"
 #include "PauseScreen.h"
+#include "MenuHandler.h"
 
 
 namespace NCL {
@@ -33,22 +34,22 @@ namespace NCL {
 					window->SetWindowPosition(0, 0);
 				}
 				if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::ESCAPE)) {
-					paintingGame->GetGameTechRenderer()->SetGameState(GameTechRenderer::GameState::PauseMenu);
+					menuHandler->SetGameState(GameState::PauseMenu);
 				}
 				window->SetTitle("Gametech frame time:" + std::to_string(1000.0f * dt));
 				paintingGame->UpdateGame(dt);
 
-				GameTechRenderer::GameState gameState = paintingGame->GetGameTechRenderer()->GetGameState();
+				GameState gameState = menuHandler->GetGameState();
 				switch (gameState) {
-				case GameTechRenderer::GameState::SplitScreen: {
+				case GameState::SplitScreen: {
 					return PushdownResult::NoChange;
 				}	break;
 
-				case GameTechRenderer::GameState::MainMenu: {
+				case GameState::MainMenu: {
 					return PushdownResult::Pop;
 				}break;
 
-				case GameTechRenderer::GameState::PauseMenu: {
+				case GameState::PauseMenu: {
 					*newState = new PauseScreen(paintingGame);
 					return PushdownResult::Push;
 				}break;
