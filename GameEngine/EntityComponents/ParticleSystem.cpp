@@ -60,11 +60,11 @@ void Particle::Update(float dt) {
 	//need to call this here because particles itself are not part of game world
 	GameObject::UpdateTransform();
 
-	rigidBody->applyLocalForceAtCenterOfMass(~(transform.GetOrientation() * velocity));
+	rigidBody->applyLocalForceAtCenterOfMass(~(direction * speed));
 	elapsedTime += dt;
 
 	if (elapsedTime >= lifeSpan) {
-		this->SetActive(false);
+		//this->SetActive(false);
 	}
 }
 
