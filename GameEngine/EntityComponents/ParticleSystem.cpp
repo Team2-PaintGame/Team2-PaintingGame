@@ -3,10 +3,13 @@
 
 using namespace NCL;
 
-ParticleSystem::ParticleSystem(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, int startSize, float startLifetime, std::string name) : GameObject(physicsCommon, physicsWorld, name) {
+ParticleSystem::ParticleSystem(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, int startSize, float startLifetime, float startSpeed, std::string name) : GameObject(physicsCommon, physicsWorld, name) {
 	this->startSize = startSize;
+	this->startLifetime = startSize;
+	this->startSpeed = startSize;
+
 	for (int i = 0; i < numParticles; i++) {
-		particles.push_back(new Particle(physicsCommon, physicsWorld, position, startSize, startLifetime));
+		particles.push_back(new Particle(physicsCommon, physicsWorld, position, startSize, startLifetime, startSpeed));
 	}
 
 	for (auto& particle : particles) {
@@ -39,13 +42,14 @@ ParticleSystem::~ParticleSystem() {
 	}
 }
 
-Particle::Particle(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 emitterPosition, int size, float lifeSpan) : GameObject(physicsCommon, physicsWorld) {
+Particle::Particle(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 emitterPosition, int size, float lifeSpan, float speed) : GameObject(physicsCommon, physicsWorld) {
 	Vector3 position = Vector3(rand() % 15 + 10, 10, rand() % 15);
 	transform
 		.SetPosition(position + emitterPosition)
 		.SetScale(Vector3(size));
 	
 	this->lifeSpan = lifeSpan;
+	this->speed = speed;
 
 	boundingVolume = physicsCommon.createSphereShape(size);
 	reactphysics3d::Transform rp3d_transform(~transform.GetPosition(), rp3d::Quaternion::identity());
