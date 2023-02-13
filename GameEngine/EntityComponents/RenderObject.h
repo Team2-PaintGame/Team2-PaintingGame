@@ -22,7 +22,7 @@ namespace NCL {
 			RenderObject(Transform* parentTransform, MeshGeometry* mesh, ShaderBase* shader);
 
 			//constructor for instanced render objects using the same mesh and shader with different transforms
-			RenderObject(std::vector<Transform*>& parentTransforms, MeshGeometry* mesh, ShaderBase* shader);
+			RenderObject(const std::vector<Transform*>& parentTransforms, MeshGeometry* mesh, ShaderBase* shader);
 			~RenderObject();
 
 			void AddTexture(TextureBase* t, std::string uniform = "mainTex", int subMeshIndex = 0) {
@@ -61,6 +61,10 @@ namespace NCL {
 				return transforms;
 			}
 
+			void SetTransforms(const std::vector<Transform*>& parentTransforms) {
+				this->transforms = parentTransforms;
+			}
+
 			ShaderBase*		GetShader() const {
 				return shader;
 			}
@@ -79,6 +83,14 @@ namespace NCL {
 
 			bool IsRigged() const {
 				return rigged;
+			}
+
+			void SetIsInstanced(bool isInstanced) {
+				this->isInstanced = isInstanced;
+			}
+
+			bool GetIsInstanced() const {
+				return isInstanced;
 			}
 
 			void GetFrameMatrices(vector<Matrix4>& frameMatrices) const {
@@ -105,6 +117,7 @@ namespace NCL {
 			Vector4			colour;
 			bool	rigged = false;
 			unsigned int numInstances = 0;
+			bool isInstanced = false;
 		};
 	}
 }
