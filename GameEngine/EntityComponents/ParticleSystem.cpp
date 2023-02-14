@@ -9,7 +9,7 @@ ParticleSystem::ParticleSystem(reactphysics3d::PhysicsCommon& physicsCommon, rea
 	this->startSpeed = startSpeed;
 	
 	transform.SetPosition(emitterPosition);
-
+	
 	renderObject = new RenderObject(transforms, mesh, shader);
 	renderObject->AddTexture(texture);
 	renderObject->SetInstanceCount(particles.size());
@@ -17,18 +17,54 @@ ParticleSystem::ParticleSystem(reactphysics3d::PhysicsCommon& physicsCommon, rea
 }
 
 void ParticleSystem::Update(float dt) {
-
 	accumulator += dt;
 	GenerateParticles();
 
-	for (auto& p : particles) {
+	//if (!particles.empty())
+	//std::cout << particles.front()->IsActive() << " " << particles.front()->elapsedTime << std::endl;
+	for (size_t i = 0; i < particles.size();) {
+		particles[i]->Update(dt);
+
+		if (!particles[i]->IsActive()) {
+			std::swap(particles[i], particles.back());
+			particles.pop_back();
+			std::swap(transforms[i], transforms.back());
+			transforms.pop_back();
+		}
+		else
+			++i;
+	}
+	//for (auto& p : particles) {
+	//	p->Update(dt);
+
+	//	//if (!p->IsActive()) {
+	//	//	//particles.erase(std::remove(particles.begin(), particles.end(), p), particles.end());
+	//	//	//transforms.erase(std::remove(transforms.begin(), transforms.end(), &p->GetTransform()), transforms.end());
+	//	//	std::erase(particles, p);
+	//	//	std::erase(transforms, &p->GetTransform());
+	//	//}
+	//}
+
+	/*transforms.erase(remove_if(begin(transforms), end(transforms),
+		[particles&](const auto& p) { return particles[&p - &*begin(transforms)].alive(); }),
+		end(transforms));
+	transforms.erase(std::remove_if(data.begin(), data.end(),
+		[&data](const double& d) { return (&d - &*data.begin()) % 2); }));*/
+	//std::erase_if(transforms, [particles&](const auto& p) {return particles[&p - &*begin(transforms)].IsActive(); });
+	std::erase_if(particles, [](const auto& p) {return !p->IsActive(); });
+	//std::erase_if(transforms, [](const auto& p) {return !p->IsActive(); });
+
+	/*auto it_t = transforms.begin();
+	for (auto it = particles.begin(); it != particles.end(); it++) {
+		Particle*& p = *it;
 		p->Update(dt);
 
 		if (!p->IsActive()) {
-			particles.erase(std::remove(particles.begin(), particles.end(), p), particles.end());
-			transforms.erase(std::remove(transforms.begin(), transforms.end(), &p->GetTransform()), transforms.end());
+			particles.erase(it);
+			transforms.erase(it_t);
 		}
-	}
+		it_t++;
+	}*/
 
 	renderObject->SetTransforms(transforms);
 	renderObject->SetInstanceCount(particles.size());
