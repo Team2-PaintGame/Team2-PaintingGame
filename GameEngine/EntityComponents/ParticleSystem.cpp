@@ -41,7 +41,7 @@ ParticleSystem::~ParticleSystem() {
 }
 
 void ParticleSystem::GenerateParticles() {
-	while (accumulator > 1.0 / emitter.GetParticleEmissionRate()) {
+	while (accumulator > 1.0 / emitter.GetParticleEmissionRate() && particles.size() < maxParticles) {
 		particles.push_back(new Particle(physicsCommon, physicsWorld, transform.GetPosition(), Vector3(), startSize, startLifetime, startSpeed, emitter.GetEmissionDirection()));
 		transforms.push_back(&particles.back()->GetTransform());
 		accumulator -= 1.0 / emitter.GetParticleEmissionRate();
