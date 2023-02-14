@@ -3,31 +3,24 @@
 
 using namespace NCL;
 
-ParticleSystem::ParticleSystem(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 emitterposition, MeshGeometry* emitterMesh, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, float startSize, float startLifetime, float startSpeed, std::string name) : GameObject(physicsCommon, physicsWorld, name) {
+ParticleSystem::ParticleSystem(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 emitterPosition, MeshGeometry* emitterMesh, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, float startSize, float startLifetime, float startSpeed, std::string name) : GameObject(physicsCommon, physicsWorld, name), emitter(emitterMesh) {
 	this->startSize = startSize;
-	this->startLifetime = startSize;
-	this->startSpeed = startSize;
-	this->emitterMesh = emitterMesh;
-
-	std::vector<Vector3> directions = emitterMesh->GetNormalData();
-	std::vector<Vector3> particlePositions = emitterMesh->GetPositionData();
-	numParticles = directions.size() > maxParticles ? maxParticles : directions.size();
-
-	for (int i = 0; i < numParticles; i++) {
-		particles.push_back(new Particle(physicsCommon, physicsWorld, emitterposition, particlePositions[i], startSize, startLifetime, startSpeed, directions[i]));
-	}
-
-	for (auto& particle : particles) {
-		transforms.push_back(&particle->GetTransform());
-	}
+	this->startLifetime = startLifetime;
+	this->startSpeed = startSpeed;
+	
+	transform.SetPosition(emitterPosition);
 
 	renderObject = new RenderObject(transforms, mesh, shader);
 	renderObject->AddTexture(texture);
-	renderObject->SetInstanceCount(numParticles);
+	renderObject->SetInstanceCount(particles.size());
 	renderObject->SetIsInstanced(true);
 }
 
 void ParticleSystem::Update(float dt) {
+
+	accumulator += dt;
+	GenerateParticles();
+
 	for (auto& p : particles) {
 		p->Update(dt);
 
@@ -47,9 +40,17 @@ ParticleSystem::~ParticleSystem() {
 	}
 }
 
+void ParticleSystem::GenerateParticles() {
+	while (accumulator > 1.0 / emitter.GetParticleEmissionRate()) {
+		particles.push_back(new Particle(physicsCommon, physicsWorld, transform.GetPosition(), Vector3(), startSize, startLifetime, startSpeed, emitter.GetEmissionDirection()));
+		transforms.push_back(&particles.back()->GetTransform());
+		accumulator -= 1.0 / emitter.GetParticleEmissionRate();
+	}
+}
+
 Particle::Particle(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 emitterPosition, Vector3 particlePosition, float size, float lifeSpan, float speed, Vector3 direction) : GameObject(physicsCommon, physicsWorld) {
 	transform
-		.SetPosition(particlePosition + emitterPosition)
+		.SetPosition(emitterPosition)
 		.SetScale(Vector3(size));
 	
 	this->lifeSpan = lifeSpan;
@@ -61,19 +62,19 @@ Particle::Particle(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d:
 
 	rigidBody = physicsWorld->createRigidBody(rp3d_transform);
 	rigidBody->addCollider(boundingVolume, rp3d::Transform::identity()); 
-	rigidBody->updateMassPropertiesFromColliders();
 	rigidBody->enableGravity(false);
 }
 
 void Particle::Update(float dt) {
+	elapsedTime += dt;
+
 	//need to call this here because particles itself are not part of game world
 	GameObject::UpdateTransform();
 
-	rigidBody->applyLocalForceAtCenterOfMass(~(direction * speed));
-	elapsedTime += dt;
+	rigidBody->applyWorldForceAtCenterOfMass(~(direction * speed));
 
 	if (elapsedTime >= lifeSpan) {
-		//this->SetActive(false);
+		this->SetActive(false);
 	}
 }
 
