@@ -19,7 +19,7 @@ struct MessagePacket : public GamePacket {
 	}
 };
 
-NetworkedGame::NetworkedGame() : PaintingGame(true) {
+NetworkedGame::NetworkedGame(MenuHandler* menu) : PaintingGame(menu, true) {
 	thisServer = nullptr;
 	thisClient = nullptr;
 

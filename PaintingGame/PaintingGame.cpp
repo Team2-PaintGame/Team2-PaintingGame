@@ -9,7 +9,7 @@
 using namespace NCL;
 using namespace CSC8508;
 
-PaintingGame::PaintingGame(bool online) {
+PaintingGame::PaintingGame(MenuHandler* menu, bool online) {
 	world = new GameWorld();
 	gamepad = new Gamepad();
 
@@ -22,13 +22,14 @@ PaintingGame::PaintingGame(bool online) {
 	*/
 	thirdPersonCamera = true;
 	is_Networked = online;
+	menuHandler = menu;
 
 	physicsWorld = physicsCommon.createPhysicsWorld(/*settings*/);
 
 #ifdef USEVULKAN
 	renderer = new GameTechVulkanRenderer(*world);
 #else 
-	renderer = new GameTechRenderer(*world, physicsWorld);
+	renderer = new GameTechRenderer(menuHandler, *world, physicsWorld);
 #endif
 	forceMagnitude = 10.0f;
 
@@ -137,6 +138,7 @@ void PaintingGame::UpdateGame(float dt) {
 		}
 	
 	}
+	//menuHandler->Update(dt);
 	renderer->Render();
 	world->UpdateWorld(dt);
 	renderer->Update(dt);

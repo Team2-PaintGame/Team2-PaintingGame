@@ -21,7 +21,7 @@ namespace NCL {
 	namespace CSC8508 {
 		class PaintingGame {
 		public:
-			PaintingGame(bool online = false);
+			PaintingGame(MenuHandler* menu, bool online = false);
 			~PaintingGame();
 			virtual void UpdateGame(float dt);
 			GameTechRenderer* GetGameTechRenderer();

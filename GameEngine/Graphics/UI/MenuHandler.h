@@ -13,7 +13,7 @@ namespace NCL {
 	class MenuHandler
 	{
 	public:
-		MenuHandler();
+		MenuHandler() = default;
 
 		void Update(float dt);
 

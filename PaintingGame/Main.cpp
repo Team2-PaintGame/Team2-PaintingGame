@@ -38,8 +38,8 @@ void GameLoop(Window* window, PaintingGame paintingGame) {
 	}
 }
 
-void PushdownAutomata(Window* window, PaintingGame* paintingGame) {
-	PushdownMachine machine(new IntroScreen(window, paintingGame));
+void PushdownAutomata(Window* window) {
+	PushdownMachine machine(new IntroScreen(window));
 	while (window->UpdateWindow()) {
 		float dt = window->GetTimer()->GetTimeDeltaSeconds();
 		if (!machine.Update(dt)) {
@@ -74,10 +74,10 @@ int main() {
 		}
 	}
 #else
-	PaintingGame g;
+	//PaintingGame g;
 #endif
 
-	PaintingGame* paintingGame = &g;
+	//PaintingGame* paintingGame = &g;
 	w->GetTimer()->GetTimeDeltaSeconds(); //Clear the timer so we don't get a larget first dt!
 
 	IMGUI_CHECKVERSION();
@@ -90,7 +90,7 @@ int main() {
 	// Setup style
 	ImGui::StyleColorsClassic();
 
-	PushdownAutomata(w, paintingGame);
+	PushdownAutomata(w);
 	
 //	GameLoop(); 
 	// Cleanup

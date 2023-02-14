@@ -10,7 +10,7 @@ namespace NCL {
 		class SplitScreen : public PushdownState
 		{
 		public:
-			SplitScreen(Window* window, PaintingGame* paintingGame);
+			SplitScreen(Window* window, MenuHandler * menu);
 			~SplitScreen();
 			PushdownResult OnUpdate(float dt, PushdownState** newState) override;
 			void OnAwake() override;

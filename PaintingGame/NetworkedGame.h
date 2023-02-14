@@ -13,7 +13,7 @@ namespace NCL {
 
 		class NetworkedGame : public PaintingGame, public PacketReceiver {
 		public:
-			NetworkedGame();
+			NetworkedGame(MenuHandler* menu);
 			~NetworkedGame();
 
 			void StartAsServer();

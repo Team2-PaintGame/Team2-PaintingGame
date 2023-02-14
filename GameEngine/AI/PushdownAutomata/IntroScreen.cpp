@@ -9,41 +9,40 @@
 
 namespace NCL {
 	namespace CSC8508 {
-		IntroScreen::IntroScreen(Window* window, PaintingGame* paintingGame)
-		{
-			isLanScreen = false;
-			this->window = window;
-			this->paintingGame = paintingGame;
-		}
 		IntroScreen::IntroScreen(Window* window)
 		{
-			isLanScreen = false;
 			this->window = window;
-			PaintingGame g(false);
-			paintingGame = &g;
+
+			menuHandler = new MenuHandler();
+			menuHandler->SetGameState(GameState::MainMenu);
+
+			paintingGame = new PaintingGame(menuHandler, false);
+			paintingGame->GetGameTechRenderer()->SetRenderMode(GameTechRenderer::RenderMode::MainMenu);
 		}
 		IntroScreen::~IntroScreen()
 		{
-
+			delete paintingGame;
+			delete menuHandler;
 		}
 		PushdownState::PushdownResult IntroScreen::OnUpdate(float dt, PushdownState** newState)
 		{
 			paintingGame->UpdateGame(dt);
+
 			NCL::GameState gameState = menuHandler->GetGameState();
 			switch (gameState) {
 
 				case GameState::SinglePlayer: {
-					*newState = new SinglePlayerScreen(window, paintingGame);
+					*newState = new SinglePlayerScreen(window, menuHandler);
 					return PushdownResult::Push;
 				}	break;
 
 				case GameState::SplitScreen: {
-					*newState = new SplitScreen(window, paintingGame);
+					*newState = new SplitScreen(window, menuHandler);
 					return PushdownResult::Push;
 				}break;
 
 				case GameState::LAN: {
-					*newState = new LanScreen(window, paintingGame);
+					*newState = new LanScreen(window, menuHandler);
 					return PushdownResult::Push; // Add in when we have LAN game created
 				}break;
 
@@ -59,7 +58,6 @@ namespace NCL {
 		}
 		void IntroScreen::OnAwake()
 		{
-
 
 		}
 	}

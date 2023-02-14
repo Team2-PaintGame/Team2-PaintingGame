@@ -15,7 +15,9 @@ using namespace CSC8508;
 
 Matrix4 biasMatrix = Matrix4::Translation(Vector3(0.5f, 0.5f, 0.5f)) * Matrix4::Scale(Vector3(0.5f, 0.5f, 0.5f));
 
-GameTechRenderer::GameTechRenderer(GameWorld& world, reactphysics3d::PhysicsWorld* physicsWorld) : OGLRenderer(*Window::GetWindow()), gameWorld(world), settings(physicsWorld) {
+GameTechRenderer::GameTechRenderer(MenuHandler* menu, GameWorld& world, reactphysics3d::PhysicsWorld* physicsWorld) : OGLRenderer(*Window::GetWindow()), gameWorld(world), settings(physicsWorld) {
+
+	menuHandler = menu;
 
 	skybox = new OGLSkybox();
 
@@ -133,7 +135,7 @@ void GameTechRenderer::RenderMainMenu()
 	glClearColor(1, 1, 1, 1);
 	glViewport(0, 0, windowWidth, windowHeight);
 	RenderSkybox(*gameWorld.GetMainCamera());
-	//RenderGUI(gameState == MainMenu);
+	RenderGUI(true);
 	glDisable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -362,6 +364,8 @@ void GameTechRenderer::RenderDebugInformation(bool isDebugInfo) {
 }
 
 void GameTechRenderer::RenderGUI(bool showWindow) {
+	menuHandler->Update(0.016f);
+
 	// Rendering
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
