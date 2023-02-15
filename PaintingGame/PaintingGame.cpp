@@ -138,7 +138,7 @@ void PaintingGame::UpdateGame(float dt) {
 		}
 	
 	}
-	//menuHandler->Update(dt);
+	menuHandler->Update(dt);
 	renderer->Render();
 	world->UpdateWorld(dt);
 	renderer->Update(dt);

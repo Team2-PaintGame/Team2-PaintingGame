@@ -2,6 +2,9 @@
 #include "PauseScreen.h"
 #include "MenuHandler.h"
 
+#include <imgui_impl_win32.h>
+#include <imgui_impl_opengl3.h>
+#include <Win32Window.h>
 
 namespace NCL {
 	namespace CSC8508 {
@@ -15,10 +18,25 @@ namespace NCL {
 
 			this->paintingGame = new PaintingGame(menu);
 			paintingGame->GetGameTechRenderer()->SetRenderMode(GameTechRenderer::RenderMode::SplitScreen);
+
+			IMGUI_CHECKVERSION();
+			ImGui::CreateContext();
+			ImGuiIO& io = ImGui::GetIO(); (void)io;
+			//Init Win32
+			//ImGui_ImplWin32_Init(dynamic_cast<NCL::Win32Code::Win32Window*>(window)->GetHandle());
+			//Init OpenGL Imgui Implementation
+			ImGui_ImplOpenGL3_Init();
+			// Setup style
+			//ImGui::StyleColorsClassic();
 		}
 		SplitScreen::~SplitScreen()
 		{
 			delete paintingGame;
+
+			// Cleanup
+			ImGui_ImplOpenGL3_Shutdown();
+			ImGui_ImplWin32_Shutdown();
+			ImGui::DestroyContext();
 		}
 		PushdownState::PushdownResult SplitScreen::OnUpdate(float dt, PushdownState** newState)
 		{
@@ -52,7 +70,7 @@ namespace NCL {
 			}break;
 
 			case GameState::PauseMenu: {
-				*newState = new PauseScreen(paintingGame);
+				*newState = new PauseScreen(paintingGame, menuHandler);
 				return PushdownResult::Push;
 			}break;
 

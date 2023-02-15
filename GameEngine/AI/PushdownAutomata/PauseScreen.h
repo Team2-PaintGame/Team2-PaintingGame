@@ -10,7 +10,7 @@ namespace NCL {
 		class PauseScreen : public PushdownState
 		{
 		public:
-			PauseScreen(PaintingGame* paintingGame);
+			PauseScreen(PaintingGame* paintingGame, MenuHandler* menu);
 			~PauseScreen();
 			PushdownResult OnUpdate(float dt, PushdownState** newState) override;
 			void OnAwake() override;

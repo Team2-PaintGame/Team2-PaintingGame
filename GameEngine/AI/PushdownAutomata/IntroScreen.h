@@ -14,7 +14,7 @@ namespace NCL {
 		class IntroScreen : public PushdownState
 		{
 		public:
-			IntroScreen(Window* window);
+			IntroScreen(Window* window, PaintingGame* g);
 			~IntroScreen();
 			PushdownResult OnUpdate(float dt, PushdownState** newState) override;
 			void OnAwake() override;

@@ -9,6 +9,7 @@
 
 #include "PushdownMachine.h"
 #include "IntroScreen.h"
+#include "MenuHandler.h"
 
 #define NETWORKING_ENABLED	(0)	// (0) - off, (1) - on
 
@@ -38,8 +39,10 @@ void GameLoop(Window* window, PaintingGame paintingGame) {
 	}
 }
 
+//void PushdownAutomata(Window* window, PaintingGame* paintingGame) {
 void PushdownAutomata(Window* window) {
-	PushdownMachine machine(new IntroScreen(window));
+	//PushdownMachine machine(new IntroScreen(window, paintingGame));
+	PushdownMachine machine(new IntroScreen(window, nullptr));
 	while (window->UpdateWindow()) {
 		float dt = window->GetTimer()->GetTimeDeltaSeconds();
 		if (!machine.Update(dt)) {
@@ -74,28 +77,31 @@ int main() {
 		}
 	}
 #else
-	//PaintingGame g;
+	MenuHandler* m = new MenuHandler();
+	m->SetGameState(GameState::MainMenu);
+	PaintingGame g(m);
 #endif
 
-	//PaintingGame* paintingGame = &g;
+	PaintingGame* paintingGame = &g;
 	w->GetTimer()->GetTimeDeltaSeconds(); //Clear the timer so we don't get a larget first dt!
 
 	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
+	/*ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	//Init Win32
 	ImGui_ImplWin32_Init(dynamic_cast<NCL::Win32Code::Win32Window*>(w)->GetHandle());
 	//Init OpenGL Imgui Implementation
 	ImGui_ImplOpenGL3_Init();
 	// Setup style
-	ImGui::StyleColorsClassic();
+	ImGui::StyleColorsClassic();*/
 
+	//PushdownAutomata(w, paintingGame);
 	PushdownAutomata(w);
 	
 //	GameLoop(); 
 	// Cleanup
-	ImGui_ImplOpenGL3_Shutdown();
+	/*ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
-	Window::DestroyGameWindow();
+	Window::DestroyGameWindow();*/
 }

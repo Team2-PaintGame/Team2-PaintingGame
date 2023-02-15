@@ -5,6 +5,8 @@
 #include <iostream>
 #include "MenuHandler.h"
 
+#include <Win32Window.h>
+
 namespace NCL {
 	namespace CSC8508 {
 
@@ -17,10 +19,25 @@ namespace NCL {
 
 			this->paintingGame = new PaintingGame(menuHandler, false);
 			paintingGame->GetGameTechRenderer()->SetRenderMode(GameTechRenderer::RenderMode::SingleViewport);
+
+			IMGUI_CHECKVERSION();
+			ImGui::CreateContext();
+			ImGuiIO& io = ImGui::GetIO(); (void)io;
+			//Init Win32
+			//ImGui_ImplWin32_Init(dynamic_cast<NCL::Win32Code::Win32Window*>(window)->GetHandle());
+			//Init OpenGL Imgui Implementation
+			//ImGui_ImplOpenGL3_Init();
+			// Setup style
+			//ImGui::StyleColorsClassic();
 		}
 		SinglePlayerScreen::~SinglePlayerScreen()
 		{
 			delete paintingGame;
+
+			// Cleanup
+			ImGui_ImplOpenGL3_Shutdown();
+			ImGui_ImplWin32_Shutdown();
+			ImGui::DestroyContext();
 		}
 		PushdownState::PushdownResult SinglePlayerScreen::OnUpdate(float dt, PushdownState** newState)
 		{
@@ -53,7 +70,7 @@ namespace NCL {
 				}break;
 
 				case GameState::PauseMenu: {
-					*newState = new PauseScreen(paintingGame);
+					*newState = new PauseScreen(paintingGame, menuHandler);
 					return PushdownResult::Push;
 				}break;
 

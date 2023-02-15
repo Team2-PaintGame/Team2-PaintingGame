@@ -106,6 +106,9 @@ namespace NCL {
 			void RenderDebugInformation(bool isDebugInfo);
 			void RenderGUI(bool showWindow = true);
 
+			void ShowMainMenuWindow();
+			void ShowPauseMenuWindow();
+
 			void SetDebugStringBufferSizes(size_t newVertCount);
 			void SetDebugLineBufferSizes(size_t newVertCount);
 			

@@ -6,10 +6,15 @@
 #include <iostream>
 #include "MenuHandler.h"
 
+//#include "imgui.h"
+#include <imgui_impl_win32.h>
+#include <imgui_impl_opengl3.h>
+#include <Win32Window.h>
+
 
 namespace NCL {
 	namespace CSC8508 {
-		IntroScreen::IntroScreen(Window* window)
+		IntroScreen::IntroScreen(Window* window, PaintingGame* g)
 		{
 			this->window = window;
 
@@ -18,11 +23,26 @@ namespace NCL {
 
 			paintingGame = new PaintingGame(menuHandler, false);
 			paintingGame->GetGameTechRenderer()->SetRenderMode(GameTechRenderer::RenderMode::MainMenu);
+
+			IMGUI_CHECKVERSION();
+			ImGui::CreateContext();
+			ImGuiIO& io = ImGui::GetIO(); (void)io;
+			//Init Win32
+			ImGui_ImplWin32_Init(dynamic_cast<NCL::Win32Code::Win32Window*>(window)->GetHandle());
+			//Init OpenGL Imgui Implementation
+			ImGui_ImplOpenGL3_Init();
+			// Setup style
+			//ImGui::StyleColorsClassic();
 		}
 		IntroScreen::~IntroScreen()
 		{
 			delete paintingGame;
 			delete menuHandler;
+
+			// Cleanup
+			ImGui_ImplOpenGL3_Shutdown();
+			ImGui_ImplWin32_Shutdown();
+			ImGui::DestroyContext();
 		}
 		PushdownState::PushdownResult IntroScreen::OnUpdate(float dt, PushdownState** newState)
 		{

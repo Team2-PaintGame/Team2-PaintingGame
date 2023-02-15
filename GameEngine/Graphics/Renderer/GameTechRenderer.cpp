@@ -364,12 +364,70 @@ void GameTechRenderer::RenderDebugInformation(bool isDebugInfo) {
 }
 
 void GameTechRenderer::RenderGUI(bool showWindow) {
-	menuHandler->Update(0.016f);
+	//menuHandler->Update(0.016f);
+
+	// Start the Dear ImGui frame
+	/*ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+	if (renderMode == RenderMode::MainMenu) {
+		ShowMainMenuWindow();
+	}
+	if (renderMode == RenderMode::SingleViewport) {
+		ShowPauseMenuWindow();
+	}
+	ImGui::EndFrame();*/
 
 	// Rendering
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
+
+void GameTechRenderer::ShowMainMenuWindow()
+{
+	bool isMainMenu = true; //(gameState == MainMenu);
+
+	ImGui::Begin("Splat Main Menu", &isMainMenu);
+	ImGui::Text("This is going to be the splat main menu!");
+
+	if (ImGui::Button("Single Player"))
+	{
+		//SetGameState(SinglePlayer);
+	}
+	if (ImGui::Button("Split Screen"))
+	{
+		//SetGameState(SplitScreen);
+	}
+	if (ImGui::Button("LAN"))
+	{
+		//SetGameState(LAN);
+	}
+	if (ImGui::Button("Exit"))
+	{
+		//SetGameState(ExitGame);
+	}
+	ImGui::End();
+}
+
+void GameTechRenderer::ShowPauseMenuWindow()
+{
+	bool isMainMenu = true;// (gameState == MainMenu);
+	ImGui::Begin("Pause Menu", &isMainMenu);
+	if (ImGui::Button("Resume"))
+	{
+		//SetGameState(previousGameState);
+	}
+	if (ImGui::Button("Toggle Debug Info"))
+	{
+		//ToggleDebugInfo();
+	}
+	if (ImGui::Button("Exit to Main Menu"))
+	{
+		//SetGameState(MainMenu);
+	}
+	ImGui::End();
+}
+
 
 void GameTechRenderer::RenderCamera(Camera& cam) {
 	if (settings.GetIsWireFrameModeEnabled()) {
