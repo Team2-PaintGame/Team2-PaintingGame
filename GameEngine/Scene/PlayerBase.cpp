@@ -3,6 +3,7 @@
 #include "Window.h"
 #include "Utils.h"
 
+
 using namespace NCL;
 
 PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, int size): GameObject(physicsCommon, physicsWorld, "BasePlayer") {
@@ -11,7 +12,12 @@ PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysic
 		.SetPosition(position);
 
 	renderObject = new RenderObject(&transform, mesh, shader);
-	renderObject->AddTexture(texture);
+	//renderObject->AddTexture(texture);
+
+	int subMeshes = mesh->GetSubMeshCount();
+	for (int index = 0; index < subMeshes; ++index) {
+		renderObject->AddTexture(texture, "mainTex", index);
+	}
 
 	boundingVolume = physicsCommon.createBoxShape(~transform.GetScale() / 2.0f);
 	reactphysics3d::Transform rp3d_transform(~position, rp3d::Quaternion::identity());
@@ -22,6 +28,10 @@ PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysic
 	rigidBody->updateMassPropertiesFromColliders();
 	rigidBody->setLinearDamping(1.5f);
 }
+
+
+
+
 
 void PlayerBase::Update(float dt) {}
 

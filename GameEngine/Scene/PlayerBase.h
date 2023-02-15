@@ -3,6 +3,9 @@
 #include "MeshGeometry.h"
 #include "TextureBase.h"
 #include "ShaderBase.h"
+#include "MeshMaterial.h"
+#include "MeshAnimation.h"
+
 
 namespace NCL {
 	using namespace Rendering;
@@ -11,6 +14,7 @@ namespace NCL {
 	public:
 		PlayerBase() = default;
 		PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, int size);
+		//PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, MeshMaterial* meshMaterial, ShaderBase* shader, int size);
 		virtual void Update(float dt);
 		virtual ~PlayerBase();
 	protected:

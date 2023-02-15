@@ -50,6 +50,7 @@ for this module, even in the coursework, but you can add it if you like!
 */
 void PaintingGame::InitialiseAssets() {
 	meshes.insert(std::make_pair("cubeMesh", renderer->LoadMesh("cube.msh")));
+	meshes.insert(std::make_pair("mainChar", renderer->LoadMesh("Rig_Maximilian.msh")));
 	meshes.insert(std::make_pair("sphereMesh", renderer->LoadMesh("sphere.msh")));
 	meshes.insert(std::make_pair("goatMesh", renderer->LoadMesh("goat.msh")));
 	meshes.insert(std::make_pair("enemyMesh", renderer->LoadMesh("Keeper.msh")));
@@ -58,7 +59,9 @@ void PaintingGame::InitialiseAssets() {
 	meshes.insert(std::make_pair("terrainMesh", renderer->LoadHeightMap("noise.png")));
 
 	meshMaterials.insert(std::make_pair("goatMat", new MeshMaterial("goat.mat")));
+	meshMaterials.insert(std::make_pair("mainCharMat", new MeshMaterial("Rig_Maximilian.mat")));
 	//meshMaterials.at("goatMat")->LoadTextures();
+	//meshMaterials.at("mainCharMat")->LoadTextures();
 
 	textures.insert(std::make_pair("basicTex", renderer->LoadTexture("checkerboard.png")));
 	textures.insert(std::make_pair("grassTex", renderer->LoadTexture("grass.jpg")));
@@ -200,7 +203,7 @@ void PaintingGame::InitWorld() {
 
 
 PlayerBase* PaintingGame::InitiliazePlayer() {
-	players[0] = new PlayerBase(physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 5);
+	players[0] = new PlayerBase(physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("mainChar"), textures.at("basicTex"), shaders.at("basicShader"), 5);
 	world->AddGameObject(players[0]);
 	playerControllers[0] = new PlayerController(world->GetMainCamera(), players[0]);
 
@@ -209,7 +212,7 @@ PlayerBase* PaintingGame::InitiliazePlayer() {
 
 PlayerBase* PaintingGame::InitialiseNetworkPlayer() {
 	
-	netPlayer = new PlayerBase(physicsCommon, physicsWorld, Vector3(0, 50, 10), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 5);
+	netPlayer = new PlayerBase(physicsCommon, physicsWorld, Vector3(0, 50, 10), meshes.at("mainChar"), textures.at("basicTex"), shaders.at("basicShader"), 5);
 	world->AddGameObject(netPlayer);
 	return netPlayer;
 }
@@ -220,7 +223,7 @@ GameTechRenderer* PaintingGame::GetGameTechRenderer()
 }
 
 PlayerBase* PaintingGame::InitSecondPlayer() {
-	players[1] = new PlayerBase(physicsCommon, physicsWorld, Vector3(10, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 5);
+	players[1] = new PlayerBase(physicsCommon, physicsWorld, Vector3(10, 10, 0), meshes.at("mainChar"), textures.at("basicTex"), shaders.at("basicShader"), 5);
 	world->AddGameObject(players[1]);
 	playerControllers[1] = new PlayerController(world->GetSecondCamera(), players[1]);
 
