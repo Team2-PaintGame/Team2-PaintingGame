@@ -10,7 +10,7 @@ namespace NCL {
 
 	class Particle : public GameObject {
 	public:
-		Particle(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 emitterPosition, Vector3 particlePosition, float size, float lifeSpan, float speed, Vector3 direction, bool enableGravity);
+		Particle(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Transform emitterTransform, Vector3 particlePosition, float lifeSpan, float speed, Vector3 direction, bool enableGravity);
 		void Update(float dt);
 		virtual ~Particle();
 	
@@ -60,7 +60,7 @@ namespace NCL {
 		//bool looping = true;					// If looping is enabled, the cycle starts once again when the duration time is reached
 		float startLifetime = 5.0f;				// The initial lifetime in seconds for the particles. The particle is destroyed after this elapsed time.
 		float startSpeed = 10.0f;				// The initial speed of the particles. The greater the speed of the particles, the more spread out they will be.
-		float startSize = 1.0f;					// the initial size of the particles.
+		//float startSize = 1.0f;					// the initial size of the particles.
 		bool enableGravity = false;
 		Emitter emitter;
 	};
