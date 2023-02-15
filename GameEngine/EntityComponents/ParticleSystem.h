@@ -10,7 +10,7 @@ namespace NCL {
 
 	class Particle : public GameObject {
 	public:
-		Particle(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 emitterPosition, Vector3 particlePosition, float size, float lifeSpan, float speed, Vector3 direction);
+		Particle(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 emitterPosition, Vector3 particlePosition, float size, float lifeSpan, float speed, Vector3 direction, bool enableGravity);
 		void Update(float dt);
 		virtual ~Particle();
 	
@@ -46,7 +46,7 @@ namespace NCL {
 	
 	class ParticleSystem : public GameObject {
 	public:
-		ParticleSystem(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 emitterPosition, MeshGeometry* emitterMesh, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, float startSize = 1, float startLifetime = 4.0f, float startSpeed = 10.0f, std::string name = "Particle System");
+		ParticleSystem(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 emitterPosition, MeshGeometry* emitterMesh, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, bool enableGravity = false, float startSize = 1, float startLifetime = 4.0f, float startSpeed = 10.0f, std::string name = "Particle System");
 		virtual void Update(float dt);		
 		virtual ~ParticleSystem();
 		
