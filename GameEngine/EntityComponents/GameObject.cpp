@@ -17,10 +17,6 @@ GameObject::GameObject(reactphysics3d::PhysicsCommon& physicsCommon, reactphysic
 GameObject::~GameObject()	{
 	delete renderObject;
 	delete networkObject;
-
-	if (rigidBody) {
-		physicsWorld->destroyRigidBody(rigidBody);
-	}
 }
 
 void GameObject::UpdateTransform() {
