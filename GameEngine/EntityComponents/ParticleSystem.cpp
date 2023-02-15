@@ -10,6 +10,7 @@ ParticleSystem::ParticleSystem(reactphysics3d::PhysicsCommon& physicsCommon, rea
 
 	transform.SetPosition(emitterPosition);
 	transform.SetScale(startSize);
+	//transform.SetOrientation(Quaternion::AxisAngleToQuaterion(Vector3(1, 0, 0), 45) * Quaternion::AxisAngleToQuaterion(Vector3(0, 1, 0), 0));
 	
 	renderObject = new RenderObject(transforms, mesh, shader);
 	renderObject->AddTexture(texture);
@@ -55,14 +56,15 @@ void ParticleSystem::GenerateParticles() {
 Particle::Particle(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Transform emitterTransform, Vector3 particlePosition, float lifeSpan, float speed, Vector3 direction, bool enableGravity) : GameObject(physicsCommon, physicsWorld) {
 	transform
 		.SetPosition(emitterTransform.GetPosition() + particlePosition)
-		.SetScale(emitterTransform.GetScale());
+		.SetScale(emitterTransform.GetScale())
+		.SetOrientation(emitterTransform.GetOrientation());
 	
 	this->lifeSpan = lifeSpan;
 	this->speed = speed;
 	this->direction = direction;
 
 	boundingVolume = physicsCommon.createSphereShape(emitterTransform.GetScale().x);
-	reactphysics3d::Transform rp3d_transform(~transform.GetPosition(), rp3d::Quaternion::identity());
+	reactphysics3d::Transform rp3d_transform(~transform.GetPosition(), ~transform.GetOrientation());
 
 	rigidBody = physicsWorld->createRigidBody(rp3d_transform);
 	rigidBody->addCollider(boundingVolume, rp3d::Transform::identity()); 
@@ -75,7 +77,7 @@ void Particle::Update(float dt) {
 	//need to call this here because particles itself are not part of game world
 	GameObject::UpdateTransform();
 
-	rigidBody->applyWorldForceAtCenterOfMass(~(direction * speed));
+	rigidBody->applyWorldForceAtCenterOfMass(~(transform.GetOrientation() * direction * speed));
 
 	if (elapsedTime >= lifeSpan) {
 		this->SetActive(false);
