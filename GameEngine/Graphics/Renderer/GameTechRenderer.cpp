@@ -364,20 +364,6 @@ void GameTechRenderer::RenderDebugInformation(bool isDebugInfo) {
 }
 
 void GameTechRenderer::RenderGUI(bool showWindow) {
-	//menuHandler->Update(0.016f);
-
-	// Start the Dear ImGui frame
-	/*ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
-	if (renderMode == RenderMode::MainMenu) {
-		ShowMainMenuWindow();
-	}
-	if (renderMode == RenderMode::SingleViewport) {
-		ShowPauseMenuWindow();
-	}
-	ImGui::EndFrame();*/
-
 	// Rendering
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

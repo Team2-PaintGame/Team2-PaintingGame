@@ -7,6 +7,7 @@ namespace NCL {
 		SplitScreen,
 		LAN,
 		PauseMenu,
+		ExitPauseMenu,
 		ExitGame
 	};
 

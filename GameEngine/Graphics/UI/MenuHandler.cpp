@@ -63,7 +63,7 @@ namespace NCL {
 		ImGui::Begin("Pause Menu", &isMainMenu);
 		if (ImGui::Button("Resume"))
 		{
-			SetGameState(previousGameState);
+			SetGameState(ExitPauseMenu);
 		}
 		if (ImGui::Button("Toggle Debug Info"))
 		{

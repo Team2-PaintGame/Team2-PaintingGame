@@ -11,6 +11,7 @@ namespace NCL {
 	namespace CSC8508 {
 
 		SinglePlayerScreen::SinglePlayerScreen(Window* window, MenuHandler* menu)
+			//SinglePlayerScreen::SinglePlayerScreen(PaintingGame* paintingGame, MenuHandler* menu)
 		{
 			isPlayingGame = true;
 			this->window = window;
@@ -19,17 +20,8 @@ namespace NCL {
 
 			this->paintingGame = new PaintingGame(menuHandler, false);
 			paintingGame->GetGameTechRenderer()->SetRenderMode(GameTechRenderer::RenderMode::SingleViewport);
-
-			IMGUI_CHECKVERSION();
-			ImGui::CreateContext();
-			ImGuiIO& io = ImGui::GetIO(); (void)io;
-			//Init Win32
-			//ImGui_ImplWin32_Init(dynamic_cast<NCL::Win32Code::Win32Window*>(window)->GetHandle());
-			//Init OpenGL Imgui Implementation
-			//ImGui_ImplOpenGL3_Init();
-			// Setup style
-			//ImGui::StyleColorsClassic();
 		}
+
 		SinglePlayerScreen::~SinglePlayerScreen()
 		{
 			delete paintingGame;
@@ -57,7 +49,7 @@ namespace NCL {
 			if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::ESCAPE)){
 				menuHandler->SetGameState(GameState::PauseMenu);
 			}
-			window->SetTitle("Gametech frame time:" + std::to_string(1000.0f * dt));
+			//window->SetTitle("Gametech frame time:" + std::to_string(1000.0f * dt));
 			paintingGame->UpdateGame(dt);
 			GameState gameState = menuHandler->GetGameState();
 			switch (gameState) {
@@ -78,7 +70,27 @@ namespace NCL {
 		}
 		void SinglePlayerScreen::OnAwake()
 		{
-
+			if (menuHandler->GetGameState() == GameState::ExitPauseMenu) // Resume game
+			{
+				menuHandler->SetGameState(GameState::SinglePlayer);
+			}
+			else if (menuHandler->GetGameState() == GameState::SinglePlayer) // Init Single player
+			{
+				IMGUI_CHECKVERSION();
+				ImGui::CreateContext();
+				ImGuiIO& io = ImGui::GetIO(); (void)io;
+				//Init Win32
+				ImGui_ImplWin32_Init(dynamic_cast<NCL::Win32Code::Win32Window*>(window)->GetHandle());
+				//Init OpenGL Imgui Implementation
+				ImGui_ImplOpenGL3_Init();
+				// Setup style
+				ImGui::StyleColorsClassic();
+			}
+		}
+		
+		void SinglePlayerScreen::OnSleep()
+		{
+			
 		}
 
 	}

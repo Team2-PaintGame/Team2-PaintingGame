@@ -11,9 +11,11 @@ namespace NCL {
 		{
 		public:
 			SinglePlayerScreen(Window* window, MenuHandler* menu);
+			SinglePlayerScreen(PaintingGame* paintingGame, MenuHandler* menu);
 			~SinglePlayerScreen();
 			PushdownResult OnUpdate(float dt, PushdownState** newState) override;
 			void OnAwake() override;
+			void OnSleep() override;
 		protected:
 			bool isPlayingGame;
 			Window* window;

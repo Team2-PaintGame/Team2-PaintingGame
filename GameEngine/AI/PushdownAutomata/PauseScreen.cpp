@@ -30,15 +30,7 @@ namespace NCL {
 				return PushdownResult::NoChange;
 			}break;
 	
-			case GameState::SplitScreen: {
-				return PushdownResult::Pop;
-			}break;
-
-			case GameState::SinglePlayer: {
-				return PushdownResult::Pop;
-			}break;
-
-			case GameState::LAN: {
+			case GameState::ExitPauseMenu: {
 				return PushdownResult::Pop;
 			}break;
 
