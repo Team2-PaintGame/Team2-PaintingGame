@@ -63,6 +63,8 @@ void PaintingGame::InitialiseAssets() {
 	//meshMaterials.at("goatMat")->LoadTextures();
 	//meshMaterials.at("mainCharMat")->LoadTextures();
 
+	meshAnimations.insert(std::make_pair("mainCharAnim", new MeshAnimation("Taunt.anm")));
+
 	textures.insert(std::make_pair("basicTex", renderer->LoadTexture("checkerboard.png")));
 	textures.insert(std::make_pair("grassTex", renderer->LoadTexture("grass.jpg")));
 	textures.insert(std::make_pair("coinTex", renderer->LoadTexture("coin.png")));
@@ -121,7 +123,7 @@ PaintingGame::~PaintingGame() {
 
 void PaintingGame::UpdateGame(float dt) {
 	world->GetMainCamera()->UpdateCamera(dt);
-
+	players[0]->Update(dt);
 	if (renderer->GetGameState() == GameTechRenderer::GameState::SplitScreen)
 	{
 		numberOfPlayerControllers = 2;
@@ -203,7 +205,7 @@ void PaintingGame::InitWorld() {
 
 
 PlayerBase* PaintingGame::InitiliazePlayer() {
-	players[0] = new PlayerBase(physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("mainChar"), textures.at("basicTex"), shaders.at("basicShader"), 5);
+	players[0] = new PlayerBase(physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("mainChar"), textures.at("basicTex"), meshAnimations.at("mainCharAnim"), shaders.at("skinningShader"), 5);
 	world->AddGameObject(players[0]);
 	playerControllers[0] = new PlayerController(world->GetMainCamera(), players[0]);
 
@@ -212,7 +214,7 @@ PlayerBase* PaintingGame::InitiliazePlayer() {
 
 PlayerBase* PaintingGame::InitialiseNetworkPlayer() {
 	
-	netPlayer = new PlayerBase(physicsCommon, physicsWorld, Vector3(0, 50, 10), meshes.at("mainChar"), textures.at("basicTex"), shaders.at("basicShader"), 5);
+	netPlayer = new PlayerBase(physicsCommon, physicsWorld, Vector3(0, 50, 10), meshes.at("mainChar"), textures.at("basicTex"), meshAnimations.at("mainCharAnim"), shaders.at("skinningShader"), 5);
 	world->AddGameObject(netPlayer);
 	return netPlayer;
 }
@@ -223,7 +225,7 @@ GameTechRenderer* PaintingGame::GetGameTechRenderer()
 }
 
 PlayerBase* PaintingGame::InitSecondPlayer() {
-	players[1] = new PlayerBase(physicsCommon, physicsWorld, Vector3(10, 10, 0), meshes.at("mainChar"), textures.at("basicTex"), shaders.at("basicShader"), 5);
+	players[1] = new PlayerBase(physicsCommon, physicsWorld, Vector3(10, 10, 0), meshes.at("mainChar"), textures.at("basicTex"), meshAnimations.at("mainCharAnim"), shaders.at("skinningShader"), 5);
 	world->AddGameObject(players[1]);
 	playerControllers[1] = new PlayerController(world->GetSecondCamera(), players[1]);
 

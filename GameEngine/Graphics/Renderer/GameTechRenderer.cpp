@@ -524,31 +524,27 @@ void GameTechRenderer::RenderCamera(Camera& cam) {
 
 		glUniform1i(hasTexLocation, (OGLTexture*)(*i).GetDefaultTexture() ? 1 : 0);
 
+		
 		BindMesh((*i).GetMesh());
-		int layerCount = (*i).GetMesh()->GetSubMeshCount();
-		for (int i = 0; i < layerCount; ++i) {
-			DrawBoundMesh(i);
+		int layercount = (*i).GetMesh()->GetSubMeshCount();
+		for (int index = 0; index < layercount; ++index) {
+
+			glUniform1i(hasTexLocation, i->GetTextures(index).size() ? 1 : 0);
+
+			//for the current submesh, get the vector of textures and send them to shader
+			std::vector<std::pair<std::string, TextureBase*>> submeshtextures = i->GetTextures(index);
+			int texunit = 2;
+			for (const auto& texturepairs : submeshtextures) {
+				BindTextureToShader(texturepairs.second, texturepairs.first, texunit);
+				texunit++;
+			}
+			DrawBoundMesh(index);
 		}
-		//BindMesh((*i).GetMesh());
-		//int layerCount = (*i).GetMesh()->GetSubMeshCount();
-		//for (int index = 0; index < layerCount; ++index) {
-
-		//	glUniform1i(hasTexLocation, i->GetTextures(index).size() ? 1 : 0);
-
-		//	//for the current submesh, get the vector of textures and send them to shader
-		//	std::vector<std::pair<std::string, TextureBase*>> subMeshTextures = i->GetTextures(index);
-		//	int texUnit = 2;
-		//	for (const auto& texturePairs : subMeshTextures) {
-		//		BindTextureToShader(texturePairs.second, texturePairs.first, texUnit);
-		//		texUnit++;
-		//	}
-		//	DrawBoundMesh(index);
-		//}
-		/*if (i->IsRigged()) {
+		if (i->IsRigged()) {
 			vector<Matrix4> frameMatrices;
 			i->GetFrameMatrices(frameMatrices);
 			glUniformMatrix4fv(jointsLocation, frameMatrices.size(), false, (float*)frameMatrices.data());
-		}*/
+		}
 	}
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }

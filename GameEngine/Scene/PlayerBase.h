@@ -13,7 +13,7 @@ namespace NCL {
 	class PlayerBase : public GameObject {
 	public:
 		PlayerBase() = default;
-		PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, int size);
+		PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, TextureBase* texture, MeshAnimation* meshAnimation, ShaderBase* shader, int size);
 		//PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, MeshMaterial* meshMaterial, ShaderBase* shader, int size);
 		virtual void Update(float dt);
 		virtual ~PlayerBase();
