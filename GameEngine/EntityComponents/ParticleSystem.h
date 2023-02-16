@@ -19,7 +19,6 @@ namespace NCL {
 		float lifeSpan;
 		Vector3 direction;
 		float elapsedTime = 0.0f;
-		rp3d::SphereShape* boundingVolume;
 	};
 
 	class Emitter {

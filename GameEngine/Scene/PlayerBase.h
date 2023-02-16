@@ -18,8 +18,6 @@ namespace NCL {
 		float turnSpeed = 100.0f; // unit: degrees/s
 		float currentRunSpeed = 0.0f;
 		float currentTurnSpeed = 0.0f;
-		rp3d::BoxShape* boundingVolume;
-		//rp3d::Collider* collider;
 	};
 }
 

@@ -83,6 +83,7 @@ namespace NCL::CSC8508 {
 
 		/// Body used to simulate the dynamics of the box
 		reactphysics3d::RigidBody* rigidBody;
+		rp3d::CollisionShape* boundingVolume;
 
 		Transform			transform;
 

@@ -89,7 +89,7 @@ Particle::~Particle() {
 	if (rigidBody) {
 		physicsWorld->destroyRigidBody(rigidBody);
 	}
-	physicsCommon.destroySphereShape(boundingVolume);
+	physicsCommon.destroySphereShape(dynamic_cast<rp3d::SphereShape*>(boundingVolume));
 }
 
 Emitter::Emitter(MeshGeometry* emitterMesh) {
