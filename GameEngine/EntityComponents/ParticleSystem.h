@@ -113,6 +113,10 @@ namespace NCL {
 
 	template <class T>
 	void ParticleSystem<T>::Update(float dt) {
+		accumulator += dt;
+		elapsedTime += dt;
+		GenerateParticles();
+
 		for (size_t i = 0; i < particles.size();) {
 			particles[i]->Update(dt);
 
@@ -128,10 +132,6 @@ namespace NCL {
 
 		renderObject->SetTransforms(transforms);
 		renderObject->SetInstanceCount(particles.size());
-
-		accumulator += dt;
-		elapsedTime += dt;
-		GenerateParticles();
 	}
 
 	template <class T>

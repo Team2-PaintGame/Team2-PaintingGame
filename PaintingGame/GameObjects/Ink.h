@@ -17,7 +17,7 @@ namespace NCL {
 	}
 
 	static ParticleSystem<InkParticle>* CreateInkStream(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 emitterPosition, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader) {
-		ParticleSystem<InkParticle>* inkSplash = new ParticleSystem<InkParticle>(physicsCommon, physicsWorld, emitterPosition, 5.0f, mesh, texture, shader, true, 1, 1.0f, 15.0f);
+		ParticleSystem<InkParticle>* inkSplash = new ParticleSystem<InkParticle>(physicsCommon, physicsWorld, emitterPosition, 5.0f, mesh, texture, shader, true, 2, 1.0f, 15.0f);
 		inkSplash->SetParticleEmissionRate(30);
 		inkSplash->SetRunTime(4.0f);
 		return inkSplash;
