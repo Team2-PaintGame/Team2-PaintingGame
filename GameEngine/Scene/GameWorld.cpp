@@ -17,6 +17,7 @@ GameWorld::GameWorld()	{
 
 GameWorld::~GameWorld()	{
 	delete mainCamera;
+	ClearAndErase();
 }
 
 void GameWorld::Clear() {
