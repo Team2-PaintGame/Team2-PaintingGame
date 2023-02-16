@@ -17,10 +17,10 @@ Particle::Particle(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d:
 void Particle::Update(float dt) {
 	elapsedTime += dt;
 
+	rigidBody->applyWorldForceAtCenterOfMass(~(transform.GetOrientation() * direction * speed));
+	
 	//need to call this here because particles itself are not part of game world
 	GameObject::UpdateTransform();
-
-	rigidBody->applyWorldForceAtCenterOfMass(~(transform.GetOrientation() * direction * speed));
 
 	if (elapsedTime >= lifeSpan) {
 		this->SetActive(false);
@@ -43,9 +43,12 @@ Vector3 Emitter::GetEmissionDirection() {
 		vIter = vIter + 1 == emissionDirections.end() ? emissionDirections.begin() : vIter + 1;
 		return dir;
 	}
-	else {
+	else if (transform) {
 		float pitch = fmod(rand(), (2.0f * angle+ 1) - angle);
 		float yaw = fmod(rand(), (2.0f * angle + 1) - angle);
 		return Quaternion::AxisAngleToQuaterion(Vector3(0, 0, 1), pitch) * Quaternion::AxisAngleToQuaterion(Vector3(1, 0, 0), yaw) * transform->GetPosition();
+	}
+	else {
+		return Vector3();
 	}
 }

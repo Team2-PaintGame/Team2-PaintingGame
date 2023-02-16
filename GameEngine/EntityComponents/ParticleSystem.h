@@ -41,7 +41,7 @@ namespace NCL {
 		std::vector<Vector3> emissionDirections;
 		unsigned int particleEmissionRate = 2;	// particles per second
 		std::vector<Vector3>::iterator vIter;
-		Transform* transform;
+		Transform* transform = NULL;
 		float angle = 20.0f;
 	};
 	
@@ -80,7 +80,7 @@ namespace NCL {
 		this->enableGravity = enableGravity;
 
 		transform.SetPosition(emitterPosition);
-		transform.SetScale(startSize);
+		transform.SetScale(Vector3(startSize));
 		transform.SetOrientation(Quaternion::AxisAngleToQuaterion(Vector3(1, 0, 0), -90));
 
 		emitter.SetTransform(&transform);
@@ -99,7 +99,7 @@ namespace NCL {
 		this->enableGravity = enableGravity;
 
 		transform.SetPosition(emitterPosition);
-		transform.SetScale(startSize);
+		transform.SetScale(Vector3(startSize));
 		transform.SetOrientation(Quaternion::AxisAngleToQuaterion(Vector3(1, 0, 0), -90));
 
 		emitter.SetTransform(&transform);
@@ -113,10 +113,6 @@ namespace NCL {
 
 	template <class T>
 	void ParticleSystem<T>::Update(float dt) {
-		accumulator += dt;
-		elapsedTime += dt;
-		GenerateParticles();
-
 		for (size_t i = 0; i < particles.size();) {
 			particles[i]->Update(dt);
 
@@ -132,6 +128,10 @@ namespace NCL {
 
 		renderObject->SetTransforms(transforms);
 		renderObject->SetInstanceCount(particles.size());
+
+		accumulator += dt;
+		elapsedTime += dt;
+		GenerateParticles();
 	}
 
 	template <class T>
