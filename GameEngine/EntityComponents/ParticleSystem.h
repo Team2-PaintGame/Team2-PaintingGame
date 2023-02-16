@@ -24,16 +24,8 @@ namespace NCL {
 
 	class Emitter {
 	public:
-		Emitter(MeshGeometry* emitterMesh) {
-			this->emitterMesh = emitterMesh;
-			emissionDirections = emitterMesh->GetNormalData();
-			vIter = emissionDirections.begin();
-		}
-		Vector3 GetEmissionDirection() {
-			Vector3 dir = *vIter;
-			vIter = vIter + 1 == emissionDirections.end() ? emissionDirections.begin() : vIter + 1;
-			return dir;
-		}
+		Emitter(MeshGeometry* emitterMesh);
+		Vector3 GetEmissionDirection();
 		unsigned int GetParticleEmissionRate() {
 			return particleEmissionRate;
 		}

@@ -92,3 +92,14 @@ Particle::~Particle() {
 	physicsCommon.destroySphereShape(boundingVolume);
 }
 
+Emitter::Emitter(MeshGeometry* emitterMesh) {
+	this->emitterMesh = emitterMesh;
+	emissionDirections = emitterMesh->GetNormalData();
+	vIter = emissionDirections.begin();
+}
+
+Vector3 Emitter::GetEmissionDirection() {
+	Vector3 dir = *vIter;
+	vIter = vIter + 1 == emissionDirections.end() ? emissionDirections.begin() : vIter + 1;
+	return dir;
+}
