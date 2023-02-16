@@ -7,7 +7,8 @@ InkParticle::InkParticle(reactphysics3d::PhysicsCommon& physicsCommon, reactphys
 	reactphysics3d::Transform rp3d_transform(~transform.GetPosition(), ~transform.GetOrientation());
 
 	rigidBody = physicsWorld->createRigidBody(rp3d_transform);
-	rigidBody->addCollider(boundingVolume, rp3d::Transform::identity());
+	rp3d::Collider* collider = rigidBody->addCollider(boundingVolume, rp3d::Transform::identity());
+	collider->setIsTrigger(true);
 	rigidBody->enableGravity(enableGravity);
 }
 

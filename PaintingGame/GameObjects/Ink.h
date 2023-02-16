@@ -8,14 +8,18 @@ namespace NCL {
 		InkParticle(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Transform emitterTransform, Vector3 particlePosition, float lifeSpan, float speed, Vector3 direction, bool enableGravity);
 		virtual ~InkParticle();
 	};
-	/*class InkStream : public ParticleSystem<InkParticle> {
-	public:
-		Ink(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 emitterPosition, MeshGeometry* emitterMesh, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader) : ParticleSystem(physicsCommon, physicsWorld, emitterPosition, emitterMesh, mesh, texture, shader) {
-			
-		}
+	
+	static ParticleSystem<InkParticle>* CreateInkSplash(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 emitterPosition, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader) {
+		ParticleSystem<InkParticle>* inkStream = new ParticleSystem<InkParticle>(physicsCommon, physicsWorld, emitterPosition, 45.0f, mesh, texture, shader, true, 0.5f, 0.5f, 10.0f);
+		inkStream->SetParticleEmissionRate(30);
+		inkStream->SetRunTime(3.0f);
+		return inkStream;
+	}
 
-		virtual ~Ink() {}
-	protected:
-	};*/
-
+	static ParticleSystem<InkParticle>* CreateInkStream(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 emitterPosition, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader) {
+		ParticleSystem<InkParticle>* inkSplash = new ParticleSystem<InkParticle>(physicsCommon, physicsWorld, emitterPosition, 5.0f, mesh, texture, shader, true, 1, 1.0f, 15.0f);
+		inkSplash->SetParticleEmissionRate(30);
+		inkSplash->SetRunTime(4.0f);
+		return inkSplash;
+	}
 }
