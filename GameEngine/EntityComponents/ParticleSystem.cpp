@@ -40,15 +40,13 @@ void ParticleSystem::Update(float dt) {
 }
 
 ParticleSystem::~ParticleSystem() {
-	for (auto const& particle : particles) {
-		delete particle;
-	}
+	particles.clear();
 }
 
 void ParticleSystem::GenerateParticles() {
 	while (accumulator > 1.0 / emitter.GetParticleEmissionRate() && particles.size() < maxParticles) {
-		particles.push_back(new Particle(physicsCommon, physicsWorld, transform, Vector3(), startLifetime, startSpeed, emitter.GetEmissionDirection(), enableGravity));
-		transforms.push_back(&particles.back()->GetTransform());
+		particles.emplace_back(std::make_unique<Particle>(physicsCommon, physicsWorld, transform, Vector3(), startLifetime, startSpeed, emitter.GetEmissionDirection(), enableGravity));
+		transforms.emplace_back(&particles.back()->GetTransform());
 		accumulator -= 1.0 / emitter.GetParticleEmissionRate();
 	}
 }
@@ -85,6 +83,9 @@ void Particle::Update(float dt) {
 }
 
 Particle::~Particle() {
+	if (rigidBody) {
+		physicsWorld->destroyRigidBody(rigidBody);
+	}
 	physicsCommon.destroySphereShape(boundingVolume);
 }
 

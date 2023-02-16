@@ -54,7 +54,7 @@ namespace NCL {
 		void GenerateParticles();
 		unsigned int maxParticles = 100;
 		float accumulator = 0.0f;
-		std::vector<Particle*> particles;
+		std::vector<std::unique_ptr<Particle>> particles;
 		std::vector<Transform*> transforms;
 		//float duration = 15.0f;					// The length of time in seconds for the particle system to run
 		//bool looping = true;					// If looping is enabled, the cycle starts once again when the duration time is reached
