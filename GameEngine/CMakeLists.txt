@@ -48,6 +48,7 @@ set(AI_Pathfinding
     "./AI/PathFinding/NavigationMesh.h"
     "./AI/PathFinding/NavigationMap.h"
     "./AI/PathFinding/NavigationPath.h"
+    "./AI/PathFinding/SecurityCallbackClass.h"
 )
 source_group("AI\\Pathfinding" FILES ${AI_Pathfinding})
 

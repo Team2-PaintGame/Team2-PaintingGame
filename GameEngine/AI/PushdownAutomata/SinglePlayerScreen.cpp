@@ -3,6 +3,7 @@
 #include <imgui_impl_win32.h>
 #include <imgui_impl_opengl3.h>
 #include <iostream>
+#include "Debug.h"
 
 namespace NCL {
 	namespace CSC8508 {
@@ -21,6 +22,11 @@ namespace NCL {
 		{
 			while (isPlayingGame)
 			{
+				/*Debug::DrawLine(Vector3(0.0,0.0,0.0), Vector3(0.0,0.0,100.0));
+				Debug::DrawLine(Vector3(0.0, 0.0, 0.0), Vector3(70.0, 0.0, 65.0));*/
+				Debug::DrawLine(Vector3(-75.0, 0.0, 65.0), Vector3(-75.0, 0.0, -75.0), Debug::RED);
+				Debug::DrawLine(Vector3(0.0, 0.0, 0.0), Vector3(-70, 5, -60));
+				
 				if (dt > 0.1f) {
 					std::cout << "Skipping large time delta" << std::endl;
 					continue; //must have hit a breakpoint or something to have a 1 second frame time!
@@ -39,6 +45,7 @@ namespace NCL {
 				}
 				window->SetTitle("Gametech frame time:" + std::to_string(1000.0f * dt));
 				paintingGame->UpdateGame(dt);
+				
 				GameTechRenderer::GameState gameState = paintingGame->GetGameTechRenderer()->GetGameState();
 				switch (gameState) {
 					case GameTechRenderer::GameState::SinglePlayer: {

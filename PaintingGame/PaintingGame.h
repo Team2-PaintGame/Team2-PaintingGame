@@ -14,6 +14,7 @@
 #include <PlayerController.h>
 #include <reactphysics3d/reactphysics3d.h>
 
+
 namespace NCL {
 	namespace CSC8508 {
 		class PaintingGame {
@@ -26,8 +27,11 @@ namespace NCL {
 			void InitialiseAssets();
 			void InitCamera();
 			void InitWorld();
+			void AddStructureFromFile(const Vector3& position, const std::string filename);
+			void AddSecurityAI();
 			PlayerBase* InitiliazePlayer();
 			PlayerBase* InitialiseNetworkPlayer();
+			PlayerBase* GetPlayer();
 #ifdef USEVULKAN
 			GameTechVulkanRenderer* renderer;
 #else

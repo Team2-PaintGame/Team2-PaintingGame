@@ -32,7 +32,7 @@ NavigationGrid::NavigationGrid(const std::string&filename, std::map<std::string,
 
 	for (int y = 0; y < gridHeight; ++y) {
 		for (int x = 0; x < gridWidth; ++x) {
-			GridNode&n = allNodes[(gridWidth * y) + x];
+			GridNode& n = allNodes[(gridWidth * y) + x];
 			char type = 0;
 			infile >> type;
 			n.type = type == 'x' ? 'x' : '.';
@@ -89,17 +89,70 @@ NavigationGrid::NavigationGrid(const std::string&filename, std::map<std::string,
 	}
 }
 
+NavigationGrid::NavigationGrid(const std::string& filename) : NavigationGrid() {
+
+	std::ifstream infile(Assets::DATADIR + filename);
+
+
+	infile >> nodeSize;
+	infile >> gridWidth;
+	infile >> gridHeight;
+
+	allNodes = new GridNode[gridWidth * gridHeight];
+
+	for (int y = 0; y < gridHeight; ++y) {
+		for (int x = 0; x < gridWidth; ++x) {
+			GridNode& n = allNodes[(gridWidth * y) + x];
+			char type = 0;
+			infile >> type;
+			n.type = type;
+			n.position = Vector3((float)(x * nodeSize) - 75, 2.5, (float)(y * nodeSize) - 75 );////// -75, 2, -75 == Current offset of GameMaze3
+
+		}
+	}
+
+	//now to build the connectivity between the nodes
+	for (int y = 0; y < gridHeight; ++y) {
+		for (int x = 0; x < gridWidth; ++x) {
+			GridNode& n = allNodes[(gridWidth * y) + x];
+
+			if (y > 0) { //get the above node
+				n.connected[0] = &allNodes[(gridWidth * (y - 1)) + x];
+			}
+			if (y < gridHeight - 1) { //get the below node
+				n.connected[1] = &allNodes[(gridWidth * (y + 1)) + x];
+			}
+			if (x > 0) { //get left node
+				n.connected[2] = &allNodes[(gridWidth * (y)) + (x - 1)];
+			}
+			if (x < gridWidth - 1) { //get right node
+				n.connected[3] = &allNodes[(gridWidth * (y)) + (x + 1)];
+			}
+			for (int i = 0; i < 4; ++i) {
+				if (n.connected[i]) {
+					if (n.connected[i]->type == '.') {
+						n.costs[i] = 1;
+					}
+					if (n.connected[i]->type == 'x') {
+						n.connected[i] = nullptr; //actually a wall, disconnect!
+					}
+				}
+			}
+		}
+	}
+}
+
 NavigationGrid::~NavigationGrid()	{
 	delete[] allNodes;
 }
 
 bool NavigationGrid::FindPath(const Vector3& from, const Vector3& to, NavigationPath& outPath) {
 	//need to work out which node 'from' sits in, and 'to' sits in
-	int fromX = ((int)from.x / nodeSize);
-	int fromZ = ((int)from.z / nodeSize);
+	int fromX = (((int)from.x +75)/ nodeSize); ////// 75 == Current offset of GameMaze3
+	int fromZ = (((int)from.z + 75)/ nodeSize);////// 75 == Current offset of GameMaze3
 
-	int toX = ((int)to.x / nodeSize);
-	int toZ = ((int)to.z / nodeSize);
+	int toX = (((int)to.x + 75) / nodeSize);////// 75 == Current offset of GameMaze3
+	int toZ = (((int)to.z + 75) / nodeSize);////// 75 == Current offset of GameMaze3
 
 	if (fromX < 0 || fromX > gridWidth - 1 ||
 		fromZ < 0 || fromZ > gridHeight - 1) {

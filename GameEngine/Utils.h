@@ -19,4 +19,5 @@ namespace NCL {
 		rp3dQauternion.w = q.w;
 		return rp3dQauternion;
 	}
+
 }

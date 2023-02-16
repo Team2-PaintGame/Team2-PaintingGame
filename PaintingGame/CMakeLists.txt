@@ -26,6 +26,10 @@ source_group("Source Files" FILES ${Source_Files})
 set(GameObjects
     "./GameObjects/Box.h"
     "./GameObjects/Floor.h"
+    "./GameObjects/SecurityGuard.h"
+    "./GameObjects/SecurityGuard.cpp"
+     "./GameObjects/Wall.h"
+
 )
 source_group("Game Objects" FILES ${GameObjects})
 
