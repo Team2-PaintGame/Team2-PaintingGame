@@ -31,6 +31,9 @@ namespace NCL {
 		}
 
 		virtual ~Floor() {
+			if (rigidBody) {
+				physicsWorld->destroyRigidBody(rigidBody);
+			}
 			physicsCommon.destroyBoxShape(boundingVolume);
 		}
 	protected:
