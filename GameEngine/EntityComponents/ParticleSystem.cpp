@@ -20,6 +20,7 @@ ParticleSystem::ParticleSystem(reactphysics3d::PhysicsCommon& physicsCommon, rea
 
 void ParticleSystem::Update(float dt) {
 	accumulator += dt;
+	elapsedTime += dt;
 	GenerateParticles();
 
 	for (size_t i = 0; i < particles.size();) {
@@ -44,10 +45,12 @@ ParticleSystem::~ParticleSystem() {
 }
 
 void ParticleSystem::GenerateParticles() {
-	while (accumulator > 1.0 / emitter.GetParticleEmissionRate() && particles.size() < maxParticles) {
-		particles.emplace_back(std::make_unique<Particle>(physicsCommon, physicsWorld, transform, Vector3(), startLifetime, startSpeed, emitter.GetEmissionDirection(), enableGravity));
-		transforms.emplace_back(&particles.back()->GetTransform());
-		accumulator -= 1.0 / emitter.GetParticleEmissionRate();
+	if (elapsedTime < duration || looping) {
+		while (accumulator > 1.0 / emitter.GetParticleEmissionRate() && particles.size() < maxParticles) {
+			particles.emplace_back(std::make_unique<Particle>(physicsCommon, physicsWorld, transform, Vector3(), startLifetime, startSpeed, emitter.GetEmissionDirection(), enableGravity));
+			transforms.emplace_back(&particles.back()->GetTransform());
+			accumulator -= 1.0 / emitter.GetParticleEmissionRate();
+		}
 	}
 }
 
