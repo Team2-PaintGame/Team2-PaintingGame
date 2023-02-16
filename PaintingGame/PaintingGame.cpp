@@ -160,8 +160,8 @@ void PaintingGame::InitWorld() {
 		world->AddGameObject(new Box(physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 2));
 	}
 
-	world->AddGameObject(CreateInkStream(physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("sphereMesh"), textures.at("grassTex"), shaders.at("instancedShader")));
-	world->AddGameObject(CreateInkSplash(physicsCommon, physicsWorld, Vector3(0, 9.5, 0), meshes.at("sphereMesh"), textures.at("coinTex"), shaders.at("instancedShader")));
+	world->AddGameObject(CreateInkStream(physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("capsuleMesh"), textures.at("grassTex"), shaders.at("instancedShader")));
+	world->AddGameObject(CreateInkSplash(physicsCommon, physicsWorld, Vector3(0, 9.5, 0), meshes.at("capsuleMesh"), textures.at("coinTex"), shaders.at("instancedShader")));
 
 }
 
