@@ -50,7 +50,7 @@ for this module, even in the coursework, but you can add it if you like!
 */
 void PaintingGame::InitialiseAssets() {
 	meshes.insert(std::make_pair("cubeMesh", renderer->LoadMesh("cube.msh")));
-	meshes.insert(std::make_pair("mainChar", renderer->LoadMesh("Rig_Maximilian.msh")));
+	meshes.insert(std::make_pair("mainChar", renderer->LoadMesh("Male_Guard.msh")));
 	meshes.insert(std::make_pair("sphereMesh", renderer->LoadMesh("sphere.msh")));
 	meshes.insert(std::make_pair("goatMesh", renderer->LoadMesh("goat.msh")));
 	meshes.insert(std::make_pair("enemyMesh", renderer->LoadMesh("Keeper.msh")));
@@ -59,7 +59,7 @@ void PaintingGame::InitialiseAssets() {
 	meshes.insert(std::make_pair("terrainMesh", renderer->LoadHeightMap("noise.png")));
 
 	meshMaterials.insert(std::make_pair("goatMat", new MeshMaterial("goat.mat")));
-	meshMaterials.insert(std::make_pair("mainCharMat", new MeshMaterial("Rig_Maximilian.mat")));
+	meshMaterials.insert(std::make_pair("mainCharMat", new MeshMaterial("goat.mat")));
 	//meshMaterials.at("goatMat")->LoadTextures();
 	//meshMaterials.at("mainCharMat")->LoadTextures();
 
@@ -196,9 +196,9 @@ void PaintingGame::InitWorld() {
 
 	world->AddGameObject(new Floor(physicsCommon, physicsWorld, Vector3(0, 0, 0), meshes.at("cubeMesh"), textures.at("basicTex"), shaders.at("basicShader"), 200));
 
-	for (int x = 0; x < 15; ++x) {
+	/*for (int x = 0; x < 15; ++x) {
 		world->AddGameObject(new Box(physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 2));
-	}
+	}*/
 }
 
 
