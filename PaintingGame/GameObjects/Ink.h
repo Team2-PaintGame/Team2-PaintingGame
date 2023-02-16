@@ -8,7 +8,7 @@ namespace NCL {
 		InkParticle(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Transform emitterTransform, Vector3 particlePosition, float lifeSpan, float speed, Vector3 direction, bool enableGravity);
 		virtual ~InkParticle();
 	};
-	class Ink : public ParticleSystem<InkParticle> {
+	/*class InkStream : public ParticleSystem<InkParticle> {
 	public:
 		Ink(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 emitterPosition, MeshGeometry* emitterMesh, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader) : ParticleSystem(physicsCommon, physicsWorld, emitterPosition, emitterMesh, mesh, texture, shader) {
 			
@@ -16,5 +16,6 @@ namespace NCL {
 
 		virtual ~Ink() {}
 	protected:
-	};
+	};*/
+
 }

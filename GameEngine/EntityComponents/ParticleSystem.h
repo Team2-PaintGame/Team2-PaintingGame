@@ -25,20 +25,27 @@ namespace NCL {
 	class Emitter {
 	public:
 		Emitter(MeshGeometry* emitterMesh);
+		Emitter(float angle = 20.0f);
 		Vector3 GetEmissionDirection();
 		unsigned int GetParticleEmissionRate() {
 			return particleEmissionRate;
 		}
+		void SetTransform(Transform* transform) {
+			this->transform = transform;
+		}
 	private:
-		MeshGeometry* emitterMesh;
+		MeshGeometry* emitterMesh = NULL;
 		std::vector<Vector3> emissionDirections;
 		unsigned int particleEmissionRate = 2;	// particles per second
 		std::vector<Vector3>::iterator vIter;
+		Transform* transform;
+		float angle = 20.0f;
 	};
 	
 	template <class T> class ParticleSystem : public GameObject {
 	public:
 		ParticleSystem(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 emitterPosition, MeshGeometry* emitterMesh, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, bool enableGravity = false, float startSize = 1, float startLifetime = 4.0f, float startSpeed = 10.0f, std::string name = "Particle System");
+		ParticleSystem(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 emitterPosition, float emissionAngle, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, bool enableGravity = false, float startSize = 1, float startLifetime = 4.0f, float startSpeed = 10.0f, std::string name = "Particle System");
 		virtual void Update(float dt);		
 		virtual ~ParticleSystem();
 		
@@ -65,6 +72,28 @@ namespace NCL {
 
 		transform.SetPosition(emitterPosition);
 		transform.SetScale(startSize);
+		transform.SetOrientation(Quaternion::AxisAngleToQuaterion(Vector3(1, 0, 0), -90));
+
+		emitter.SetTransform(&transform);
+		//transform.SetOrientation(Quaternion::AxisAngleToQuaterion(Vector3(1, 0, 0), 45) * Quaternion::AxisAngleToQuaterion(Vector3(0, 1, 0), 0));
+
+		renderObject = new RenderObject(transforms, mesh, shader);
+		renderObject->AddTexture(texture);
+		renderObject->SetInstanceCount(particles.size());
+		renderObject->SetIsInstanced(true);
+	}
+
+	template <class T>
+	ParticleSystem<T>::ParticleSystem(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 emitterPosition, float emissionAngle, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, bool enableGravity, float startSize, float startLifetime, float startSpeed, std::string name) : GameObject(physicsCommon, physicsWorld, name), emitter(emissionAngle) {
+		this->startLifetime = startLifetime;
+		this->startSpeed = startSpeed;
+		this->enableGravity = enableGravity;
+
+		transform.SetPosition(emitterPosition);
+		transform.SetScale(startSize);
+		transform.SetOrientation(Quaternion::AxisAngleToQuaterion(Vector3(1, 0, 0), -90));
+
+		emitter.SetTransform(&transform);
 		//transform.SetOrientation(Quaternion::AxisAngleToQuaterion(Vector3(1, 0, 0), 45) * Quaternion::AxisAngleToQuaterion(Vector3(0, 1, 0), 0));
 
 		renderObject = new RenderObject(transforms, mesh, shader);

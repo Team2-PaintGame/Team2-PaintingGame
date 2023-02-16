@@ -33,8 +33,19 @@ Emitter::Emitter(MeshGeometry* emitterMesh) {
 	vIter = emissionDirections.begin();
 }
 
+Emitter::Emitter(float angle) {
+	this->angle = angle;
+}
+
 Vector3 Emitter::GetEmissionDirection() {
-	Vector3 dir = *vIter;
-	vIter = vIter + 1 == emissionDirections.end() ? emissionDirections.begin() : vIter + 1;
-	return dir;
+	if (emitterMesh) {
+		Vector3 dir = *vIter;
+		vIter = vIter + 1 == emissionDirections.end() ? emissionDirections.begin() : vIter + 1;
+		return dir;
+	}
+	else {
+		float pitch = fmod(rand(), (2.0f * angle+ 1) - angle);
+		float yaw = fmod(rand(), (2.0f * angle + 1) - angle);
+		return Quaternion::AxisAngleToQuaterion(Vector3(0, 0, 1), pitch) * Quaternion::AxisAngleToQuaterion(Vector3(1, 0, 0), yaw) * transform->GetPosition();
+	}
 }
