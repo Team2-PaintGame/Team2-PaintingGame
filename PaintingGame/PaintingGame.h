@@ -15,6 +15,7 @@
 #include <reactphysics3d/reactphysics3d.h>
 
 class Gamepad;
+class AnimationController;
 
 namespace NCL {
 	namespace CSC8508 {
@@ -70,6 +71,8 @@ namespace NCL {
 
 			Gamepad* gamepad = NULL;
 			bool wasConnected = true;
+
+			AnimationController* animController;
 		};
 	}
 }

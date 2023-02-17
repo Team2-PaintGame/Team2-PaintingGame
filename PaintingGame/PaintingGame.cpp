@@ -4,6 +4,7 @@
 #include "Box.h"
 #include "Floor.h"
 #include "InputController.h"
+#include "AnimationController.h"
 
 using namespace NCL;
 using namespace CSC8508;
@@ -11,6 +12,7 @@ using namespace CSC8508;
 PaintingGame::PaintingGame(bool online) {
 	world = new GameWorld();
 	gamepad = new Gamepad();
+	animController = new AnimationController();
 
 	/* Code for changing physics system paramaters
 	// Create the world settings 
@@ -64,6 +66,7 @@ void PaintingGame::InitialiseAssets() {
 	//meshMaterials.at("mainCharMat")->LoadTextures();
 
 	meshAnimations.insert(std::make_pair("mainCharAnim", new MeshAnimation("Taunt.anm")));
+
 
 	textures.insert(std::make_pair("basicTex", renderer->LoadTexture("checkerboard.png")));
 	textures.insert(std::make_pair("grassTex", renderer->LoadTexture("grass.jpg")));
@@ -205,7 +208,8 @@ void PaintingGame::InitWorld() {
 
 
 PlayerBase* PaintingGame::InitiliazePlayer() {
-	players[0] = new PlayerBase(physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("mainChar"), textures.at("basicTex"), meshAnimations.at("mainCharAnim"), shaders.at("skinningShader"), 5);
+	players[0] = new PlayerBase(physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("mainChar"), textures.at("basicTex"), animController, shaders.at("skinningShader"), 5);
+	animController->SetAnimation(meshAnimations.at("mainCharAnim"));
 	world->AddGameObject(players[0]);
 	playerControllers[0] = new PlayerController(world->GetMainCamera(), players[0]);
 
@@ -214,7 +218,8 @@ PlayerBase* PaintingGame::InitiliazePlayer() {
 
 PlayerBase* PaintingGame::InitialiseNetworkPlayer() {
 	
-	netPlayer = new PlayerBase(physicsCommon, physicsWorld, Vector3(0, 50, 10), meshes.at("mainChar"), textures.at("basicTex"), meshAnimations.at("mainCharAnim"), shaders.at("skinningShader"), 5);
+	netPlayer = new PlayerBase(physicsCommon, physicsWorld, Vector3(0, 50, 10), meshes.at("mainChar"), textures.at("basicTex"), animController, shaders.at("skinningShader"), 5);
+	animController->SetAnimation(meshAnimations.at("mainCharAnim"));
 	world->AddGameObject(netPlayer);
 	return netPlayer;
 }
@@ -225,7 +230,8 @@ GameTechRenderer* PaintingGame::GetGameTechRenderer()
 }
 
 PlayerBase* PaintingGame::InitSecondPlayer() {
-	players[1] = new PlayerBase(physicsCommon, physicsWorld, Vector3(10, 10, 0), meshes.at("mainChar"), textures.at("basicTex"), meshAnimations.at("mainCharAnim"), shaders.at("skinningShader"), 5);
+	players[1] = new PlayerBase(physicsCommon, physicsWorld, Vector3(10, 10, 0), meshes.at("mainChar"), textures.at("basicTex"), animController, shaders.at("skinningShader"), 5);
+	animController->SetAnimation(meshAnimations.at("mainCharAnim"));
 	world->AddGameObject(players[1]);
 	playerControllers[1] = new PlayerController(world->GetSecondCamera(), players[1]);
 

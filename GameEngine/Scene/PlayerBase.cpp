@@ -6,20 +6,22 @@
 
 using namespace NCL;
 
-PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, TextureBase* texture, MeshAnimation* meshAnimation, ShaderBase* shader, int size): GameObject(physicsCommon, physicsWorld, "BasePlayer") {
+PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, TextureBase* texture, AnimationController* animController, ShaderBase* shader, int size): GameObject(physicsCommon, physicsWorld, "BasePlayer") {
 	transform
 		.SetScale(Vector3(size))
 		.SetPosition(position);
 
 	renderObject = new RenderObject(&transform, mesh, shader);
+	this->animationController = animController;
+	animationController->SetRenderer(renderObject);
 	//renderObject->AddTexture(texture);
 
 	int subMeshes = mesh->GetSubMeshCount();
 	for (int index = 0; index < subMeshes; ++index) {
 		renderObject->AddTexture(texture, "mainTex", index);
 	}
-	renderObject->SetRigged(true);
-	renderObject->animation = meshAnimation;
+	//renderObject->SetRigged(true);
+	//renderObject->animation = meshAnimation;
 	boundingVolume = physicsCommon.createBoxShape(~transform.GetScale() / 2.0f);
 	reactphysics3d::Transform rp3d_transform(~position, rp3d::Quaternion::identity());
 	
@@ -36,11 +38,13 @@ PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysic
 
 void PlayerBase::Update(float dt) {
 
-	renderObject->frameTime -= dt;
+	animationController->UpdateAnimations(dt);
+
+	/*renderObject->frameTime -= dt;
 	while (renderObject->frameTime < 0.0f) {
 		renderObject->currentFrame = (renderObject->currentFrame + 1) % renderObject->animation->GetFrameCount();
 		renderObject->frameTime += 1.0f / renderObject->animation->GetFrameRate();
-	}
+	}*/
 }
 
 PlayerBase::~PlayerBase() {
