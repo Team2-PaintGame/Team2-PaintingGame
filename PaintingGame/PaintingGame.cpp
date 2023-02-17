@@ -65,7 +65,9 @@ void PaintingGame::InitialiseAssets() {
 	//meshMaterials.at("goatMat")->LoadTextures();
 	//meshMaterials.at("mainCharMat")->LoadTextures();
 
-	meshAnimations.insert(std::make_pair("mainCharAnim", new MeshAnimation("Taunt.anm")));
+	meshAnimations.insert(std::make_pair("mainCharTauntAnim", new MeshAnimation("Taunt.anm")));
+	meshAnimations.insert(std::make_pair("mainCharIdleAnim", new MeshAnimation("Idle1.anm")));
+	meshAnimations.insert(std::make_pair("mainCharRunAnim", new MeshAnimation("StepForward.anm")));
 
 
 	textures.insert(std::make_pair("basicTex", renderer->LoadTexture("checkerboard.png")));
@@ -209,7 +211,10 @@ void PaintingGame::InitWorld() {
 
 PlayerBase* PaintingGame::InitiliazePlayer() {
 	players[0] = new PlayerBase(physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("mainChar"), textures.at("basicTex"), animController, shaders.at("skinningShader"), 5);
-	animController->SetAnimation(meshAnimations.at("mainCharAnim"));
+	animController->SetIdleAnimation(meshAnimations.at("mainCharIdleAnim"));
+	animController->SetRunAnimation(meshAnimations.at("mainCharRunAnim"));
+	animController->SetTauntAnimation(meshAnimations.at("mainCharTauntAnim"));
+
 	world->AddGameObject(players[0]);
 	playerControllers[0] = new PlayerController(world->GetMainCamera(), players[0]);
 
@@ -219,7 +224,9 @@ PlayerBase* PaintingGame::InitiliazePlayer() {
 PlayerBase* PaintingGame::InitialiseNetworkPlayer() {
 	
 	netPlayer = new PlayerBase(physicsCommon, physicsWorld, Vector3(0, 50, 10), meshes.at("mainChar"), textures.at("basicTex"), animController, shaders.at("skinningShader"), 5);
-	animController->SetAnimation(meshAnimations.at("mainCharAnim"));
+	animController->SetIdleAnimation(meshAnimations.at("mainCharIdleAnim"));
+	animController->SetRunAnimation(meshAnimations.at("mainCharRunAnim"));
+	animController->SetTauntAnimation(meshAnimations.at("mainCharTauntAnim"));
 	world->AddGameObject(netPlayer);
 	return netPlayer;
 }
@@ -231,7 +238,9 @@ GameTechRenderer* PaintingGame::GetGameTechRenderer()
 
 PlayerBase* PaintingGame::InitSecondPlayer() {
 	players[1] = new PlayerBase(physicsCommon, physicsWorld, Vector3(10, 10, 0), meshes.at("mainChar"), textures.at("basicTex"), animController, shaders.at("skinningShader"), 5);
-	animController->SetAnimation(meshAnimations.at("mainCharAnim"));
+	animController->SetIdleAnimation(meshAnimations.at("mainCharIdleAnim"));
+	animController->SetRunAnimation(meshAnimations.at("mainCharRunAnim"));
+	animController->SetTauntAnimation(meshAnimations.at("mainCharTauntAnim"));
 	world->AddGameObject(players[1]);
 	playerControllers[1] = new PlayerController(world->GetSecondCamera(), players[1]);
 
