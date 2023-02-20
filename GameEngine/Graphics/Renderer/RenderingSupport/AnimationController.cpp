@@ -3,13 +3,21 @@
 #include "RenderObject.h"
 #include "Transform.h"
 #include "GameObject.h"
+#include "StateMachine.h"
+#include "State.h"
+#include "StateTransition.h"
+
+using namespace NCL;
+using namespace NCL::CSC8508;
 
 AnimationController::AnimationController()
 {
+	animStateMachine = new StateMachine();
+
 	
 }
 
-void AnimationController::SetGameObject(NCL::CSC8508::GameObject* gameObj)
+void AnimationController::SetGameObject(GameObject* gameObj)
 {
 	this->gameObject = gameObj;
 }
@@ -31,8 +39,8 @@ void AnimationController::SetRunAnimation(NCL::MeshAnimation* meshAnim)
 
 void AnimationController::SetCurrentAnimation(NCL::MeshAnimation* meshAnim)
 {
+	gameObject->GetRenderObject()->currentFrame = 0;
 	gameObject->GetRenderObject()->SetRigged(true);
-	gameObject->GetRenderObject()->animation = nullptr;
 	gameObject->GetRenderObject()->animation = meshAnim;
 }
 
@@ -45,14 +53,14 @@ void AnimationController::UpdateAnimations(float dt)
 {
 	std::cout << gameObject->GetRigidBody()->getLinearVelocity().length() << "\n";
 
-	if (gameObject->GetRigidBody()->getLinearVelocity().length() > 5.f) {
+	if(gameObject->GetRigidBody()->getLinearVelocity().length() > 5.f) {
 		SetCurrentAnimation(movingAnimation);
 	}
 	else{
 		SetCurrentAnimation(IdleAnimation);
 	}
 
-	if (gameObject->GetRenderObject() == nullptr && !gameObject->GetRenderObject()->IsRigged()) return;
+	if(gameObject->GetRenderObject()->animation == nullptr && !gameObject->GetRenderObject()->IsRigged()) return;
 
 	gameObject->GetRenderObject()->frameTime -= dt;
 
@@ -60,8 +68,6 @@ void AnimationController::UpdateAnimations(float dt)
 		gameObject->GetRenderObject()->currentFrame = (gameObject->GetRenderObject()->currentFrame + 1) % gameObject->GetRenderObject()->animation->GetFrameCount();
 		gameObject->GetRenderObject()->frameTime += 1.0f / gameObject->GetRenderObject()->animation->GetFrameRate();
 	}
-	
-	
 }
 
 

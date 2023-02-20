@@ -5,6 +5,9 @@ namespace NCL {
 	namespace CSC8508 {
 		class RenderObject;
 		class GameObject;
+		class StateTransition;
+		class State;
+		class StateMachine;
 	}
 }
 
@@ -19,10 +22,17 @@ public:
 	void SetRenderer(NCL::CSC8508::RenderObject* renderObj);
 	void UpdateAnimations(float dt);
 protected:
-	NCL::MeshAnimation* IdleAnimation;
-	NCL::MeshAnimation* tauntAnimation;
-	NCL::MeshAnimation* movingAnimation;
+	NCL::CSC8508::State* idleState = nullptr;
+	NCL::CSC8508::State* moveState = nullptr;
+	NCL::CSC8508::State* tauntState = nullptr;
+	NCL::CSC8508::StateMachine* animStateMachine = nullptr;
+	NCL::CSC8508::StateTransition* idleToMoveStateTransition = nullptr;
+	NCL::CSC8508::StateTransition* MoveToIdleStateTransition = nullptr;
+
+	NCL::MeshAnimation* IdleAnimation = nullptr;
+	NCL::MeshAnimation* tauntAnimation = nullptr;
+	NCL::MeshAnimation* movingAnimation = nullptr;
 	//NCL::CSC8508::RenderObject* renderObject;
-	NCL::CSC8508::GameObject* gameObject;
+	NCL::CSC8508::GameObject* gameObject = nullptr;
 	void SetCurrentAnimation(NCL::MeshAnimation* meshAnim);
 };
