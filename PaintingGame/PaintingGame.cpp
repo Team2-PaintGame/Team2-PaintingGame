@@ -186,7 +186,6 @@ void PaintingGame::InitCamera()
 
 void PaintingGame::InitWorld() {
 	world->ClearAndErase();
-	physicsCommon.
 
 	//TerrainTexturePack terrainTexturePack(textures.at("terrainSplatMap"), textures.at("terrainRTex"), textures.at("terrainGTex"), textures.at("terrainBTex"), textures.at("terrainBgTex"));
 	//world->AddGameObject(new Terrain(*physicsCommon, physicsWorld, Vector2(), meshes.at("terrainMesh"), terrainTexturePack, shaders.at("terrainShader")));

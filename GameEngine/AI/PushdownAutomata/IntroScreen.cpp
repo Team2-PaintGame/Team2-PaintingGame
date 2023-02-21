@@ -42,7 +42,7 @@ namespace NCL {
 				}	break;
 
 				case GameState::SplitScreen: {
-					*newState = new SplitScreen(window, menuHandler);
+					*newState = new SplitScreen(window, renderer, gameWorld, physicsCommon, menuHandler);
 					return PushdownResult::Push;
 				}break;
 

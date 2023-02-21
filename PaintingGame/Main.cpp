@@ -40,9 +40,9 @@ void GameLoop(Window* window, PaintingGame paintingGame) {
 }
 
 //void PushdownAutomata(Window* window, PaintingGame* paintingGame) {
-void PushdownAutomata(Window* window, ) {
+void PushdownAutomata(Window* window) {
 	//PushdownMachine machine(new IntroScreen(window, paintingGame));
-	PushdownMachine machine(new IntroScreen(window, nullptr));
+	PushdownMachine machine(new IntroScreen(window));
 	while (window->UpdateWindow()) {
 		float dt = window->GetTimer()->GetTimeDeltaSeconds();
 		if (!machine.Update(dt)) {

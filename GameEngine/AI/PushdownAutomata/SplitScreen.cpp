@@ -9,14 +9,20 @@
 namespace NCL {
 	namespace CSC8508 {
 
-		SplitScreen::SplitScreen(Window* window, MenuHandler* menu)
+		SplitScreen::SplitScreen(Window* window, GameTechRenderer* rend, GameWorld* gameWorld, reactphysics3d::PhysicsCommon* physicsCommon, MenuHandler* menu)
 		{
 			this->window = window;
 			this->menuHandler = menu;
+			this->renderer = rend;
+			this->gameWorld = gameWorld;
+			this->physicsCommon = physicsCommon;
+
+			reactphysics3d::PhysicsWorld* physicsWorld = physicsCommon->createPhysicsWorld();
+
 			menuHandler->SetGameState(GameState::SplitScreen);
 
 
-			this->paintingGame = new PaintingGame(menu);
+			this->paintingGame = new PaintingGame(renderer,gameWorld,physicsWorld,physicsCommon, menuHandler,false);
 			paintingGame->GetGameTechRenderer()->SetRenderMode(GameTechRenderer::RenderMode::SplitScreen);
 
 			IMGUI_CHECKVERSION();

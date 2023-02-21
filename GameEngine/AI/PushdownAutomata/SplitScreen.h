@@ -10,7 +10,7 @@ namespace NCL {
 		class SplitScreen : public PushdownState
 		{
 		public:
-			SplitScreen(Window* window, MenuHandler * menu);
+			SplitScreen(Window* window, GameTechRenderer* rend, GameWorld* gameWorld, reactphysics3d::PhysicsCommon* physicsCommon, MenuHandler * menu);
 			~SplitScreen();
 			PushdownResult OnUpdate(float dt, PushdownState** newState) override;
 			void OnAwake() override;
@@ -20,6 +20,10 @@ namespace NCL {
 			PaintingGame* paintingGame;
 			bool isPlayingGame;
 			MenuHandler* menuHandler;
+
+			GameTechRenderer* renderer;
+			GameWorld* gameWorld;
+			reactphysics3d::PhysicsCommon* physicsCommon;
 		};
 
 	}
