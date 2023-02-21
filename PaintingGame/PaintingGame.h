@@ -34,6 +34,9 @@ namespace NCL {
 			void InitWorld();
 			PlayerBase* InitiliazePlayer();
 			PlayerBase* InitialiseNetworkPlayer();
+
+			bool SelectObject();
+
 #ifdef USEVULKAN
 			GameTechVulkanRenderer* renderer;
 #else
@@ -64,7 +67,6 @@ namespace NCL {
 			
 			//Create a physics world 
 			reactphysics3d::PhysicsCommon physicsCommon;
-			reactphysics3d::PhysicsWorld* physicsWorld = NULL; 
 
 			int numberOfPlayerControllers = 1;
 

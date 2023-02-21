@@ -12,6 +12,54 @@ namespace NCL {
 		typedef std::function<void(GameObject*)> GameObjectFunc;
 		typedef std::vector<GameObject*>::const_iterator GameObjectIterator;
 
+
+		struct SceneContactPoint {
+			bool isHit;
+			float hitFraction;
+			reactphysics3d::Vector3 hitPos;
+			reactphysics3d::Vector3 normal;
+			reactphysics3d::CollisionBody* body;
+			GameObject* object;
+		};
+
+		class RaycastManager : public reactphysics3d::RaycastCallback {
+		public:
+
+			RaycastManager() { ignoreBody = nullptr; }
+			~RaycastManager() {}
+
+			virtual rp3d::decimal notifyRaycastHit(const rp3d::RaycastInfo& raycastInfo) override;
+
+			bool isHit() {
+				return !hitPoints.empty();
+			}
+
+			void setIgnore(reactphysics3d::RigidBody* ignoreThis) {
+				ignoreBody = ignoreThis;
+			}
+
+			SceneContactPoint* getHit() {
+				SceneContactPoint* nearest = new SceneContactPoint();
+				nearest->hitFraction = 1.1f;
+
+				for (auto i : hitPoints) {
+					if (i->hitFraction < nearest->hitFraction) {
+						nearest = i;
+					}
+				}
+
+				return nearest;
+			}
+
+			void clear() {
+				hitPoints.clear();
+				ignoreBody = nullptr;
+			}
+		private:
+			std::vector<SceneContactPoint*> hitPoints;
+			reactphysics3d::RigidBody* ignoreBody;
+		};
+
 		class GameWorld	{
 		public:
 			GameWorld();
@@ -58,12 +106,28 @@ namespace NCL {
 				return worldStateCounter;
 			}
 
+			void SetCollisionListener(GameObjectListener* listener) {
+				collisionManager = listener;
+				physicsWorld->setEventListener(listener);
+			}
+
+			SceneContactPoint* Raycast(reactphysics3d::Ray& r, GameObject* ignore = nullptr) const;
+
+			vector<Vector3> painted;
+			reactphysics3d::PhysicsWorld* physicsWorld = NULL;
 		protected:
+			
+			RaycastManager* raycastManager;
+			GameObjectListener* collisionManager;
+
+
 			std::vector<GameObject*> gameObjects;
 			std::vector<Constraint*> constraints;
 
 			Camera* mainCamera;
 			Camera* secondCamera;
+
+
 
 			bool shuffleConstraints;
 			bool shuffleObjects;

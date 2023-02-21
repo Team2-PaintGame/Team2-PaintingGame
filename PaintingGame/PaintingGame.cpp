@@ -4,6 +4,8 @@
 #include "Box.h"
 #include "Floor.h"
 #include "InputController.h"
+#include <Ray.h>
+#include <CollisionDetection.h>
 
 using namespace NCL;
 using namespace CSC8508;
@@ -22,17 +24,17 @@ PaintingGame::PaintingGame(bool online) {
 	thirdPersonCamera = true;
 	is_Networked = online;
 
-	physicsWorld = physicsCommon.createPhysicsWorld(/*settings*/);
+	world->physicsWorld = physicsCommon.createPhysicsWorld(/*settings*/);
 
 #ifdef USEVULKAN
 	renderer = new GameTechVulkanRenderer(*world);
 #else 
-	renderer = new GameTechRenderer(*world, physicsWorld);
+	renderer = new GameTechRenderer(*world, world->physicsWorld);
 #endif
 	forceMagnitude = 10.0f;
 
 	InitialiseAssets();
-	physicsWorld->setIsGravityEnabled(useGravity);
+	world->physicsWorld->setIsGravityEnabled(useGravity);
 	renderer->UseFog(useFog);
 
 	renderer->settings.SetIsDebugRenderingModeEnabled(true);
@@ -136,10 +138,13 @@ void PaintingGame::UpdateGame(float dt) {
 		}
 	
 	}
+
+	SelectObject();
+
 	renderer->Render();
 	world->UpdateWorld(dt);
 	renderer->Update(dt);
-	physicsWorld->update(dt);
+	world->physicsWorld->update(dt);
 	Debug::UpdateRenderables(dt);
 
 	if (!gamepad->Refresh())
@@ -191,16 +196,16 @@ void PaintingGame::InitWorld() {
 		InitiliazePlayer();
 	}
 
-	world->AddGameObject(new Floor(physicsCommon, physicsWorld, Vector3(0, 0, 0), meshes.at("cubeMesh"), textures.at("basicTex"), shaders.at("basicShader"), 200));
+	world->AddGameObject(new Floor(physicsCommon, world->physicsWorld, Vector3(0, 0, 0), meshes.at("cubeMesh"), textures.at("basicTex"), shaders.at("basicShader"), 200));
 
 	for (int x = 0; x < 15; ++x) {
-		world->AddGameObject(new Box(physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 2));
+		world->AddGameObject(new Box(physicsCommon, world->physicsWorld, Vector3(0, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 2));
 	}
 }
 
 
 PlayerBase* PaintingGame::InitiliazePlayer() {
-	players[0] = new PlayerBase(physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 5);
+	players[0] = new PlayerBase(physicsCommon, world->physicsWorld, Vector3(0, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 5);
 	world->AddGameObject(players[0]);
 	playerControllers[0] = new PlayerController(world->GetMainCamera(), players[0]);
 
@@ -209,7 +214,7 @@ PlayerBase* PaintingGame::InitiliazePlayer() {
 
 PlayerBase* PaintingGame::InitialiseNetworkPlayer() {
 	
-	netPlayer = new PlayerBase(physicsCommon, physicsWorld, Vector3(0, 50, 10), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 5);
+	netPlayer = new PlayerBase(physicsCommon, world->physicsWorld, Vector3(0, 50, 10), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 5);
 	world->AddGameObject(netPlayer);
 	return netPlayer;
 }
@@ -220,7 +225,7 @@ GameTechRenderer* PaintingGame::GetGameTechRenderer()
 }
 
 PlayerBase* PaintingGame::InitSecondPlayer() {
-	players[1] = new PlayerBase(physicsCommon, physicsWorld, Vector3(10, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 5);
+	players[1] = new PlayerBase(physicsCommon, world->physicsWorld, Vector3(10, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 5);
 	world->AddGameObject(players[1]);
 	playerControllers[1] = new PlayerController(world->GetSecondCamera(), players[1]);
 
@@ -246,4 +251,26 @@ void PaintingGame::DestroySecondPlayer() {
 	world->GetSecondCamera()->~Camera();
 }
 
+bool PaintingGame::SelectObject() {
 
+		if (Window::GetMouse()->ButtonPressed(NCL::MouseButtons::RIGHT)) {
+			
+			Ray r = CollisionDetection::BuildRayFromMouse(*world->GetMainCamera());
+			Vector3 startPos = r.GetPosition();
+			Vector3 endPos = r.GetPosition() + r.GetDirection() * 1000;
+
+			reactphysics3d::Ray ray = reactphysics3d::Ray(
+				reactphysics3d::Vector3(startPos.x, startPos.y+5, startPos.z), reactphysics3d::Vector3(endPos.x, endPos.y, endPos.z));
+			
+			SceneContactPoint* closestCollision = world->Raycast(ray);
+			//Debug::DrawLine(startPos, endPos, Vector4(1, 1, 1, 1), 3);
+			if (closestCollision->isHit) {
+				world->painted.push_back(closestCollision->hitPos);
+				for (Vector4 x : world->painted) {
+					std::cout << x << "\n";
+				}
+				return true;
+			}
+	}
+	return false;
+}

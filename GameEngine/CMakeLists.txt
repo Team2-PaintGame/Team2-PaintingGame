@@ -61,6 +61,9 @@ set(Asset_Handling
     "./AssetsHandling/TextureLoader.h"
     "./AssetsHandling/TextureWriter.cpp"
     "./AssetsHandling/TextureWriter.h"
+    "./AssetsHandling/CollisionDetection.cpp"
+    "./AssetsHandling/CollisionDetection.h"
+    "./AssetsHandling/Ray.h"
 )
 source_group("Asset Handling" FILES ${Asset_Handling})
 

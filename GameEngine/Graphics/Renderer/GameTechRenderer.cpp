@@ -446,6 +446,8 @@ void GameTechRenderer::RenderCamera(Camera& cam) {
 	int skyboxTexLocation = 0;
 	int shadowLocation  = 0;
 	int jointsLocation	= 0;
+	int paintedLocation = 0;
+
 
 	int lightPosLocation	= 0;
 	int lightColourLocation = 0;
@@ -461,7 +463,8 @@ void GameTechRenderer::RenderCamera(Camera& cam) {
 		OGLShader* shader = (OGLShader*)(*i).GetShader();
 		BindShader(shader);
 
-		//BindTextureToShader((OGLTexture*)(*i).GetDefaultTexture(), "mainTex", 0);
+		BindTextureToShader((OGLTexture*)(*i).GetDefaultTexture(), "mainTex", 0);
+		
 		/*std::vector<TextureBase*> textures = (*i).GetTextures();
 		for (const auto& texture : textures) {
 			BindTextureToShader(texture, "mainTex", 0);
@@ -487,6 +490,15 @@ void GameTechRenderer::RenderCamera(Camera& cam) {
 			jointsLocation = glGetUniformLocation(shader->GetProgramID(), "joints");
 
 			Vector3 camPos = cam.GetPosition();
+
+			for (int i = 0; i < gameWorld.painted.size(); i++) {
+				Vector4 paintedPos = Vector4(gameWorld.painted[i], 0);
+				char buffer[64];
+				sprintf_s(buffer, "paintedPos[%i]", i);
+				paintedLocation = glGetUniformLocation(shader->GetProgramID(), buffer);
+				glUniform4fv(paintedLocation, 1, paintedPos.array);
+			}
+
 			glUniform3fv(cameraLocation, 1, camPos.array);
 
 			glUniformMatrix4fv(projLocation, 1, false, (float*)&projMatrix);

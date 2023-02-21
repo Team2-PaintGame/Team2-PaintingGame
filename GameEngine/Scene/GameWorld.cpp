@@ -6,9 +6,29 @@
 using namespace NCL;
 using namespace NCL::CSC8508;
 
+rp3d::decimal RaycastManager::notifyRaycastHit(const rp3d::RaycastInfo& raycastInfo) {
+	if (ignoreBody == raycastInfo.body) { return -1; }
+
+	rp3d::Vector3 n = raycastInfo.worldNormal;
+	rp3d::Vector3 hitPos = raycastInfo.worldPoint;
+
+	SceneContactPoint* collision = new SceneContactPoint();
+	collision->isHit = true;
+	collision->hitFraction = raycastInfo.hitFraction;
+	collision->hitPos = hitPos;
+	collision->normal = n;
+	collision->body = raycastInfo.body;
+
+	hitPoints.push_back(collision);
+
+	//Debug::DrawLine(hitPos, hitPos + n, Vector4(1, 1, 0, 1), 4.0f);
+	return raycastInfo.hitFraction;
+}
+
 GameWorld::GameWorld()	{
 	mainCamera = new Camera();
 	secondCamera = new Camera();
+	raycastManager = new RaycastManager();
 
 	shuffleConstraints	= false;
 	shuffleObjects		= false;
@@ -101,4 +121,27 @@ void GameWorld::GetConstraintIterators(
 	std::vector<Constraint*>::const_iterator& last) const {
 	first	= constraints.begin();
 	last	= constraints.end();
+}
+
+SceneContactPoint* GameWorld::Raycast(reactphysics3d::Ray& r, GameObject* ignoreThis) const {
+	raycastManager->clear();
+	if (ignoreThis) { raycastManager->setIgnore(ignoreThis->GetRigidBody()); }
+
+	physicsWorld->raycast(r, raycastManager);
+	SceneContactPoint* dummy = new SceneContactPoint();
+	dummy->isHit = false;
+	if (!raycastManager->isHit()) { return dummy; }
+
+	SceneContactPoint* closestHit = raycastManager->getHit();
+	rp3d::Vector3 n = closestHit->normal;
+	rp3d::Vector3 hitPos = closestHit->hitPos;
+	//Debug::DrawLine(hitPos, hitPos + (2 * n), Vector4(1, 0, 0, 1), 4.0f);
+
+	for (auto& i : gameObjects) {
+		if (i->GetRigidBody() == closestHit->body) {
+			closestHit->object = i;
+		}
+	}
+
+	return closestHit;
 }

@@ -22,13 +22,13 @@ namespace NCL {
 			RenderObject(Transform* parentTransform, MeshGeometry* mesh, ShaderBase* shader);
 			~RenderObject();
 
-			/*void SetDefaultTexture(TextureBase* t) {
+			void SetDefaultTexture(TextureBase* t) {
 				texture = t;
 			}
 
 			TextureBase* GetDefaultTexture() const {
 				return texture;
-			}*/
+			}
 
 			void AddTexture(TextureBase* t, std::string uniform = "mainTex", int subMeshIndex = 0) {
 				if (t) {
@@ -92,6 +92,7 @@ namespace NCL {
 			std::map<int, std::vector<std::pair<std::string, TextureBase*>>> subMeshTextures;
 
 			//std::vector<TextureBase*>	textures;
+			TextureBase* texture;
 			ShaderBase*		shader;
 			Transform*		transform;
 			Vector4			colour;

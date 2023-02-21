@@ -21,6 +21,7 @@ out Vertex
 	vec4 shadowProj;
 	vec3 normal;
 	vec3 worldPos;
+	vec4 localPos;
 } OUT;
 
 void main(void)
@@ -30,6 +31,7 @@ void main(void)
 
 	OUT.shadowProj 	=  shadowMatrix * vec4 ( position,1);
 	OUT.worldPos 	= ( modelMatrix * vec4 ( position ,1)). xyz ;
+	OUT.localPos =  modelMatrix * vec4(position, 1.0);
 	OUT.normal 		= normalize ( normalMatrix * normalize ( normal ));
 	
 	OUT.texCoord	= texCoord;
