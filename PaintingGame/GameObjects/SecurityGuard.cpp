@@ -4,12 +4,15 @@
 #include <cmath>
 
 namespace NCL::CSC8508 {
-	SecurityGuard::SecurityGuard(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, std::string objectName, Vector3 position, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, Vector3 size, GameObject* player)
+	SecurityGuard::SecurityGuard(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, std::string objectName, Vector3 position, MeshGeometry* mesh,
+		TextureBase* texture, ShaderBase* shader, Vector3 size, GameObject* playerOne, GameObject* playerTwo)
 		: GameObject(physicsCommon, physicsWorld, objectName)
 	{
 
-		this->player = player;
+		this->playerOne = playerOne;
+		this->playerTwo = playerTwo;
 		this->physicsWorld = physicsWorld;
+		chasedPlayer = nullptr;
 		transform.SetScale(size).SetPosition(position);
 		renderObject = new RenderObject(&transform, mesh, shader);
 		renderObject->AddTexture(texture);
@@ -23,7 +26,8 @@ namespace NCL::CSC8508 {
 		rigidBody->updateMassPropertiesFromColliders();
 		rigidBody->setLinearDamping(1.5f);
 		rigidBody->setAngularDamping(1.5f);
-		callbackObject = new SecurityCallbackClass(player);
+		callbackPlayerOne = new SecurityCallbackClass(playerOne);
+		callbackPlayerTwo = new SecurityCallbackClass(playerTwo);
 
 		FindNavigableNodes("GameMaze3.txt", navigableNodes);
 		navigationGrid = new NavigationGrid("GameMaze3.txt");
@@ -47,10 +51,13 @@ namespace NCL::CSC8508 {
 		delete chaseThePlayer;
 		delete attackThePlayer;
 
-		delete callbackObject;
+		delete callbackPlayerOne;
+		delete callbackPlayerTwo;
 
 		delete navigationGrid;
 		delete navigationPath;
+
+		// delete renderObject // Is this deleted here or elsewhere?
 
 		physicsCommon.destroyBoxShape(boundingVolume);
 
@@ -144,9 +151,9 @@ namespace NCL::CSC8508 {
 				Vector3 direction = navigationPath->waypoints.back() - this->GetTransform().GetPosition();
 				Vector3 velocity = rigidBody->getLinearVelocity();
 								
-				if (LookForPlayer()) {
+				if (LookForPlayers() != nullptr) {
 					navigationPath->Clear();
-					//std::cout << " Going to the destination - Can see Player\n";
+					std::cout << " Going to the destination - Can see Player\n";
 					return Success;
 				}
 				if (velocity.Length() < 0.1) {
@@ -159,13 +166,13 @@ namespace NCL::CSC8508 {
 					}
 				}
 				if (direction.Length() <= 4 && navigationPath->waypoints.size() >= 2) {
-			//		std::cout << " Going to the destination - Going Destination\n";
+					std::cout << " Going to the destination - Going Destination\n";
 					navigationPath->waypoints.pop_back();
 				}
 	
 				if (navigationPath->waypoints.size() == 1) {
 					if (DistanceToTarget(navigationPath->waypoints.front()) <= 3.0f) {
-						//std::cout << " Going to the destination - Reached Destination\n";
+						std::cout << " Going to the destination - Reached Destination\n";
 						navigationPath->Clear();
 						return Success;
 					}
@@ -186,13 +193,13 @@ namespace NCL::CSC8508 {
 			}
 			else if (state == Ongoing) {
 
-				bool isPLayerVisible = LookForPlayer();
-				if (isPLayerVisible) {
-					//std::cout << " Looking for Player - Can see Player\n";
+				chasedPlayer = LookForPlayers();
+				if (chasedPlayer != nullptr) {
+					std::cout << " Looking for Player - Can see Player\n";
 					state = Success;
 				}
 				else {
-					//std::cout << " Looking for Player - Player not visible\n";
+					std::cout << " Looking for Player - Player not visible\n";
 					state = Failure;
 				}
 			}
@@ -205,13 +212,13 @@ namespace NCL::CSC8508 {
 		chaseThePlayer = new BehaviourAction("Chase the goat ", [&](float dt, BehaviourState state)->BehaviourState {
 
 			if (state == Initialise) {
-				Vector3 playerPosition = player->GetTransform().GetPosition();
+				Vector3 playerPosition = chasedPlayer->GetTransform().GetPosition();
 				Vector3 securityPosition = this->GetTransform().GetPosition();
 				playerPosition = FindClosestNode(playerPosition);
 				securityPosition = FindClosestNode(securityPosition);
 
 				navigationGrid->FindPath(securityPosition, playerPosition, *navigationPath);
-				//	std::cout << " Chase the Player - Path found\n";
+					std::cout << " Chase the Player - Path found\n";
 				state = Ongoing;
 			}
 			else if (state == Ongoing) {
@@ -220,7 +227,7 @@ namespace NCL::CSC8508 {
 
 				timeAccumulator += dt;
 				if (timeAccumulator >= 1.5) {
-					bool isPlayerVisible = LookForPlayer();
+					bool isPlayerVisible = LookForPlayer(chasedPlayer);
 					//	std::cout << "1.5 seconds accumulated\n";
 					timeAccumulator = 0.0f;
 					if (isPlayerVisible) {
@@ -232,11 +239,11 @@ namespace NCL::CSC8508 {
 
 				if (direction.Length() <= 4 && navigationPath->waypoints.size() >= 2) {
 					navigationPath->waypoints.pop_back();
-					//	std::cout << " Chase the Player - Chasing player\n";
+						std::cout << " Chase the Player - Chasing player\n";
 				}
 				if (navigationPath->waypoints.size() == 1) {
 					if (DistanceToTarget(navigationPath->waypoints.back()) <= 4.0f) {
-						//		std::cout << " Chase the Player - Reached the player\n";
+								std::cout << " Chase the Player - Reached the player\n";
 						navigationPath->Clear();
 						timeAccumulator = 0.0f;
 						return Success;
@@ -260,17 +267,16 @@ namespace NCL::CSC8508 {
 				state = Ongoing;
 			}
 			else if (state == Ongoing) {
-				Vector3 direction = player->GetTransform().GetPosition() - this->GetTransform().GetPosition();
+				Vector3 direction = chasedPlayer->GetTransform().GetPosition() - this->GetTransform().GetPosition();
 				if (direction.Length() > 15) {
-					//			std::cout << "The goat is too far away..\n";
+					//	std::cout << "The player is too far away..\n";
 					state = Failure;
 				}
 				else {
-					//std::cout << "Spitting at goat..\n";
-					/*player->GetRenderObject()->SetColour(Debug::RED);
-					player->SetHealth();
-					player->GetRenderObject()->SetColour(Debug::GREEN);*/
-
+					// Respawns player at position location
+					reactphysics3d::Vector3 position(0, 20, 0);
+					reactphysics3d::Transform rp3d_transform(position, rp3d::Quaternion::identity());
+					chasedPlayer->GetRigidBody()->setTransform(rp3d_transform);
 					state = Success;
 				}
 			}
@@ -281,22 +287,70 @@ namespace NCL::CSC8508 {
 		);
 	}
 
+	GameObject* SecurityGuard::LookForPlayers()
+	{
+		bool isPlayerOneVisible = LookForPlayer(playerOne);
+		bool isPlayerTwoVisible = LookForPlayer(playerTwo);
 
-	bool SecurityGuard::LookForPlayer()
+		if (isPlayerOneVisible && isPlayerTwoVisible) //both players are visible
+		{
+			return FindClosestPlayer();
+		}
+		else if (isPlayerOneVisible)
+		{
+			return playerOne;
+		}
+		else if (isPlayerTwoVisible)
+		{
+			return playerTwo;
+		}
+		else 
+			return nullptr;
+	}
+
+	GameObject* SecurityGuard::FindClosestPlayer()
+	{
+		Vector3 securityPosition = this->GetTransform().GetPosition();
+		Vector3 playerOnePosition = playerOne->GetTransform().GetPosition();
+		Vector3 playerTwoPosition = playerTwo->GetTransform().GetPosition();
+		playerOnePosition -= securityPosition;
+		playerTwoPosition -= securityPosition;
+
+		GameObject* gameObject = playerOnePosition.Length() < playerTwoPosition.Length() ? playerOne : playerTwo;
+		return gameObject;
+	}
+
+	bool SecurityGuard::LookForPlayer(GameObject* player)
+	{
+		bool isPlayerVisible = false;
+
+		if (player == playerOne) 
+		{
+			RaycastAgainstPlayer(playerOne, callbackPlayerOne, isPlayerVisible);
+		}
+		else if (player == playerTwo) 
+		{
+			RaycastAgainstPlayer(playerTwo, callbackPlayerTwo, isPlayerVisible);
+		}
+		return isPlayerVisible;
+	}
+
+	void SecurityGuard::RaycastAgainstPlayer(GameObject* player, SecurityCallbackClass* callbackClass, bool& isPlayerVisible)
 	{
 		Vector3 securityPosition = this->GetTransform().GetPosition();
 		Vector3 playerPosition = player->GetTransform().GetPosition();
-		//Debug::DrawLine(securityPosition, playerPosition, Debug::BLUE, 0.1f);
+		if (player == playerOne) {
+			Debug::DrawLine(securityPosition, playerPosition, Debug::BLUE, 0.1f);
+		}
+		else if (player == playerTwo) {
+			Debug::DrawLine(securityPosition, playerPosition, Debug::RED, 0.1f);
+		}
 		reactphysics3d::Ray ray(~securityPosition, ~playerPosition); // '~' converts NCL Vector3 to reactphysics3d Vector3
 		reactphysics3d::RaycastInfo rayCastInfo;
-
-		physicsWorld->raycast(ray, *(&callbackObject));
-		callbackObject->notifyRaycastHit(rayCastInfo);
-
-		bool isPlayerVisible = callbackObject->IsPlayerVisible();
-		callbackObject->ResetObjectDistances();
-		return isPlayerVisible;
-
+		physicsWorld->raycast(ray, *(&callbackClass));
+		callbackClass->notifyRaycastHit(rayCastInfo);
+		isPlayerVisible = callbackClass->IsPlayerVisible();
+		callbackClass->ResetObjectDistances();
 	}
 
 	void SecurityGuard::FindNavigableNodes(const std::string& filename, vector<Vector3>& navigableNodes)

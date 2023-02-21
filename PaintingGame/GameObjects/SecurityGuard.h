@@ -20,7 +20,8 @@ namespace NCL::CSC8508 {
 	class SecurityGuard : public GameObject
 	{
 	public:
-		SecurityGuard(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, std::string objectName, Vector3 position, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, Vector3 size, GameObject* player);
+		SecurityGuard(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, std::string objectName, Vector3 position, MeshGeometry* mesh, 
+			TextureBase* texture, ShaderBase* shader, Vector3 size, GameObject* playerOne, GameObject* playerTwo);
 		~SecurityGuard();
 		void Update(float dt);
 
@@ -36,14 +37,17 @@ namespace NCL::CSC8508 {
 		void InitRootSelector();
 		void InitBehaviorTree();
 
-		bool LookForPlayer();
+		bool LookForPlayer(GameObject* player);
+		GameObject* LookForPlayers();
 		void FindNavigableNodes(const std::string& filename, vector<Vector3>& navigableNodes);
 		Vector3 ChooseDestination();
 		void DisplayPathfinding();
 		void MoveSecurityGuard(Vector3 direction);
 		float DistanceToTarget(Vector3 destination);
 		Vector3 FindClosestNode(Vector3 position);
+		GameObject* FindClosestPlayer();
 		void DetermineSpeed();
+		void RaycastAgainstPlayer(GameObject* player, SecurityCallbackClass* callbackClass, bool& isPlayerVisible);
 
 		
 
@@ -81,8 +85,11 @@ namespace NCL::CSC8508 {
 		NavigationGrid* navigationGrid;
 		NavigationPath* navigationPath;
 
-		GameObject* player;
-		SecurityCallbackClass* callbackObject;
+		GameObject* playerOne;
+		GameObject* playerTwo;
+		GameObject* chasedPlayer;
+		SecurityCallbackClass* callbackPlayerOne;
+		SecurityCallbackClass* callbackPlayerTwo;
 	};
 
 }

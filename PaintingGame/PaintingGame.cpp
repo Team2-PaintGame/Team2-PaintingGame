@@ -196,7 +196,7 @@ PlayerBase* PaintingGame::InitiliazePlayer() {
 	world->AddGameObject(players[0]);
 	playerControllers[0] = new PlayerController(world->GetMainCamera(), players[0]);
 
-	players[1] = new PlayerBase(physicsCommon, physicsWorld, Vector3(95, 10, 0), meshes.at("cubeMesh"), textures.at("basicTex"), shaders.at("basicShader"), 5);
+	players[1] = new PlayerBase(physicsCommon, physicsWorld, Vector3(15, 10, 0), meshes.at("cubeMesh"), textures.at("basicTex"), shaders.at("basicShader"), 5);
 	world->AddGameObject(players[1]);
 	playerControllers[1] = new PlayerController(world->GetSecondCamera(), players[1]);
 
@@ -309,6 +309,6 @@ PlayerBase* PaintingGame::GetPlayer()
 
 void PaintingGame::AddSecurityAI()
 {
-	world->AddGameObject(new SecurityGuard(physicsCommon, physicsWorld, "Security Guard", Vector3(-70.0f, 5.0f, 60.0f), meshes.at("cubeMesh"), textures.at("basicTex"), shaders.at("basicShader"), Vector3(2, 2, 2), GetPlayer()));
+	world->AddGameObject(new SecurityGuard(physicsCommon, physicsWorld, "Security Guard", Vector3(-70.0f, 5.0f, 60.0f), meshes.at("cubeMesh"), textures.at("basicTex"), shaders.at("basicShader"), Vector3(2, 2, 2), players[0], players[1]));
 }
 

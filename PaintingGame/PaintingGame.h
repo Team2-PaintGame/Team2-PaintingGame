@@ -32,6 +32,7 @@ namespace NCL {
 			PlayerBase* InitiliazePlayer();
 			PlayerBase* InitialiseNetworkPlayer();
 			PlayerBase* GetPlayer();
+
 #ifdef USEVULKAN
 			GameTechVulkanRenderer* renderer;
 #else
