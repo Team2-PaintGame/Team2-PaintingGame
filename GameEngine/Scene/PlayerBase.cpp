@@ -15,6 +15,7 @@ PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysic
 	this->animationController = animController;
 	//animationController->SetRenderer(renderObject);
 	animationController->SetGameObject(this);
+	animationController->InitStateMachine();
 	//renderObject->AddTexture(texture);
 
 	int subMeshes = mesh->GetSubMeshCount();

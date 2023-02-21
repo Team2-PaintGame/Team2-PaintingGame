@@ -12,9 +12,44 @@ using namespace NCL::CSC8508;
 
 AnimationController::AnimationController()
 {
+	
+}
+
+void AnimationController::InitStateMachine()
+{
 	animStateMachine = new StateMachine();
 
-	
+	idleState = new State([&](float dt)->void {
+		SetCurrentAnimation(IdleAnimation);
+		});
+	moveState = new State([&](float dt)->void {
+		SetCurrentAnimation(movingAnimation);
+		});
+
+	idleToMoveStateTransition = new StateTransition(idleState, moveState, [&](void)->bool {
+
+			if (gameObject->GetRigidBody()->getLinearVelocity().length() > 5.f)
+			{
+				gameObject->GetRenderObject()->currentFrame = 0;
+				return true;
+			}
+			return false;
+		});
+
+	moveToIdleStateTransition = new StateTransition(moveState, idleState, [&](void)->bool {
+
+			if (gameObject->GetRigidBody()->getLinearVelocity().length() < 5.f)
+			{
+				gameObject->GetRenderObject()->currentFrame = 0;
+				return true;
+			}
+			return false;
+		});
+
+	animStateMachine->AddState(idleState);
+	animStateMachine->AddState(moveState);
+	animStateMachine->AddTransition(idleToMoveStateTransition);
+	animStateMachine->AddTransition(moveToIdleStateTransition);
 }
 
 void AnimationController::SetGameObject(GameObject* gameObj)
@@ -39,7 +74,6 @@ void AnimationController::SetRunAnimation(NCL::MeshAnimation* meshAnim)
 
 void AnimationController::SetCurrentAnimation(NCL::MeshAnimation* meshAnim)
 {
-	gameObject->GetRenderObject()->currentFrame = 0;
 	gameObject->GetRenderObject()->SetRigged(true);
 	gameObject->GetRenderObject()->animation = meshAnim;
 }
@@ -51,16 +85,18 @@ void AnimationController::SetRenderer(NCL::CSC8508::RenderObject* renderObj)
 
 void AnimationController::UpdateAnimations(float dt)
 {
-	std::cout << gameObject->GetRigidBody()->getLinearVelocity().length() << "\n";
+	//std::cout << gameObject->GetRigidBody()->getLinearVelocity().length() << "\n";
 
-	if(gameObject->GetRigidBody()->getLinearVelocity().length() > 5.f) {
+	/*if(gameObject->GetRigidBody()->getLinearVelocity().length() > 5.f) {
 		SetCurrentAnimation(movingAnimation);
 	}
 	else{
 		SetCurrentAnimation(IdleAnimation);
-	}
+	}*/
 
-	if(gameObject->GetRenderObject()->animation == nullptr && !gameObject->GetRenderObject()->IsRigged()) return;
+	if(gameObject->GetRenderObject()->animation == nullptr && animStateMachine == nullptr && !gameObject->GetRenderObject()->IsRigged()) return;
+
+	animStateMachine->Update(dt);
 
 	gameObject->GetRenderObject()->frameTime -= dt;
 

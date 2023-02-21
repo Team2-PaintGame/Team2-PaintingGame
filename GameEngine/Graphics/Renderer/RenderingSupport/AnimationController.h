@@ -1,4 +1,6 @@
 #pragma once
+#include "PushdownState.h"
+#include "PushdownMachine.h"
 
 namespace NCL {
 	class MeshAnimation;
@@ -14,6 +16,7 @@ namespace NCL {
 class AnimationController {
 public:
 	AnimationController();
+	void InitStateMachine();
 	void SetGameObject(NCL::CSC8508::GameObject* gameObj);
 	void SetIdleAnimation(NCL::MeshAnimation* meshAnim);
 	void SetTauntAnimation(NCL::MeshAnimation* meshAnim);
@@ -27,7 +30,7 @@ protected:
 	NCL::CSC8508::State* tauntState = nullptr;
 	NCL::CSC8508::StateMachine* animStateMachine = nullptr;
 	NCL::CSC8508::StateTransition* idleToMoveStateTransition = nullptr;
-	NCL::CSC8508::StateTransition* MoveToIdleStateTransition = nullptr;
+	NCL::CSC8508::StateTransition* moveToIdleStateTransition = nullptr;
 
 	NCL::MeshAnimation* IdleAnimation = nullptr;
 	NCL::MeshAnimation* tauntAnimation = nullptr;
