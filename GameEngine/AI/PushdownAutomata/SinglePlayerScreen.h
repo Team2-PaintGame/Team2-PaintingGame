@@ -10,7 +10,7 @@ namespace NCL {
 		class SinglePlayerScreen : public PushdownState
 		{
 		public:
-			SinglePlayerScreen(Window* window, MenuHandler* menu);
+			SinglePlayerScreen(Window* window, GameTechRenderer* rend, GameWorld* gameWorld, reactphysics3d::PhysicsCommon* physicsCommon, MenuHandler* menu);
 			SinglePlayerScreen(PaintingGame* paintingGame, MenuHandler* menu);
 			~SinglePlayerScreen();
 			PushdownResult OnUpdate(float dt, PushdownState** newState) override;
@@ -21,6 +21,10 @@ namespace NCL {
 			Window* window;
 			PaintingGame* paintingGame;
 			MenuHandler* menuHandler;
+
+			GameTechRenderer* renderer;
+			GameWorld* gameWorld;
+			reactphysics3d::PhysicsCommon* physicsCommon;
 		};
 	}
 }

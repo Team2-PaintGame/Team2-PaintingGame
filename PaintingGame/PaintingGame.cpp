@@ -9,8 +9,13 @@
 using namespace NCL;
 using namespace CSC8508;
 
-PaintingGame::PaintingGame(MenuHandler* menu, bool online) {
-	world = new GameWorld();
+#ifdef USEVULKAN
+PaintingGame::PaintingGame(GameTechVulkanRenderer* render, GameWorld* world, reactphysics3d::PhysicsWorld* physicsWorld, reactphysics3d::PhysicsCommon* physicsCommon, MenuHandler* menu, bool online = false)
+#else
+PaintingGame::PaintingGame(GameTechRenderer* render, GameWorld* game_world, reactphysics3d::PhysicsWorld* physicsWorld, reactphysics3d::PhysicsCommon* physicsCommon, MenuHandler* menu, bool online)
+#endif
+{
+	world = game_world;
 	gamepad = new Gamepad();
 
 	/* Code for changing physics system paramaters
@@ -24,13 +29,11 @@ PaintingGame::PaintingGame(MenuHandler* menu, bool online) {
 	is_Networked = online;
 	menuHandler = menu;
 
-	physicsWorld = physicsCommon.createPhysicsWorld(/*settings*/);
+	this->physicsCommon = physicsCommon;
+	this->physicsWorld = this->physicsCommon->createPhysicsWorld(/*settings*/);
 
-#ifdef USEVULKAN
-	renderer = new GameTechVulkanRenderer(*world);
-#else 
-	renderer = new GameTechRenderer(menuHandler, *world, physicsWorld);
-#endif
+	renderer = render;
+
 	forceMagnitude = 10.0f;
 
 	InitialiseAssets();
@@ -40,7 +43,6 @@ PaintingGame::PaintingGame(MenuHandler* menu, bool online) {
 	renderer->settings.SetIsDebugRenderingModeEnabled(true);
 	renderer->settings.debugRendererSettings.SetIsCollisionShapeDisplayed(true);
 	renderer->settings.debugRendererSettings.SetIsBroadPhaseAABBDisplayed(true);
-
 }
 
 /*
@@ -184,6 +186,7 @@ void PaintingGame::InitCamera()
 
 void PaintingGame::InitWorld() {
 	world->ClearAndErase();
+	physicsCommon.
 
 	//TerrainTexturePack terrainTexturePack(textures.at("terrainSplatMap"), textures.at("terrainRTex"), textures.at("terrainGTex"), textures.at("terrainBTex"), textures.at("terrainBgTex"));
 	//world->AddGameObject(new Terrain(*physicsCommon, physicsWorld, Vector2(), meshes.at("terrainMesh"), terrainTexturePack, shaders.at("terrainShader")));

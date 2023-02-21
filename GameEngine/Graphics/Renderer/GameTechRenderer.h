@@ -8,8 +8,6 @@
 #include "GameWorld.h"
 #include "TextureHUD.h"
 
-#include "MenuHandler.h"
-
 
 namespace NCL {
 	class Maths::Vector3;
@@ -66,7 +64,7 @@ namespace NCL {
 			};
 			//----------------------------- GameTechRenderer:
 			
-			GameTechRenderer(MenuHandler* menu, GameWorld& world, reactphysics3d::PhysicsWorld* physicsWorld);
+			GameTechRenderer(GameWorld& world, reactphysics3d::PhysicsWorld* physicsWorld);
 			~GameTechRenderer();
 			virtual void Update(float dt);
 			
@@ -149,8 +147,6 @@ namespace NCL {
 			vector<TextureHUD> hudTextures;
 			bool useFog = false;
 			Vector3 fogColour = Vector3(0.6706f, 0.6824f, 0.6902f); //removing alpha value of fog colour to preserve the original transparency value of the fragment
-
-			MenuHandler* menuHandler;
 
 			bool isDebugInfo = false;
 			RenderMode renderMode = RenderMode::MainMenu;

@@ -15,10 +15,8 @@ using namespace CSC8508;
 
 Matrix4 biasMatrix = Matrix4::Translation(Vector3(0.5f, 0.5f, 0.5f)) * Matrix4::Scale(Vector3(0.5f, 0.5f, 0.5f));
 
-GameTechRenderer::GameTechRenderer(MenuHandler* menu, GameWorld& world, reactphysics3d::PhysicsWorld* physicsWorld) : OGLRenderer(*Window::GetWindow()), gameWorld(world), settings(physicsWorld) {
-
-	menuHandler = menu;
-
+GameTechRenderer::GameTechRenderer(GameWorld& world, reactphysics3d::PhysicsWorld* physicsWorld) : OGLRenderer(*Window::GetWindow()), gameWorld(world), settings(physicsWorld) 
+{
 	skybox = new OGLSkybox();
 
 	glEnable(GL_DEPTH_TEST);

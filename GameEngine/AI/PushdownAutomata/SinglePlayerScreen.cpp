@@ -10,16 +10,24 @@
 namespace NCL {
 	namespace CSC8508 {
 
-		SinglePlayerScreen::SinglePlayerScreen(Window* window, MenuHandler* menu)
-			//SinglePlayerScreen::SinglePlayerScreen(PaintingGame* paintingGame, MenuHandler* menu)
+		SinglePlayerScreen::SinglePlayerScreen(Window* window, GameTechRenderer* rend, GameWorld* gameWorld, reactphysics3d::PhysicsCommon* physicsCommon, MenuHandler* menu)
 		{
-			isPlayingGame = true;
 			this->window = window;
 			this->menuHandler = menu;
-			menuHandler->SetGameState(GameState::SinglePlayer);
+			this->renderer = rend;
+			this->gameWorld = gameWorld;
+			this->physicsCommon = physicsCommon;		
 
-			this->paintingGame = new PaintingGame(menuHandler, false);
+			reactphysics3d::PhysicsWorld* physicsWorld = physicsCommon->createPhysicsWorld();
+
+			paintingGame = new PaintingGame(renderer, gameWorld, physicsWorld, physicsCommon, menuHandler, false);
 			paintingGame->GetGameTechRenderer()->SetRenderMode(GameTechRenderer::RenderMode::SingleViewport);
+
+			//TODO: Set renderer's physics world
+
+			//TODO: Repeat this code on SplitScreen and LanScreen
+
+			//TODO: Pray this works
 		}
 
 		SinglePlayerScreen::~SinglePlayerScreen()
@@ -49,8 +57,11 @@ namespace NCL {
 			if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::ESCAPE)){
 				menuHandler->SetGameState(GameState::PauseMenu);
 			}
-			//window->SetTitle("Gametech frame time:" + std::to_string(1000.0f * dt));
+
+			window->SetTitle("Gametech frame time:" + std::to_string(1000.0f * dt));
+
 			paintingGame->UpdateGame(dt);
+
 			GameState gameState = menuHandler->GetGameState();
 			switch (gameState) {
 				case GameState::SinglePlayer: {
@@ -73,18 +84,6 @@ namespace NCL {
 			if (menuHandler->GetGameState() == GameState::ExitPauseMenu) // Resume game
 			{
 				menuHandler->SetGameState(GameState::SinglePlayer);
-			}
-			else if (menuHandler->GetGameState() == GameState::SinglePlayer) // Init Single player
-			{
-				IMGUI_CHECKVERSION();
-				ImGui::CreateContext();
-				ImGuiIO& io = ImGui::GetIO(); (void)io;
-				//Init Win32
-				ImGui_ImplWin32_Init(dynamic_cast<NCL::Win32Code::Win32Window*>(window)->GetHandle());
-				//Init OpenGL Imgui Implementation
-				ImGui_ImplOpenGL3_Init();
-				// Setup style
-				ImGui::StyleColorsClassic();
 			}
 		}
 		

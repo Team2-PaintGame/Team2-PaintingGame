@@ -14,7 +14,7 @@ namespace NCL {
 		class IntroScreen : public PushdownState
 		{
 		public:
-			IntroScreen(Window* window, PaintingGame* g);
+			IntroScreen(Window* window);
 			~IntroScreen();
 			PushdownResult OnUpdate(float dt, PushdownState** newState) override;
 			void OnAwake() override;
@@ -22,8 +22,11 @@ namespace NCL {
 		protected:
 			Window* window;
 			PaintingGame* paintingGame;
-
 			MenuHandler* menuHandler;
+
+			GameTechRenderer* renderer;
+			GameWorld* gameWorld;
+			reactphysics3d::PhysicsCommon* physicsCommon;
 		};
 
 	}
