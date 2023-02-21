@@ -1,6 +1,7 @@
 #include "SecurityGuard.h"
 #include <fstream>
 #include "Assets.h"
+#include <cmath>
 
 namespace NCL::CSC8508 {
 	SecurityGuard::SecurityGuard(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, std::string objectName, Vector3 position, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, Vector3 size, GameObject* player)
@@ -27,6 +28,7 @@ namespace NCL::CSC8508 {
 		FindNavigableNodes("GameMaze3.txt", navigableNodes);
 		navigationGrid = new NavigationGrid("GameMaze3.txt");
 		navigationPath = new NavigationPath();
+
 		InitBehaviorTree();
 
 
@@ -60,17 +62,14 @@ namespace NCL::CSC8508 {
 			state = Ongoing;
 		}
 		if (state == Ongoing) {
-			//	std::cout << "root Execution !\n";
 			state = rootSelector->Execute(dt);
 		}
 		if (state == Success) {
 			rootSelector->Reset();
 			state = Initialise;
-			//	std::cout << "What a successful adventure !\n";
 		}
 		if (state == Failure) {
 			state = Initialise;
-			//	std::cout << "What a waste of time !\n";
 		}
 
 	}
@@ -115,7 +114,7 @@ namespace NCL::CSC8508 {
 	{
 		chooseDestination = new BehaviourAction("Choose Destination ", [&](float dt, BehaviourState state)->BehaviourState {
 			if (state == Initialise) {
-				std::cout << "Choose Destination - Initialise\n";
+				//std::cout << "Choose Destination - Initialise\n";
 				state = Ongoing;
 			}
 
@@ -123,15 +122,13 @@ namespace NCL::CSC8508 {
 				Vector3 destination = ChooseDestination();
 				Vector3 securityPosition = this->GetTransform().GetPosition();
 				securityPosition = FindClosestNode(securityPosition);
-
 				bool foundPath = navigationGrid->FindPath(securityPosition, destination, *navigationPath);
-				std::cout << "Choose Destination - Found Path\n";
-
+				
+				//std::cout << "Choose Destination - Found Path\n";
 				return Success;
 			}
 			return state;
 			}
-
 		);
 	}
 
@@ -139,34 +136,42 @@ namespace NCL::CSC8508 {
 	{
 		goToDestination = new BehaviourAction("Go To Destination ", [&](float dt, BehaviourState state)->BehaviourState {
 			if (state == Initialise) {
-				std::cout << " Going to the destination - Initialise \n";
+				//std::cout << " Going to the destination - Initialise \n";
 				state = Ongoing;
 			}
 			else if (state == Ongoing) {
-
+				
 				Vector3 direction = navigationPath->waypoints.back() - this->GetTransform().GetPosition();
 				Vector3 velocity = rigidBody->getLinearVelocity();
-				std::cout << "Velocity = " << velocity.Length() << "\n";
+								
 				if (LookForPlayer()) {
 					navigationPath->Clear();
-					std::cout << " Going to the destination - Can see Player\n";
+					//std::cout << " Going to the destination - Can see Player\n";
 					return Success;
 				}
-				if (direction.Length() <= 3 && navigationPath->waypoints.size() >= 2) {
-					std::cout << " Going to the destination - Going Destination\n";
-					navigationPath->waypoints.pop_back();
-				}
-
-				if (navigationPath->waypoints.size() == 1) {
-					if (DistanceToTarget(navigationPath->waypoints.front()) <= 3.0f) {
-
-						std::cout << " Going to the destination - Reached Destination\n";
+				if (velocity.Length() < 0.1) {
+					//std::cout << "Velocity = " << velocity.Length() << "\n";
+					timeAccumulator += dt;
+					if (timeAccumulator > 5.0) {
+						timeAccumulator = 0.0f;
 						navigationPath->Clear();
 						return Success;
 					}
 				}
+				if (direction.Length() <= 4 && navigationPath->waypoints.size() >= 2) {
+			//		std::cout << " Going to the destination - Going Destination\n";
+					navigationPath->waypoints.pop_back();
+				}
+	
+				if (navigationPath->waypoints.size() == 1) {
+					if (DistanceToTarget(navigationPath->waypoints.front()) <= 3.0f) {
+						//std::cout << " Going to the destination - Reached Destination\n";
+						navigationPath->Clear();
+						return Success;
+					}
+				}
+				DetermineSpeed();
 				MoveSecurityGuard(direction);
-
 			}
 			return state;
 			}
@@ -183,14 +188,13 @@ namespace NCL::CSC8508 {
 
 				bool isPLayerVisible = LookForPlayer();
 				if (isPLayerVisible) {
-					std::cout << " Looking for Player - Can see Player\n";
+					//std::cout << " Looking for Player - Can see Player\n";
 					state = Success;
 				}
 				else {
-					std::cout << " Looking for Player - Player not visible\n";
+					//std::cout << " Looking for Player - Player not visible\n";
 					state = Failure;
 				}
-
 			}
 			return state;
 			}
@@ -207,29 +211,43 @@ namespace NCL::CSC8508 {
 				securityPosition = FindClosestNode(securityPosition);
 
 				navigationGrid->FindPath(securityPosition, playerPosition, *navigationPath);
-				std::cout << " Chase the Player - Path found\n";
+				//	std::cout << " Chase the Player - Path found\n";
 				state = Ongoing;
 			}
 			else if (state == Ongoing) {
 				Vector3 direction = navigationPath->waypoints.back() - this->GetTransform().GetPosition();
+				Vector3 nextDirection = (navigationPath->waypoints.back() - 1) - this->GetTransform().GetPosition();
+
+				timeAccumulator += dt;
+				if (timeAccumulator >= 1.5) {
+					bool isPlayerVisible = LookForPlayer();
+					//	std::cout << "1.5 seconds accumulated\n";
+					timeAccumulator = 0.0f;
+					if (isPlayerVisible) {
+						navigationPath->Clear();
+						return Failure;
+					}
+
+				}
+
 				if (direction.Length() <= 4 && navigationPath->waypoints.size() >= 2) {
 					navigationPath->waypoints.pop_back();
-					std::cout << " Chase the Player - Chasing player\n";
+					//	std::cout << " Chase the Player - Chasing player\n";
 				}
-				if ( navigationPath->waypoints.size() == 1) {
+				if (navigationPath->waypoints.size() == 1) {
 					if (DistanceToTarget(navigationPath->waypoints.back()) <= 4.0f) {
-						std::cout << " Chase the Player - Reached the player\n";
+						//		std::cout << " Chase the Player - Reached the player\n";
 						navigationPath->Clear();
+						timeAccumulator = 0.0f;
 						return Success;
 					}
 				}
+				DetermineSpeed();
 				MoveSecurityGuard(direction);
 			}
 			return state;
 			}
-
 		);
-
 	}
 		
 
@@ -268,7 +286,7 @@ namespace NCL::CSC8508 {
 	{
 		Vector3 securityPosition = this->GetTransform().GetPosition();
 		Vector3 playerPosition = player->GetTransform().GetPosition();
-		Debug::DrawLine(securityPosition, playerPosition, Debug::BLUE, 0.1f);
+		//Debug::DrawLine(securityPosition, playerPosition, Debug::BLUE, 0.1f);
 		reactphysics3d::Ray ray(~securityPosition, ~playerPosition); // '~' converts NCL Vector3 to reactphysics3d Vector3
 		reactphysics3d::RaycastInfo rayCastInfo;
 
@@ -312,7 +330,7 @@ namespace NCL::CSC8508 {
 		int numNodes = navigableNodes.size();
 		int randomNum = rand() % numNodes;
 		Vector3 destination = navigableNodes[randomNum];
-		std::cout << "ChooseDestination: " << destination << "\n";
+		//std::cout << "ChooseDestination: " << destination << "\n";
 		return destination;
 	}
 
@@ -326,10 +344,9 @@ namespace NCL::CSC8508 {
 
 	void SecurityGuard::MoveSecurityGuard(Vector3 direction)
 	{
-		float force = 100;
 		reactphysics3d::Vector3 forceDirection;
 		forceDirection = ~direction.Normalised();
-		this->GetRigidBody()->applyWorldForceAtCenterOfMass(forceDirection*force);// '~' converts NCL Vector3 to reactphysics3d Vector3
+		this->GetRigidBody()->applyWorldForceAtCenterOfMass(forceDirection * force);// '~' converts NCL Vector3 to reactphysics3d Vector3
 	}
 
 	float SecurityGuard::DistanceToTarget(Vector3 destination) 
@@ -349,7 +366,59 @@ namespace NCL::CSC8508 {
 		}
 		//	std::cout << "Closest Node: " << closestNode << "\n";
 		return closestNode;
+	}
+	void SecurityGuard::DetermineSpeed()
+	{
+		int numWaypoints = navigationPath->waypoints.size();
+		if(numWaypoints<1)
+		{
+			return;
+		}
+		if (numWaypoints == 1)
+		{
+			force = slowForce;
+			return;
+		}
+		if (numWaypoints == 2 || numWaypoints == 3)
+		{
+			force = walkForce;
+			return;
+		}
+		
+		vector<Vector3>::iterator it = navigationPath->waypoints.end() - 1;
+		if (numWaypoints >= 4)
+		{
+			Vector3 nextThreeWaypoints[3];
+			int i = 0;
+			for (it ; it != navigationPath->waypoints.end() - 4; --it)
+			{
+				nextThreeWaypoints[i] = *it;
+				++i;
+			}
+			Vector3 playerPos = this->GetTransform().GetPosition();
+			playerPos = FindClosestNode(playerPos);
+			Vector3 firstWaypointDirection, secondWaypointDirection, thirdWaypointDirection;
+			firstWaypointDirection = (nextThreeWaypoints[0] - playerPos).Normalised();
+			secondWaypointDirection = (nextThreeWaypoints[1] - playerPos).Normalised();
+			thirdWaypointDirection = (nextThreeWaypoints[2] - playerPos).Normalised();
 
+			if (firstWaypointDirection == secondWaypointDirection && secondWaypointDirection == thirdWaypointDirection) //Going in a straight line
+			{
+				force = runForce;
+				return;
+			}
+
+			if (firstWaypointDirection == secondWaypointDirection && secondWaypointDirection != thirdWaypointDirection) // third waypoint there is a turn
+			{
+				force = walkForce;
+				return;
+			}
+			if (firstWaypointDirection != secondWaypointDirection && secondWaypointDirection != thirdWaypointDirection) // second waypoint there is a turn
+			{
+				force = slowForce;
+				return;
+			}
+		}
 	}
 
 

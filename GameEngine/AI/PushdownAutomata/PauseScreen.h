@@ -13,6 +13,7 @@ namespace NCL {
 			~PauseScreen();
 			PushdownResult OnUpdate(float dt, PushdownState** newState) override;
 			void OnAwake() override;
+			void OnSleep() override;
 		protected:
 			bool selectExitOption;
 			PaintingGame* paintingGame;

@@ -43,6 +43,7 @@ namespace NCL::CSC8508 {
 		void MoveSecurityGuard(Vector3 direction);
 		float DistanceToTarget(Vector3 destination);
 		Vector3 FindClosestNode(Vector3 position);
+		void DetermineSpeed();
 
 		
 
@@ -52,6 +53,13 @@ namespace NCL::CSC8508 {
 		int nodeSize;
 		int gridWidth;
 		int gridHeight;
+
+		float force = 100;
+		const float slowForce = 100;
+		const float walkForce = 150;
+		const float runForce = 300;
+
+		float timeAccumulator = 0.0f;
 
 		BehaviourSelector* rootSelector;
 		BehaviourSequence* patrolSequence;
@@ -69,7 +77,6 @@ namespace NCL::CSC8508 {
 		reactphysics3d::PhysicsWorld* physicsWorld;
 
 		vector <Vector3> navigableNodes;
-		//Vector3 destination;
 		
 		NavigationGrid* navigationGrid;
 		NavigationPath* navigationPath;

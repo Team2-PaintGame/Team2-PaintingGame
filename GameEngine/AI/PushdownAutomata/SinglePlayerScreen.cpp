@@ -13,6 +13,7 @@ namespace NCL {
 			isPlayingGame = true;
 			this->window = window;
 			this->paintingGame = paintingGame;
+			
 		}
 		SinglePlayerScreen::~SinglePlayerScreen()
 		{
@@ -22,11 +23,7 @@ namespace NCL {
 		{
 			while (isPlayingGame)
 			{
-				/*Debug::DrawLine(Vector3(0.0,0.0,0.0), Vector3(0.0,0.0,100.0));
-				Debug::DrawLine(Vector3(0.0, 0.0, 0.0), Vector3(70.0, 0.0, 65.0));*/
-				Debug::DrawLine(Vector3(-75.0, 0.0, 65.0), Vector3(-75.0, 0.0, -75.0), Debug::RED);
-				Debug::DrawLine(Vector3(0.0, 0.0, 0.0), Vector3(-70, 5, -60));
-				
+			
 				if (dt > 0.1f) {
 					std::cout << "Skipping large time delta" << std::endl;
 					continue; //must have hit a breakpoint or something to have a 1 second frame time!
@@ -66,8 +63,11 @@ namespace NCL {
 		}
 		void SinglePlayerScreen::OnAwake()
 		{
-
+			window->LockMouseToWindow(true);
 		}
-
+		void SinglePlayerScreen::OnSleep()
+		{
+			window->LockMouseToWindow(false);
+		}
 	}
 }

@@ -192,11 +192,11 @@ void PaintingGame::InitWorld() {
 
 
 PlayerBase* PaintingGame::InitiliazePlayer() {
-	players[0] = new PlayerBase(physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 5);
+	players[0] = new PlayerBase(physicsCommon, physicsWorld, Vector3(10, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 5);
 	world->AddGameObject(players[0]);
 	playerControllers[0] = new PlayerController(world->GetMainCamera(), players[0]);
 
-	players[1] = new PlayerBase(physicsCommon, physicsWorld, Vector3(10, 10, 0), meshes.at("cubeMesh"), textures.at("basicTex"), shaders.at("basicShader"), 5);
+	players[1] = new PlayerBase(physicsCommon, physicsWorld, Vector3(95, 10, 0), meshes.at("cubeMesh"), textures.at("basicTex"), shaders.at("basicShader"), 5);
 	world->AddGameObject(players[1]);
 	playerControllers[1] = new PlayerController(world->GetSecondCamera(), players[1]);
 

@@ -56,7 +56,7 @@ int main() {
 	}
 
 	w->ShowOSPointer(true);
-//	w->LockMouseToWindow(true);
+	w->LockMouseToWindow(true);
 	w->GetTimer()->GetTimeDeltaSeconds(); //Clear the timer so we don't get a larget first dt!
 
 #if NETWORKING_ENABLED // For now, hiding network code behind this flag - Dovy

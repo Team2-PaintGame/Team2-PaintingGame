@@ -45,8 +45,11 @@ namespace NCL {
 		}
 		void PauseScreen::OnAwake()
 		{
-
+			
 		}
-
+		void PauseScreen::OnSleep()
+		{
+		
+		}
 	}
 }
