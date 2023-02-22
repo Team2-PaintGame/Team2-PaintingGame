@@ -14,7 +14,7 @@ namespace NCL {
 	class MenuHandler
 	{
 	public:
-		MenuHandler() = default;
+		MenuHandler();
 
 		void Update(float dt);
 

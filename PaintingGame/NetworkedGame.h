@@ -60,6 +60,12 @@ namespace NCL {
 			int ClientPlayerID;
 
 			bool connected = false;
+
+			MenuHandler* menuHandler;
+			GameTechRenderer* renderer;
+			GameWorld* gameWorld;
+			reactphysics3d::PhysicsCommon* physicsCommon;
+
 		};
 	}
 }

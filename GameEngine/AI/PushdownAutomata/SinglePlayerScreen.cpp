@@ -33,11 +33,6 @@ namespace NCL {
 		SinglePlayerScreen::~SinglePlayerScreen()
 		{
 			delete paintingGame;
-
-			// Cleanup
-			ImGui_ImplOpenGL3_Shutdown();
-			ImGui_ImplWin32_Shutdown();
-			ImGui::DestroyContext();
 		}
 		PushdownState::PushdownResult SinglePlayerScreen::OnUpdate(float dt, PushdownState** newState)
 		{

@@ -10,7 +10,7 @@ namespace NCL {
 		class LanScreen : public PushdownState
 		{
 		public:
-			LanScreen(Window* window, MenuHandler* menu);
+			LanScreen(Window* window, GameTechRenderer* rend, GameWorld* gameWorld, reactphysics3d::PhysicsCommon* physicsCommon, MenuHandler* menu);
 			~LanScreen();
 			PushdownResult OnUpdate(float dt, PushdownState** newState) override;
 			void OnAwake() override;
@@ -19,6 +19,10 @@ namespace NCL {
 			Window* window;
 			NetworkedGame* paintingGame;
 			MenuHandler* menuHandler;
+
+			GameTechRenderer* renderer;
+			GameWorld* gameWorld;
+			reactphysics3d::PhysicsCommon* physicsCommon;
 		};
 
 	}

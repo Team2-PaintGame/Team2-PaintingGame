@@ -19,7 +19,15 @@ struct MessagePacket : public GamePacket {
 	}
 };
 
-NetworkedGame::NetworkedGame(Window* window, GameTechRenderer* rend, GameWorld* gameWorld, reactphysics3d::PhysicsCommon* physicsCommon, MenuHandler* menu) : PaintingGame(menu, true) {
+NetworkedGame::NetworkedGame(Window* window, GameTechRenderer* rend, GameWorld* gameWorld, reactphysics3d::PhysicsCommon* physicsCommon, MenuHandler* menu) : PaintingGame(renderer,gameWorld,physicsWorld, physicsCommon,menuHandler, true) {
+	
+	this->menuHandler = menu;
+	this->renderer = rend;
+	this->gameWorld = gameWorld;
+	this->physicsCommon = physicsCommon;
+
+	reactphysics3d::PhysicsWorld* physicsWorld = physicsCommon->createPhysicsWorld();
+
 	thisServer = nullptr;
 	thisClient = nullptr;
 

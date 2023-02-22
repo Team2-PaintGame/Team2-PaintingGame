@@ -65,15 +65,7 @@ int main() {
 
 	w->GetTimer()->GetTimeDeltaSeconds(); //Clear the timer so we don't get a larget first dt!
 
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
-	//Init Win32
-	ImGui_ImplWin32_Init(dynamic_cast<NCL::Win32Code::Win32Window*>(w)->GetHandle());
-	//Init OpenGL Imgui Implementation
-	ImGui_ImplOpenGL3_Init();
-	// Setup style
-	ImGui::StyleColorsClassic();
+	
 
 	//PushdownAutomata(w, paintingGame);
 	PushdownAutomata(w);

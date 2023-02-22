@@ -5,6 +5,9 @@
 #include "GameTechRenderer.h"
 #include <iostream>
 #include "MenuHandler.h"
+#include <imgui_impl_win32.h>
+#include <imgui_impl_opengl3.h>
+#include <Win32Window.h>
 
 
 
@@ -22,12 +25,24 @@ namespace NCL {
 			menuHandler = new MenuHandler();
 			renderer = new GameTechRenderer(*(this->gameWorld), physicsWorld);
 
+			IMGUI_CHECKVERSION();
+			ImGui::CreateContext();
+			ImGuiIO& io = ImGui::GetIO(); (void)io;
+			//Init Win32
+			ImGui_ImplWin32_Init(dynamic_cast<NCL::Win32Code::Win32Window*>(window)->GetHandle());
+			//Init OpenGL Imgui Implementation
+			ImGui_ImplOpenGL3_Init();
+			// Setup style
+			ImGui::StyleColorsClassic();
+
 			paintingGame = new PaintingGame(renderer, gameWorld, physicsWorld, physicsCommon, menuHandler, false);
 		}
 		IntroScreen::~IntroScreen()
 		{
 			delete paintingGame;
 			delete menuHandler;
+			delete renderer;
+			delete gameWorld;
 		}
 		PushdownState::PushdownResult IntroScreen::OnUpdate(float dt, PushdownState** newState)
 		{
@@ -47,7 +62,7 @@ namespace NCL {
 				}break;
 
 				case GameState::LAN: {
-					*newState = new LanScreen(window, menuHandler);
+					*newState = new LanScreen(window,renderer,gameWorld,physicsCommon, menuHandler);
 					return PushdownResult::Push; // Add in when we have LAN game created
 				}break;
 

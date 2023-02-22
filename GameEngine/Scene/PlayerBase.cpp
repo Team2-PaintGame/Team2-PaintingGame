@@ -26,6 +26,10 @@ PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysic
 void PlayerBase::Update(float dt) {}
 
 PlayerBase::~PlayerBase() {
+	if (rigidBody) {
+		physicsWorld->destroyRigidBody(rigidBody);
+	}
+
 	physicsCommon.destroyBoxShape(boundingVolume);
 }
 

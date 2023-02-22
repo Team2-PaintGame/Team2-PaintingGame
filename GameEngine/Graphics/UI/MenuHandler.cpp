@@ -5,6 +5,9 @@
 
 namespace NCL {
 
+	MenuHandler::MenuHandler() {
+	}
+
 	GameState MenuHandler::GetGameState()
 	{
 		return gameState;

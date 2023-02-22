@@ -11,7 +11,7 @@ namespace NCL {
 		{
 		public:
 			SinglePlayerScreen(Window* window, GameTechRenderer* rend, GameWorld* gameWorld, reactphysics3d::PhysicsCommon* physicsCommon, MenuHandler* menu);
-			SinglePlayerScreen(PaintingGame* paintingGame, MenuHandler* menu);
+			//SinglePlayerScreen(PaintingGame* paintingGame, MenuHandler* menu);
 			~SinglePlayerScreen();
 			PushdownResult OnUpdate(float dt, PushdownState** newState) override;
 			void OnAwake() override;
