@@ -5,7 +5,10 @@ namespace NCL {
 		MainMenu,
 		SinglePlayer,
 		SplitScreen,
+		LANMenu,
 		LAN,
+		Server,
+		Client,
 		PauseMenu,
 		ExitPauseMenu,
 		ExitGame
@@ -23,6 +26,7 @@ namespace NCL {
 	private:
 		void ShowMainMenuWindow();
 		void ShowPauseMenuWindow();
+		void ShowLanMenuWindow();
 
 	private:
 		//Pushdown Automata Game States

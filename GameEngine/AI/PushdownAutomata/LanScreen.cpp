@@ -17,9 +17,15 @@ namespace NCL {
 			this->gameWorld = gameWorld;
 			this->physicsCommon = physicsCommon;
 			menuHandler->SetGameState(GameState::LAN);
-
 			this->paintingGame = new NetworkedGame(window,renderer,gameWorld,physicsCommon, menuHandler);
 			paintingGame->GetGameTechRenderer()->SetRenderMode(GameTechRenderer::RenderMode::SingleViewport);
+
+			if (menuHandler->GetGameState() == GameState::Server) {
+				paintingGame->StartAsServer();
+			}
+			else {
+				paintingGame->StartAsClient(127,0,0,1);
+			}
 		}
 		LanScreen::~LanScreen()
 		{
@@ -65,7 +71,10 @@ namespace NCL {
 		}
 		void LanScreen::OnAwake()
 		{
-
+			if (menuHandler->GetGameState() == GameState::ExitPauseMenu) // Resume game
+			{
+				menuHandler->SetGameState(GameState::LAN);
+			}
 		}
 	}
 }

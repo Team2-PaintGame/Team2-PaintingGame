@@ -22,27 +22,14 @@ namespace NCL {
 			menuHandler->SetGameState(GameState::SplitScreen);
 
 
-			this->paintingGame = new PaintingGame(renderer,gameWorld,physicsWorld,physicsCommon, menuHandler,false);
+			this->paintingGame = new PaintingGame(renderer,gameWorld,physicsCommon, menuHandler,false);
 			paintingGame->GetGameTechRenderer()->SetRenderMode(GameTechRenderer::RenderMode::SplitScreen);
 
-			IMGUI_CHECKVERSION();
-			ImGui::CreateContext();
-			ImGuiIO& io = ImGui::GetIO(); (void)io;
-			//Init Win32
-			//ImGui_ImplWin32_Init(dynamic_cast<NCL::Win32Code::Win32Window*>(window)->GetHandle());
-			//Init OpenGL Imgui Implementation
-			ImGui_ImplOpenGL3_Init();
-			// Setup style
-			//ImGui::StyleColorsClassic();
+			
 		}
 		SplitScreen::~SplitScreen()
 		{
 			delete paintingGame;
-
-			// Cleanup
-			ImGui_ImplOpenGL3_Shutdown();
-			ImGui_ImplWin32_Shutdown();
-			ImGui::DestroyContext();
 		}
 		PushdownState::PushdownResult SplitScreen::OnUpdate(float dt, PushdownState** newState)
 		{
@@ -84,8 +71,15 @@ namespace NCL {
 		}
 		void SplitScreen::OnAwake()
 		{
-			paintingGame->InitSecondPlayer();
-			paintingGame->InitSecondCamera();
+			if (menuHandler->GetGameState() == GameState::ExitPauseMenu) // Resume game
+			{
+				menuHandler->SetGameState(GameState::SplitScreen);
+			}
+			else {
+				paintingGame->InitSecondPlayer();
+				paintingGame->InitSecondCamera();
+			}
+			
 		}
 
 		void SplitScreen::OnSleep() {

@@ -35,7 +35,7 @@ namespace NCL {
 			// Setup style
 			ImGui::StyleColorsClassic();
 
-			paintingGame = new PaintingGame(renderer, gameWorld, physicsWorld, physicsCommon, menuHandler, false);
+			paintingGame = new PaintingGame(renderer, gameWorld, physicsCommon, menuHandler, false);
 		}
 		IntroScreen::~IntroScreen()
 		{
@@ -62,6 +62,14 @@ namespace NCL {
 				}break;
 
 				case GameState::LAN: {
+					//*newState = new LanScreen(window,renderer,gameWorld,physicsCommon, menuHandler);
+					return PushdownResult::NoChange; // Add in when we have LAN game created
+				}break;
+				case GameState::Server: {
+					*newState = new LanScreen(window,renderer,gameWorld,physicsCommon, menuHandler);
+					return PushdownResult::Push; // Add in when we have LAN game created
+				}break;
+				case GameState::Client: {
 					*newState = new LanScreen(window,renderer,gameWorld,physicsCommon, menuHandler);
 					return PushdownResult::Push; // Add in when we have LAN game created
 				}break;

@@ -20,7 +20,7 @@ namespace NCL {
 
 			reactphysics3d::PhysicsWorld* physicsWorld = physicsCommon->createPhysicsWorld();
 
-			paintingGame = new PaintingGame(renderer, gameWorld, physicsWorld, physicsCommon, menuHandler, false);
+			paintingGame = new PaintingGame(renderer, gameWorld, physicsCommon, menuHandler, false);
 			paintingGame->GetGameTechRenderer()->SetRenderMode(GameTechRenderer::RenderMode::SingleViewport);
 
 			//TODO: Set renderer's physics world

@@ -19,11 +19,20 @@ namespace NCL {
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplWin32_NewFrame();
 		ImGui::NewFrame();
-		if (gameState == MainMenu) {
+		switch (gameState)
+		{
+		case MainMenu:
 			ShowMainMenuWindow();
-		}
-		if (gameState == PauseMenu) {
+			break;
+		case PauseMenu:
 			ShowPauseMenuWindow();
+			break;
+		case LANMenu:
+			ShowLanMenuWindow();
+			break;
+		default:
+			//ShowMainMenuWindow();
+			break;
 		}
 		ImGui::EndFrame();
 	}
@@ -51,8 +60,9 @@ namespace NCL {
 		}
 		if (ImGui::Button("LAN"))
 		{
-			//SetGameState(LAN);
+			SetGameState(LANMenu);
 		}
+
 		if (ImGui::Button("Exit"))
 		{
 			SetGameState(ExitGame);
@@ -62,8 +72,9 @@ namespace NCL {
 
 	void MenuHandler::ShowPauseMenuWindow()
 	{
-		bool isMainMenu = (gameState == MainMenu);
-		ImGui::Begin("Pause Menu", &isMainMenu);
+		bool isPauseMenu = (gameState == PauseMenu);
+		
+		ImGui::Begin("Pause Menu", &isPauseMenu);
 		if (ImGui::Button("Resume"))
 		{
 			SetGameState(ExitPauseMenu);
@@ -71,6 +82,25 @@ namespace NCL {
 		if (ImGui::Button("Toggle Debug Info"))
 		{
 			//ToggleDebugInfo();
+		}
+		if (ImGui::Button("Exit to Main Menu"))
+		{
+			SetGameState(MainMenu);
+		}
+		ImGui::End();
+	}
+	void MenuHandler::ShowLanMenuWindow()
+	{
+		bool isLANMainMenu = (gameState == LANMenu);
+
+		ImGui::Begin("Pause Menu", &isLANMainMenu);
+		if (ImGui::Button("Server"))
+		{
+			SetGameState(Server);
+		}
+		if (ImGui::Button("Client"))
+		{
+			SetGameState(Client);
 		}
 		if (ImGui::Button("Exit to Main Menu"))
 		{
