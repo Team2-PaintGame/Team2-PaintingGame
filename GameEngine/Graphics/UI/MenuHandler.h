@@ -5,7 +5,6 @@ namespace NCL {
 		MainMenu,
 		SinglePlayer,
 		SplitScreen,
-		LANMenu,
 		LAN,
 		Server,
 		Client,

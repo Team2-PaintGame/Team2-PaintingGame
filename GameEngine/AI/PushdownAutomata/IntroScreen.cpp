@@ -61,10 +61,6 @@ namespace NCL {
 					return PushdownResult::Push;
 				}break;
 
-				case GameState::LAN: {
-					//*newState = new LanScreen(window,renderer,gameWorld,physicsCommon, menuHandler);
-					return PushdownResult::NoChange; // Add in when we have LAN game created
-				}break;
 				case GameState::Server: {
 					*newState = new LanScreen(window,renderer,gameWorld,physicsCommon, menuHandler);
 					return PushdownResult::Push; // Add in when we have LAN game created

@@ -16,16 +16,11 @@ namespace NCL {
 			this->renderer = rend;
 			this->gameWorld = gameWorld;
 			this->physicsCommon = physicsCommon;
-			menuHandler->SetGameState(GameState::LAN);
+			//menuHandler->SetGameState(GameState::LAN);
 			this->paintingGame = new NetworkedGame(window,renderer,gameWorld,physicsCommon, menuHandler);
 			paintingGame->GetGameTechRenderer()->SetRenderMode(GameTechRenderer::RenderMode::SingleViewport);
 
-			if (menuHandler->GetGameState() == GameState::Server) {
-				paintingGame->StartAsServer();
-			}
-			else {
-				paintingGame->StartAsClient(127,0,0,1);
-			}
+			
 		}
 		LanScreen::~LanScreen()
 		{
@@ -33,7 +28,14 @@ namespace NCL {
 		}
 		PushdownState::PushdownResult LanScreen::OnUpdate(float dt, PushdownState** newState)
 		{
-			if (dt > 0.1f) {
+			if (menuHandler->GetGameState() == GameState::Server) {
+				paintingGame->StartAsServer();
+			}
+			else if (menuHandler->GetGameState() == GameState::Client) {
+				paintingGame->StartAsClient(127, 0, 0, 1);
+			}
+
+			if (dt > 5.0f) {
 				std::cout << "Skipping large time delta" << std::endl;
 				return PushdownResult::NoChange; //must have hit a breakpoint or something to have a 1 second frame time!
 			}
@@ -54,7 +56,10 @@ namespace NCL {
 
 			GameState gameState = menuHandler->GetGameState();
 			switch (gameState) {
-			case GameState::LAN: {
+			case GameState::Server: {
+				return PushdownResult::NoChange;
+			}	break;
+			case GameState::Client: {
 				return PushdownResult::NoChange;
 			}	break;
 
@@ -71,10 +76,10 @@ namespace NCL {
 		}
 		void LanScreen::OnAwake()
 		{
-			if (menuHandler->GetGameState() == GameState::ExitPauseMenu) // Resume game
-			{
-				menuHandler->SetGameState(GameState::LAN);
-			}
+			//if (menuHandler->GetGameState() == GameState::ExitPauseMenu) // Resume game
+			//{
+			//	menuHandler->SetGameState(GameState::Server);
+			//}
 		}
 	}
 }

@@ -27,7 +27,7 @@ namespace NCL {
 		case PauseMenu:
 			ShowPauseMenuWindow();
 			break;
-		case LANMenu:
+		case LAN:
 			ShowLanMenuWindow();
 			break;
 		default:
@@ -60,7 +60,7 @@ namespace NCL {
 		}
 		if (ImGui::Button("LAN"))
 		{
-			SetGameState(LANMenu);
+			SetGameState(LAN);
 		}
 
 		if (ImGui::Button("Exit"))
@@ -91,7 +91,7 @@ namespace NCL {
 	}
 	void MenuHandler::ShowLanMenuWindow()
 	{
-		bool isLANMainMenu = (gameState == LANMenu);
+		bool isLANMainMenu = (gameState == LAN);
 
 		ImGui::Begin("Pause Menu", &isLANMainMenu);
 		if (ImGui::Button("Server"))
