@@ -13,6 +13,8 @@ https://research.ncl.ac.uk/game/
 #include "Maths.h"
 #include "PlayerBase.h"
 
+class Gamepad;
+
 namespace NCL {
 	using namespace NCL::Maths;
 	enum class CameraType {
@@ -26,11 +28,13 @@ namespace NCL {
 	class Camera {
 	public:
 		Camera(void) = default;
+		Camera(Gamepad* gamepad);
 		void SetBasicCameraParameters(float pitch, float yaw, const Vector3& position, float znear = 1.0f, float zfar = 100.0f);
 		void SetFirstPersonCamera();
 		void SetThirdPersonCamera(PlayerBase* player);
 		void SetPerspectiveCameraParameters(float aspect, float fov = 45.0f);
 		void SetOrthographicCameraParameters(float right, float left, float top, float bottom);
+		void SetGamePad(Gamepad* gamepad);
 		~Camera(void) = default;
 
 		void UpdateCamera(float dt);
@@ -72,5 +76,7 @@ namespace NCL {
 		//third person camera params
 		Vector3 offsetFromPlayer = Vector3(0, 3.0f, 13);
 		PlayerBase* player = NULL;
+
+		Gamepad* gamepad = NULL;
 	};
 }

@@ -128,6 +128,16 @@ PaintingGame::~PaintingGame() {
 
 void PaintingGame::UpdateGame(float dt) {
 	world->GetMainCamera()->UpdateCamera(dt);
+
+	if (thirdPersonCamera)
+	{
+		for (int i = 0; i < numberOfPlayerControllers; i++)
+		{
+			playerControllers[i]->Update(dt);
+		}
+
+	}
+
 	players[0]->Update(dt);
 	if (renderer->GetGameState() == GameTechRenderer::GameState::SplitScreen)
 	{
@@ -138,38 +148,12 @@ void PaintingGame::UpdateGame(float dt) {
 		numberOfPlayerControllers = 1;
 	}
 
-	if (thirdPersonCamera)
-	{
-		for (int i = 0; i < numberOfPlayerControllers; i++)
-		{
-			playerControllers[i]->Update(dt);
-		}
 	
-	}
 	renderer->Render();
 	world->UpdateWorld(dt);
 	renderer->Update(dt);
 	physicsWorld->update(dt);
 	Debug::UpdateRenderables(dt);
-
-	if (!gamepad->Refresh())
-	{
-		if (wasConnected)
-		{
-			wasConnected = false;
-
-			std::cout << "Please connect an Xbox 360 controller." << std::endl;
-		}
-	}
-	else
-	{
-		if (!wasConnected)
-		{
-			wasConnected = true;
-
-			std::cout << "Controller connected on port " << gamepad->GetPort() << std::endl;
-		}
-	}
 }
 
 void PaintingGame::InitCamera()
@@ -217,7 +201,7 @@ PlayerBase* PaintingGame::InitiliazePlayer() {
 	
 
 	world->AddGameObject(players[0]);
-	playerControllers[0] = new PlayerController(world->GetMainCamera(), players[0]);
+	playerControllers[0] = new PlayerController(world->GetMainCamera(), players[0],NULL);
 
 	return players[0];
 }
@@ -242,7 +226,7 @@ PlayerBase* PaintingGame::InitSecondPlayer() {
 	animController->SetTauntAnimation(meshAnimations.at("mainCharTauntAnim"));
 	players[1] = new PlayerBase(physicsCommon, physicsWorld, Vector3(10, 10, 0), meshes.at("mainChar"), textures.at("basicTex"), animController, shaders.at("skinningShader"), 5);
 	world->AddGameObject(players[1]);
-	playerControllers[1] = new PlayerController(world->GetSecondCamera(), players[1]);
+	playerControllers[1] = new PlayerController(world->GetSecondCamera(), players[1], gamePad);
 
 	return players[1];
 }
@@ -251,6 +235,7 @@ void PaintingGame::InitSecondCamera() {
 
 	if (thirdPersonCamera) {
 		world->GetSecondCamera()->SetThirdPersonCamera(players[1]);
+		world->GetSecondCamera()->SetGamePad(gamePad);
 	}
 	else {
 		world->GetSecondCamera()->SetFirstPersonCamera();
