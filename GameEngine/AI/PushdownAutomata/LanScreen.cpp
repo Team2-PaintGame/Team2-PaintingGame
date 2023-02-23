@@ -20,6 +20,12 @@ namespace NCL {
 			this->paintingGame = new NetworkedGame(window,renderer,gameWorld,physicsCommon, menuHandler);
 			paintingGame->GetGameTechRenderer()->SetRenderMode(GameTechRenderer::RenderMode::SingleViewport);
 
+			if (menuHandler->GetGameState() == GameState::Server) {
+				paintingGame->StartAsServer();
+			}
+			else if (menuHandler->GetGameState() == GameState::Client) {
+				paintingGame->StartAsClient(127, 0, 0, 1);
+			}
 			
 		}
 		LanScreen::~LanScreen()
@@ -28,12 +34,7 @@ namespace NCL {
 		}
 		PushdownState::PushdownResult LanScreen::OnUpdate(float dt, PushdownState** newState)
 		{
-			if (menuHandler->GetGameState() == GameState::Server) {
-				paintingGame->StartAsServer();
-			}
-			else if (menuHandler->GetGameState() == GameState::Client) {
-				paintingGame->StartAsClient(127, 0, 0, 1);
-			}
+			
 
 			if (dt > 5.0f) {
 				std::cout << "Skipping large time delta" << std::endl;
