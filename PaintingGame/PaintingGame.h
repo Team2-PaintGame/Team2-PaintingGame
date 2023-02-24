@@ -15,6 +15,7 @@
 #include <reactphysics3d/reactphysics3d.h>
 
 class Gamepad;
+class AnimationController;
 
 namespace NCL {
 	class MenuHandler;
@@ -80,6 +81,8 @@ namespace NCL {
 
 			//UI
 			MenuHandler* menuHandler;
+
+			AnimationController* animController;
 		};
 	}
 }

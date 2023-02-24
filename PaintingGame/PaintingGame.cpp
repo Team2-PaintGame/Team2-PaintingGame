@@ -4,6 +4,7 @@
 #include "Box.h"
 #include "Floor.h"
 #include "InputController.h"
+#include "AnimationController.h"
 #include "MenuHandler.h"
 
 using namespace NCL;
@@ -17,6 +18,7 @@ PaintingGame::PaintingGame(GameTechRenderer* render, GameWorld* game_world, reac
 {
 	world = game_world;
 	gamepad = new Gamepad();
+	animController = new AnimationController();
 
 	/* Code for changing physics system paramaters
 	// Create the world settings 
@@ -54,6 +56,7 @@ for this module, even in the coursework, but you can add it if you like!
 */
 void PaintingGame::InitialiseAssets() {
 	meshes.insert(std::make_pair("cubeMesh", renderer->LoadMesh("cube.msh")));
+	meshes.insert(std::make_pair("mainChar", renderer->LoadMesh("Male_Guard.msh")));
 	meshes.insert(std::make_pair("sphereMesh", renderer->LoadMesh("sphere.msh")));
 	meshes.insert(std::make_pair("goatMesh", renderer->LoadMesh("goat.msh")));
 	meshes.insert(std::make_pair("enemyMesh", renderer->LoadMesh("Keeper.msh")));
@@ -62,7 +65,14 @@ void PaintingGame::InitialiseAssets() {
 	meshes.insert(std::make_pair("terrainMesh", renderer->LoadHeightMap("noise.png")));
 
 	meshMaterials.insert(std::make_pair("goatMat", new MeshMaterial("goat.mat")));
+	meshMaterials.insert(std::make_pair("mainCharMat", new MeshMaterial("goat.mat")));
 	//meshMaterials.at("goatMat")->LoadTextures();
+	//meshMaterials.at("mainCharMat")->LoadTextures();
+
+	meshAnimations.insert(std::make_pair("mainCharTauntAnim", new MeshAnimation("Taunt.anm")));
+	meshAnimations.insert(std::make_pair("mainCharIdleAnim", new MeshAnimation("Idle1.anm")));
+	meshAnimations.insert(std::make_pair("mainCharRunAnim", new MeshAnimation("StepForward.anm")));
+
 
 	textures.insert(std::make_pair("basicTex", renderer->LoadTexture("checkerboard.png")));
 	textures.insert(std::make_pair("grassTex", renderer->LoadTexture("grass.jpg")));
@@ -123,7 +133,17 @@ PaintingGame::~PaintingGame() {
 void PaintingGame::UpdateGame(float dt) {
 	world->GetMainCamera()->UpdateCamera(dt);
 
-	if (menuHandler->GetGameState() == GameState::SplitScreen)
+	if (thirdPersonCamera)
+	{
+		for (int i = 0; i < numberOfPlayerControllers; i++)
+		{
+			playerControllers[i]->Update(dt);
+		}
+
+	}
+
+	players[0]->Update(dt);
+	if (renderer->GetGameState() == GameTechRenderer::GameState::SplitScreen)
 	{
 		numberOfPlayerControllers = 2;
 		world->GetSecondCamera()->UpdateCamera(dt);
@@ -132,12 +152,6 @@ void PaintingGame::UpdateGame(float dt) {
 		numberOfPlayerControllers = 1;
 	}
 
-	if (thirdPersonCamera)
-	{
-		for (int i = 0; i < numberOfPlayerControllers; i++)
-		{
-			playerControllers[i]->Update(dt);
-		}
 	
 	}
 	menuHandler->Update(dt);
@@ -146,25 +160,6 @@ void PaintingGame::UpdateGame(float dt) {
 	renderer->Update(dt);
 	physicsWorld->update(dt);
 	Debug::UpdateRenderables(dt);
-
-	if (!gamepad->Refresh())
-	{
-		if (wasConnected)
-		{
-			wasConnected = false;
-
-			std::cout << "Please connect an Xbox 360 controller." << std::endl;
-		}
-	}
-	else
-	{
-		if (!wasConnected)
-		{
-			wasConnected = true;
-
-			std::cout << "Controller connected on port " << gamepad->GetPort() << std::endl;
-		}
-	}
 }
 
 void PaintingGame::InitCamera()
@@ -205,16 +200,23 @@ void PaintingGame::InitWorld() {
 
 
 PlayerBase* PaintingGame::InitiliazePlayer() {
-	players[0] = new PlayerBase(*physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 5);
+	animController->SetIdleAnimation(meshAnimations.at("mainCharIdleAnim"));
+	animController->SetRunAnimation(meshAnimations.at("mainCharRunAnim"));
+	animController->SetTauntAnimation(meshAnimations.at("mainCharTauntAnim"));
+	players[0] = new PlayerBase(physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("mainChar"), textures.at("basicTex"), animController, shaders.at("skinningShader"), 5);
+	
+
 	world->AddGameObject(players[0]);
-	playerControllers[0] = new PlayerController(world->GetMainCamera(), players[0]);
+	playerControllers[0] = new PlayerController(world->GetMainCamera(), players[0],NULL);
 
 	return players[0];
 }
 
 PlayerBase* PaintingGame::InitialiseNetworkPlayer() {
-	
-	netPlayer = new PlayerBase(*physicsCommon, physicsWorld, Vector3(0, 50, 10), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 5);
+	animController->SetIdleAnimation(meshAnimations.at("mainCharIdleAnim"));
+	animController->SetRunAnimation(meshAnimations.at("mainCharRunAnim"));
+	animController->SetTauntAnimation(meshAnimations.at("mainCharTauntAnim"));
+	netPlayer = new PlayerBase(physicsCommon, physicsWorld, Vector3(0, 50, 10), meshes.at("mainChar"), textures.at("basicTex"), animController, shaders.at("skinningShader"), 5);
 	world->AddGameObject(netPlayer);
 	return netPlayer;
 }
@@ -225,9 +227,12 @@ GameTechRenderer* PaintingGame::GetGameTechRenderer()
 }
 
 PlayerBase* PaintingGame::InitSecondPlayer() {
-	players[1] = new PlayerBase(*physicsCommon, physicsWorld, Vector3(10, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 5);
+	animController->SetIdleAnimation(meshAnimations.at("mainCharIdleAnim"));
+	animController->SetRunAnimation(meshAnimations.at("mainCharRunAnim"));
+	animController->SetTauntAnimation(meshAnimations.at("mainCharTauntAnim"));
+	players[1] = new PlayerBase(physicsCommon, physicsWorld, Vector3(10, 10, 0), meshes.at("mainChar"), textures.at("basicTex"), animController, shaders.at("skinningShader"), 5);
 	world->AddGameObject(players[1]);
-	playerControllers[1] = new PlayerController(world->GetSecondCamera(), players[1]);
+	playerControllers[1] = new PlayerController(world->GetSecondCamera(), players[1], gamePad);
 
 	return players[1];
 }
@@ -236,6 +241,7 @@ void PaintingGame::InitSecondCamera() {
 
 	if (thirdPersonCamera) {
 		world->GetSecondCamera()->SetThirdPersonCamera(players[1]);
+		world->GetSecondCamera()->SetGamePad(gamePad);
 	}
 	else {
 		world->GetSecondCamera()->SetFirstPersonCamera();

@@ -110,9 +110,7 @@ void NCL::CSC8508::GameTechRenderer::RenderInSingleViewport()
 	RenderDebugInformation(isDebugInfo);
 	glViewport(0, 0, windowWidth, windowHeight);
 	RenderSkybox(*gameWorld.GetMainCamera());
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	RenderCamera(*gameWorld.GetMainCamera());
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	RenderHUD();
 	glDisable(GL_CULL_FACE); //Todo - text indices are going the wrong way...
 	glDisable(GL_BLEND);
@@ -414,12 +412,12 @@ void GameTechRenderer::ShowPauseMenuWindow()
 
 
 void GameTechRenderer::RenderCamera(Camera& cam) {
-	if (settings.GetIsWireFrameModeEnabled()) {
+	/*if (settings.GetIsWireFrameModeEnabled()) {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
 	else {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	}
+	}*/
 	//float screenAspect = (float)windowWidth / (float)windowHeight;
 	Matrix4 viewMatrix = cam.BuildViewMatrix();
 	Matrix4 projMatrix = cam.BuildProjectionMatrix();
@@ -451,7 +449,7 @@ void GameTechRenderer::RenderCamera(Camera& cam) {
 		OGLShader* shader = (OGLShader*)(*i).GetShader();
 		BindShader(shader);
 
-		//BindTextureToShader((OGLTexture*)(*i).GetDefaultTexture(), "mainTex", 0);
+		BindTextureToShader((OGLTexture*)(*i).GetDefaultTexture(), "mainTex", 0);
 		/*std::vector<TextureBase*> textures = (*i).GetTextures();
 		for (const auto& texture : textures) {
 			BindTextureToShader(texture, "mainTex", 0);
@@ -514,19 +512,21 @@ void GameTechRenderer::RenderCamera(Camera& cam) {
 
 		glUniform1i(hasVColLocation, !(*i).GetMesh()->GetColourData().empty());
 
+		glUniform1i(hasTexLocation, (OGLTexture*)(*i).GetDefaultTexture() ? 1 : 0);
 
+		
 		BindMesh((*i).GetMesh());
-		int layerCount = (*i).GetMesh()->GetSubMeshCount();
-		for (int index = 0; index < layerCount; ++index) {
+		int layercount = (*i).GetMesh()->GetSubMeshCount();
+		for (int index = 0; index < layercount; ++index) {
 
 			glUniform1i(hasTexLocation, i->GetTextures(index).size() ? 1 : 0);
 
 			//for the current submesh, get the vector of textures and send them to shader
-			std::vector<std::pair<std::string, TextureBase*>> subMeshTextures = i->GetTextures(index);
-			int texUnit = 2;
-			for (const auto& texturePairs : subMeshTextures) {
-				BindTextureToShader(texturePairs.second, texturePairs.first, texUnit);
-				texUnit++;
+			std::vector<std::pair<std::string, TextureBase*>> submeshtextures = i->GetTextures(index);
+			int texunit = 2;
+			for (const auto& texturepairs : submeshtextures) {
+				BindTextureToShader(texturepairs.second, texturepairs.first, texunit);
+				texunit++;
 			}
 			DrawBoundMesh(index);
 		}
@@ -536,7 +536,7 @@ void GameTechRenderer::RenderCamera(Camera& cam) {
 			glUniformMatrix4fv(jointsLocation, frameMatrices.size(), false, (float*)frameMatrices.data());
 		}
 	}
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
 MeshGeometry* GameTechRenderer::LoadMesh(const string& name) {

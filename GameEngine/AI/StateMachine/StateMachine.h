@@ -19,12 +19,15 @@ namespace NCL {
 			void AddTransition(StateTransition* t);
 
 			virtual void Update(float dt); //made it virtual!
+			//virtual void IsStateChanged(StateUpdateFunction func);
 
 		protected:
 			State * activeState;
 
 			std::vector<State*> allStates;
 			TransitionContainer allTransitions;
+
+			//StateUpdateFunction func;
 		};
 	}
 }
