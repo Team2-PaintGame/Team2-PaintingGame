@@ -76,7 +76,7 @@ namespace NCL {
 
 			int numberOfPlayerControllers = 1;
 
-			Gamepad* gamepad = NULL;
+			Gamepad* gamePad = NULL;
 			bool wasConnected = true;
 
 			//UI

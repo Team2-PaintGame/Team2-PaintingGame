@@ -55,12 +55,12 @@ namespace NCL {
 
 			window->SetTitle("Gametech frame time:" + std::to_string(1000.0f * dt));
 
-			paintingGame->UpdateGame(dt);
+			
 
 			GameState gameState = menuHandler->GetGameState();
 			switch (gameState) {
 				case GameState::SinglePlayer: {
-					return PushdownResult::NoChange;
+					// return PushdownResult::NoChange;
 				}	break;
 
 				case GameState::MainMenu: {
@@ -73,6 +73,9 @@ namespace NCL {
 				}break;
 
 			}
+
+			paintingGame->UpdateGame(dt);
+			return PushdownResult::NoChange;
 		}
 		void SinglePlayerScreen::OnAwake()
 		{

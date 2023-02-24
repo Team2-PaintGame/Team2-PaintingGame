@@ -17,7 +17,7 @@ PaintingGame::PaintingGame(GameTechRenderer* render, GameWorld* game_world, reac
 #endif
 {
 	world = game_world;
-	gamepad = new Gamepad();
+	gamePad = new Gamepad();
 	animController = new AnimationController();
 
 	/* Code for changing physics system paramaters
@@ -133,30 +133,32 @@ PaintingGame::~PaintingGame() {
 void PaintingGame::UpdateGame(float dt) {
 	world->GetMainCamera()->UpdateCamera(dt);
 
-	if (thirdPersonCamera)
+	if (menuHandler->GetGameState() != GameState::MainMenu) // ugly temporary if by an ugly temporary programmer
 	{
-		for (int i = 0; i < numberOfPlayerControllers; i++)
+		if (thirdPersonCamera)
 		{
-			playerControllers[i]->Update(dt);
+			for (int i = 0; i < numberOfPlayerControllers; i++)
+			{
+				playerControllers[i]->Update(dt);
+			}
+
 		}
 
+		if (menuHandler->GetGameState() == GameState::SplitScreen) {
+			numberOfPlayerControllers = 2;
+			world->GetSecondCamera()->UpdateCamera(dt);
+		}
+		else if (menuHandler->GetGameState() == GameState::SinglePlayer) {
+			numberOfPlayerControllers = 1;
+		}
+
+
+		world->UpdateWorld(dt);
+
 	}
 
-	players[0]->Update(dt);
-	if (renderer->GetGameState() == GameTechRenderer::GameState::SplitScreen)
-	{
-		numberOfPlayerControllers = 2;
-		world->GetSecondCamera()->UpdateCamera(dt);
-	}
-	else if (menuHandler->GetGameState() == GameState::SinglePlayer) {
-		numberOfPlayerControllers = 1;
-	}
-
-	
-	}
 	menuHandler->Update(dt);
 	renderer->Render();
-	world->UpdateWorld(dt);
 	renderer->Update(dt);
 	physicsWorld->update(dt);
 	Debug::UpdateRenderables(dt);
@@ -203,7 +205,7 @@ PlayerBase* PaintingGame::InitiliazePlayer() {
 	animController->SetIdleAnimation(meshAnimations.at("mainCharIdleAnim"));
 	animController->SetRunAnimation(meshAnimations.at("mainCharRunAnim"));
 	animController->SetTauntAnimation(meshAnimations.at("mainCharTauntAnim"));
-	players[0] = new PlayerBase(physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("mainChar"), textures.at("basicTex"), animController, shaders.at("skinningShader"), 5);
+	players[0] = new PlayerBase(*physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("mainChar"), textures.at("basicTex"), animController, shaders.at("skinningShader"), 5);
 	
 
 	world->AddGameObject(players[0]);
@@ -216,7 +218,7 @@ PlayerBase* PaintingGame::InitialiseNetworkPlayer() {
 	animController->SetIdleAnimation(meshAnimations.at("mainCharIdleAnim"));
 	animController->SetRunAnimation(meshAnimations.at("mainCharRunAnim"));
 	animController->SetTauntAnimation(meshAnimations.at("mainCharTauntAnim"));
-	netPlayer = new PlayerBase(physicsCommon, physicsWorld, Vector3(0, 50, 10), meshes.at("mainChar"), textures.at("basicTex"), animController, shaders.at("skinningShader"), 5);
+	netPlayer = new PlayerBase(*physicsCommon, physicsWorld, Vector3(0, 50, 10), meshes.at("mainChar"), textures.at("basicTex"), animController, shaders.at("skinningShader"), 5);
 	world->AddGameObject(netPlayer);
 	return netPlayer;
 }
@@ -230,7 +232,7 @@ PlayerBase* PaintingGame::InitSecondPlayer() {
 	animController->SetIdleAnimation(meshAnimations.at("mainCharIdleAnim"));
 	animController->SetRunAnimation(meshAnimations.at("mainCharRunAnim"));
 	animController->SetTauntAnimation(meshAnimations.at("mainCharTauntAnim"));
-	players[1] = new PlayerBase(physicsCommon, physicsWorld, Vector3(10, 10, 0), meshes.at("mainChar"), textures.at("basicTex"), animController, shaders.at("skinningShader"), 5);
+	players[1] = new PlayerBase(*physicsCommon, physicsWorld, Vector3(10, 10, 0), meshes.at("mainChar"), textures.at("basicTex"), animController, shaders.at("skinningShader"), 5);
 	world->AddGameObject(players[1]);
 	playerControllers[1] = new PlayerController(world->GetSecondCamera(), players[1], gamePad);
 

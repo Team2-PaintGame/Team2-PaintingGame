@@ -41,12 +41,6 @@ PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysic
 void PlayerBase::Update(float dt) {
 
 	animationController->UpdateAnimations(dt);
-
-	/*renderObject->frameTime -= dt;
-	while (renderObject->frameTime < 0.0f) {
-		renderObject->currentFrame = (renderObject->currentFrame + 1) % renderObject->animation->GetFrameCount();
-		renderObject->frameTime += 1.0f / renderObject->animation->GetFrameRate();
-	}*/
 }
 
 PlayerBase::~PlayerBase() {

@@ -84,6 +84,8 @@ namespace NCL {
 		{
 			renderer->SetRenderMode(GameTechRenderer::RenderMode::MainMenu);
 			menuHandler->SetGameState(GameState::MainMenu);
+
+			
 		}
 
 		void IntroScreen::OnSleep()
