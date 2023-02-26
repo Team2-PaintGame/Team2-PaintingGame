@@ -11,7 +11,7 @@ namespace NCL {
 			virtual PlayerBase* AddPlayer();
 
 		protected:
-			PlayerBase* player;
+			PlayerBase* player = NULL;
 		};
 	}
 }

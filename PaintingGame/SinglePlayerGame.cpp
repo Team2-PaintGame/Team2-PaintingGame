@@ -4,6 +4,7 @@ using namespace NCL;
 using namespace CSC8508;
 
 SinglePlayerGame::SinglePlayerGame(GameTechRenderer* render, GameWorld* world, reactphysics3d::PhysicsCommon* physicsCommon, MenuHandler* menu) : PaintingGame(render, world, physicsCommon, menu) {
+	//change this through settings obj
 	render->SetRenderMode(GameTechRenderer::RenderMode::SingleViewport);
 }
 
