@@ -40,6 +40,10 @@ namespace NCL {
 			void InitialiseAssets();
 			void InitCamera();
 			void InitWorld();
+
+			//make it pure virtual 
+			virtual PlayerBase* AddPlayer() { return nullptr; }
+			//delete this
 			PlayerBase* InitiliazePlayer();
 			PlayerBase* InitialiseNetworkPlayer();
 #ifdef USEVULKAN
@@ -51,9 +55,11 @@ namespace NCL {
 
 			bool useGravity = true;
 			bool useFog = true;
+			//delete this
 			bool useSplitScreen = false;
 			bool thirdPersonCamera;
 
+			//delete this
 			bool is_Networked;
 
 			float		forceMagnitude;
@@ -66,6 +72,7 @@ namespace NCL {
 			std::map<std::string, ShaderBase*> shaders;
 
 			//Coursework Additional functionality	
+			//delete this
 			PlayerBase* players[2] = { NULL };
 			PlayerBase* netPlayer = NULL;
 			PlayerController* playerControllers[2] = {NULL};
@@ -74,6 +81,8 @@ namespace NCL {
 			reactphysics3d::PhysicsCommon* physicsCommon;
 			reactphysics3d::PhysicsWorld* physicsWorld = NULL; 
 
+
+			//delete this
 			int numberOfPlayerControllers = 1;
 
 			Gamepad* gamePad = NULL;

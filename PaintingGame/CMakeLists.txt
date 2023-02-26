@@ -5,6 +5,8 @@ set(PROJECT_NAME PaintingGame)
 ################################################################################
 set(Header_Files
     "NetworkedGame.h"
+    "SplitScreenGame.h"
+    "SinglePlayerGame.h"
     "NetworkPlayer.h"
     "PaintingGame.h"
 )
@@ -13,6 +15,8 @@ source_group("Header Files" FILES ${Header_Files})
 set(Source_Files
     "Main.cpp"
     "NetworkedGame.cpp"
+    "SplitScreenGame.cpp"
+    "SinglePlayerGame.cpp"
     "NetworkPlayer.cpp"
     "PaintingGame.cpp"
 )
