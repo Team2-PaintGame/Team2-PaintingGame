@@ -15,4 +15,5 @@ SplitScreenGame::~SplitScreenGame() {
 PlayerBase* SplitScreenGame::AddPlayer() {
 	players.emplace_back(new PlayerBase(*physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("mainChar"), textures.at("basicTex"), animController, shaders.at("skinningShader"), 5));
 	world->AddGameObject(players.back());
+	return players.back();
 }

@@ -14,4 +14,5 @@ SinglePlayerGame::~SinglePlayerGame() {
 PlayerBase* SinglePlayerGame::AddPlayer() {
 	player = new PlayerBase(*physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("mainChar"), textures.at("basicTex"), animController, shaders.at("skinningShader"), 5);
 	world->AddGameObject(player);
+	return player;
 }

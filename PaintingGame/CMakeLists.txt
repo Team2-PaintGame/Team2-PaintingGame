@@ -33,6 +33,22 @@ set(GameObjects
 )
 source_group("Game Objects" FILES ${GameObjects})
 
+set(Screens
+    "./Screens/IntroScreen.h"
+    "./Screens/IntroScreen.cpp"
+    "./Screens/SinglePlayerScreen.h"
+    "./Screens/SinglePlayerScreen.cpp"
+    "./Screens/SplitScreen.h"
+    "./Screens/SplitScreen.cpp"
+    "./Screens/LanScreen.h"
+    "./Screens/LanScreen.cpp"
+    "./Screens/PauseScreen.h"
+    "./Screens/PauseScreen.cpp"   
+    "./Screens/BaseScreen.h"
+    "./Screens/BaseScreen.cpp"   
+)
+source_group("Screens" FILES ${Screens})
+
 set(ImGui
     "../Middleware/ImGui/imgui.cpp"
     "../Middleware/ImGui/imgui.h"
@@ -57,6 +73,7 @@ set(ALL_FILES
     ${Header_Files}
     ${Source_Files}
     ${GameObjects}
+    ${Screens}
     ${ImGui}
 )
 
@@ -208,6 +225,7 @@ if(MSVC)
 endif()
 
 include_directories("./GameObjects")
+include_directories("./Screens")
 include_directories("../OpenGLRendering/")
 include_directories("../Networking/")
 include_directories("../GameEngine/")
