@@ -32,16 +32,8 @@ namespace NCL::CSC8508 {
 			return rigidBody;
 		}
 
-		RenderObject* GetRenderObject() const {
-			return renderObject;
-		}
-
 		NetworkObject* GetNetworkObject() const {
 			return networkObject;
-		}
-
-		void SetRenderObject(RenderObject* newObject) {
-			renderObject = newObject;
 		}
 
 		void SetLayer(Layer l) {
