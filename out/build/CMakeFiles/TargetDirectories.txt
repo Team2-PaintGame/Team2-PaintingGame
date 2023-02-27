@@ -1,0 +1,6 @@
+C:/Users/b7023988/source/repos/Team2-PaintingGame/out/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/b7023988/source/repos/Team2-PaintingGame/out/build/CMakeFiles/ZERO_CHECK.dir
+C:/Users/b7023988/source/repos/Team2-PaintingGame/out/build/GameEngine/CMakeFiles/GameEngine.dir
+C:/Users/b7023988/source/repos/Team2-PaintingGame/out/build/Networking/CMakeFiles/Networking.dir
+C:/Users/b7023988/source/repos/Team2-PaintingGame/out/build/OpenGLRendering/CMakeFiles/OpenGLRendering.dir
+C:/Users/b7023988/source/repos/Team2-PaintingGame/out/build/PaintingGame/CMakeFiles/PaintingGame.dir

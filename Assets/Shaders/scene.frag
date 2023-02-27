@@ -4,17 +4,14 @@ uniform vec4 		objectColour;
 uniform sampler2D 	mainTex;
 uniform sampler2DShadow shadowTex;
 
-//struct PaintedPoint{
-//	vec3 position;
-//	vec3 colour;
-//	float radius;
-//};
-
 uniform vec3	lightPos;
 uniform float	lightRadius;
 uniform vec4	lightColour;
 
 uniform vec4 paintedPos[1000];
+
+uniform int numOfSplats;
+
 uniform vec3	cameraPos;
 
 uniform bool hasTexture;
@@ -81,12 +78,14 @@ void main(void)
 	 albedo *= texture(mainTex, IN.texCoord);
 	}
 
-	for(int i = 0; i< 1000;i++){
-		float distanceBetween = distance(IN.localPos.xyz, paintedPos[i].xyz);
-		if (distanceBetween <= 5 - SplatNoise(IN.localPos.xyz)){
-			albedo *= vec4(vec3(1,1,0), 1.0);
+	//if(numOfSplats > 0){
+		for(int i = 0; i< 1000;i++){
+			float distanceBetween = distance(IN.localPos.xyz, paintedPos[i].xyz);
+			if (distanceBetween <= 5 - SplatNoise(IN.localPos.xyz)){
+				albedo = vec4(vec3(0.51,1,0.1), 1.0);
+			}
 		}
-	}
+	//}
 	
 	albedo.rgb = pow(albedo.rgb, vec3(2.2));
 	

@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\Networking\GameClient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\Networking\GameServer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\Networking\NetworkBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\Networking\NetworkObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\Networking\NetworkState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\Networking\GameClient.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\Networking\GameServer.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\Networking\NetworkBase.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\Networking\NetworkObject.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\Networking\NetworkState.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\Networking\enet\callbacks.c">
+      <Filter>eNet</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\Networking\enet\list.h">
+      <Filter>eNet</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\Networking\enet\list.c">
+      <Filter>eNet</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\Networking\enet\protocol.h">
+      <Filter>eNet</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\Networking\enet\protocol.c">
+      <Filter>eNet</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\Networking\enet\win32.h">
+      <Filter>eNet</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\Networking\enet\win32.c">
+      <Filter>eNet</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\Networking\enet\enet.h">
+      <Filter>eNet</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\Networking\enet\time.h">
+      <Filter>eNet</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\Networking\enet\types.h">
+      <Filter>eNet</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\Networking\enet\utility.h">
+      <Filter>eNet</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\Networking\enet\compress.c">
+      <Filter>eNet</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\Networking\enet\host.c">
+      <Filter>eNet</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\Networking\enet\packet.c">
+      <Filter>eNet</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\Networking\enet\peer.c">
+      <Filter>eNet</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\Networking\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{222319A5-1FE8-3124-AA1B-95E115C63A52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{1A244550-3A72-3EE1-83D0-68EA6A0B9A6D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="eNet">
+      <UniqueIdentifier>{57BF9864-9D40-3026-9B6C-71BACCD91AFB}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,295 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{2C59D3B8-01B6-3E5F-965F-60C966A8EC8E}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0.22621.0</WindowsTargetPlatformVersion>
+    <Platform>x64</Platform>
+    <ProjectName>GameEngine</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\b7023988\source\repos\Team2-PaintingGame\x64\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">GameEngine.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">GameEngine</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\b7023988\source\repos\Team2-PaintingGame\x64\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">GameEngine.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">GameEngine</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.lib</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Maths;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\WindowingAndInput;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\WindowingAndInput\Win32;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Physics;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Physics\CollisionDetection;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Scene;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Scene\Terrain;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\..\Networking;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Graphics\Renderer;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Graphics\Renderer\RenderingSupport;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Graphics\Camera;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Graphics\Lights;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\EntityComponents;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Debugging;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AssetsHandling;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AI\BehaviorTrees;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AI\PathFinding;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AI\PushdownAutomata;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AI\StateMachine;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\..\OpenGLRendering;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Users/b7023988/source/repos/Team2-PaintingGame/ReactPhysics3D/include"</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <ConformanceMode>true</ConformanceMode>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <SDLCheck>true</SDLCheck>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_MBCS;NOMINMAX;ASSETROOTLOCATION="C:/Users/b7023988/source/repos/Team2-PaintingGame/Assets/";CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_MBCS;NOMINMAX;ASSETROOTLOCATION=\"C:/Users/b7023988/source/repos/Team2-PaintingGame/Assets/\";CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Maths;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\WindowingAndInput;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\WindowingAndInput\Win32;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Physics;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Physics\CollisionDetection;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Scene;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Scene\Terrain;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\..\Networking;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Graphics\Renderer;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Graphics\Renderer\RenderingSupport;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Graphics\Camera;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Graphics\Lights;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\EntityComponents;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Debugging;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AssetsHandling;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AI\BehaviorTrees;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AI\PathFinding;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AI\PushdownAutomata;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AI\StateMachine;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\..\OpenGLRendering;C:\Users\b7023988\source\repos\Team2-PaintingGame\ReactPhysics3D\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Maths;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\WindowingAndInput;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\WindowingAndInput\Win32;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Physics;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Physics\CollisionDetection;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Scene;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Scene\Terrain;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\..\Networking;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Graphics\Renderer;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Graphics\Renderer\RenderingSupport;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Graphics\Camera;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Graphics\Lights;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\EntityComponents;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Debugging;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AssetsHandling;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AI\BehaviorTrees;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AI\PathFinding;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AI\PushdownAutomata;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AI\StateMachine;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\..\OpenGLRendering;C:\Users\b7023988\source\repos\Team2-PaintingGame\ReactPhysics3D\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Maths;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\WindowingAndInput;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\WindowingAndInput\Win32;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Physics;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Physics\CollisionDetection;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Scene;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Scene\Terrain;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\..\Networking;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Graphics\Renderer;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Graphics\Renderer\RenderingSupport;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Graphics\Camera;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Graphics\Lights;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\EntityComponents;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Debugging;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AssetsHandling;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AI\BehaviorTrees;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AI\PathFinding;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AI\PushdownAutomata;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AI\StateMachine;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\..\OpenGLRendering;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Users/b7023988/source/repos/Team2-PaintingGame/ReactPhysics3D/include"</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ConformanceMode>true</ConformanceMode>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <SDLCheck>true</SDLCheck>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_CRT_SECURE_NO_WARNINGS;_MBCS;NOMINMAX;ASSETROOTLOCATION="C:/Users/b7023988/source/repos/Team2-PaintingGame/Assets/";CMAKE_INTDIR="Release"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_CRT_SECURE_NO_WARNINGS;_MBCS;NOMINMAX;ASSETROOTLOCATION=\"C:/Users/b7023988/source/repos/Team2-PaintingGame/Assets/\";CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Maths;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\WindowingAndInput;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\WindowingAndInput\Win32;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Physics;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Physics\CollisionDetection;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Scene;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Scene\Terrain;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\..\Networking;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Graphics\Renderer;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Graphics\Renderer\RenderingSupport;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Graphics\Camera;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Graphics\Lights;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\EntityComponents;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Debugging;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AssetsHandling;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AI\BehaviorTrees;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AI\PathFinding;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AI\PushdownAutomata;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AI\StateMachine;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\..\OpenGLRendering;C:\Users\b7023988\source\repos\Team2-PaintingGame\ReactPhysics3D\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Maths;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\WindowingAndInput;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\WindowingAndInput\Win32;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Physics;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Physics\CollisionDetection;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Scene;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Scene\Terrain;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\..\Networking;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Graphics\Renderer;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Graphics\Renderer\RenderingSupport;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Graphics\Camera;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Graphics\Lights;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\EntityComponents;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Debugging;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AssetsHandling;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AI\BehaviorTrees;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AI\PathFinding;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AI\PushdownAutomata;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AI\StateMachine;C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\..\OpenGLRendering;C:\Users\b7023988\source\repos\Team2-PaintingGame\ReactPhysics3D\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\CMakeLists.txt">
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/Users/b7023988/source/repos/Team2-PaintingGame/GameEngine/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+\\campus\home\home2017\b7023988\Downloads\cmake-3.25.0-windows-x86_64\bin\cmake.exe -SC:/Users/b7023988/source/repos/Team2-PaintingGame -BC:/Users/b7023988/source/repos/Team2-PaintingGame/out/build --check-stamp-file C:/Users/b7023988/source/repos/Team2-PaintingGame/out/build/GameEngine/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\b7023988\source\repos\Team2-PaintingGame\CMake\Default.cmake;C:\Users\b7023988\source\repos\Team2-PaintingGame\CMake\DefaultCXX.cmake;C:\Users\b7023988\source\repos\Team2-PaintingGame\ReactPhysics3D\lib\cmake\ReactPhysics3D\ReactPhysics3DConfig-debug.cmake;C:\Users\b7023988\source\repos\Team2-PaintingGame\ReactPhysics3D\lib\cmake\ReactPhysics3D\ReactPhysics3DConfig-release.cmake;C:\Users\b7023988\source\repos\Team2-PaintingGame\ReactPhysics3D\lib\cmake\ReactPhysics3D\ReactPhysics3DConfig.cmake;C:\Users\b7023988\source\repos\Team2-PaintingGame\ReactPhysics3D\lib\cmake\ReactPhysics3D\ReactPhysics3DConfigVersion.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\b7023988\source\repos\Team2-PaintingGame\out\build\GameEngine\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/Users/b7023988/source/repos/Team2-PaintingGame/GameEngine/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+\\campus\home\home2017\b7023988\Downloads\cmake-3.25.0-windows-x86_64\bin\cmake.exe -SC:/Users/b7023988/source/repos/Team2-PaintingGame -BC:/Users/b7023988/source/repos/Team2-PaintingGame/out/build --check-stamp-file C:/Users/b7023988/source/repos/Team2-PaintingGame/out/build/GameEngine/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\b7023988\source\repos\Team2-PaintingGame\CMake\Default.cmake;C:\Users\b7023988\source\repos\Team2-PaintingGame\CMake\DefaultCXX.cmake;C:\Users\b7023988\source\repos\Team2-PaintingGame\ReactPhysics3D\lib\cmake\ReactPhysics3D\ReactPhysics3DConfig-debug.cmake;C:\Users\b7023988\source\repos\Team2-PaintingGame\ReactPhysics3D\lib\cmake\ReactPhysics3D\ReactPhysics3DConfig-release.cmake;C:\Users\b7023988\source\repos\Team2-PaintingGame\ReactPhysics3D\lib\cmake\ReactPhysics3D\ReactPhysics3DConfig.cmake;C:\Users\b7023988\source\repos\Team2-PaintingGame\ReactPhysics3D\lib\cmake\ReactPhysics3D\ReactPhysics3DConfigVersion.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\b7023988\source\repos\Team2-PaintingGame\out\build\GameEngine\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AI\BehaviorTrees\BehaviourAction.h" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AI\BehaviorTrees\BehaviourNode.h" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AI\BehaviorTrees\BehaviourNodeWithChildren.h" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AI\BehaviorTrees\BehaviourSelector.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AI\BehaviorTrees\BehaviourSelector.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AI\BehaviorTrees\BehaviourSequence.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AI\BehaviorTrees\BehaviourSequence.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AI\PushdownAutomata\PushdownMachine.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AI\PushdownAutomata\PushdownMachine.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AI\PushdownAutomata\PushdownState.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AI\PushdownAutomata\PushdownState.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AI\StateMachine\State.h" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AI\StateMachine\StateMachine.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AI\StateMachine\StateMachine.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AI\StateMachine\StateTransition.h" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AI\PathFinding\NavigationGrid.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AI\PathFinding\NavigationGrid.cpp" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AI\PathFinding\NavigationMesh.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AI\PathFinding\NavigationMesh.h" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AI\PathFinding\NavigationMap.h" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AI\PathFinding\NavigationPath.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AssetsHandling\Assets.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AssetsHandling\Assets.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AssetsHandling\SimpleFont.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AssetsHandling\SimpleFont.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AssetsHandling\TextureLoader.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AssetsHandling\TextureLoader.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AssetsHandling\TextureWriter.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\AssetsHandling\TextureWriter.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Debugging\Debug.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Debugging\Debug.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\EntityComponents\GameObject.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\EntityComponents\GameObject.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\EntityComponents\StateGameObject.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\EntityComponents\StateGameObject.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\EntityComponents\RenderObject.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\EntityComponents\RenderObject.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\EntityComponents\Transform.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\EntityComponents\Transform.h" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\EntityComponents\Layer.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Graphics\Camera\Camera.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Graphics\Camera\Camera.h" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Graphics\Lights\Light.h" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Graphics\Lights\PointLight.h" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Graphics\Lights\SpotLight.h" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Graphics\Lights\DirectionalLight.h" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Graphics\Renderer\GameTechRenderer.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Graphics\Renderer\GameTechRenderer.cpp" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Graphics\Renderer\RenderingSupport\MeshAnimation.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Graphics\Renderer\RenderingSupport\MeshAnimation.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Graphics\Renderer\RenderingSupport\MeshGeometry.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Graphics\Renderer\RenderingSupport\MeshGeometry.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Graphics\Renderer\RenderingSupport\MeshMaterial.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Graphics\Renderer\RenderingSupport\MeshMaterial.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Graphics\Renderer\RenderingSupport\RendererBase.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Graphics\Renderer\RenderingSupport\RendererBase.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Graphics\Renderer\RenderingSupport\ShaderBase.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Graphics\Renderer\RenderingSupport\ShaderBase.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Graphics\Renderer\RenderingSupport\TextureBase.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Graphics\Renderer\RenderingSupport\TextureBase.h" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Graphics\Renderer\RenderingSupport\TextureHUD.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Maths\Maths.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Maths\Maths.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Maths\Matrix2.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Maths\Matrix2.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Maths\Matrix3.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Maths\Matrix3.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Maths\Matrix4.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Maths\Matrix4.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Maths\Plane.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Maths\Plane.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Maths\Quaternion.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Maths\Quaternion.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Maths\Vector2.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Maths\Vector2.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Maths\Vector3.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Maths\Vector3.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Maths\Vector4.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Maths\Vector4.h" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Physics\Constraint.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Physics\PositionConstraint.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Physics\PositionConstraint.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Physics\OrientationConstraint.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Physics\OrientationConstraint.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Physics\PhysicsObject.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Physics\PhysicsObject.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Physics\PhysicsSystem.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Physics\PhysicsSystem.h" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Physics\CollisionDetection\AABBVolume.h" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Physics\CollisionDetection\CapsuleVolume.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Physics\CollisionDetection\CapsuleVolume.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Physics\CollisionDetection\CollisionDetection.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Physics\CollisionDetection\CollisionDetection.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Physics\CollisionDetection\CollisionVolume.h" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Physics\CollisionDetection\OBBVolume.h" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Physics\CollisionDetection\QuadTree.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Physics\CollisionDetection\QuadTree.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Physics\CollisionDetection\Ray.h" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Physics\CollisionDetection\SphereVolume.h" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Scene\GameWorld.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Scene\GameWorld.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Scene\PlayerBase.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Scene\PlayerBase.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Scene\Terrain\Terrain.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Scene\Terrain\Terrain.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\Scene\Terrain\TerrainTexturePack.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\WindowingAndInput\GameTimer.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\WindowingAndInput\GameTimer.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\WindowingAndInput\Keyboard.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\WindowingAndInput\Keyboard.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\WindowingAndInput\Mouse.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\WindowingAndInput\Mouse.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\WindowingAndInput\Window.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\WindowingAndInput\Window.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\WindowingAndInput\Win32\Win32Keyboard.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\WindowingAndInput\Win32\Win32Keyboard.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\WindowingAndInput\Win32\Win32Mouse.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\WindowingAndInput\Win32\Win32Mouse.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\WindowingAndInput\Win32\Win32Window.cpp" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\GameEngine\WindowingAndInput\Win32\Win32Window.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\out\build\ZERO_CHECK.vcxproj">
+      <Project>{751669DA-2C62-341F-8884-B144693BC688}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

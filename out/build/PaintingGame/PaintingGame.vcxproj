@@ -1,0 +1,247 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{5CA3048F-1133-38B3-AE26-65B0EB03BE4E}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0.22621.0</WindowsTargetPlatformVersion>
+    <Platform>x64</Platform>
+    <ProjectName>PaintingGame</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\b7023988\source\repos\Team2-PaintingGame\x64\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PaintingGame.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PaintingGame</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\b7023988\source\repos\Team2-PaintingGame\x64\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">PaintingGame.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">PaintingGame</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.exe</TargetExt>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\OpenGLRendering;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\Networking;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Maths;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\EntityComponents;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Scene;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Scene\Terrain;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\WindowingAndInput;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\WindowingAndInput\Win32;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Physics;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Physics\CollisionDetection;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Graphics\Renderer;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Graphics\Renderer\RenderingSupport;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Graphics\Camera;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Graphics\Lights;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Debugging;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\AssetsHandling;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\AI\BehaviorTrees;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\AI\PathFinding;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\AI\PushdownAutomata;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\AI\StateMachine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Users/b7023988/source/repos/Team2-PaintingGame/ReactPhysics3D/include"</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <ConformanceMode>true</ConformanceMode>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>C:/Users/b7023988/source/repos/Team2-PaintingGame/out/build/PaintingGame/CMakeFiles/PaintingGame.dir/Debug/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>C:/Users/b7023988/source/repos/Team2-PaintingGame/out/build/PaintingGame/PaintingGame.dir/Debug/cmake_pch.pch</PrecompiledHeaderOutputFile>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <SDLCheck>true</SDLCheck>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;UNICODE;_UNICODE;WIN32_LEAN_AND_MEAN;_WINSOCKAPI_;_WINSOCK2API_;_WINSOCK_DEPRECATED_NO_WARNINGS;NOMINMAX;ASSETROOTLOCATION="C:/Users/b7023988/source/repos/Team2-PaintingGame/Assets/";CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;UNICODE;_UNICODE;WIN32_LEAN_AND_MEAN;_WINSOCKAPI_;_WINSOCK2API_;_WINSOCK_DEPRECATED_NO_WARNINGS;NOMINMAX;ASSETROOTLOCATION=\"C:/Users/b7023988/source/repos/Team2-PaintingGame/Assets/\";CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\OpenGLRendering;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\Networking;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Maths;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\EntityComponents;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Scene;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Scene\Terrain;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\WindowingAndInput;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\WindowingAndInput\Win32;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Physics;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Physics\CollisionDetection;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Graphics\Renderer;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Graphics\Renderer\RenderingSupport;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Graphics\Camera;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Graphics\Lights;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Debugging;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\AssetsHandling;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\AI\BehaviorTrees;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\AI\PathFinding;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\AI\PushdownAutomata;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\AI\StateMachine;C:\Users\b7023988\source\repos\Team2-PaintingGame\ReactPhysics3D\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\OpenGLRendering;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\Networking;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Maths;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\EntityComponents;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Scene;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Scene\Terrain;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\WindowingAndInput;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\WindowingAndInput\Win32;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Physics;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Physics\CollisionDetection;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Graphics\Renderer;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Graphics\Renderer\RenderingSupport;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Graphics\Camera;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Graphics\Lights;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Debugging;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\AssetsHandling;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\AI\BehaviorTrees;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\AI\PathFinding;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\AI\PushdownAutomata;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\AI\StateMachine;C:\Users\b7023988\source\repos\Team2-PaintingGame\ReactPhysics3D\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>Winmm.lib;C:\Users\b7023988\source\repos\Team2-PaintingGame\x64\Debug\GameEngine.lib;C:\Users\b7023988\source\repos\Team2-PaintingGame\x64\Debug\OpenGLRendering.lib;C:\Users\b7023988\source\repos\Team2-PaintingGame\x64\Debug\Networking.lib;opengl32.lib;C:\Users\b7023988\source\repos\Team2-PaintingGame\x64\Debug\GameEngine.lib;C:\Users\b7023988\source\repos\Team2-PaintingGame\ReactPhysics3D\lib\Debug\reactphysics3d.lib;ws2_32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>C:/Users/b7023988/source/repos/Team2-PaintingGame/x64/Debug/PaintingGame.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Users/b7023988/source/repos/Team2-PaintingGame/x64/Debug/PaintingGame.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\OpenGLRendering;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\Networking;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Maths;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\EntityComponents;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Scene;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Scene\Terrain;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\WindowingAndInput;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\WindowingAndInput\Win32;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Physics;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Physics\CollisionDetection;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Graphics\Renderer;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Graphics\Renderer\RenderingSupport;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Graphics\Camera;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Graphics\Lights;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Debugging;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\AssetsHandling;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\AI\BehaviorTrees;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\AI\PathFinding;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\AI\PushdownAutomata;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\AI\StateMachine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Users/b7023988/source/repos/Team2-PaintingGame/ReactPhysics3D/include"</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ConformanceMode>true</ConformanceMode>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>C:/Users/b7023988/source/repos/Team2-PaintingGame/out/build/PaintingGame/CMakeFiles/PaintingGame.dir/Release/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>C:/Users/b7023988/source/repos/Team2-PaintingGame/out/build/PaintingGame/PaintingGame.dir/Release/cmake_pch.pch</PrecompiledHeaderOutputFile>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <SDLCheck>true</SDLCheck>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;UNICODE;_UNICODE;WIN32_LEAN_AND_MEAN;_WINSOCKAPI_;_WINSOCK2API_;_WINSOCK_DEPRECATED_NO_WARNINGS;NOMINMAX;ASSETROOTLOCATION="C:/Users/b7023988/source/repos/Team2-PaintingGame/Assets/";CMAKE_INTDIR="Release"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;UNICODE;_UNICODE;WIN32_LEAN_AND_MEAN;_WINSOCKAPI_;_WINSOCK2API_;_WINSOCK_DEPRECATED_NO_WARNINGS;NOMINMAX;ASSETROOTLOCATION=\"C:/Users/b7023988/source/repos/Team2-PaintingGame/Assets/\";CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\OpenGLRendering;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\Networking;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Maths;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\EntityComponents;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Scene;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Scene\Terrain;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\WindowingAndInput;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\WindowingAndInput\Win32;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Physics;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Physics\CollisionDetection;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Graphics\Renderer;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Graphics\Renderer\RenderingSupport;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Graphics\Camera;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Graphics\Lights;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Debugging;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\AssetsHandling;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\AI\BehaviorTrees;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\AI\PathFinding;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\AI\PushdownAutomata;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\AI\StateMachine;C:\Users\b7023988\source\repos\Team2-PaintingGame\ReactPhysics3D\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\OpenGLRendering;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\Networking;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Maths;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\EntityComponents;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Scene;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Scene\Terrain;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\WindowingAndInput;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\WindowingAndInput\Win32;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Physics;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Physics\CollisionDetection;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Graphics\Renderer;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Graphics\Renderer\RenderingSupport;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Graphics\Camera;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Graphics\Lights;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\Debugging;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\AssetsHandling;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\AI\BehaviorTrees;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\AI\PathFinding;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\AI\PushdownAutomata;C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\..\GameEngine\AI\StateMachine;C:\Users\b7023988\source\repos\Team2-PaintingGame\ReactPhysics3D\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>Winmm.lib;C:\Users\b7023988\source\repos\Team2-PaintingGame\x64\Release\GameEngine.lib;C:\Users\b7023988\source\repos\Team2-PaintingGame\x64\Release\OpenGLRendering.lib;C:\Users\b7023988\source\repos\Team2-PaintingGame\x64\Release\Networking.lib;opengl32.lib;C:\Users\b7023988\source\repos\Team2-PaintingGame\x64\Release\GameEngine.lib;C:\Users\b7023988\source\repos\Team2-PaintingGame\ReactPhysics3D\lib\Release\reactphysics3d.lib;ws2_32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>C:/Users/b7023988/source/repos/Team2-PaintingGame/x64/Release/PaintingGame.lib</ImportLibrary>
+      <OptimizeReferences>true</OptimizeReferences>
+      <ProgramDataBaseFile>C:/Users/b7023988/source/repos/Team2-PaintingGame/x64/Release/PaintingGame.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\CMakeLists.txt">
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/Users/b7023988/source/repos/Team2-PaintingGame/PaintingGame/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+\\campus\home\home2017\b7023988\Downloads\cmake-3.25.0-windows-x86_64\bin\cmake.exe -SC:/Users/b7023988/source/repos/Team2-PaintingGame -BC:/Users/b7023988/source/repos/Team2-PaintingGame/out/build --check-stamp-file C:/Users/b7023988/source/repos/Team2-PaintingGame/out/build/PaintingGame/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\b7023988\source\repos\Team2-PaintingGame\CMake\Default.cmake;C:\Users\b7023988\source\repos\Team2-PaintingGame\CMake\DefaultCXX.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\b7023988\source\repos\Team2-PaintingGame\out\build\PaintingGame\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/Users/b7023988/source/repos/Team2-PaintingGame/PaintingGame/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+\\campus\home\home2017\b7023988\Downloads\cmake-3.25.0-windows-x86_64\bin\cmake.exe -SC:/Users/b7023988/source/repos/Team2-PaintingGame -BC:/Users/b7023988/source/repos/Team2-PaintingGame/out/build --check-stamp-file C:/Users/b7023988/source/repos/Team2-PaintingGame/out/build/PaintingGame/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\b7023988\source\repos\Team2-PaintingGame\CMake\Default.cmake;C:\Users\b7023988\source\repos\Team2-PaintingGame\CMake\DefaultCXX.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\b7023988\source\repos\Team2-PaintingGame\out\build\PaintingGame\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\out\build\PaintingGame\CMakeFiles\PaintingGame.dir\cmake_pch.cxx">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/b7023988/source/repos/Team2-PaintingGame/out/build/PaintingGame/CMakeFiles/PaintingGame.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/b7023988/source/repos/Team2-PaintingGame/out/build/PaintingGame/CMakeFiles/PaintingGame.dir/Debug/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/b7023988/source/repos/Team2-PaintingGame/out/build/PaintingGame/PaintingGame.dir/Debug/cmake_pch.pch</PrecompiledHeaderOutputFile>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/b7023988/source/repos/Team2-PaintingGame/out/build/PaintingGame/CMakeFiles/PaintingGame.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/b7023988/source/repos/Team2-PaintingGame/out/build/PaintingGame/CMakeFiles/PaintingGame.dir/Release/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/b7023988/source/repos/Team2-PaintingGame/out/build/PaintingGame/PaintingGame.dir/Release/cmake_pch.pch</PrecompiledHeaderOutputFile>
+    </ClCompile>
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\NetworkedGame.h" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\NetworkPlayer.h" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\PaintingGame.h" />
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\Main.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/b7023988/source/repos/Team2-PaintingGame/out/build/PaintingGame/CMakeFiles/PaintingGame.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/b7023988/source/repos/Team2-PaintingGame/out/build/PaintingGame/CMakeFiles/PaintingGame.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\NetworkedGame.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/b7023988/source/repos/Team2-PaintingGame/out/build/PaintingGame/CMakeFiles/PaintingGame.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/b7023988/source/repos/Team2-PaintingGame/out/build/PaintingGame/CMakeFiles/PaintingGame.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\NetworkPlayer.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/b7023988/source/repos/Team2-PaintingGame/out/build/PaintingGame/CMakeFiles/PaintingGame.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/b7023988/source/repos/Team2-PaintingGame/out/build/PaintingGame/CMakeFiles/PaintingGame.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\PaintingGame\PaintingGame.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/b7023988/source/repos/Team2-PaintingGame/out/build/PaintingGame/CMakeFiles/PaintingGame.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/b7023988/source/repos/Team2-PaintingGame/out/build/PaintingGame/CMakeFiles/PaintingGame.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\out\build\PaintingGame\CMakeFiles\PaintingGame.dir\Debug\cmake_pch.hxx" />
+    <ClInclude Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\out\build\PaintingGame\CMakeFiles\PaintingGame.dir\Release\cmake_pch.hxx" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\out\build\ZERO_CHECK.vcxproj">
+      <Project>{751669DA-2C62-341F-8884-B144693BC688}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\out\build\GameEngine\GameEngine.vcxproj">
+      <Project>{2C59D3B8-01B6-3E5F-965F-60C966A8EC8E}</Project>
+      <Name>GameEngine</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\out\build\Networking\Networking.vcxproj">
+      <Project>{601B0A0B-8433-3AE1-8EBD-918552CDD853}</Project>
+      <Name>Networking</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\Users\b7023988\source\repos\Team2-PaintingGame\out\build\OpenGLRendering\OpenGLRendering.vcxproj">
+      <Project>{46A1219B-CF5E-3871-B0B2-60C7CEAEA59B}</Project>
+      <Name>OpenGLRendering</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

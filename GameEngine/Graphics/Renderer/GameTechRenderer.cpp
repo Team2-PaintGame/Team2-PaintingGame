@@ -499,6 +499,9 @@ void GameTechRenderer::RenderCamera(Camera& cam) {
 				glUniform4fv(paintedLocation, 1, paintedPos.array);
 			}
 
+			int splatVectorSize = glGetUniformLocation(shader->GetProgramID(), "numOfSplats");
+			glUniform1i(splatVectorSize, gameWorld.painted.size());
+
 			glUniform3fv(cameraLocation, 1, camPos.array);
 
 			glUniformMatrix4fv(projLocation, 1, false, (float*)&projMatrix);
@@ -513,8 +516,9 @@ void GameTechRenderer::RenderCamera(Camera& cam) {
 			glUniform1f(lightRadiusLocation , lightRadius);
 
 			int shadowTexLocation = glGetUniformLocation(shader->GetProgramID(), "shadowTex");
+
 			glUniform1i(shadowTexLocation, 1);
-			
+						
 			//binding skybox texture to shader:
 			glUniform1i(skyboxTexLocation, 0);
 			glActiveTexture(GL_TEXTURE0);
