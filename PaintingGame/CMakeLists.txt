@@ -9,6 +9,7 @@ set(Header_Files
     "SinglePlayerGame.h"
     "NetworkPlayer.h"
     "PaintingGame.h"
+    "GameManager.h"
 )
 source_group("Header Files" FILES ${Header_Files})
 
@@ -45,7 +46,13 @@ set(Screens
     "./Screens/PauseScreen.h"
     "./Screens/PauseScreen.cpp"   
     "./Screens/BaseScreen.h"
-    "./Screens/BaseScreen.cpp"   
+    "./Screens/BaseScreen.cpp" 
+    "./Screens/SplashScreen.h"
+    "./Screens/SplashScreen.cpp" 
+    "./Screens/MainMenuScreen.h"
+    "./Screens/MainMenuScreen.cpp" 
+    "./Screens/GameScreen.h"
+    "./Screens/GameScreen.cpp" 
 )
 source_group("Screens" FILES ${Screens})
 

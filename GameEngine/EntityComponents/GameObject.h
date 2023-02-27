@@ -2,6 +2,7 @@
 #include "Transform.h"
 #include "Layer.h"
 #include <reactphysics3d/reactphysics3d.h>
+#include "SceneNode.h"
 
 using std::vector;
 
@@ -10,7 +11,7 @@ namespace NCL::CSC8508 {
 	class RenderObject;
 	class PhysicsObject;
 
-	class GameObject	{
+	class GameObject :public SceneNode	{
 	public:
 		GameObject(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, std::string name = "");
 		virtual ~GameObject();
@@ -72,7 +73,6 @@ namespace NCL::CSC8508 {
 			return worldID;
 		}
 
-		virtual void Update(float dt) {}
 		void UpdateTransform();
 
 
@@ -86,7 +86,6 @@ namespace NCL::CSC8508 {
 
 		Transform			transform;
 
-		RenderObject*		renderObject;
 		NetworkObject*		networkObject;
 
 		bool		isActive;
