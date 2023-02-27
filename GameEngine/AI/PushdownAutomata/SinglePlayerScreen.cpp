@@ -22,12 +22,6 @@ namespace NCL {
 
 			paintingGame = new PaintingGame(renderer, gameWorld, physicsCommon, menuHandler, false);
 			paintingGame->GetGameTechRenderer()->SetRenderMode(GameTechRenderer::RenderMode::SingleViewport);
-
-			//TODO: Set renderer's physics world
-
-			//TODO: Repeat this code on SplitScreen and LanScreen
-
-			//TODO: Pray this works
 		}
 
 		SinglePlayerScreen::~SinglePlayerScreen()
