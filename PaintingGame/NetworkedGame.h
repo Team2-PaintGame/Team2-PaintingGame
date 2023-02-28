@@ -13,7 +13,7 @@ namespace NCL {
 
 		class NetworkedGame : public PaintingGame, public PacketReceiver {
 		public:
-			NetworkedGame();
+			NetworkedGame(Window* window, GameTechRenderer* rend, GameWorld* gameWorld, reactphysics3d::PhysicsCommon* physicsCommon, MenuHandler* menu);
 			~NetworkedGame();
 
 			void StartAsServer();
@@ -60,6 +60,12 @@ namespace NCL {
 			int ClientPlayerID;
 
 			bool connected = false;
+
+			MenuHandler* menuHandler;
+			GameTechRenderer* renderer;
+			GameWorld* gameWorld;
+			reactphysics3d::PhysicsCommon* physicsCommon;
+
 		};
 	}
 }

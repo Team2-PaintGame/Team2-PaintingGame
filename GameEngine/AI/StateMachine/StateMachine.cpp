@@ -43,3 +43,8 @@ void StateMachine::Update(float dt) {
 		}
 	}
 }
+
+//void NCL::CSC8508::StateMachine::IsStateChanged(NCL::CSC8508::StateUpdateFunction func)
+//{
+//
+//}

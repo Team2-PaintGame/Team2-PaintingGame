@@ -15,12 +15,20 @@
 #include <reactphysics3d/reactphysics3d.h>
 
 class Gamepad;
+class AnimationController;
 
 namespace NCL {
+	class MenuHandler;
 	namespace CSC8508 {
 		class PaintingGame {
 		public:
-			PaintingGame(bool online = false);
+#ifdef USEVULKAN
+			PaintingGame(GameTechVulkanRenderer* render, GameWorld* world, reactphysics3d::PhysicsWorld* physicsWorld, reactphysics3d::PhysicsCommon* physicsCommon, MenuHandler* menu, bool online = false);
+#else
+			
+			PaintingGame(GameTechRenderer* render, GameWorld* world, reactphysics3d::PhysicsCommon* physicsCommon, MenuHandler* menu, bool online = false);
+#endif
+			
 			~PaintingGame();
 			virtual void UpdateGame(float dt);
 			GameTechRenderer* GetGameTechRenderer();
@@ -67,13 +75,18 @@ namespace NCL {
 			PlayerController* playerControllers[2] = {NULL};
 			
 			//Create a physics world 
-			reactphysics3d::PhysicsCommon physicsCommon;
+			reactphysics3d::PhysicsCommon* physicsCommon;
 			reactphysics3d::PhysicsWorld* physicsWorld = NULL; 
 
 			int numberOfPlayerControllers = 1;
 
-			Gamepad* gamepad = NULL;
+			Gamepad* gamePad = NULL;
 			bool wasConnected = true;
+
+			//UI
+			MenuHandler* menuHandler;
+
+			AnimationController* animController;
 		};
 	}
 }

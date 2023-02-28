@@ -4,12 +4,13 @@
 #include "../../../../PaintingGame/PaintingGame.h"
 
 namespace NCL {
+	class MenuHandler;
 	namespace CSC8508 {
 
 		class PauseScreen : public PushdownState
 		{
 		public:
-			PauseScreen(PaintingGame* paintingGame);
+			PauseScreen(PaintingGame* paintingGame, MenuHandler* menu);
 			~PauseScreen();
 			PushdownResult OnUpdate(float dt, PushdownState** newState) override;
 			void OnAwake() override;
@@ -17,6 +18,7 @@ namespace NCL {
 		protected:
 			bool selectExitOption;
 			PaintingGame* paintingGame;
+			MenuHandler* menuHandler;
 		};
 
 	}

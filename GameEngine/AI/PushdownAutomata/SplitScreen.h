@@ -4,12 +4,13 @@
 #include "../../../../PaintingGame/PaintingGame.h"
 
 namespace NCL {
+	class MenuHandler;
 	namespace CSC8508 {
 
 		class SplitScreen : public PushdownState
 		{
 		public:
-			SplitScreen(Window* window, PaintingGame* paintingGame);
+			SplitScreen(Window* window, GameTechRenderer* rend, GameWorld* gameWorld, reactphysics3d::PhysicsCommon* physicsCommon, MenuHandler * menu);
 			~SplitScreen();
 			PushdownResult OnUpdate(float dt, PushdownState** newState) override;
 			void OnAwake() override;
@@ -18,6 +19,11 @@ namespace NCL {
 			Window* window;
 			PaintingGame* paintingGame;
 			bool isPlayingGame;
+			MenuHandler* menuHandler;
+
+			GameTechRenderer* renderer;
+			GameWorld* gameWorld;
+			reactphysics3d::PhysicsCommon* physicsCommon;
 		};
 
 	}

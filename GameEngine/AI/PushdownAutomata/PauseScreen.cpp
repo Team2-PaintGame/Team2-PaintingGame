@@ -1,13 +1,18 @@
 #include "PauseScreen.h"
 #include <iostream>
+#include "MenuHandler.h"
 
 namespace NCL {
 	namespace CSC8508 {
 
-		PauseScreen::PauseScreen( PaintingGame* paintingGame)
+		PauseScreen::PauseScreen( PaintingGame* paintingGame, MenuHandler* menu)
 		{
 			selectExitOption = false;
 			this->paintingGame = paintingGame;
+			menuHandler = menu;
+			menuHandler->SetGameState(GameState::PauseMenu);
+
+
 		}
 		PauseScreen::~PauseScreen()
 		{
@@ -16,27 +21,20 @@ namespace NCL {
 		PushdownState::PushdownResult PauseScreen::OnUpdate(float dt, PushdownState** newState)
 		{
 			paintingGame->GetGameTechRenderer()->Render();
-			GameTechRenderer::GameState gameState = paintingGame->GetGameTechRenderer()->GetGameState();
+			menuHandler->Update(dt);
+			GameState gameState = menuHandler->GetGameState();
 
 			switch (gameState) {
 
-			case GameTechRenderer::GameState::PauseMenu: {
+			case GameState::PauseMenu: {
 				return PushdownResult::NoChange;
 			}break;
 	
-			case GameTechRenderer::GameState::SplitScreen: {
+			case GameState::ExitPauseMenu: {
 				return PushdownResult::Pop;
 			}break;
 
-			case GameTechRenderer::GameState::SinglePlayer: {
-				return PushdownResult::Pop;
-			}break;
-
-			case GameTechRenderer::GameState::LAN: {
-				return PushdownResult::Pop;
-			}break;
-
-			case GameTechRenderer::GameState::MainMenu: {
+			case GameState::MainMenu: {
 				return PushdownResult::Pop;
 			}break;
 

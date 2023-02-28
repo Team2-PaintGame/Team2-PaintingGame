@@ -110,6 +110,8 @@ list(APPEND Graphics_Renderer "./Graphics/Renderer/GameTechVulkanRenderer.cpp")
 endif()
 
 set(Graphics_Renderering_Support
+    "./Graphics/Renderer/RenderingSupport/AnimationController.cpp"
+    "./Graphics/Renderer/RenderingSupport/AnimationController.h"
     "./Graphics/Renderer/RenderingSupport/MeshAnimation.cpp"
     "./Graphics/Renderer/RenderingSupport/MeshAnimation.h"
     "./Graphics/Renderer/RenderingSupport/MeshGeometry.cpp"
@@ -125,6 +127,12 @@ set(Graphics_Renderering_Support
     "./Graphics/Renderer/RenderingSupport/TextureHUD.h"
 )
 source_group("Graphics\\Renderer\\Rendering Support" FILES ${Graphics_Renderering_Support})
+
+set(Graphics_UI
+    "./Graphics/UI/MenuHandler.h"
+    "./Graphics/UI/MenuHandler.cpp"
+)
+source_group("Graphics\\UI" FILES ${Graphics_UI})
 
 set(Maths
     "./Maths/Maths.cpp"
@@ -206,6 +214,7 @@ set(ALL_FILES
     ${Graphics_Lights}
     ${Graphics_Renderer}
     ${Graphics_Renderering_Support}
+	${Graphics_UI}
     ${Maths}
     #${Networking}
     #${Networking_enet_Files}
@@ -293,6 +302,7 @@ include_directories("Scene/Terrain")
 include_directories("../Networking/")
 include_directories("Graphics/Renderer/")
 include_directories("Graphics/Renderer/RenderingSupport/")
+include_directories("Graphics/UI/")
 include_directories("Graphics/Camera/")
 include_directories("Graphics/Lights/")
 include_directories("EntityComponents/")

@@ -55,21 +55,18 @@ namespace NCL {
 				reactphysics3d::PhysicsWorld* physicsWorld;
 			};
 
-			//----------------------------- GameTechRenderer:
-			enum GameState {
+
+			enum class RenderMode
+			{
 				MainMenu,
-				SinglePlayer,
-				SplitScreen,
-				LAN,
-				PauseMenu,
-				ExitGame
+				SingleViewport,
+				SplitScreen
 			};
+			//----------------------------- GameTechRenderer:
+			
 			GameTechRenderer(GameWorld& world, reactphysics3d::PhysicsWorld* physicsWorld);
 			~GameTechRenderer();
 			virtual void Update(float dt);
-
-			GameState GetGameState();
-			void SetGameState(GameState gameState);
 			
 			MeshGeometry*	LoadMesh(const string& name);
 			MeshGeometry* LoadFlatMesh(int hVertexCount = 128, int wVertexCount = 128);
@@ -81,11 +78,11 @@ namespace NCL {
 			void UseFog(bool val) { useFog = val; }
 			RendererSettings settings;
 
+			void SetRenderMode(RenderMode mode);
+
 		protected:
 			void NewRenderLines(Camera& cam);
 			void NewRenderText();
-			void ShowMainMenuWindow();
-			void ShowPauseMenuWindow();
 			void RenderFrame()	override;
 			void RenderInSingleViewport();
 			void RenderMainMenu();
@@ -106,6 +103,9 @@ namespace NCL {
 			void RenderHUD();
 			void RenderDebugInformation(bool isDebugInfo);
 			void RenderGUI(bool showWindow = true);
+
+			void ShowMainMenuWindow();
+			void ShowPauseMenuWindow();
 
 			void SetDebugStringBufferSizes(size_t newVertCount);
 			void SetDebugLineBufferSizes(size_t newVertCount);
@@ -148,12 +148,8 @@ namespace NCL {
 			bool useFog = false;
 			Vector3 fogColour = Vector3(0.6706f, 0.6824f, 0.6902f); //removing alpha value of fog colour to preserve the original transparency value of the fragment
 
-			//Pushdown Automata Game States
-			GameState gameState = MainMenu;
-			GameState previousGameState = MainMenu;
-
 			bool isDebugInfo = false;
-
+			RenderMode renderMode = RenderMode::MainMenu;
 		};
 	}
 }
