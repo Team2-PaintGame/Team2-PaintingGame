@@ -16,7 +16,7 @@ namespace NCL {
 			this->renderer = rend;
 			this->gameWorld = gameWorld;
 			this->physicsCommon = physicsCommon;
-			//menuHandler->SetGameState(GameState::LAN);
+
 			this->paintingGame = new NetworkedGame(window,renderer,gameWorld,physicsCommon, menuHandler);
 			paintingGame->GetGameTechRenderer()->SetRenderMode(GameTechRenderer::RenderMode::SingleViewport);
 
@@ -34,8 +34,6 @@ namespace NCL {
 		}
 		PushdownState::PushdownResult LanScreen::OnUpdate(float dt, PushdownState** newState)
 		{
-			
-
 			if (dt > 5.0f) {
 				std::cout << "Skipping large time delta" << std::endl;
 				return PushdownResult::NoChange; //must have hit a breakpoint or something to have a 1 second frame time!

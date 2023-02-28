@@ -8,12 +8,19 @@ namespace NCL {
 		public:
 			SplitScreenGame(GameTechRenderer* render, GameWorld* world, reactphysics3d::PhysicsCommon* physicsCommon, MenuHandler* menu);
 			virtual ~SplitScreenGame();
-			virtual PlayerBase* AddPlayer();
+			PlayerBase* AddPlayer(Camera* camera, Vector3 position, Gamepad* gamepad = nullptr) override;
+			void UpdateGame(float dt) override;
+
+		protected:
+			//void InitWorld() override;
+			void InitPlayers();
 
 		protected:
 			//contains an array of players (2) only
-			std::vector<PlayerBase*> players;
 			const int maxPlayers = 2;
+			std::vector<PlayerBase*> players;
+			std::vector<PlayerController*> playerControllers;
+			Gamepad* gamepad;
 		};
 	}
 }
