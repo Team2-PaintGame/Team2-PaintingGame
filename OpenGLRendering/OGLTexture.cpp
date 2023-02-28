@@ -1,3 +1,4 @@
+#ifdef _WIN32
 /*
 Part of Newcastle University's Game Engineering source code.
 
@@ -74,3 +75,4 @@ TextureBase* OGLTexture::RGBATextureFromFilename(const std::string&name) {
 
 	return glTex;
 }
+#endif

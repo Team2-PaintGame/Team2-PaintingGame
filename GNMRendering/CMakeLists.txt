@@ -1,40 +1,32 @@
-set(PROJECT_NAME OpenGLRendering)
+set(PROJECT_NAME GNMRendering)
 
 ################################################################################
 # Source groups
 ################################################################################
 set(Header_Files
-    "OGLComputeShader.h"
-    "OGLMesh.h"
-    "OGLRenderer.h"
-    "OGLShader.h"
-    "OGLTexture.h"
-    "OGLSkybox.h"
-    "OGLAssetLoader.h"
+    "GNMRenderer.h"
+    "GNMComputeShader.h"
+    "GNMMesh.h"
+    "GNMShader.h"
+    "GNMTexture.h"
+    "GNMAssetLoader.h"
 )
 source_group("Header Files" FILES ${Header_Files})
 
 set(Source_Files
-    "OGLComputeShader.cpp"
-    "OGLMesh.cpp"
-    "OGLRenderer.cpp"
-    "OGLShader.cpp"
-    "OGLTexture.cpp"
-    "OGLSkybox.cpp"
-    "OGLAssetLoader.cpp"
+    "GNMRenderer.cpp"
+    "GNMComputeShader.cpp"
+    "GNMMesh.cpp"
+    "GNMShader.cpp"
+    "GNMTexture.cpp"
+    "GNMAssetLoader.cpp"
 )
 source_group("Source Files" FILES ${Source_Files})
 
-set(GLAD
-    "glad/gl.h"
-    "glad/gl.c"
-)
-source_group("GLAD" FILES ${GLAD})
 
 set(ALL_FILES
     ${Header_Files}
     ${Source_Files}
-    ${GLAD}
 )
 
 set_source_files_properties(${ALL_FILES} PROPERTIES LANGUAGE CXX)
@@ -45,7 +37,7 @@ set_source_files_properties(${ALL_FILES} PROPERTIES LANGUAGE CXX)
 add_library(${PROJECT_NAME} STATIC ${ALL_FILES})
 
 use_props(${PROJECT_NAME} "${CMAKE_CONFIGURATION_TYPES}" "${DEFAULT_CXX_PROPS}")
-set(ROOT_NAMESPACE OpenGLRendering)
+set(ROOT_NAMESPACE GNMRendering)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
     VS_GLOBAL_KEYWORD "Win32Proj"
@@ -92,7 +84,6 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
 ################################################################################
 set(ADDITIONAL_LIBRARY_DEPENDENCIES
     "GameEngine"
-    "opengl32.lib"
 )
 
 include_directories("./")
@@ -101,6 +92,6 @@ include_directories("../GameEngine/Graphics/Renderer/RenderingSupport/")
 include_directories("../GameEngine/Maths/")
 include_directories("../GameEngine/AssetsHandling/")
 include_directories("../GameEngine/WindowingAndInput/")
-include_directories("../GameEngine/WindowingAndInput/Win32/")
+include_directories("../GameEngine/WindowingAndInput/PS4/")
 
 target_link_libraries(${PROJECT_NAME} PUBLIC "${ADDITIONAL_LIBRARY_DEPENDENCIES}")

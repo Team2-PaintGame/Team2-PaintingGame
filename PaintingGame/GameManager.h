@@ -1,38 +1,17 @@
 #pragma once
-#include "SceneNode.h"
-#include "RenderObject.h"
-#include <GameTechRenderer.h>
+#include "ScreenManager.h"
+#include "PlatformConfigurations.h"
 
 namespace NCL::CSC8508 {
-	class BaseScreen;
-	enum class ScreenType {
-		None,
-		SplashScreen,
-		MainMenuScreen,
-		GameScreen,
-		GameWinScreen,
-		GameOverScreen,
-	};
-	class ScreenManager {
-	public:
-		ScreenManager(GameTechRenderer* renderer);
-		~ScreenManager();
-		BaseScreen* GetScreen(ScreenType screenType) const;
-	protected:
-		void LoadAssets(GameTechRenderer* renderer);
-		std::map<ScreenType, BaseScreen*> screens;
-		std::map<ScreenType, TextureBase*> screenTextures;
-		std::map<ScreenType, SceneNode> screenSceneNodes;
-		MeshGeometry* quadMesh;
-		ShaderBase* screenShader;
-	};
 	class GameManager {
 	public:
-		GameManager() : gameMachine((PushdownState*)screenManager->GetScreen(ScreenType::SplashScreen)) {
+		GameManager(Window* window) : gameMachine((PushdownState*)screenManager->GetScreen(ScreenType::SplashScreen)) {
+			renderer2 = config.rendererFactory->createRenderer(*window);
 		}
 		~GameManager() {
 			delete renderer;
 			delete screenManager;
+			delete renderer2;
 			physicsCommon.destroyPhysicsWorld(physicsWorld);
 		}
 		void Run(Window* window);
@@ -43,7 +22,10 @@ namespace NCL::CSC8508 {
 		GameWorld gameWorld;
 		reactphysics3d::PhysicsCommon  physicsCommon;
 		reactphysics3d::PhysicsWorld* physicsWorld = physicsCommon.createPhysicsWorld();
+		PlatformConfigurations config;
+		RendererBase* renderer2;
 		GameTechRenderer* renderer = new GameTechRenderer(gameWorld, physicsWorld);
+		//PaintingGameRenderer rendererTemp;
 		ScreenManager* screenManager = new ScreenManager(renderer);
 		PushdownMachine gameMachine;
 	};

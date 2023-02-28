@@ -10,6 +10,8 @@ set(Header_Files
     "NetworkPlayer.h"
     "PaintingGame.h"
     "GameManager.h"
+    "ScreenManager.h"
+    "PlatformConfigurations.h"
 )
 source_group("Header Files" FILES ${Header_Files})
 
@@ -21,6 +23,7 @@ set(Source_Files
     "NetworkPlayer.cpp"
     "PaintingGame.cpp"
     "GameManager.cpp"
+    "ScreenManager.cpp"
 )
 
 if(USE_VULKAN)
@@ -236,6 +239,7 @@ include_directories(".")
 include_directories("./GameObjects")
 include_directories("./Screens")
 include_directories("../OpenGLRendering/")
+include_directories("../GNMRendering/")
 include_directories("../Networking/")
 include_directories("../GameEngine/")
 include_directories("../GameEngine/Maths/")
@@ -244,6 +248,7 @@ include_directories("../GameEngine/Scene/")
 include_directories("../GameEngine/Scene/Terrain")
 include_directories("../GameEngine/WindowingAndInput/")
 include_directories("../GameEngine/WindowingAndInput/Win32/")
+include_directories("../GameEngine/WindowingAndInput/PS4/")
 include_directories("../GameEngine/Physics/")
 include_directories("../GameEngine/Physics/CollisionDetection/")
 include_directories("../GameEngine/Graphics/Renderer/")
