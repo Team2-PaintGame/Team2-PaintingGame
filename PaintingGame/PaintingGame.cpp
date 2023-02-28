@@ -7,6 +7,7 @@
 #include "Wall.h"
 #include "../GameObjects/MuseumItem.h"
 #include "SecurityGuard.h"
+#include "InputController.h"
 
 
 using namespace NCL;
@@ -14,6 +15,7 @@ using namespace CSC8508;
 
 PaintingGame::PaintingGame(bool online) {
 	world = new GameWorld();
+	gamepad = new Gamepad();
 
 	/* Code for changing physics system paramaters
 	// Create the world settings 
@@ -37,9 +39,11 @@ PaintingGame::PaintingGame(bool online) {
 	InitialiseAssets();
 	physicsWorld->setIsGravityEnabled(useGravity);
 	renderer->UseFog(useFog);
+
 	renderer->settings.SetIsDebugRenderingModeEnabled(true);
 	renderer->settings.debugRendererSettings.SetIsCollisionShapeDisplayed(true);
 	renderer->settings.debugRendererSettings.SetIsBroadPhaseAABBDisplayed(true);
+
 }
 
 /*
@@ -131,11 +135,16 @@ void PaintingGame::UpdateGame(float dt) {
 
 	if (renderer->GetGameState() == GameTechRenderer::GameState::SplitScreen)
 	{
+		numberOfPlayerControllers = 2;
 		world->GetSecondCamera()->UpdateCamera(dt);
 	}
+	else if (renderer->GetGameState() == GameTechRenderer::GameState::SinglePlayer) {
+		numberOfPlayerControllers = 1;
+	}
+
 	if (thirdPersonCamera)
 	{
-		for (int i = 0; i < 2; i++)
+		for (int i = 0; i < numberOfPlayerControllers; i++)
 		{
 			playerControllers[i]->Update(dt);
 		}
@@ -151,11 +160,29 @@ void PaintingGame::UpdateGame(float dt) {
 	physicsWorld->update(dt);
 	Debug::UpdateRenderables(dt);
 
+	if (!gamepad->Refresh())
+	{
+		if (wasConnected)
+		{
+			wasConnected = false;
+
+			std::cout << "Please connect an Xbox 360 controller." << std::endl;
+		}
+	}
+	else
+	{
+		if (!wasConnected)
+		{
+			wasConnected = true;
+
+			std::cout << "Controller connected on port " << gamepad->GetPort() << std::endl;
+		}
+	}
 }
 
 void PaintingGame::InitCamera()
 {
-	float aspect_divide = (renderer->GetGameState() == GameTechRenderer::GameState::SplitScreen) ? 2.0f : 1.0f;
+	//float aspect_divide = renderer->GetGameState() == GameTechRenderer::GameState::SplitScreen ? 2.0f : 1.0f;
 
 	if (thirdPersonCamera) {
 		world->GetMainCamera()->SetThirdPersonCamera(players[0]);
@@ -165,17 +192,9 @@ void PaintingGame::InitCamera()
 	}
 
 	world->GetMainCamera()->SetBasicCameraParameters(-15.0f, 315.0f, Vector3(-60, 40, 60), 0.1f, 500.0f);
-	world->GetMainCamera()->SetPerspectiveCameraParameters(Window::GetWindow()->GetScreenAspect() / aspect_divide);
+	world->GetMainCamera()->SetPerspectiveCameraParameters(Window::GetWindow()->GetScreenAspect());
 
-	if (thirdPersonCamera) {
-		world->GetSecondCamera()->SetThirdPersonCamera(players[1]);
-	}
-	else {
-		world->GetSecondCamera()->SetFirstPersonCamera();
-	}
-
-	world->GetSecondCamera()->SetBasicCameraParameters(-15.0f, 315.0f, Vector3(-60, 40, 60), 0.1f, 500.0f);
-	world->GetSecondCamera()->SetPerspectiveCameraParameters(Window::GetWindow()->GetScreenAspect() / aspect_divide);
+	
 }
 
 void PaintingGame::InitWorld() {
@@ -206,10 +225,6 @@ PlayerBase* PaintingGame::InitiliazePlayer() {
 	players[0] = new PlayerBase(physicsCommon, physicsWorld, Vector3(10, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 5);
 	world->AddGameObject(players[0]);
 	playerControllers[0] = new PlayerController(world->GetMainCamera(), players[0]);
-
-	players[1] = new PlayerBase(physicsCommon, physicsWorld, Vector3(15, 10, 0), meshes.at("cubeMesh"), textures.at("basicTex"), shaders.at("basicShader"), 5);
-	world->AddGameObject(players[1]);
-	playerControllers[1] = new PlayerController(world->GetSecondCamera(), players[1]);
 
 	return players[0];
 }
@@ -322,4 +337,31 @@ void PaintingGame::AddSecurityAI()
 {
 	world->AddGameObject(new SecurityGuard(physicsCommon, physicsWorld, "Security Guard", Vector3(-70.0f, 5.0f, 60.0f), meshes.at("cubeMesh"), textures.at("basicTex"), shaders.at("basicShader"), Vector3(2, 2, 2), players[0], players[1]));
 }
+PlayerBase* PaintingGame::InitSecondPlayer() {
+	players[1] = new PlayerBase(physicsCommon, physicsWorld, Vector3(10, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 5);
+	world->AddGameObject(players[1]);
+	playerControllers[1] = new PlayerController(world->GetSecondCamera(), players[1]);
+
+	return players[1];
+}
+
+void PaintingGame::InitSecondCamera() {
+
+	if (thirdPersonCamera) {
+		world->GetSecondCamera()->SetThirdPersonCamera(players[1]);
+	}
+	else {
+		world->GetSecondCamera()->SetFirstPersonCamera();
+	}
+
+	world->GetSecondCamera()->SetBasicCameraParameters(-15.0f, 315.0f, Vector3(-60, 40, 60), 0.1f, 500.0f);
+	world->GetSecondCamera()->SetPerspectiveCameraParameters(Window::GetWindow()->GetScreenAspect() / 2.0f);
+}
+
+void PaintingGame::DestroySecondPlayer() {
+
+	players[1]->~PlayerBase();
+	world->GetSecondCamera()->~Camera();
+}
+
 

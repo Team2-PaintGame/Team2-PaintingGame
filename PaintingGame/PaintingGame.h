@@ -14,6 +14,7 @@
 #include <PlayerController.h>
 #include <reactphysics3d/reactphysics3d.h>
 
+class Gamepad;
 
 namespace NCL {
 	namespace CSC8508 {
@@ -23,6 +24,10 @@ namespace NCL {
 			~PaintingGame();
 			virtual void UpdateGame(float dt);
 			GameTechRenderer* GetGameTechRenderer();
+			PlayerBase* InitSecondPlayer();
+			void InitSecondCamera();
+			void DestroySecondPlayer();
+
 		protected:
 			void InitialiseAssets();
 			void InitCamera();
@@ -45,7 +50,6 @@ namespace NCL {
 			bool useSplitScreen = false;
 			bool thirdPersonCamera;
 
-
 			bool is_Networked;
 
 			float		forceMagnitude;
@@ -65,6 +69,11 @@ namespace NCL {
 			//Create a physics world 
 			reactphysics3d::PhysicsCommon physicsCommon;
 			reactphysics3d::PhysicsWorld* physicsWorld = NULL; 
+
+			int numberOfPlayerControllers = 1;
+
+			Gamepad* gamepad = NULL;
+			bool wasConnected = true;
 		};
 	}
 }
