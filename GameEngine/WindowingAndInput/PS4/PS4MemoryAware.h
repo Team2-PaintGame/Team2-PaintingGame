@@ -12,11 +12,11 @@ namespace sce{
 }
 
 namespace NCL {
-	namespace GNM {
-		class GNMMemoryAware {
+	namespace PS4 {
+		class PS4MemoryAware {
 		protected:
-			GNMMemoryAware() {}
-			~GNMMemoryAware() {}
+			PS4MemoryAware() {}
+			~PS4MemoryAware() {}
 		protected:
 			static sce::Gnmx::Toolkit::IAllocator*	onionAllocator;
 			static sce::Gnmx::Toolkit::IAllocator*	garlicAllocator;
