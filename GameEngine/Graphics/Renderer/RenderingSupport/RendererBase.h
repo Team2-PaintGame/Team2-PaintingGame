@@ -56,11 +56,6 @@ namespace NCL::Rendering {
 		virtual void EndFrame()		= 0;
 		virtual void SwapBuffers()	= 0;
 
-		virtual void BindShader(ShaderBase* s) = 0;
-		virtual void BindTextureToShader(const TextureBase* t, const std::string& uniform, int texUnit) const = 0;
-		virtual void BindMesh(MeshGeometry* m) = 0;
-		virtual void DrawBoundMesh(int subLayer = 0, int numInstances = 1) = 0;
-
 		Window& hostWindow;
 
 		int windowWidth;

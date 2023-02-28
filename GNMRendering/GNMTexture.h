@@ -1,37 +1,24 @@
-/*
-Part of Newcastle University's Game Engineering source code.
-
-Use as you see fit!
-
-Comments and queries to: richard-gordon.davison AT ncl.ac.uk
-https://research.ncl.ac.uk/game/
-*/
 #pragma once
+#ifdef _ORBIS
 #include "TextureBase.h"
-#include "glad\gl.h"
-
 #include <string>
+#include <gnm\texture.h>
 
 namespace NCL {
 	namespace Rendering {
-		class OGLTexture : public TextureBase
+		class GNMTexture : public TextureBase
 		{
 		public:
-			//friend class OGLRenderer;
-			 OGLTexture();
-			 OGLTexture(GLuint texToOwn);
-			~OGLTexture();
+			GNMTexture();
+			~GNMTexture();
 
-			static TextureBase* RGBATextureFromData(char* data, int width, int height, int channels);
-
-			static TextureBase* RGBATextureFromFilename(const std::string&name);
-
-			GLuint GetObjectID() const	{
-				return texID;
-			}
+			static GNMTexture* LoadTextureFromFile(const std::string& filename);
+			const sce::Gnm::Texture& GetAPITexture() const { return apiTexture; }
+			
 		protected:						
-			GLuint texID;
+			sce::Gnm::Texture apiTexture;
 		};
 	}
 }
+#endif
 

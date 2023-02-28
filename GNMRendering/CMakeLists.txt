@@ -9,11 +9,17 @@ set(Header_Files
     "GNMMesh.h"
     "GNMShader.h"
     "GNMTexture.h"
+    "GNMAssetLoader.h"
 )
 source_group("Header Files" FILES ${Header_Files})
 
 set(Source_Files
-    
+    "GNMRenderer.cpp"
+    "GNMComputeShader.cpp"
+    "GNMMesh.cpp"
+    "GNMShader.cpp"
+    "GNMTexture.cpp"
+    "GNMAssetLoader.cpp"
 )
 source_group("Source Files" FILES ${Source_Files})
 
@@ -86,6 +92,6 @@ include_directories("../GameEngine/Graphics/Renderer/RenderingSupport/")
 include_directories("../GameEngine/Maths/")
 include_directories("../GameEngine/AssetsHandling/")
 include_directories("../GameEngine/WindowingAndInput/")
-include_directories("../GameEngine/WindowingAndInput/Win32/")
+include_directories("../GameEngine/WindowingAndInput/PS4/")
 
 target_link_libraries(${PROJECT_NAME} PUBLIC "${ADDITIONAL_LIBRARY_DEPENDENCIES}")
