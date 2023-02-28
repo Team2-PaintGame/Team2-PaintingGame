@@ -10,6 +10,7 @@
 #include "PushdownMachine.h"
 #include "IntroScreen.h"
 #include "MenuHandler.h"
+#include "GameManager.h"
 
 #define NETWORKING_ENABLED	(0)	// (0) - off, (1) - on
 
@@ -53,7 +54,7 @@ void PushdownAutomata(Window* window) {
 
 int main() {
 	Window* w = Window::CreateGameWindow("CSC8508 Game technology!", 1280, 720);
-
+	GameManager gameManager;
 	if (!w->HasInitialised()) {
 		return -1;
 	}

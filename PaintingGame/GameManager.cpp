@@ -7,12 +7,12 @@ using namespace NCL;
 using namespace CSC8508;
 
 void GameManager::Run(Window* window) {
-	/*while (window->UpdateWindow()) {
+	while (window->UpdateWindow()) {
 		float dt = window->GetTimer()->GetTimeDeltaSeconds();
-		if (!gameMachine->Update(dt)) {
+		if (!gameMachine.Update(dt)) {
 			return;
 		}
-	}*/
+	}
 }
 
 ScreenManager::ScreenManager(GameTechRenderer* renderer) {
