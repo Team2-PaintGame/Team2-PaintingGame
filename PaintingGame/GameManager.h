@@ -28,16 +28,22 @@ namespace NCL::CSC8508 {
 	};
 	class GameManager {
 	public:
-		GameManager() : gameMachine((PushdownState*)screenManager->GetScreen(ScreenType::SplashScreen)) {}
+		GameManager() : gameMachine((PushdownState*)screenManager->GetScreen(ScreenType::SplashScreen)) {
+		}
+		~GameManager() {
+			delete renderer;
+			delete screenManager;
+			physicsCommon.destroyPhysicsWorld(physicsWorld);
+		}
 		void Run(Window* window);
 		//void LoadAssets(); //textures, meshes, shaders
 		//setup renderer, load imgui context inside renderer
 		//this class will also be responsible for making push down automata
 	protected:
-		GameWorld* gameWorld = new GameWorld();
-		reactphysics3d::PhysicsCommon*  physicsCommon = new reactphysics3d::PhysicsCommon();
-		reactphysics3d::PhysicsWorld* physicsWorld = physicsCommon->createPhysicsWorld();
-		GameTechRenderer* renderer = new GameTechRenderer(*gameWorld, physicsWorld);
+		GameWorld gameWorld;
+		reactphysics3d::PhysicsCommon  physicsCommon;
+		reactphysics3d::PhysicsWorld* physicsWorld = physicsCommon.createPhysicsWorld();
+		GameTechRenderer* renderer = new GameTechRenderer(gameWorld, physicsWorld);
 		ScreenManager* screenManager = new ScreenManager(renderer);
 		PushdownMachine gameMachine;
 	};
