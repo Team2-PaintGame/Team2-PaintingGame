@@ -3,14 +3,15 @@
 
 namespace NCL {
 	namespace CSC8508 {
-		class SplashScreen : public BaseScreen
+		class GameScreen : public BaseScreen
 		{
 		public:
-			SplashScreen();
-			~SplashScreen();
-			
+			GameScreen(ScreenManager* screenManager, SceneNode* sceneNode) : BaseScreen(screenManager, sceneNode) {}
+			//virtual ~SplashScreen();
+			void OnAwake() override;
 		protected:
 			virtual void MenuFrame();
+			virtual PushdownResult onStateChange(PushdownState** newState);
 		};
 
 	}

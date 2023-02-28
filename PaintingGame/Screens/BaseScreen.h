@@ -3,22 +3,15 @@
 #include <imgui_impl_win32.h>
 #include <imgui_impl_opengl3.h>
 #include "SceneNode.h"
+#include "GameManager.h"
 
 namespace NCL {
 	namespace CSC8508 {
-		enum class Screen {
-			None,
-			SplashScreen,
-			MainMenuScreen,
-			GameScreen,
-			GameWinScreen,
-			GameOverScreen,
-		};
 		class BaseScreen : public PushdownState
 		{
 		public:
-			BaseScreen(SceneNode* sceneNode);
-			virtual ~BaseScreen();
+			BaseScreen(ScreenManager* screenManager, SceneNode* sceneNode) : screenManager(screenManager), sceneNode(sceneNode) {}
+			virtual ~BaseScreen() {}
 			PushdownResult OnUpdate(float dt, PushdownState** newState) override;
 			void OnAwake() override = 0;
 		protected:
@@ -27,8 +20,9 @@ namespace NCL {
 			virtual PushdownResult onStateChange(PushdownState** newState) = 0;
 			SceneNode* sceneNode = NULL;
 			bool isMenuDisplayed = true;
-			Screen currentScreen = Screen::None;
-			Screen nextScreen = Screen::None;
+			ScreenType currentScreen = ScreenType::None;
+			ScreenType nextScreen = ScreenType::None;
+			ScreenManager* screenManager;
 		};
 
 	}

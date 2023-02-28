@@ -4,27 +4,32 @@ using namespace NCL;
 using namespace CSC8508;
 
 void MainMenuScreen::OnAwake() {
-	currentScreen = Screen::MainMenuScreen;
+	currentScreen = ScreenType::MainMenuScreen;
 }
 
 void MainMenuScreen::MenuFrame() {
 	ImGui::Begin("Main Menu");
-	bool isSinglePlayer = ImGui::Button("Single Player Game");
-	bool isSplitScreen = ImGui::Button("Split Screen: 2 Player Game");
-	bool isNetworkedGame = ImGui::Button("LAN Game");
-	bool isExit = ImGui::Button("Exit");
-	if (isSinglePlayer || isSplitScreen || isNetworkedGame) {
-		nextScreen = Screen::GameScreen;
+	if (ImGui::Button("Single Player Game")) {
+		nextScreen = ScreenType::GameScreen;
+		gameModeSelected = GameMode::SinglePlayer;
 	}
-	else if (isExit) {
-		nextScreen
+	if (ImGui::Button("Split Screen: 2 Player Game")) {
+		nextScreen = ScreenType::GameScreen;
+		gameModeSelected = GameMode::SplitScreen;
+	}
+	if (ImGui::Button("LAN Game")) {
+		nextScreen = ScreenType::GameScreen;
+		gameModeSelected = GameMode::Networked;
+	}	
+	if (ImGui::Button("Exit")) {
+		//nextScreen = ScreenType::Exit;
 	}
 	ImGui::End();
 }
 
 PushdownState::PushdownResult MainMenuScreen::onStateChange(PushdownState** newState) {
 	switch (nextScreen) {
-		case Screen::GameScreen: {
+		case ScreenType::GameScreen: {
 			//*newState = new GameScreen(window, renderer, gameWorld, physicsCommon, menuHandler);
 			//how to tell game screen to construct single, multi, networked game in its constructor
 			return PushdownResult::Push;

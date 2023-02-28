@@ -20,6 +20,7 @@ set(Source_Files
     "SinglePlayerGame.cpp"
     "NetworkPlayer.cpp"
     "PaintingGame.cpp"
+    "GameManager.cpp"
 )
 
 if(USE_VULKAN)
@@ -231,6 +232,7 @@ if(MSVC)
     target_link_libraries(${PROJECT_NAME} LINK_PUBLIC  "xinput.lib")
 endif()
 
+include_directories(".")
 include_directories("./GameObjects")
 include_directories("./Screens")
 include_directories("../OpenGLRendering/")

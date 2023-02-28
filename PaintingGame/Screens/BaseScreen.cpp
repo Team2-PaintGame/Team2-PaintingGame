@@ -3,13 +3,6 @@
 using namespace NCL;
 using namespace CSC8508;
 
-BaseScreen::BaseScreen(SceneNode* sceneNode) {
-	this->sceneNode = sceneNode;
-}
-
-BaseScreen::~BaseScreen() {
-}
-
 PushdownState::PushdownResult BaseScreen::OnUpdate(float dt, PushdownState** newState) {
 	if (!isMenuDisplayed) {
 		sceneNode->Update(dt);
