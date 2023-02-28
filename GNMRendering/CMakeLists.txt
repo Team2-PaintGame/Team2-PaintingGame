@@ -5,6 +5,10 @@ set(PROJECT_NAME GNMRendering)
 ################################################################################
 set(Header_Files
     "GNMRenderer.h"
+    "GNMComputeShader.h"
+    "GNMMesh.h"
+    "GNMShader.h"
+    "GNMTexture.h"
 )
 source_group("Header Files" FILES ${Header_Files})
 
