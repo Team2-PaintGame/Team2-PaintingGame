@@ -83,6 +83,9 @@ namespace NCL {
 			MenuHandler* menuHandler;
 
 			AnimationController* animController;
+
+			reactphysics3d::ConcaveMeshShape* arenaConcaveMeshCollision;
+			reactphysics3d::ConcaveMeshShape* CreateConcaveCollision(std::string meshName);
 		};
 	}
 }

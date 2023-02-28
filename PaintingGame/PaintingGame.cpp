@@ -55,6 +55,7 @@ for this module, even in the coursework, but you can add it if you like!
 
 */
 void PaintingGame::InitialiseAssets() {
+	meshes.insert(std::make_pair("floorMesh", renderer->LoadMesh("Floor.msh")));
 	meshes.insert(std::make_pair("cubeMesh", renderer->LoadMesh("cube.msh")));
 	meshes.insert(std::make_pair("mainChar", renderer->LoadMesh("Male_Guard.msh")));
 	meshes.insert(std::make_pair("sphereMesh", renderer->LoadMesh("sphere.msh")));
@@ -128,6 +129,7 @@ PaintingGame::~PaintingGame() {
 
 	//delete renderer;
 	//delete world;
+	//delete physicsCommon->destroyConcaveMeshShape(arenaConcaveMeshCollision);
 }
 
 void PaintingGame::UpdateGame(float dt) {
@@ -153,6 +155,7 @@ void PaintingGame::UpdateGame(float dt) {
 		}
 
 
+		physicsWorld->update(dt);
 		world->UpdateWorld(dt);
 
 	}
@@ -160,7 +163,6 @@ void PaintingGame::UpdateGame(float dt) {
 	menuHandler->Update(dt);
 	renderer->Render();
 	renderer->Update(dt);
-	physicsWorld->update(dt);
 	Debug::UpdateRenderables(dt);
 }
 
@@ -193,7 +195,7 @@ void PaintingGame::InitWorld() {
 		InitiliazePlayer();
 	}
 
-	world->AddGameObject(new Floor(*physicsCommon, physicsWorld, Vector3(0, 0, 0), meshes.at("cubeMesh"), textures.at("basicTex"), shaders.at("basicShader"), 200));
+	world->AddGameObject(new Floor(*physicsCommon, physicsWorld, Vector3(-20, 0, 0), meshes.at("floorMesh"),CreateConcaveCollision("floorMesh"), textures.at("basicTex"), shaders.at("basicShader"), 1));
 
 	for (int x = 0; x < 15; ++x) {
 		world->AddGameObject(new Box(*physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 2));
@@ -221,6 +223,31 @@ PlayerBase* PaintingGame::InitialiseNetworkPlayer() {
 	netPlayer = new PlayerBase(*physicsCommon, physicsWorld, Vector3(0, 50, 10), meshes.at("mainChar"), textures.at("basicTex"), animController, shaders.at("skinningShader"), 5);
 	world->AddGameObject(netPlayer);
 	return netPlayer;
+}
+
+reactphysics3d::ConcaveMeshShape* NCL::CSC8508::PaintingGame::CreateConcaveCollision(std::string meshName)
+{
+	float nbvertices = meshes.at(meshName)->GetVertexCount();
+	int indices = meshes.at(meshName)->GetIndexCount();
+	int trianglesCount = indices / 3;
+
+	const void* meshVertStart = meshes.at(meshName)->GetPositionData().data();
+	const void* meshIndexStart = meshes.at(meshName)->GetIndexData().data();
+
+	reactphysics3d::TriangleVertexArray* triangleArray =
+		new reactphysics3d::TriangleVertexArray(nbvertices, meshVertStart, sizeof(Vector3), trianglesCount,
+			meshIndexStart, 3 * sizeof(int),
+			reactphysics3d::TriangleVertexArray::VertexDataType::VERTEX_FLOAT_TYPE,
+			reactphysics3d::TriangleVertexArray::IndexDataType::INDEX_INTEGER_TYPE);
+
+	reactphysics3d::TriangleMesh* triangleMesh = physicsCommon->createTriangleMesh();
+
+	// Add the triangle vertex array to the triangle mesh 
+	triangleMesh->addSubpart(triangleArray);
+
+	// Create the concave mesh shape 
+	arenaConcaveMeshCollision = physicsCommon->createConcaveMeshShape(triangleMesh);
+	return arenaConcaveMeshCollision;
 }
 
 GameTechRenderer* PaintingGame::GetGameTechRenderer()

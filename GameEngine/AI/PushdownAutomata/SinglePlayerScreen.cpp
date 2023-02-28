@@ -4,7 +4,6 @@
 #include <imgui_impl_opengl3.h>
 #include <iostream>
 #include "MenuHandler.h"
-
 #include <Win32Window.h>
 
 namespace NCL {
