@@ -75,7 +75,7 @@ namespace NCL {
 			{
 				menuHandler->SetGameState(GameState::SplitScreen);
 			}
-			else if(menuHandler->GetGameState() == GameState::MainMenu) {
+			else if(menuHandler->GetGameState() == GameState::SplitScreen) {
 				paintingGame->InitSecondPlayer();
 				paintingGame->InitSecondCamera();
 			}
