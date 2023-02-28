@@ -55,7 +55,7 @@ for this module, even in the coursework, but you can add it if you like!
 
 */
 void PaintingGame::InitialiseAssets() {
-	meshes.insert(std::make_pair("floorMesh", renderer->LoadMesh("Floor.msh")));
+	meshes.insert(std::make_pair("floorMesh", renderer->LoadMesh("Arena.msh")));
 	meshes.insert(std::make_pair("cubeMesh", renderer->LoadMesh("cube.msh")));
 	meshes.insert(std::make_pair("mainChar", renderer->LoadMesh("Male_Guard.msh")));
 	meshes.insert(std::make_pair("sphereMesh", renderer->LoadMesh("sphere.msh")));
@@ -195,7 +195,7 @@ void PaintingGame::InitWorld() {
 		InitiliazePlayer();
 	}
 
-	world->AddGameObject(new Floor(*physicsCommon, physicsWorld, Vector3(-20, 0, 0), meshes.at("floorMesh"),CreateConcaveCollision("floorMesh"), textures.at("basicTex"), shaders.at("basicShader"), 1));
+	world->AddGameObject(new Floor(*physicsCommon, physicsWorld, Vector3(-30, 0, 20), meshes.at("floorMesh"),CreateConcaveCollision("floorMesh"), textures.at("basicTex"), shaders.at("basicShader"), 1));
 
 	for (int x = 0; x < 15; ++x) {
 		world->AddGameObject(new Box(*physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 2));
