@@ -8,6 +8,9 @@ https://research.ncl.ac.uk/game/
 */
 #pragma once
 #include "Window.h"
+#include "ShaderBase.h"
+#include "TextureBase.h"
+#include "MeshGeometry.h"
 
 namespace NCL::Rendering {
 	enum class VerticalSyncState {
@@ -15,6 +18,14 @@ namespace NCL::Rendering {
 		VSync_OFF,
 		VSync_ADAPTIVE
 	};
+
+	// The abstract factory interface for creating renderer objects
+	class RendererFactory {
+	public:
+		virtual ~RendererFactory() {}
+		virtual RendererBase* createRenderer(Window& w) = 0;
+	};
+
 	class RendererBase {
 	public:
 		friend class NCL::Window;
@@ -22,7 +33,13 @@ namespace NCL::Rendering {
 		RendererBase(Window& w);
 		virtual ~RendererBase();
 
-		virtual bool HasInitialised() const {return true;}
+		bool HasInitialised() const  {
+			return initState;
+		}
+
+		void ForceValidDebugState(bool newState) {
+			forceValidDebugState = newState;
+		}
 
 		virtual void Update(float dt) {}
 
@@ -45,9 +62,18 @@ namespace NCL::Rendering {
 		virtual void RenderFrame()	= 0;
 		virtual void EndFrame()		= 0;
 		virtual void SwapBuffers()	= 0;
+
+		virtual void BindShader(ShaderBase* s) = 0;
+		virtual void BindTextureToShader(const TextureBase* t, const std::string& uniform, int texUnit) const = 0;
+		virtual void BindMesh(MeshGeometry* m) = 0;
+		virtual void DrawBoundMesh(int subLayer = 0, int numInstances = 1) = 0;
+
 		Window& hostWindow;
 
 		int windowWidth;
 		int windowHeight;
+
+		bool initState;
+		bool forceValidDebugState;
 	};
 }

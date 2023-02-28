@@ -36,20 +36,18 @@ namespace NCL {
 		class ShaderBase;
 		class TextureBase;
 
-		class OGLMesh;
-		class OGLShader;
+		class GNMMesh;
+		class GNMShader;
 
-		class SimpleFont;
-
-		class OGLRenderer : public RendererBase
+		class GNMRenderer : public RendererBase
 		{
 		public:
 			friend class OGLRenderer;
-			OGLRenderer(Window& w);
-			~OGLRenderer();
+			GNMRenderer(Window& w);
+			~GNMRenderer();
 
 			void OnWindowResize(int w, int h)	override;
-			
+
 			virtual bool SetVerticalSync(VerticalSyncState s);
 
 			/*void DrawString(const std::string& text, const Vector2&pos, const Vector4& colour = Vector4(0.75f, 0.75f, 0.75f,1), float size = 20.0f );
@@ -76,15 +74,16 @@ namespace NCL {
 			HGLRC	renderContext;		//Permanent Rendering Context		
 #endif
 		private:
-			OGLMesh*	boundMesh;
-			OGLShader*	boundShader;
+		
+			GNMMesh*	boundMesh;
+			GNMShader*	boundShader;
 		};
 
-		// Concrete factory for creating OpenGL renderer
-		class OGLRendererFactory : public RendererFactory {
+		// Concrete factory for creating GNM renderer
+		class GNMRendererFactory : public RendererFactory {
 		public:
 			RendererBase* createRenderer(Window& w) override {
-				return new OGLRenderer(w);
+				return new GNMRenderer(w);
 			}
 		};
 
