@@ -8,10 +8,16 @@ namespace NCL {
 		public:
 			SinglePlayerGame(GameTechRenderer* render, GameWorld* world, reactphysics3d::PhysicsCommon* physicsCommon, MenuHandler* menu);
 			virtual ~SinglePlayerGame();
-			virtual PlayerBase* AddPlayer();
+			PlayerBase* AddPlayer(Camera* camera, Vector3 position, Gamepad* gamepad = nullptr) override;
+			void UpdateGame(float dt) override;
+
+		protected:
+			//void InitWorld() override;
 
 		protected:
 			PlayerBase* player = NULL;
+			PlayerController* playerController;
+			Gamepad* gamepad;
 		};
 	}
 }

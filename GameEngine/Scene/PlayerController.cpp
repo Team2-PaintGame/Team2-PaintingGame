@@ -14,8 +14,6 @@ PlayerController::PlayerController(Camera* cam, GameObject* player, Gamepad* gam
 void PlayerController::Update(float dt)
 {
 	if (gamePad == NULL) {
-		std::cout << "GAMEPAD IS NULL." << "\n";
-		std::cout << "Use Keyboard." << "\n";
 		UpdateKeys();
 	}
 	else {

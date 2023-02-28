@@ -5,6 +5,7 @@
 #include <imgui_impl_win32.h>
 #include <imgui_impl_opengl3.h>
 #include <Win32Window.h>
+#include "SplitScreenGame.h"
 
 namespace NCL {
 	namespace CSC8508 {
@@ -17,12 +18,9 @@ namespace NCL {
 			this->gameWorld = gameWorld;
 			this->physicsCommon = physicsCommon;
 
-			reactphysics3d::PhysicsWorld* physicsWorld = physicsCommon->createPhysicsWorld();
-
 			menuHandler->SetGameState(GameState::SplitScreen);
 
-
-			this->paintingGame = new PaintingGame(renderer,gameWorld,physicsCommon, menuHandler,false);
+			this->paintingGame = new SplitScreenGame(renderer, this->gameWorld, this->physicsCommon, menuHandler);
 			paintingGame->GetGameTechRenderer()->SetRenderMode(GameTechRenderer::RenderMode::SplitScreen);
 
 			
@@ -75,11 +73,6 @@ namespace NCL {
 			{
 				menuHandler->SetGameState(GameState::SplitScreen);
 			}
-			else if(menuHandler->GetGameState() == GameState::SplitScreen) {
-				paintingGame->InitSecondPlayer();
-				paintingGame->InitSecondCamera();
-			}
-			
 		}
 
 		void SplitScreen::OnSleep() {
