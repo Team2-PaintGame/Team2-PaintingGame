@@ -5,6 +5,7 @@
 #include "Floor.h"
 #include "Assets.h"
 #include "Wall.h"
+#include "../GameObjects/MuseumItem.h"
 #include "SecurityGuard.h"
 
 
@@ -56,6 +57,15 @@ void PaintingGame::InitialiseAssets() {
 	meshes.insert(std::make_pair("coinMesh", renderer->LoadMesh("coin.msh")));
 	meshes.insert(std::make_pair("capsuleMesh", renderer->LoadMesh("capsule.msh")));
 	meshes.insert(std::make_pair("terrainMesh", renderer->LoadHeightMap("noise.png")));
+
+	
+	meshes.insert(std::make_pair("throneMesh", renderer->LoadMesh("SanctumThrone.msh")));
+//	textures.insert(std::make_pair("throneColour", renderer->LoadTexture("SanctumThrone/InSanct_Max_Throne_A_Colour.tga")));
+//	textures.insert(std::make_pair("throneMetal", renderer->LoadTexture("SanctumThrone/InSanct_Max_Throne_A_Metal.tga")));
+//	textures.insert(std::make_pair("throneNormal", renderer->LoadTexture("SanctumThrone/InSanct_Max_Throne_A_Normal.tga")));
+
+
+	textures.insert(std::make_pair("basicTex", renderer->LoadTexture("checkerboard.png")));
 
 	meshMaterials.insert(std::make_pair("goatMat", new MeshMaterial("goat.mat")));
 	//meshMaterials.at("goatMat")->LoadTextures();
@@ -185,8 +195,9 @@ void PaintingGame::InitWorld() {
 	//for (int x = 0; x < 15; ++x) {
 	//	world->AddGameObject(new Box(physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 2));
 	//}
-	AddStructureFromFile(Vector3(-75.0, 5.0f, -75.0f), "GameMaze3.txt");
+	AddStructureFromFile(Vector3(-75.0, 5.0f, -75.0f), "SplatAtTheMuseum.txt");
 	AddSecurityAI();
+	world->AddGameObject(new MuseumItem(physicsCommon, physicsWorld, Vector3(25, 25, 25), meshes.at("throneMesh"), textures.at("basicTex"), shaders.at("basicShader"), Vector3(10, 10, 10), "Throne"));
 
 }
 

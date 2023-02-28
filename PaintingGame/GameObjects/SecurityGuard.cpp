@@ -29,8 +29,10 @@ namespace NCL::CSC8508 {
 		callbackPlayerOne = new SecurityCallbackClass(playerOne);
 		callbackPlayerTwo = new SecurityCallbackClass(playerTwo);
 
-		FindNavigableNodes("GameMaze3.txt", navigableNodes);
-		navigationGrid = new NavigationGrid("GameMaze3.txt");
+		//FindNavigableNodes("GameMaze3.txt", navigableNodes);
+		//navigationGrid = new NavigationGrid("GameMaze3.txt");
+		FindNavigableNodes("SplatAtTheMuseum.txt", navigableNodes);
+		navigationGrid = new NavigationGrid("SplatAtTheMuseum.txt");
 		navigationPath = new NavigationPath();
 
 		InitBehaviorTree();
@@ -57,7 +59,7 @@ namespace NCL::CSC8508 {
 		delete navigationGrid;
 		delete navigationPath;
 
-		// delete renderObject // Is this deleted here or elsewhere?
+		delete renderObject; // Is this deleted here or elsewhere?
 
 		physicsCommon.destroyBoxShape(boundingVolume);
 
