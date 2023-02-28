@@ -101,9 +101,8 @@ PaintingGame::~PaintingGame() {
 		delete val;
 	}
 
-	
-	world->ClearAndErase();
 	physicsCommon->destroyPhysicsWorld(physicsWorld);
+	world->ClearAndErase();
 }
 
 void PaintingGame::InitCamera(Camera& camera, PlayerBase& focus, float aspect_multiplier)
@@ -125,11 +124,15 @@ void PaintingGame::InitWorld() {
 }
 
 void PaintingGame::UpdateGame(float dt) {
-	world->UpdateWorld(dt);
+
+	if (menuHandler->GetGameState() != GameState::MainMenu)
+	{
+		world->UpdateWorld(dt);
+		physicsWorld->update(dt);
+	}
 	menuHandler->Update(dt);
 	renderer->Render();
 	renderer->Update(dt);
-	physicsWorld->update(dt);
 	Debug::UpdateRenderables(dt);
 }
 

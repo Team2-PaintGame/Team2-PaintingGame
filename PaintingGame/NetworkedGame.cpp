@@ -27,8 +27,6 @@ NetworkedGame::NetworkedGame(Window* window, GameTechRenderer* rend, GameWorld* 
 	NetworkBase::Initialise();
 	timeToNextPacket  = 0.0f;
 	packetsToSnapshot = 0;
-
-	InitWorld();
 }
 
 NetworkedGame::~NetworkedGame()	{
@@ -218,13 +216,15 @@ void NetworkedGame::UpdateMinimumState() {
 
 NCL::PlayerBase* NetworkedGame::SpawnPlayer() {
 	if (thisServer) {
-		ServerPlayer = CreatePlayer(Vector3(5.0f, 10.0f, 5.0f));
+		ServerPlayer = CreatePlayer(Vector3(5.0f, 15.0f, 5.0f));
+		world->AddGameObject(ServerPlayer);
 		ServerPlayerID = 1;
 		return ServerPlayer;
 	}
 	if (thisClient) {
 		// send to server that player has been spawned
 		ClientPlayer = CreatePlayer(Vector3(-5.0f, 10.0f, -5.0f));
+		world->AddGameObject(ClientPlayer);
 		ClientPlayerID = 2;
 		SpawnPacket packet;
 		packet.position = ClientPlayer->GetTransform().GetPosition();
@@ -240,10 +240,14 @@ NCL::PlayerBase* NetworkedGame::AddPlayer(Camera* camera, Vector3 position, Game
 }
 
 void NetworkedGame::StartLevel() {
+
+	InitWorld();
+
 	PlayerBase* player = SpawnPlayer();
 	InitCamera(*world->GetMainCamera(), *player, 1.0f );
 
 	playerController = new PlayerController(world->GetMainCamera(), player, nullptr);
+
 
 }
 

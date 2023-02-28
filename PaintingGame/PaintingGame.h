@@ -32,6 +32,8 @@ namespace NCL {
 			virtual void UpdateGame(float dt);
 			GameTechRenderer* GetGameTechRenderer();
 
+			void Restart() { InitWorld(); }
+
 		protected:
 			void InitialiseAssets();
 
