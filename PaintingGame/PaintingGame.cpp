@@ -196,16 +196,16 @@ void PaintingGame::InitWorld() {
 		InitiliazePlayer();
 	}
 
-	world->AddGameObject(new Floor(physicsCommon, world->physicsWorld, Vector3(0, 0, 0), meshes.at("cubeMesh"), textures.at("basicTex"), shaders.at("basicShader"), 200));
+	world->AddGameObject(new Floor(physicsCommon, world->physicsWorld, Vector3(0, 5, 0), meshes.at("cubeMesh"), textures.at("basicTex"), shaders.at("basicShader"), 200));
 
 	for (int x = 0; x < 15; ++x) {
-		world->AddGameObject(new Box(physicsCommon, world->physicsWorld, Vector3(0, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 2));
+		world->AddGameObject(new Box(physicsCommon, world->physicsWorld, Vector3(0, 20, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 2));
 	}
 }
 
 
 PlayerBase* PaintingGame::InitiliazePlayer() {
-	players[0] = new PlayerBase(physicsCommon, world->physicsWorld, Vector3(0, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 5);
+	players[0] = new PlayerBase(physicsCommon, world->physicsWorld, Vector3(0, 20, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 5);
 	world->AddGameObject(players[0]);
 	playerControllers[0] = new PlayerController(world->GetMainCamera(), players[0]);
 

@@ -20,7 +20,7 @@ rp3d::decimal RaycastManager::notifyRaycastHit(const rp3d::RaycastInfo& raycastI
 	collision->body = raycastInfo.body;
 
 	hitPoints.push_back(collision);
-
+	
 	//Debug::DrawLine(hitPos, hitPos + n, Vector4(1, 1, 0, 1), 4.0f);
 	return raycastInfo.hitFraction;
 }
@@ -29,7 +29,6 @@ GameWorld::GameWorld()	{
 	mainCamera = new Camera();
 	secondCamera = new Camera();
 	raycastManager = new RaycastManager();
-
 	shuffleConstraints	= false;
 	shuffleObjects		= false;
 	worldIDCounter		= 0;

@@ -70,7 +70,7 @@ void main(void)
 	vec3 halfDir = normalize ( incident + viewDir );
 
 	float rFactor = max (0.0 , dot ( halfDir , IN.normal ));
-	float sFactor = pow ( rFactor , 10000.0);
+	float sFactor = pow ( rFactor , 100.0);
 	
 	vec4 albedo = IN.colour;
 	
@@ -78,14 +78,13 @@ void main(void)
 	 albedo *= texture(mainTex, IN.texCoord);
 	}
 
-	//if(numOfSplats > 0){
-		for(int i = 0; i< 1000;i++){
-			float distanceBetween = distance(IN.localPos.xyz, paintedPos[i].xyz);
-			if (distanceBetween <= 5 - SplatNoise(IN.localPos.xyz)){
-				albedo = vec4(vec3(0.51,1,0.1), 1.0);
-			}
+
+	for(int i = 0; i< 1000;i++){
+		float distanceBetween = distance(paintedPos[i].xyz, IN.worldPos.xyz);
+		if (distanceBetween <= 5 - SplatNoise(IN.localPos.xyz)){
+			albedo = vec4(vec3(0.51,1,0.1),1);
 		}
-	//}
+	}
 	
 	albedo.rgb = pow(albedo.rgb, vec3(2.2));
 	
@@ -97,6 +96,8 @@ void main(void)
 	
 	fragColor.rgb = pow(fragColor.rgb, vec3(1.0 / 2.2f));
 	
-	fragColor.a = albedo.a;
+	fragColor.a = albedo.a;		
+
+
 
 }
