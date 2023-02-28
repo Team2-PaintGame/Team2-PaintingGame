@@ -1,4 +1,5 @@
 #pragma once
+#ifdef _WIN32
 #include "AssetLoader.h"
 
 namespace NCL::Assets {
@@ -22,3 +23,4 @@ namespace NCL::Assets {
 
 	
 }
+#endif

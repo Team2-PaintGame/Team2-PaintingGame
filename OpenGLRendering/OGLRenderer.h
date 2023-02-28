@@ -7,15 +7,13 @@ Comments and queries to: richard-gordon.davison AT ncl.ac.uk
 https://research.ncl.ac.uk/game/
 */
 #pragma once
+#ifdef _WIN32
 #include "RendererBase.h"
 
 #include "Vector3.h"
 #include "Vector4.h"
-
-
-#ifdef _WIN32
 #include "windows.h"
-#endif
+
 
 #ifdef _DEBUG
 #define OPENGL_DEBUGGING
@@ -90,3 +88,4 @@ namespace NCL {
 
 	}
 }
+#endif

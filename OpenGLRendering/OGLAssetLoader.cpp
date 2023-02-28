@@ -1,4 +1,4 @@
-#pragma once
+#ifdef _WIN32
 #include "AssetLoader.h"
 #include "OGLAssetLoader.h"
 #include "OGLTexture.h"
@@ -39,4 +39,4 @@ MeshGeometry* OGLAssetLoader::LoadFlatMesh(int hVertexCount, int wVertexCount) {
 MeshGeometry* OGLAssetLoader::LoadHeightMap(const std::string& filename, int heightMultiplier) {
 	return OGLMesh::GenerateHeightMap(filename, heightMultiplier);
 }
-
+#endif

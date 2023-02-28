@@ -6,6 +6,7 @@ Use as you see fit!
 Comments and queries to: richard-gordon.davison AT ncl.ac.uk
 https://research.ncl.ac.uk/game/
 */
+#ifdef _WIN32
 #include "OGLMesh.h"
 #include "Vector2.h"
 #include "Vector3.h"
@@ -307,3 +308,4 @@ void OGLMesh::RecalculateNormals() {
 
 	}
 }
+#endif
