@@ -19,13 +19,6 @@ namespace NCL::Rendering {
 		VSync_ADAPTIVE
 	};
 
-	// The abstract factory interface for creating renderer objects
-	class RendererFactory {
-	public:
-		virtual ~RendererFactory() {}
-		virtual RendererBase* createRenderer(Window& w) = 0;
-	};
-
 	class RendererBase {
 	public:
 		friend class NCL::Window;
@@ -75,5 +68,12 @@ namespace NCL::Rendering {
 
 		bool initState;
 		bool forceValidDebugState;
+	};
+
+	// The abstract factory interface for creating renderer objects
+	class RendererFactory {
+	public:
+		virtual ~RendererFactory() {}
+		virtual RendererBase* createRenderer(Window& w) = 0;
 	};
 }

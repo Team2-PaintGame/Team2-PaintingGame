@@ -54,7 +54,7 @@ void PushdownAutomata(Window* window) {
 
 int main() {
 	Window* w = Window::CreateGameWindow("CSC8508 Game technology!", 1280, 720);
-	GameManager gameManager;
+	GameManager gameManager(w);
 	if (!w->HasInitialised()) {
 		return -1;
 	}

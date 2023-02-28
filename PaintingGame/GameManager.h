@@ -2,6 +2,8 @@
 #include "SceneNode.h"
 #include "RenderObject.h"
 #include <GameTechRenderer.h>
+#include "PaintingGameRenderer.h"
+#include "RendererBase.h"
 
 namespace NCL::CSC8508 {
 	class BaseScreen;
@@ -28,11 +30,21 @@ namespace NCL::CSC8508 {
 	};
 	class GameManager {
 	public:
-		GameManager() : gameMachine((PushdownState*)screenManager->GetScreen(ScreenType::SplashScreen)) {
+		GameManager(Window* window) : gameMachine((PushdownState*)screenManager->GetScreen(ScreenType::SplashScreen)) {
+			// Determine which platform the user is on
+#ifdef _WIN32
+			factory = new OGLRendererFactory();
+#endif
+#ifdef __ORBIS__
+			factory = new GNMRendererFactory();
+#endif
+			renderer2 = factory->createRenderer(*window);
 		}
 		~GameManager() {
 			delete renderer;
 			delete screenManager;
+			delete renderer2;
+			delete factory;
 			physicsCommon.destroyPhysicsWorld(physicsWorld);
 		}
 		void Run(Window* window);
@@ -43,7 +55,12 @@ namespace NCL::CSC8508 {
 		GameWorld gameWorld;
 		reactphysics3d::PhysicsCommon  physicsCommon;
 		reactphysics3d::PhysicsWorld* physicsWorld = physicsCommon.createPhysicsWorld();
+		RendererFactory* factory;
+
+
+		RendererBase* renderer2;
 		GameTechRenderer* renderer = new GameTechRenderer(gameWorld, physicsWorld);
+		//PaintingGameRenderer rendererTemp;
 		ScreenManager* screenManager = new ScreenManager(renderer);
 		PushdownMachine gameMachine;
 	};
