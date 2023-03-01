@@ -4,18 +4,18 @@
 using namespace NCL;
 using namespace CSC8508;
 
-SplitScreenGame::SplitScreenGame(GameTechRenderer* render, GameWorld* world, reactphysics3d::PhysicsCommon* physicsCommon, MenuHandler* menu) : PaintingGame(render, world, physicsCommon, menu) {
+SplitScreenGame::SplitScreenGame(GameAssets* assets) : PaintingGame(assets) {
 	
 	players.reserve(maxPlayers);
 	//change this through settings obj
-	render->SetRenderMode(GameTechRenderer::RenderMode::SplitScreen);
+	//render->SetRenderMode(GameTechRenderer::RenderMode::SplitScreen);
 
 	gamepad = new Gamepad();
 
 	InitWorld();
 	InitPlayers();
-	InitCamera(*this->world->GetMainCamera(), *players[0], 0.5f);
-	InitCamera(*this->world->GetSecondCamera(), *players[1], 0.5f);
+	//InitCamera(*this->world->GetMainCamera(), *players[0], 0.5f);
+	//InitCamera(*this->world->GetSecondCamera(), *players[1], 0.5f);
 }
 
 SplitScreenGame::~SplitScreenGame() {
@@ -44,7 +44,7 @@ PlayerBase* SplitScreenGame::AddPlayer(Camera* camera, Vector3 position, Gamepad
 	return player;
 }
 
-void SplitScreenGame::UpdateGame(float dt) {
+void SplitScreenGame::Update(float dt) {
 
 	for (PlayerController* pc : playerControllers)
 	{
@@ -54,7 +54,7 @@ void SplitScreenGame::UpdateGame(float dt) {
 	world->GetMainCamera()->UpdateCamera(dt);
 	world->GetSecondCamera()->UpdateCamera(dt);
 
-	PaintingGame::UpdateGame(dt);
+	PaintingGame::Update(dt);
 }
 
 

@@ -4,15 +4,15 @@
 using namespace NCL;
 using namespace CSC8508;
 
-SinglePlayerGame::SinglePlayerGame(GameTechRenderer* render, GameWorld* world, reactphysics3d::PhysicsCommon* physicsCommon, MenuHandler* menu) : PaintingGame(render, world, physicsCommon, menu) {
+SinglePlayerGame::SinglePlayerGame(GameAssets* assets) : PaintingGame(assets) {
 	//change this through settings obj
-	render->SetRenderMode(GameTechRenderer::RenderMode::SingleViewport);
+	//renderer->SetRenderMode(GameTechRenderer::RenderMode::SingleViewport);
 
 	gamepad = new Gamepad();
 
 	InitWorld();
 	AddPlayer(world->GetMainCamera(), Vector3(0.0f, 10.0f, 0.0f), nullptr);
-	InitCamera(*this->world->GetMainCamera(), *player);
+	//InitCamera(*this->world->GetMainCamera(), *player);
 }
 
 SinglePlayerGame::~SinglePlayerGame() {
@@ -28,9 +28,9 @@ PlayerBase* SinglePlayerGame::AddPlayer(Camera* camera, Vector3 position, Gamepa
 	return player;
 }
 
-void SinglePlayerGame::UpdateGame(float dt) {
+void SinglePlayerGame::Update(float dt) {
 	playerController->Update(dt);
 	world->GetMainCamera()->UpdateCamera(dt);
 
-	PaintingGame::UpdateGame(dt);
+	PaintingGame::Update(dt);
 }

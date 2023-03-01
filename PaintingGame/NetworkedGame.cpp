@@ -20,7 +20,7 @@ struct MessagePacket : public GamePacket {
 	}
 };
 
-NetworkedGame::NetworkedGame(Window* window, GameTechRenderer* rend, GameWorld* gameWorld, reactphysics3d::PhysicsCommon* physicsCommon, MenuHandler* menu) : PaintingGame(rend,gameWorld, physicsCommon,menu, true) {
+NetworkedGame::NetworkedGame(GameAssets* assets) : PaintingGame(assets) {
 	thisServer = nullptr;
 	thisClient = nullptr;
 
@@ -63,7 +63,7 @@ void NetworkedGame::StartAsClient(char a, char b, char c, char d) {
 
 }
 
-void NetworkedGame::UpdateGame(float dt) {
+void NetworkedGame::Update(float dt) {
 	timeToNextPacket -= dt;
 	if (timeToNextPacket < 0) {
 		if (thisServer) {
@@ -85,7 +85,7 @@ void NetworkedGame::UpdateGame(float dt) {
 	{
 		world->GetMainCamera()->UpdateCamera(dt);
 		playerController->Update(dt);
-		PaintingGame::UpdateGame(dt);
+		PaintingGame::Update(dt);
 	}
 }
 
@@ -244,7 +244,7 @@ void NetworkedGame::StartLevel() {
 	InitWorld();
 
 	PlayerBase* player = SpawnPlayer();
-	InitCamera(*world->GetMainCamera(), *player, 1.0f );
+	//InitCamera(*world->GetMainCamera(), *player, 1.0f );
 
 	playerController = new PlayerController(world->GetMainCamera(), player, nullptr);
 

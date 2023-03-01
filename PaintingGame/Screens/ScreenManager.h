@@ -28,14 +28,16 @@ namespace NCL::CSC8508 {
 	public:
 		ScreenManager(GameAssets* assets);
 		BaseScreen* GetScreen(ScreenType screenType) const;
+		GameAssets* GetGameAssets() const { return assets; }
 	protected:
 		std::unordered_map<ScreenType, std::unique_ptr<BaseScreen>> screens;
 		std::unordered_map<ScreenType, SceneNode> screenSceneNodes;
+		GameAssets* assets;
 	};
 	class BaseScreen : public PushdownState
 	{
 	public:
-		BaseScreen(ScreenManager* screenManager, SceneNode* sceneNode) : screenManager(screenManager), sceneNode(sceneNode) {}
+		BaseScreen(ScreenManager* screenManager, SceneNode* sceneNode = NULL) : screenManager(screenManager), sceneNode(sceneNode) {}
 		virtual ~BaseScreen() {}
 		PushdownResult OnUpdate(float dt, PushdownState** newState) override;
 		void OnAwake() override {};

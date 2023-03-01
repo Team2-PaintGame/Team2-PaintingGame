@@ -6,7 +6,7 @@ namespace NCL {
 		class GameScreen : public BaseScreen
 		{
 		public:
-			GameScreen(ScreenManager* screenManager, SceneNode* sceneNode) : BaseScreen(screenManager, sceneNode) {}
+			GameScreen(ScreenManager* screenManager, SceneNode* sceneNode = NULL) : BaseScreen(screenManager, sceneNode) {}
 			void OnAwake() override;
 		protected:
 			void LoadGame();

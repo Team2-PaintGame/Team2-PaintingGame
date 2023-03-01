@@ -39,16 +39,6 @@ set(GameObjects
 source_group("Game Objects" FILES ${GameObjects})
 
 set(Screens
-    "./Screens/IntroScreen.h"
-    "./Screens/IntroScreen.cpp"
-    "./Screens/SinglePlayerScreen.h"
-    "./Screens/SinglePlayerScreen.cpp"
-    "./Screens/SplitScreen.h"
-    "./Screens/SplitScreen.cpp"
-    "./Screens/LanScreen.h"
-    "./Screens/LanScreen.cpp"
-    "./Screens/PauseScreen.h"
-    "./Screens/PauseScreen.cpp"  
     "./Screens/SplashScreen.h"
     "./Screens/SplashScreen.cpp" 
     "./Screens/MainMenuScreen.h"

@@ -5,6 +5,7 @@
 #include "GameClient.h"
 #include "GameServer.h"
 #include <array>
+#include <PlayerController.h>
 
 namespace NCL {
 	namespace CSC8508 {
@@ -14,13 +15,13 @@ namespace NCL {
 
 		class NetworkedGame : public PaintingGame, public PacketReceiver {
 		public:
-			NetworkedGame(Window* window, GameTechRenderer* rend, GameWorld* gameWorld, reactphysics3d::PhysicsCommon* physicsCommon, MenuHandler* menu);
+			NetworkedGame(GameAssets* assets);
 			~NetworkedGame();
 
 			void StartAsServer();
 			void StartAsClient(char a, char b, char c, char d);
 
-			void UpdateGame(float dt) override;
+			void Update(float dt) override;
 
 			void StartLevel();
 
