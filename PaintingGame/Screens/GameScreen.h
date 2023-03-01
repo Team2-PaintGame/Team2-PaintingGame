@@ -7,7 +7,6 @@ namespace NCL {
 		{
 		public:
 			GameScreen(ScreenManager* screenManager, SceneNode* sceneNode) : BaseScreen(screenManager, sceneNode) {}
-			//virtual ~GameScreen();
 			void OnAwake() override;
 		protected:
 			virtual void MenuFrame();

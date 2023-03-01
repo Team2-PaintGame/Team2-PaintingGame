@@ -3,26 +3,27 @@
 using namespace NCL;
 using namespace CSC8508;
 
-void SplashScreen::OnAwake() {
-	currentScreen = ScreenType::SplashScreen;
-}
-
 void SplashScreen::MenuFrame() {
 	ImGui::Begin("Painting Game");
 	if (ImGui::Button("Play Game")) {
-		//transition to main menu
-		nextScreen = ScreenType::MainMenuScreen;
+		command = ScreenCommand::Transition;
+	}
+	if (ImGui::Button("Exit")) {
+		command = ScreenCommand::Exit;
 	}
 	ImGui::End();
 }
 
 PushdownState::PushdownResult SplashScreen::onStateChange(PushdownState** newState) {
-	switch (nextScreen) {
-		case ScreenType::MainMenuScreen: {
+	switch (command)
+	{
+		case ScreenCommand::Transition: {
 			*newState = screenManager->GetScreen(ScreenType::MainMenuScreen);
 			return PushdownResult::Push;
 		}
-
+		case ScreenCommand::Exit: {
+			return PushdownResult::Pop;
+		}
 		default: {
 			return PushdownResult::NoChange;
 		}

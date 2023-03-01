@@ -14,6 +14,14 @@ namespace NCL::CSC8508 {
 		GameWinScreen,
 		GameOverScreen,
 	};
+	enum class ScreenCommand {
+		None,
+		Transition,
+		CreateSinglePlayerGame,
+		CreateSplitScreenGame,
+		CreateNetworkedGame,
+		Exit,
+	};
 	class BaseScreen;
 	class ScreenManager {
 	public:
@@ -29,15 +37,15 @@ namespace NCL::CSC8508 {
 		BaseScreen(ScreenManager* screenManager, SceneNode* sceneNode) : screenManager(screenManager), sceneNode(sceneNode) {}
 		virtual ~BaseScreen() {}
 		PushdownResult OnUpdate(float dt, PushdownState** newState) override;
-		void OnAwake() override = 0;
+		void OnAwake() override {};
 	protected:
 		//void RenderMenu();
 		virtual void MenuFrame() = 0;
 		virtual PushdownResult onStateChange(PushdownState** newState) = 0;
+		virtual void onCommand() {};
 		SceneNode* sceneNode = NULL;
 		bool isMenuDisplayed = true;
-		ScreenType currentScreen = ScreenType::None;
-		ScreenType nextScreen = ScreenType::None;
+		ScreenCommand command = ScreenCommand::None;
 		ScreenManager* screenManager;
 	};
 }
