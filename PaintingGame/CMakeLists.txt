@@ -5,16 +5,25 @@ set(PROJECT_NAME PaintingGame)
 ################################################################################
 set(Header_Files
     "NetworkedGame.h"
+    "SplitScreenGame.h"
+    "SinglePlayerGame.h"
     "NetworkPlayer.h"
     "PaintingGame.h"
+    "GameManager.h"
+    "PlatformConfigurations.h"
+    "GameAssets.h"
 )
 source_group("Header Files" FILES ${Header_Files})
 
 set(Source_Files
     "Main.cpp"
     "NetworkedGame.cpp"
+    "SplitScreenGame.cpp"
+    "SinglePlayerGame.cpp"
     "NetworkPlayer.cpp"
     "PaintingGame.cpp"
+    "GameManager.cpp"
+    "GameAssets.cpp"
 )
 
 if(USE_VULKAN)
@@ -28,6 +37,28 @@ set(GameObjects
     "./GameObjects/Floor.h"
 )
 source_group("Game Objects" FILES ${GameObjects})
+
+set(Screens
+    "./Screens/IntroScreen.h"
+    "./Screens/IntroScreen.cpp"
+    "./Screens/SinglePlayerScreen.h"
+    "./Screens/SinglePlayerScreen.cpp"
+    "./Screens/SplitScreen.h"
+    "./Screens/SplitScreen.cpp"
+    "./Screens/LanScreen.h"
+    "./Screens/LanScreen.cpp"
+    "./Screens/PauseScreen.h"
+    "./Screens/PauseScreen.cpp"  
+    "./Screens/SplashScreen.h"
+    "./Screens/SplashScreen.cpp" 
+    "./Screens/MainMenuScreen.h"
+    "./Screens/MainMenuScreen.cpp" 
+    "./Screens/GameScreen.h"
+    "./Screens/GameScreen.cpp" 
+    "./Screens/ScreenManager.h"
+    "./Screens/ScreenManager.cpp"
+)
+source_group("Screens" FILES ${Screens})
 
 set(ImGui
     "../Middleware/ImGui/imgui.cpp"
@@ -53,6 +84,7 @@ set(ALL_FILES
     ${Header_Files}
     ${Source_Files}
     ${GameObjects}
+    ${Screens}
     ${ImGui}
 )
 
@@ -203,8 +235,11 @@ if(MSVC)
     target_link_libraries(${PROJECT_NAME} LINK_PUBLIC  "xinput.lib")
 endif()
 
+include_directories(".")
 include_directories("./GameObjects")
+include_directories("./Screens")
 include_directories("../OpenGLRendering/")
+include_directories("../GNMRendering/")
 include_directories("../Networking/")
 include_directories("../GameEngine/")
 include_directories("../GameEngine/Maths/")
@@ -213,6 +248,7 @@ include_directories("../GameEngine/Scene/")
 include_directories("../GameEngine/Scene/Terrain")
 include_directories("../GameEngine/WindowingAndInput/")
 include_directories("../GameEngine/WindowingAndInput/Win32/")
+include_directories("../GameEngine/WindowingAndInput/PS4/")
 include_directories("../GameEngine/Physics/")
 include_directories("../GameEngine/Physics/CollisionDetection/")
 include_directories("../GameEngine/Graphics/Renderer/")

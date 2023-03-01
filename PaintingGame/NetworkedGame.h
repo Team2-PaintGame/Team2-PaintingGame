@@ -4,6 +4,7 @@
 #include <NetworkObject.h>
 #include "GameClient.h"
 #include "GameServer.h"
+#include <array>
 
 namespace NCL {
 	namespace CSC8508 {
@@ -21,8 +22,6 @@ namespace NCL {
 
 			void UpdateGame(float dt) override;
 
-			void SpawnPlayer();
-
 			void StartLevel();
 
 			void ReceivePacket(int type, GamePacket* payload, int source) override;
@@ -30,6 +29,9 @@ namespace NCL {
 			void OnPlayerCollision(NetworkPlayer* a, NetworkPlayer* b);
 
 		protected:
+			PlayerBase* SpawnPlayer();
+			PlayerBase* AddPlayer(Camera* camera, Vector3 position, Gamepad* gamepad) override;
+
 			void UpdateAsServer(float dt);
 			void UpdateAsClient(float dt);
 
@@ -44,6 +46,9 @@ namespace NCL {
 
 			void BroadcastSnapshot(bool deltaFrame);
 			void UpdateMinimumState();
+
+
+		protected:
 			std::map<int, int> stateIDs;
 
 			GameServer* thisServer;
@@ -53,18 +58,14 @@ namespace NCL {
 
 			std::vector<NetworkObject*> networkObjects;
 
-			std::map<int, GameObject*> serverPlayers;
 			PlayerBase* ServerPlayer;
 			PlayerBase* ClientPlayer;
 			int ServerPlayerID;
 			int ClientPlayerID;
 
-			bool connected = false;
+			PlayerController* playerController;
 
-			MenuHandler* menuHandler;
-			GameTechRenderer* renderer;
-			GameWorld* gameWorld;
-			reactphysics3d::PhysicsCommon* physicsCommon;
+			bool connected = false;
 
 		};
 	}

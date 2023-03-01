@@ -1,3 +1,4 @@
+#ifdef _WIN32
 #include "OGLSkybox.h"
 #include <string>
 #include <vector>
@@ -112,3 +113,4 @@ void OGLSkybox::LoadTextures(std::string* filenames, GLuint& texID) {
 		TextureLoader::FreeTexture(texData[i]);
 	}
 }
+#endif

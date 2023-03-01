@@ -69,6 +69,9 @@ namespace NCL {
 			virtual void Update(float dt);
 			
 			MeshGeometry*	LoadMesh(const string& name);
+			MeshGeometry* LoadQuadMesh() {
+				return OGLMesh::GenerateQuad();
+			}
 			MeshGeometry* LoadFlatMesh(int hVertexCount = 128, int wVertexCount = 128);
 			MeshGeometry* LoadHeightMap(const std::string& filename, int heightMultiplier = 10);
 			TextureBase*	LoadTexture(const string& name);

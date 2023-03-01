@@ -19,16 +19,6 @@ set(AI_Pushdown_Automata
     "./AI/PushdownAutomata/PushdownMachine.cpp"
     "./AI/PushdownAutomata/PushdownState.h"
     "./AI/PushdownAutomata/PushdownState.cpp"
-    "./AI/PushdownAutomata/IntroScreen.h"
-    "./AI/PushdownAutomata/IntroScreen.cpp"
-    "./AI/PushdownAutomata/SinglePlayerScreen.h"
-    "./AI/PushdownAutomata/SinglePlayerScreen.cpp"
-    "./AI/PushdownAutomata/SplitScreen.h"
-    "./AI/PushdownAutomata/SplitScreen.cpp"
-    "./AI/PushdownAutomata/LanScreen.h"
-    "./AI/PushdownAutomata/LanScreen.cpp"
-    "./AI/PushdownAutomata/PauseScreen.h"
-    "./AI/PushdownAutomata/PauseScreen.cpp"   
 )
 source_group("AI\\Pushdown Automata" FILES ${AI_Pushdown_Automata})
 
@@ -55,6 +45,7 @@ source_group("AI\\Pathfinding" FILES ${AI_Pathfinding})
 set(Asset_Handling
     "./AssetsHandling/Assets.cpp"
     "./AssetsHandling/Assets.h"
+    "./AssetsHandling/AssetLoader.h"
     "./AssetsHandling/SimpleFont.cpp"
     "./AssetsHandling/SimpleFont.h"
     "./AssetsHandling/TextureLoader.cpp"
@@ -80,6 +71,7 @@ set(Entity_Components
     "./EntityComponents/Transform.cpp"
     "./EntityComponents/Transform.h"
     "./EntityComponents/Layer.h"
+    "./EntityComponents/SceneNode.h"
 )
 source_group("Entity Components" FILES ${Entity_Components})
 
@@ -196,6 +188,21 @@ set(Windowing_and_Input__Win32
 )
 source_group("Windowing and Input\\Win32" FILES ${Windowing_and_Input__Win32})
 
+set(Windowing_and_Input__PS4
+    "./WindowingAndInput/PS4/InputBase.cpp"
+    "./WindowingAndInput/PS4/InputBase.h"
+    "./WindowingAndInput/PS4/PS4Input.cpp"
+    "./WindowingAndInput/PS4/PS4Input.h"
+    "./WindowingAndInput/PS4/PS4Window.cpp"
+    "./WindowingAndInput/PS4/PS4Window.h"
+    "./WindowingAndInput/PS4/PS4Frame.cpp"
+    "./WindowingAndInput/PS4/PS4Frame.h"
+    "./WindowingAndInput/PS4/PS4MemoryAware.cpp"
+    "./WindowingAndInput/PS4/PS4MemoryAware.h"
+
+)
+source_group("Windowing and Input\\PS4" FILES ${Windowing_and_Input__PS4})
+
 set(Utils
     "Utils.h"
 )
@@ -223,6 +230,7 @@ set(ALL_FILES
     ${Scene_Terrain}
     ${Windowing_and_Input}
     ${Windowing_and_Input__Win32}
+    ${Windowing_and_Input__PS4}
     ${Utils}
 )
 
@@ -294,6 +302,7 @@ include_directories("./")
 include_directories("Maths/")
 include_directories("WindowingAndInput/")
 include_directories("WindowingAndInput/Win32/")
+include_directories("WindowingAndInput/PS4/")
 include_directories("Physics/")
 include_directories("Physics/CollisionDetection/")
 include_directories("Scene/")
@@ -312,6 +321,7 @@ include_directories("AI/PathFinding/")
 include_directories("AI/PushdownAutomata/")
 include_directories("AI/StateMachine/")
 include_directories("../OpenGLRendering/")
+include_directories("../GNMRendering/")
 include_directories("../Middleware/ImGui/")
 
 set(ADDITIONAL_LIBRARY_DEPENDENCIES

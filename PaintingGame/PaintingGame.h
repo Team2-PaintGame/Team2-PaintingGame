@@ -20,28 +20,28 @@ class AnimationController;
 namespace NCL {
 	class MenuHandler;
 	namespace CSC8508 {
-		class PaintingGame {
+		class PaintingGame : SceneNode {
 		public:
 #ifdef USEVULKAN
 			PaintingGame(GameTechVulkanRenderer* render, GameWorld* world, reactphysics3d::PhysicsWorld* physicsWorld, reactphysics3d::PhysicsCommon* physicsCommon, MenuHandler* menu, bool online = false);
 #else
-			
 			PaintingGame(GameTechRenderer* render, GameWorld* world, reactphysics3d::PhysicsCommon* physicsCommon, MenuHandler* menu, bool online = false);
 #endif
 			
 			~PaintingGame();
 			virtual void UpdateGame(float dt);
 			GameTechRenderer* GetGameTechRenderer();
-			PlayerBase* InitSecondPlayer();
-			void InitSecondCamera();
-			void DestroySecondPlayer();
+
+			void Restart() { InitWorld(); }
 
 		protected:
 			void InitialiseAssets();
-			void InitCamera();
-			void InitWorld();
-			PlayerBase* InitiliazePlayer();
-			PlayerBase* InitialiseNetworkPlayer();
+
+			virtual void InitCamera(Camera& camera, PlayerBase& focus, float aspect_multiplier = 1.0f);
+			virtual void InitWorld();
+
+			virtual PlayerBase* CreatePlayer(Vector3 position);
+			virtual PlayerBase* AddPlayer(Camera* camera, Vector3 position, Gamepad* gamepad = nullptr) { return nullptr; };
 #ifdef USEVULKAN
 			GameTechVulkanRenderer* renderer;
 #else
@@ -51,10 +51,6 @@ namespace NCL {
 
 			bool useGravity = true;
 			bool useFog = true;
-			bool useSplitScreen = false;
-			bool thirdPersonCamera;
-
-			bool is_Networked;
 
 			float		forceMagnitude;
 
@@ -66,18 +62,10 @@ namespace NCL {
 			std::map<std::string, ShaderBase*> shaders;
 
 			//Coursework Additional functionality	
-			PlayerBase* players[2] = { NULL };
-			PlayerBase* netPlayer = NULL;
-			PlayerController* playerControllers[2] = {NULL};
 			
 			//Create a physics world 
 			reactphysics3d::PhysicsCommon* physicsCommon;
-			reactphysics3d::PhysicsWorld* physicsWorld = NULL; 
-
-			int numberOfPlayerControllers = 1;
-
-			Gamepad* gamePad = NULL;
-			bool wasConnected = true;
+			reactphysics3d::PhysicsWorld* physicsWorld = NULL;
 
 			//UI
 			MenuHandler* menuHandler;

@@ -1,4 +1,4 @@
-#include "SplitScreen.h"
+#include "LanScreen.h"
 #include "PauseScreen.h"
 #include "MenuHandler.h"
 
@@ -8,32 +8,33 @@
 
 namespace NCL {
 	namespace CSC8508 {
-
-		SplitScreen::SplitScreen(Window* window, GameTechRenderer* rend, GameWorld* gameWorld, reactphysics3d::PhysicsCommon* physicsCommon, MenuHandler* menu)
+		LanScreen::LanScreen(Window* window, GameTechRenderer* rend, GameWorld* gameWorld, reactphysics3d::PhysicsCommon* physicsCommon, MenuHandler* menu)
 		{
 			this->window = window;
-			this->menuHandler = menu;
+			isPlayingGame = true;
+			menuHandler = menu;
 			this->renderer = rend;
 			this->gameWorld = gameWorld;
 			this->physicsCommon = physicsCommon;
 
-			reactphysics3d::PhysicsWorld* physicsWorld = physicsCommon->createPhysicsWorld();
+			this->paintingGame = new NetworkedGame(window,renderer,gameWorld,physicsCommon, menuHandler);
+			paintingGame->GetGameTechRenderer()->SetRenderMode(GameTechRenderer::RenderMode::SingleViewport);
 
-			menuHandler->SetGameState(GameState::SplitScreen);
-
-
-			this->paintingGame = new PaintingGame(renderer,gameWorld,physicsCommon, menuHandler,false);
-			paintingGame->GetGameTechRenderer()->SetRenderMode(GameTechRenderer::RenderMode::SplitScreen);
-
+			if (menuHandler->GetGameState() == GameState::Server) {
+				paintingGame->StartAsServer();
+			}
+			else if (menuHandler->GetGameState() == GameState::Client) {
+				paintingGame->StartAsClient(127, 0, 0, 1);
+			}
 			
 		}
-		SplitScreen::~SplitScreen()
+		LanScreen::~LanScreen()
 		{
 			delete paintingGame;
 		}
-		PushdownState::PushdownResult SplitScreen::OnUpdate(float dt, PushdownState** newState)
+		PushdownState::PushdownResult LanScreen::OnUpdate(float dt, PushdownState** newState)
 		{
-			if (dt > 0.1f) {
+			if (dt > 5.0f) {
 				std::cout << "Skipping large time delta" << std::endl;
 				return PushdownResult::NoChange; //must have hit a breakpoint or something to have a 1 second frame time!
 			}
@@ -54,7 +55,10 @@ namespace NCL {
 
 			GameState gameState = menuHandler->GetGameState();
 			switch (gameState) {
-			case GameState::SplitScreen: {
+			case GameState::Server: {
+				return PushdownResult::NoChange;
+			}	break;
+			case GameState::Client: {
 				return PushdownResult::NoChange;
 			}	break;
 
@@ -66,25 +70,16 @@ namespace NCL {
 				*newState = new PauseScreen(paintingGame, menuHandler);
 				return PushdownResult::Push;
 			}break;
-
 			}
+
 		}
-		void SplitScreen::OnAwake()
+		void LanScreen::OnAwake()
 		{
-			if (menuHandler->GetGameState() == GameState::ExitPauseMenu) // Resume game
-			{
-				menuHandler->SetGameState(GameState::SplitScreen);
-			}
-			else if(menuHandler->GetGameState() == GameState::SplitScreen) {
-				paintingGame->InitSecondPlayer();
-				paintingGame->InitSecondCamera();
-			}
-			
+			//if (menuHandler->GetGameState() == GameState::ExitPauseMenu) // Resume game
+			//{
+			//	menuHandler->SetGameState(GameState::Server);
+			//}
 		}
-
-		void SplitScreen::OnSleep() {
-
-		}
-
 	}
 }
+
