@@ -3,7 +3,7 @@
 #include <imgui_impl_win32.h>
 #include <imgui_impl_opengl3.h>
 #include "SceneNode.h"
-#include "GameManager.h"
+#include "ScreenManager.h"
 
 namespace NCL {
 	namespace CSC8508 {

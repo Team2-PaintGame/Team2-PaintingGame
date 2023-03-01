@@ -10,8 +10,8 @@ set(Header_Files
     "NetworkPlayer.h"
     "PaintingGame.h"
     "GameManager.h"
-    "ScreenManager.h"
     "PlatformConfigurations.h"
+    "GameAssets.h"
 )
 source_group("Header Files" FILES ${Header_Files})
 
@@ -23,7 +23,7 @@ set(Source_Files
     "NetworkPlayer.cpp"
     "PaintingGame.cpp"
     "GameManager.cpp"
-    "ScreenManager.cpp"
+    "GameAssets.cpp"
 )
 
 if(USE_VULKAN)
@@ -49,14 +49,16 @@ set(Screens
     "./Screens/LanScreen.cpp"
     "./Screens/PauseScreen.h"
     "./Screens/PauseScreen.cpp"   
-    "./Screens/BaseScreen.h"
-    "./Screens/BaseScreen.cpp" 
+   # "./Screens/BaseScreen.h"
+   # "./Screens/BaseScreen.cpp" 
     "./Screens/SplashScreen.h"
     "./Screens/SplashScreen.cpp" 
     "./Screens/MainMenuScreen.h"
     "./Screens/MainMenuScreen.cpp" 
     "./Screens/GameScreen.h"
     "./Screens/GameScreen.cpp" 
+    "./Screens/ScreenManager.h"
+    "./Screens/ScreenManager.cpp"
 )
 source_group("Screens" FILES ${Screens})
 

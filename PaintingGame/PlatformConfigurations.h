@@ -1,6 +1,8 @@
 #pragma once
 #include <RendererBase.h>
 #include <AssetLoader.h>
+#include <OGLRenderer.h>
+#include <GNMRenderer.h>
 #include <OGLAssetLoader.h>
 #include <GNMAssetLoader.h>
 

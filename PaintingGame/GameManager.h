@@ -1,32 +1,34 @@
 #pragma once
 #include "ScreenManager.h"
 #include "PlatformConfigurations.h"
+#include "GameAssets.h"
+#include <PushdownMachine.h>
 
 namespace NCL::CSC8508 {
 	class GameManager {
 	public:
-		GameManager(Window* window) : gameMachine((PushdownState*)screenManager->GetScreen(ScreenType::SplashScreen)) {
-			renderer2 = config.rendererFactory->createRenderer(*window);
+		GameManager(Window* window) {
+			renderer = config.rendererFactory->createRenderer(*window);
+			assetLoader = config.assetLoaderFactory->createAssetLoader();
+			gameAssets = new GameAssets(assetLoader);
+			screenManager = new ScreenManager(gameAssets);
+			gameMachine = new PushdownMachine((PushdownState*)screenManager->GetScreen(ScreenType::SplashScreen));
 		}
 		~GameManager() {
 			delete renderer;
 			delete screenManager;
-			delete renderer2;
-			physicsCommon.destroyPhysicsWorld(physicsWorld);
+			delete assetLoader;
+			delete gameAssets;
+			delete gameMachine;
 		}
 		void Run(Window* window);
-		//void LoadAssets(); //textures, meshes, shaders
 		//setup renderer, load imgui context inside renderer
-		//this class will also be responsible for making push down automata
 	protected:
-		GameWorld gameWorld;
-		reactphysics3d::PhysicsCommon  physicsCommon;
-		reactphysics3d::PhysicsWorld* physicsWorld = physicsCommon.createPhysicsWorld();
 		PlatformConfigurations config;
-		RendererBase* renderer2;
-		GameTechRenderer* renderer = new GameTechRenderer(gameWorld, physicsWorld);
-		//PaintingGameRenderer rendererTemp;
-		ScreenManager* screenManager = new ScreenManager(renderer);
-		PushdownMachine gameMachine;
+		RendererBase* renderer;
+		Assets::AssetLoader* assetLoader;
+		GameAssets* gameAssets;
+		ScreenManager* screenManager;
+		PushdownMachine* gameMachine;
 	};
 }

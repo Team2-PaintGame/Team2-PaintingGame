@@ -1,5 +1,5 @@
 #pragma once
-#include "BaseScreen.h"
+#include "ScreenManager.h"
 
 namespace NCL {
 	namespace CSC8508 {
