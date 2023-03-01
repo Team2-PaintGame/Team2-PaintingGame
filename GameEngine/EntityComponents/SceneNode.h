@@ -12,10 +12,8 @@ namespace NCL::CSC8508 {
 			renderObject = new RenderObject(NULL, mesh, shader);
 			renderObject->AddTexture(texture);
 		}
-		void AddChild(SceneNode* n) { child = n; }
 		virtual void Update(float dt) {}
 	protected:
 		RenderObject* renderObject = NULL;
-		SceneNode* child;
 	};
 }

@@ -8,19 +8,20 @@ using namespace CSC8508;
 
 void GameScreen::OnAwake() {
 	isMenuDisplayed = false;
+	LoadGame();
 }
 
 void GameScreen::LoadGame() {
 	switch (command)
 	{
 	case ScreenCommand::CreateSinglePlayerGame: 
-		sceneNode->AddChild(new SinglePlayerGame());
+		sceneNode = new SinglePlayerGame();
 	break;
 	case ScreenCommand::CreateSplitScreenGame:
-		sceneNode->AddChild(new SinglePlayerGame());
+		sceneNode = new SinglePlayerGame();
 		break;
 	case ScreenCommand::CreateNetworkedGame: 
-		sceneNode->AddChild(new SinglePlayerGame());
+		sceneNode = new SinglePlayerGame();
 		break;
 	default:
 		std::cout << "No instance of game could be created: No appropriate Command Selected." << std::endl;
