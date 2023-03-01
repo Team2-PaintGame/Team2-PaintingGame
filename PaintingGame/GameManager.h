@@ -21,7 +21,7 @@ namespace NCL::CSC8508 {
 			delete gameAssets;
 			delete gameMachine;
 		}
-		void Run(Window* window);
+		bool RunGame(float dt);
 		//setup renderer, load imgui context inside renderer
 	protected:
 		PlatformConfigurations config;

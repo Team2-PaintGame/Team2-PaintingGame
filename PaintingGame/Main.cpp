@@ -30,7 +30,8 @@ int main() {
 			continue; //must have hit a breakpoint or something to have a 1 second frame time!
 		}
 		w->SetTitle("Painting Game Frame time: " + std::to_string(1000.0f * dt));
-		//gameManager.Run(w);
+		if (!gameManager.RunGame(dt)) 
+			return 0;
 	}
 
 	Window::DestroyGameWindow();
