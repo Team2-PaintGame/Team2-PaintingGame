@@ -15,30 +15,16 @@ void MainMenuScreen::MenuFrame() {
 		command = ScreenCommand::CreateNetworkedGame;
 	}	
 	if (ImGui::Button("Exit")) {
-		command = ScreenCommand::Exit;
+		command = ScreenCommand::TransitionToPreviousScreen;
 	}
 	ImGui::End();
 }
 
 PushdownState::PushdownResult MainMenuScreen::onStateChange(PushdownState** newState) {
-	switch (command) {
-		case ScreenCommand::CreateSinglePlayerGame: {
-			*newState = screenManager->GetScreen(ScreenType::GameScreen);
-			return PushdownResult::Push;
-		}
-		case ScreenCommand::CreateSplitScreenGame: {
-			*newState = screenManager->GetScreen(ScreenType::GameScreen);
-			return PushdownResult::Push;
-		}
-		case ScreenCommand::CreateNetworkedGame: {
-			*newState = screenManager->GetScreen(ScreenType::GameScreen);
-			return PushdownResult::Push;
-		}
-		case ScreenCommand::Exit: {
-			return PushdownResult::Pop;
-		}
-		default: {
-			return PushdownResult::NoChange;
-		}
+	if (command == ScreenCommand::CreateSinglePlayerGame || command == ScreenCommand::CreateSplitScreenGame || command == ScreenCommand::CreateNetworkedGame) {
+		*newState = screenManager->GetScreen(ScreenType::GameScreen);
+		((BaseScreen*)(*newState))->SetCommand(command);
+		return PushdownResult::Push;
 	}
+	return PushdownResult::NoChange;
 }

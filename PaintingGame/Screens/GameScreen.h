@@ -9,6 +9,7 @@ namespace NCL {
 			GameScreen(ScreenManager* screenManager, SceneNode* sceneNode) : BaseScreen(screenManager, sceneNode) {}
 			void OnAwake() override;
 		protected:
+			void LoadGame();
 			virtual void MenuFrame();
 			virtual PushdownResult onStateChange(PushdownState** newState);
 		};

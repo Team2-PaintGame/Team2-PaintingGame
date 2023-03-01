@@ -16,7 +16,8 @@ namespace NCL::CSC8508 {
 	};
 	enum class ScreenCommand {
 		None,
-		Transition,
+		TransitionToNextScreen,
+		TransitionToPreviousScreen,
 		CreateSinglePlayerGame,
 		CreateSplitScreenGame,
 		CreateNetworkedGame,
@@ -38,11 +39,11 @@ namespace NCL::CSC8508 {
 		virtual ~BaseScreen() {}
 		PushdownResult OnUpdate(float dt, PushdownState** newState) override;
 		void OnAwake() override {};
+		void SetCommand(ScreenCommand command) { this->command = command; };
 	protected:
 		//void RenderMenu();
 		virtual void MenuFrame() = 0;
 		virtual PushdownResult onStateChange(PushdownState** newState) = 0;
-		virtual void onCommand() {};
 		SceneNode* sceneNode = NULL;
 		bool isMenuDisplayed = true;
 		ScreenCommand command = ScreenCommand::None;
