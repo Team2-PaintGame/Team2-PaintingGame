@@ -17,7 +17,7 @@ namespace NCL {
 			this->gameWorld = gameWorld;
 			this->physicsCommon = physicsCommon;
 
-			reactphysics3d::PhysicsWorld* physicsWorld = physicsCommon->createPhysicsWorld();
+			//reactphysics3d::PhysicsWorld* physicsWorld = physicsCommon->createPhysicsWorld();
 
 			menuHandler->SetGameState(GameState::SplitScreen);
 
@@ -71,13 +71,14 @@ namespace NCL {
 		}
 		void SplitScreen::OnAwake()
 		{
+			window->LockMouseToWindow(true);
 			if (menuHandler->GetGameState() == GameState::ExitPauseMenu) // Resume game
 			{
 				menuHandler->SetGameState(GameState::SplitScreen);
 			}
 			else if(menuHandler->GetGameState() == GameState::SplitScreen) {
-				paintingGame->InitSecondPlayer();
-				paintingGame->InitSecondCamera();
+				//paintingGame->InitSecondPlayer();
+				//paintingGame->InitSecondCamera();
 			}
 			
 		}

@@ -50,6 +50,7 @@ PaintingGame::PaintingGame(GameTechRenderer* render, GameWorld* game_world, reac
 	renderer->settings.SetIsDebugRenderingModeEnabled(true);
 	renderer->settings.debugRendererSettings.SetIsCollisionShapeDisplayed(true);
 	renderer->settings.debugRendererSettings.SetIsBroadPhaseAABBDisplayed(true);
+	renderer->settings.SetIsWireFrameModeEnabled(true);
 }
 
 /*
@@ -68,13 +69,16 @@ void PaintingGame::InitialiseAssets() {
 	meshes.insert(std::make_pair("coinMesh", renderer->LoadMesh("coin.msh")));
 	meshes.insert(std::make_pair("capsuleMesh", renderer->LoadMesh("capsule.msh")));
 	meshes.insert(std::make_pair("terrainMesh", renderer->LoadHeightMap("noise.png")));
+	meshes.insert(std::make_pair("sceneMesh", renderer->LoadHeightMap("Scene.msh")));
 
 	
 	meshes.insert(std::make_pair("throneMesh", renderer->LoadMesh("SanctumThrone.msh")));
-//	textures.insert(std::make_pair("throneColour", renderer->LoadTexture("SanctumThrone/InSanct_Max_Throne_A_Colour.tga")));
+	textures.insert(std::make_pair("throneColour", renderer->LoadTexture("SanctumThrone/InSanct_Max_Throne_A_Colour.tga")));
 //	textures.insert(std::make_pair("throneMetal", renderer->LoadTexture("SanctumThrone/InSanct_Max_Throne_A_Metal.tga")));
 //	textures.insert(std::make_pair("throneNormal", renderer->LoadTexture("SanctumThrone/InSanct_Max_Throne_A_Normal.tga")));
 
+	meshes.insert(std::make_pair("catMesh", renderer->LoadMesh("SanctumCat.msh")));
+	textures.insert(std::make_pair("catColour", renderer->LoadTexture("SanctumThrone/InSanct_Max_Cat_Colour.tga")));
 
 	textures.insert(std::make_pair("basicTex", renderer->LoadTexture("checkerboard.png")));
 
@@ -149,6 +153,17 @@ void PaintingGame::UpdateGame(float dt) {
 
 	if (menuHandler->GetGameState() != GameState::MainMenu) // ugly temporary if by an ugly temporary programmer
 	{
+		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::F1)) {
+			thirdPersonCamera = !thirdPersonCamera;
+			if (thirdPersonCamera == false)
+			{
+				world->GetMainCamera()->SetFirstPersonCamera();
+			}
+			else
+			{
+				world->GetMainCamera()->SetThirdPersonCamera(players[0]);
+			}
+		}
 		if (thirdPersonCamera)
 		{
 			for (int i = 0; i < numberOfPlayerControllers; i++)
@@ -205,16 +220,21 @@ void PaintingGame::InitWorld() {
 	if (!is_Networked) // Networked Game handles its own player init
 	{
 		InitiliazePlayer();
+		if (menuHandler->GetGameState() == GameState::SplitScreen) {
+			InitSecondPlayer();
+			InitSecondCamera();
+		}
 	}
 
-	world->AddGameObject(new Floor(*physicsCommon, physicsWorld, Vector3(0, 0, 0), meshes.at("cubeMesh"), textures.at("basicTex"), shaders.at("basicShader"), 200));
+	world->AddGameObject(new Floor(*physicsCommon, physicsWorld, Vector3(0, 0, 0), meshes.at("sceneMesh"), textures.at("basicTex"), shaders.at("basicShader"), 1));
 
 	//for (int x = 0; x < 15; ++x) {
 	//	world->AddGameObject(new Box(physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 2));
 	//}
-	AddStructureFromFile(Vector3(-75.0, 5.0f, -75.0f), "SplatAtTheMuseum.txt");
-	AddSecurityAI();
-	world->AddGameObject(new MuseumItem(physicsCommon, physicsWorld, Vector3(25, 25, 25), meshes.at("throneMesh"), textures.at("basicTex"), shaders.at("basicShader"), Vector3(10, 10, 10), "Throne"));
+	//AddStructureFromFile(Vector3(-75.0, 5.0f, -75.0f), "SplatAtTheMuseum.txt");
+	//AddSecurityAI();
+	//world->AddGameObject(new MuseumItem(*physicsCommon, physicsWorld, Vector3(25, 25, 25), meshes.at("throneMesh"), textures.at("basicTex"), shaders.at("basicShader"), Vector3(10, 10, 10), "Throne"));
+	//world->AddGameObject(new MuseumItem(*physicsCommon, physicsWorld, Vector3(50, 25, 50), meshes.at("catMesh"), textures.at("basicTex"), shaders.at("basicShader"), Vector3(10, 10, 10), "Cat"));
 
 }
 
@@ -322,7 +342,7 @@ void PaintingGame::AddStructureFromFile(const NCL::Maths::Vector3& position, con
 			if (type == 'x')
 			{
 				// Wall
-				world->AddGameObject(new Wall(physicsCommon, physicsWorld, position + pos, meshes.at("cubeMesh"), textures.at("basicTex"), shaders.at("basicShader"), Vector3((nodeSize * wall_counter) , 10.0f, (nodeSize * column_counter) )));
+				world->AddGameObject(new Wall(*physicsCommon, physicsWorld, position + pos, meshes.at("cubeMesh"), textures.at("basicTex"), shaders.at("basicShader"), Vector3((nodeSize * wall_counter) , 10.0f, (nodeSize * column_counter) )));
 
 			}
 
@@ -340,7 +360,8 @@ PlayerBase* PaintingGame::GetPlayer()
 
 void PaintingGame::AddSecurityAI()
 {
-	world->AddGameObject(new SecurityGuard(physicsCommon, physicsWorld, "Security Guard", Vector3(-70.0f, 5.0f, 60.0f), meshes.at("cubeMesh"), textures.at("basicTex"), shaders.at("basicShader"), Vector3(2, 2, 2), players[0], players[1]));
+	if(menuHandler->GetGameState() != GameState::MainMenu)
+	world->AddGameObject(new SecurityGuard(*physicsCommon, physicsWorld, "Security Guard", Vector3(-70.0f, 5.0f, 60.0f), meshes.at("cubeMesh"), textures.at("basicTex"), shaders.at("basicShader"), Vector3(2, 2, 2), players[0], players[1]));
 }
 PlayerBase* PaintingGame::InitSecondPlayer() {
 	animController->SetIdleAnimation(meshAnimations.at("mainCharIdleAnim"));

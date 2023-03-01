@@ -79,7 +79,7 @@ namespace NCL {
 			RendererSettings settings;
 
 			void SetRenderMode(RenderMode mode);
-
+			void ToggleDebugInfo();
 		protected:
 			void NewRenderLines(Camera& cam);
 			void NewRenderText();
@@ -88,7 +88,7 @@ namespace NCL {
 			void RenderMainMenu();
 			void RenderFirstFrame();
 			void RenderSecondFrame();
-			void ToggleDebugInfo();
+			
 
 			OGLShader*		defaultShader;
 
@@ -148,8 +148,9 @@ namespace NCL {
 			bool useFog = false;
 			Vector3 fogColour = Vector3(0.6706f, 0.6824f, 0.6902f); //removing alpha value of fog colour to preserve the original transparency value of the fragment
 
-			bool isDebugInfo = false;
+			
 			RenderMode renderMode = RenderMode::MainMenu;
+			bool isDebugInfo = true;
 		};
 	}
 }

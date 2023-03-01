@@ -19,7 +19,12 @@ namespace NCL {
 		{
 			transform.SetScale(size).SetPosition(position);
 			renderObject = new RenderObject(&transform, mesh, shader);
-			renderObject->AddTexture(texture);
+			//renderObject->AddTexture(texture);
+
+			int subMeshes = mesh->GetSubMeshCount();
+			for (int index = 0; index < subMeshes; ++index) {
+				renderObject->AddTexture(texture, "mainTex", index);
+			}
 
 			boundingVolume = physicsCommon.createBoxShape(~transform.GetScale() / 2.0f);
 			reactphysics3d::Transform rp3d_transform(~position, rp3d::Quaternion::identity());
