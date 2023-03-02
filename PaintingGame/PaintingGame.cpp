@@ -141,7 +141,7 @@ PlayerBase* PaintingGame::CreatePlayer(Vector3 position) {
 	animController->SetRunAnimation(meshAnimations.at("mainCharRunAnim"));
 	//animController->SetTauntAnimation(meshAnimations.at("mainCharTauntAnim"));
 
-	SetColorOfMesh(meshes.at("mainChar"), Debug::RED);
+	//SetColorOfMesh(meshes.at("mainChar"), Debug::RED);
 	return new PlayerBase(*physicsCommon, physicsWorld, position, meshes.at("mainChar"), meshMaterials.at("mainCharMat"), animController, shaders.at("skinningShader"), 4);
 }
 
@@ -194,9 +194,9 @@ void NCL::CSC8508::PaintingGame::SetColorOfMesh(MeshGeometry* mesh, Vector4 colo
 		A = indices[i + 0];
 		B = indices[i + 1];
 		C = indices[i + 2];
-		vertexColor[A] = Vector4(0, 0, 0, 1);
-		vertexColor[B] = Vector4(0, 0, 0, 1);
-		vertexColor[C] = Vector4(0, 0, 0, 1);
+		vertexColor[A] = Vector4(0, 1, 0, 1);
+		vertexColor[B] = Vector4(0, 1, 0, 1);
+		vertexColor[C] = Vector4(0, 1, 0, 1);
 	}
 
 
