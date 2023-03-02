@@ -141,7 +141,8 @@ PlayerBase* PaintingGame::CreatePlayer(Vector3 position) {
 	animController->SetRunAnimation(meshAnimations.at("mainCharRunAnim"));
 	//animController->SetTauntAnimation(meshAnimations.at("mainCharTauntAnim"));
 
-	return new PlayerBase(*physicsCommon, physicsWorld, position, meshes.at("mainChar"), meshMaterials.at("mainCharMat"), animController, shaders.at("skinningShader"), 5);
+	SetColorOfMesh(meshes.at("mainChar"), Debug::RED);
+	return new PlayerBase(*physicsCommon, physicsWorld, position, meshes.at("mainChar"), textures.at("basicTex"), animController, shaders.at("skinningShader"), 5);
 }
 
 reactphysics3d::ConcaveMeshShape* NCL::CSC8508::PaintingGame::CreateConcaveCollision(std::string meshName)
@@ -172,4 +173,33 @@ reactphysics3d::ConcaveMeshShape* NCL::CSC8508::PaintingGame::CreateConcaveColli
 GameTechRenderer* PaintingGame::GetGameTechRenderer()
 {
 	return renderer;
+}
+
+void NCL::CSC8508::PaintingGame::SetColorOfMesh(MeshGeometry* mesh, Vector4 color)
+{
+	vector<Vector4> vertexColor;
+	for (int i = 0; i < mesh->GetVertexCount(); i++)
+	{
+		vertexColor.emplace_back(color);
+	}
+
+	const SubMesh* subMesh = mesh->GetSubMesh(1);
+	vector<unsigned int> indices = mesh->GetIndexData();
+
+	int start = subMesh->start;
+	int end = start + subMesh->count;
+	int A, B, C = 0;
+	for (int i = start; i < end; i += 3)
+	{
+		A = indices[i + 0];
+		B = indices[i + 1];
+		C = indices[i + 2];
+		vertexColor[A] = Vector4(1, 0, 0, 1);
+		vertexColor[B] = Vector4(1, 0, 0, 1);
+		vertexColor[C] = Vector4(1, 0, 0, 1);
+	}
+
+
+	mesh->SetVertexColours(vertexColor);
+	mesh->UploadToGPU();
 }
