@@ -42,8 +42,9 @@ namespace NCL::CSC8508 {
 		PushdownResult OnUpdate(float dt, PushdownState** newState) override;
 		void OnAwake() override {};
 		void SetCommand(ScreenCommand command) { this->command = command; };
+		SceneNode* GetSceneNode() const { return sceneNode; }
+		void RenderMenu();
 	protected:
-		//void RenderMenu();
 		virtual void MenuFrame() = 0;
 		virtual PushdownResult onStateChange(PushdownState** newState) = 0;
 		SceneNode* sceneNode = NULL;
