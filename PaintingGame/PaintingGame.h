@@ -3,6 +3,9 @@
 #include "GameAssets.h"
 #include <Camera.h>
 #include <GameWorld.h>
+#include <DirectionalLight.h>
+#include <SpotLight.h>
+#include <PointLight.h>
 
 class Gamepad;
 class AnimationController;
@@ -33,6 +36,11 @@ namespace NCL {
 			reactphysics3d::PhysicsCommon* physicsCommon;
 			reactphysics3d::PhysicsWorld* physicsWorld = NULL;
 			GameAssets* assets;
+
+			//containers for lights
+			std::vector<DirectionalLight> directionalLights;
+			std::vector<PointLight> pointLights;
+			std::vector<SpotLight> spotLights;
 		};
 	}
 }
