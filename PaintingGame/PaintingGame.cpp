@@ -102,54 +102,20 @@ PaintingGame::~PaintingGame() {
 		delete val;
 	}
 
-<<<<<<< HEAD
-	//delete renderer;
-	//delete world;
-	//delete physicsCommon->destroyConcaveMeshShape(arenaConcaveMeshCollision);
+	//world->ClearAndErase();
+	//physicsCommon->destroyPhysicsWorld(physicsWorld);
 }
 
 void PaintingGame::UpdateGame(float dt) {
-	world->GetMainCamera()->UpdateCamera(dt);
-
-	if (menuHandler->GetGameState() != GameState::MainMenu) // ugly temporary if by an ugly temporary programmer
-	{
-		if (thirdPersonCamera)
-		{
-			for (int i = 0; i < numberOfPlayerControllers; i++)
-			{
-				playerControllers[i]->Update(dt);
-			}
-
-		}
-
-		if (menuHandler->GetGameState() == GameState::SplitScreen) {
-			numberOfPlayerControllers = 2;
-			world->GetSecondCamera()->UpdateCamera(dt);
-		}
-		else if (menuHandler->GetGameState() == GameState::SinglePlayer) {
-			numberOfPlayerControllers = 1;
-		}
-
-
-		physicsWorld->update(dt);
-		world->UpdateWorld(dt);
-
-	}
-
+	world->UpdateWorld(dt);
 	menuHandler->Update(dt);
 	renderer->Render();
 	renderer->Update(dt);
+	physicsWorld->update(dt);
 	Debug::UpdateRenderables(dt);
 }
 
-void PaintingGame::InitCamera()
-=======
-	physicsCommon->destroyPhysicsWorld(physicsWorld);
-	world->ClearAndErase();
-}
-
 void PaintingGame::InitCamera(Camera& camera, PlayerBase& focus, float aspect_multiplier)
->>>>>>> Code-Refactoring
 {
 	camera.SetThirdPersonCamera(&focus);
 
@@ -160,37 +126,11 @@ void PaintingGame::InitCamera(Camera& camera, PlayerBase& focus, float aspect_mu
 void PaintingGame::InitWorld() {
 	world->ClearAndErase();
 
-<<<<<<< HEAD
-	//TerrainTexturePack terrainTexturePack(textures.at("terrainSplatMap"), textures.at("terrainRTex"), textures.at("terrainGTex"), textures.at("terrainBTex"), textures.at("terrainBgTex"));
-	//world->AddGameObject(new Terrain(*physicsCommon, physicsWorld, Vector2(), meshes.at("terrainMesh"), terrainTexturePack, shaders.at("terrainShader")));
-	//world->AddGameObject(new Terrain(*physicsCommon, physicsWorld, Vector2(0, 1), meshes.at("terrainMesh"), terrainTexturePack, shaders.at("terrainShader")));
-
-	if (!is_Networked) // Networked Game handles its own player init
-	{
-		InitiliazePlayer();
-	}
-
-	world->AddGameObject(new Floor(*physicsCommon, physicsWorld, Vector3(-30, 0, 20), meshes.at("floorMesh"),CreateConcaveCollision("floorMesh"), textures.at("basicTex"), shaders.at("basicShader"), 1));
-=======
-	world->AddGameObject(new Floor(*physicsCommon, physicsWorld, Vector3(0, 0, 0), meshes.at("cubeMesh"), textures.at("basicTex"), shaders.at("basicShader"), 200));
->>>>>>> Code-Refactoring
+	world->AddGameObject(new Floor(*physicsCommon, physicsWorld, Vector3(0, 0, 0), meshes.at("floorMesh"), CreateConcaveCollision("floorMesh"),  textures.at("basicTex"), shaders.at("basicShader"), 200));
 
 	for (int x = 0; x < 15; ++x) {
 		world->AddGameObject(new Box(*physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 2));
 	}
-}
-
-void PaintingGame::UpdateGame(float dt) {
-
-	if (menuHandler->GetGameState() != GameState::MainMenu)
-	{
-		world->UpdateWorld(dt);
-		physicsWorld->update(dt);
-	}
-	menuHandler->Update(dt);
-	renderer->Render();
-	renderer->Update(dt);
-	Debug::UpdateRenderables(dt);
 }
 
 PlayerBase* PaintingGame::CreatePlayer(Vector3 position) {

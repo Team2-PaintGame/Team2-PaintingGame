@@ -13,14 +13,13 @@
 #include <PlayerBase.h>
 #include <PlayerController.h>
 #include <reactphysics3d/reactphysics3d.h>
-
-class Gamepad;
-class AnimationController;
+#include "InputController.h"
+#include "AnimationController.h"
 
 namespace NCL {
 	class MenuHandler;
 	namespace CSC8508 {
-		class PaintingGame : SceneNode {
+		class PaintingGame : public SceneNode {
 		public:
 #ifdef USEVULKAN
 			PaintingGame(GameTechVulkanRenderer* render, GameWorld* world, reactphysics3d::PhysicsWorld* physicsWorld, reactphysics3d::PhysicsCommon* physicsCommon, MenuHandler* menu, bool online = false);

@@ -4,10 +4,7 @@
 #include <imgui_impl_opengl3.h>
 #include <iostream>
 #include "MenuHandler.h"
-<<<<<<< HEAD:GameEngine/AI/PushdownAutomata/SinglePlayerScreen.cpp
-=======
 #include "SinglePlayerGame.h"
->>>>>>> Code-Refactoring:PaintingGame/Screens/SinglePlayerScreen.cpp
 #include <Win32Window.h>
 
 namespace NCL {

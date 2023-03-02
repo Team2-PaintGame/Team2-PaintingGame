@@ -1,5 +1,4 @@
 #include "SplitScreenGame.h"
-#include "InputController.h"
 
 using namespace NCL;
 using namespace CSC8508;
