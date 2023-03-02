@@ -1,6 +1,7 @@
 #include "MeshMaterial.h"
 #include "Assets.h"
 #include "TextureLoader.h"
+#include "stb/stb_image.h"
 
 #include <fstream>
 #include <iostream>
@@ -48,7 +49,7 @@ MeshMaterial::MeshMaterial(const std::string& filename) {
 			string file;
 			size_t split = entryData.find_first_of(':');
 			channel = entryData.substr(0, split);
-			file = entryData.substr(split + 1);
+			file = entryData.substr(split + 2);
 
 			materialLayers[i].entries.insert(std::make_pair(channel, std::make_pair(file, nullptr)));
 		}
@@ -78,7 +79,9 @@ void MeshMaterialEntry::LoadTextures() {
 	for (auto& i : entries) {
 		string filename = Assets::TEXTUREDIR + i.second.first;
 
+		stbi_set_flip_vertically_on_load(true);
 		TextureBase* t = TextureLoader::LoadAPITexture(filename);
+		stbi_set_flip_vertically_on_load(false);
 
 		i.second.second = t;
 	}

@@ -11,7 +11,7 @@ SinglePlayerGame::SinglePlayerGame(GameTechRenderer* render, GameWorld* world, r
 	gamepad = new Gamepad();
 
 	InitWorld();
-	AddPlayer(world->GetMainCamera(), Vector3(0.0f, 10.0f, 0.0f), nullptr);
+	AddPlayer(world->GetMainCamera(), Vector3(10.0f, 30.0f, 10.0f), nullptr);
 	InitCamera(*this->world->GetMainCamera(), *player);
 }
 

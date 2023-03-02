@@ -45,7 +45,7 @@ for this module, even in the coursework, but you can add it if you like!
 void PaintingGame::InitialiseAssets() {
 	meshes.insert(std::make_pair("floorMesh", renderer->LoadMesh("Arena.msh")));
 	meshes.insert(std::make_pair("cubeMesh", renderer->LoadMesh("cube.msh")));
-	meshes.insert(std::make_pair("mainChar", renderer->LoadMesh("Male_Guard.msh")));
+	meshes.insert(std::make_pair("mainChar", renderer->LoadMesh("Aj_TPose.msh")));
 	meshes.insert(std::make_pair("sphereMesh", renderer->LoadMesh("sphere.msh")));
 	meshes.insert(std::make_pair("goatMesh", renderer->LoadMesh("goat.msh")));
 	meshes.insert(std::make_pair("enemyMesh", renderer->LoadMesh("Keeper.msh")));
@@ -54,13 +54,13 @@ void PaintingGame::InitialiseAssets() {
 	meshes.insert(std::make_pair("terrainMesh", renderer->LoadHeightMap("noise.png")));
 
 	meshMaterials.insert(std::make_pair("goatMat", new MeshMaterial("goat.mat")));
-	meshMaterials.insert(std::make_pair("mainCharMat", new MeshMaterial("goat.mat")));
+	meshMaterials.insert(std::make_pair("mainCharMat", new MeshMaterial("Aj_TPose.mat")));
 	//meshMaterials.at("goatMat")->LoadTextures();
 	//meshMaterials.at("mainCharMat")->LoadTextures();
 
-	meshAnimations.insert(std::make_pair("mainCharTauntAnim", new MeshAnimation("Taunt.anm")));
-	meshAnimations.insert(std::make_pair("mainCharIdleAnim", new MeshAnimation("Idle1.anm")));
-	meshAnimations.insert(std::make_pair("mainCharRunAnim", new MeshAnimation("StepForward.anm")));
+	//meshAnimations.insert(std::make_pair("mainCharTauntAnim", new MeshAnimation("Taunt.anm")));
+	meshAnimations.insert(std::make_pair("mainCharIdleAnim", new MeshAnimation("AJIdle.anm")));
+	meshAnimations.insert(std::make_pair("mainCharRunAnim", new MeshAnimation("AJRun.anm")));
 
 
 	textures.insert(std::make_pair("basicTex", renderer->LoadTexture("checkerboard.png")));
@@ -75,6 +75,7 @@ void PaintingGame::InitialiseAssets() {
 	textures.insert(std::make_pair("terrainGTex", renderer->LoadTexture("Terrain/gTex_mudGrass.jpg")));
 	textures.insert(std::make_pair("terrainBTex", renderer->LoadTexture("Terrain/bTex_path.jpg")));
 	textures.insert(std::make_pair("terrainBgTex", renderer->LoadTexture("Terrain/bgTex_grass.jpg")));
+	textures.insert(std::make_pair("boxTGA", renderer->LoadTexture("Maximilian_BodyHands_Albedo.tga")));
 
 
 	shaders.insert(std::make_pair("basicShader", renderer->LoadShader("scene.vert", "scene.frag")));
@@ -102,8 +103,9 @@ PaintingGame::~PaintingGame() {
 		delete val;
 	}
 
-	//world->ClearAndErase();
-	//physicsCommon->destroyPhysicsWorld(physicsWorld);
+	if(menuHandler->GetGameState() != GameState::ExitGame)
+	physicsCommon->destroyPhysicsWorld(physicsWorld);
+	world->ClearAndErase();
 }
 
 void PaintingGame::UpdateGame(float dt) {
@@ -126,10 +128,10 @@ void PaintingGame::InitCamera(Camera& camera, PlayerBase& focus, float aspect_mu
 void PaintingGame::InitWorld() {
 	world->ClearAndErase();
 
-	world->AddGameObject(new Floor(*physicsCommon, physicsWorld, Vector3(0, 0, 0), meshes.at("floorMesh"), CreateConcaveCollision("floorMesh"),  textures.at("basicTex"), shaders.at("basicShader"), 200));
+	world->AddGameObject(new Floor(*physicsCommon, physicsWorld, Vector3(0, 0, 0), meshes.at("floorMesh"), CreateConcaveCollision("floorMesh"),  textures.at("basicTex"), shaders.at("basicShader"), 1));
 
 	for (int x = 0; x < 15; ++x) {
-		world->AddGameObject(new Box(*physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 2));
+		world->AddGameObject(new Box(*physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("cubeMesh"), textures.at("boxTGA"), shaders.at("basicShader"), 2));
 	}
 }
 
@@ -137,9 +139,9 @@ PlayerBase* PaintingGame::CreatePlayer(Vector3 position) {
 	AnimationController* animController = new AnimationController();
 	animController->SetIdleAnimation(meshAnimations.at("mainCharIdleAnim"));
 	animController->SetRunAnimation(meshAnimations.at("mainCharRunAnim"));
-	animController->SetTauntAnimation(meshAnimations.at("mainCharTauntAnim"));
+	//animController->SetTauntAnimation(meshAnimations.at("mainCharTauntAnim"));
 
-	return new PlayerBase(*physicsCommon, physicsWorld, position, meshes.at("mainChar"), textures.at("basicTex"), animController, shaders.at("skinningShader"), 5);
+	return new PlayerBase(*physicsCommon, physicsWorld, position, meshes.at("mainChar"), meshMaterials.at("mainCharMat"), animController, shaders.at("skinningShader"), 5);
 }
 
 reactphysics3d::ConcaveMeshShape* NCL::CSC8508::PaintingGame::CreateConcaveCollision(std::string meshName)

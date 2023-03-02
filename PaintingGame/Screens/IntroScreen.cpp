@@ -43,7 +43,7 @@ namespace NCL {
 			delete menuHandler;
 			delete renderer;
 			delete gameWorld;
-			delete physicsCommon;
+			//delete physicsCommon;
 		}
 		PushdownState::PushdownResult IntroScreen::OnUpdate(float dt, PushdownState** newState)
 		{
