@@ -142,7 +142,7 @@ PlayerBase* PaintingGame::CreatePlayer(Vector3 position) {
 	//animController->SetTauntAnimation(meshAnimations.at("mainCharTauntAnim"));
 
 	//SetColorOfMesh(meshes.at("mainChar"), Debug::RED);
-	return new PlayerBase(*physicsCommon, physicsWorld, position, meshes.at("mainChar"), meshMaterials.at("mainCharMat"), animController, shaders.at("skinningShader"), 4);
+	return new PlayerBase(*physicsCommon, physicsWorld, position, meshes.at("mainChar"), meshMaterials.at("mainCharMat"), animController, shaders.at("skinningShader"), 5);
 }
 
 reactphysics3d::ConcaveMeshShape* NCL::CSC8508::PaintingGame::CreateConcaveCollision(std::string meshName)
