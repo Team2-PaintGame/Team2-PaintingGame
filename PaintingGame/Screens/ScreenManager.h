@@ -48,6 +48,7 @@ namespace NCL::CSC8508 {
 		void OnAwake() override {};
 		void SetCommand(ScreenCommand command) { this->command = command; };
 		SceneNode* GetSceneNode() const { return sceneNode; }
+		ScreenType GetScreenType() const { return screenType; }
 		void RenderMenu();
 	protected:
 		virtual void MenuFrame() = 0;
@@ -56,5 +57,6 @@ namespace NCL::CSC8508 {
 		bool isMenuDisplayed = true;
 		ScreenCommand command = ScreenCommand::None;
 		ScreenManager* screenManager;
+		ScreenType screenType = ScreenType::None;
 	};
 }

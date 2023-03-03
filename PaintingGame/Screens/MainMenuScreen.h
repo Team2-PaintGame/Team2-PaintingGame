@@ -6,7 +6,9 @@ namespace NCL {
 		class MainMenuScreen : public BaseScreen
 		{
 		public:
-			MainMenuScreen(ScreenManager* screenManager, SceneNode* sceneNode) : BaseScreen(screenManager, sceneNode) {}
+			MainMenuScreen(ScreenManager* screenManager, SceneNode* sceneNode) : BaseScreen(screenManager, sceneNode) {
+				screenType = ScreenType::MainMenuScreen;
+			}
 		protected:
 			virtual void MenuFrame();
 			virtual PushdownResult onStateChange(PushdownState** newState);
