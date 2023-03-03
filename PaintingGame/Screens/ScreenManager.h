@@ -4,6 +4,7 @@
 #include "PushdownState.h"
 #include <imgui_impl_win32.h>
 #include <imgui_impl_opengl3.h>
+#include "PushdownMachine.h"
 
 namespace NCL::CSC8508 {
 	enum class ScreenType {
@@ -28,11 +29,15 @@ namespace NCL::CSC8508 {
 	public:
 		ScreenManager(GameAssets* assets);
 		BaseScreen* GetScreen(ScreenType screenType) const;
+		BaseScreen* GetActiveScreen() const;
 		GameAssets* GetGameAssets() const { return assets; }
+		bool Update(float dt);
 	protected:
+		void LoadScreens();
 		std::unordered_map<ScreenType, std::unique_ptr<BaseScreen>> screens;
 		std::unordered_map<ScreenType, SceneNode> screenSceneNodes;
 		GameAssets* assets;
+		std::unique_ptr<PushdownMachine> machine;
 	};
 	class BaseScreen : public PushdownState
 	{

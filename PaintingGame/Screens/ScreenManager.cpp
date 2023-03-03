@@ -10,6 +10,11 @@ using namespace CSC8508;
 
 ScreenManager::ScreenManager(GameAssets* assets) {
 	this->assets = assets;
+	LoadScreens();
+	machine = std::make_unique<PushdownMachine>((PushdownState*)GetScreen(ScreenType::SplashScreen));
+}
+
+void ScreenManager::LoadScreens() {
 	screenSceneNodes.insert(std::make_pair(ScreenType::SplashScreen, SceneNode(assets->GetMesh("quadMesh"), assets->GetShader("screenShader"), assets->GetTexture("splashScreenTex"))));
 	screenSceneNodes.insert(std::make_pair(ScreenType::MainMenuScreen, SceneNode(assets->GetMesh("quadMesh"), assets->GetShader("screenShader"), assets->GetTexture("mainMenuScreenTex"))));
 
@@ -22,6 +27,13 @@ BaseScreen* NCL::CSC8508::ScreenManager::GetScreen(ScreenType screenType) const 
 	return screens.count(screenType) ? screens.at(screenType).get() : nullptr;
 }
 
+BaseScreen* ScreenManager::GetActiveScreen() const {
+	return (BaseScreen*)machine->GetActiveState();
+}
+
+bool ScreenManager::Update(float dt) {
+	return machine->Update(dt);
+}
 
 PushdownState::PushdownResult BaseScreen::OnUpdate(float dt, PushdownState** newState) {
 	if (!isMenuDisplayed) {
