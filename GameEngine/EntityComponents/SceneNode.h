@@ -1,5 +1,6 @@
 #pragma once
 #include "RenderObject.h"
+#include "GameWorld.h"
 
 namespace NCL::CSC8508 {
 	class SceneNode {
@@ -13,6 +14,7 @@ namespace NCL::CSC8508 {
 			renderObject->SetDefaultTexture(texture);
 		}
 		virtual void Update(float dt) {}
+		virtual GameWorld* GetWorld() const { return nullptr; }
 	protected:
 		RenderObject* renderObject = NULL;
 	};
