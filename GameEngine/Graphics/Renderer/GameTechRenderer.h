@@ -22,14 +22,14 @@ namespace NCL {
 			public:
 				class DebugRendererSettings {
 				public:
-					DebugRendererSettings(reactphysics3d::PhysicsWorld* physicsWorld) : debugRenderer(physicsWorld->getDebugRenderer()) {}
+					DebugRendererSettings(reactphysics3d::PhysicsWorld* physicsWorld) : debugRenderer(&physicsWorld->getDebugRenderer()) {}
 					void SetIsCollisionShapeDisplayed(bool boolean) {
-						debugRenderer.setIsDebugItemDisplayed(reactphysics3d::DebugRenderer::DebugItem::COLLISION_SHAPE, boolean);
+						debugRenderer->setIsDebugItemDisplayed(reactphysics3d::DebugRenderer::DebugItem::COLLISION_SHAPE, boolean);
 					}
 					void SetIsBroadPhaseAABBDisplayed(bool boolean) {
-						debugRenderer.setIsDebugItemDisplayed(reactphysics3d::DebugRenderer::DebugItem::COLLIDER_BROADPHASE_AABB, boolean);
+						debugRenderer->setIsDebugItemDisplayed(reactphysics3d::DebugRenderer::DebugItem::COLLIDER_BROADPHASE_AABB, boolean);
 					}
-					reactphysics3d::DebugRenderer& debugRenderer;
+					reactphysics3d::DebugRenderer* debugRenderer;
 				private:
 					bool isCollisionShapeEnabled = false;
 					bool isBroadPhaseAABBEnabled = false;
@@ -49,6 +49,12 @@ namespace NCL {
 				bool GetIsDebugRenderingModeEnabled() {
 					return physicsWorld->getIsDebugRenderingEnabled();
 				}
+
+				void SetPhysicsWorld(reactphysics3d::PhysicsWorld* pworld){
+					physicsWorld = pworld;
+					debugRendererSettings.debugRenderer = &physicsWorld->getDebugRenderer();
+				}
+
 				DebugRendererSettings debugRendererSettings;
 			private:
 				bool isWireFrameModeEnabled = false;
@@ -83,6 +89,16 @@ namespace NCL {
 
 			void SetRenderMode(RenderMode mode);
 
+			void SetPhysicsWorld(reactphysics3d::PhysicsWorld* pworld)
+			{
+				if (pworld)
+				{
+					settings.SetPhysicsWorld(pworld);
+				}
+			}
+
+			void ToggleDebugInfo();
+
 		protected:
 			void NewRenderLines(Camera& cam);
 			void NewRenderText();
@@ -91,7 +107,6 @@ namespace NCL {
 			void RenderMainMenu();
 			void RenderFirstFrame();
 			void RenderSecondFrame();
-			void ToggleDebugInfo();
 
 			OGLShader*		defaultShader;
 

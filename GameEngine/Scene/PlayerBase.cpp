@@ -27,7 +27,8 @@ PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysic
 	}
 	//renderObject->SetRigged(true);
 	//renderObject->animation = meshAnimation;
-	boundingVolume = physicsCommon.createBoxShape(~transform.GetScale() / 2.0f);
+	//boundingVolume = physicsCommon.createBoxShape(~transform.GetScale() / 2.0f);
+	boundingVolume = physicsCommon.createCapsuleShape(size*.35f, size);
 	reactphysics3d::Transform rp3d_transform(~position, rp3d::Quaternion::identity());
 	
 	// Create a rigid body in the physics world

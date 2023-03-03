@@ -30,8 +30,8 @@ SplitScreenGame::~SplitScreenGame() {
 void SplitScreenGame::InitPlayers() {
 	players.clear();
 	
-	AddPlayer(world->GetMainCamera(), Vector3(0.0f, 10.0f, 0.0f));
-	AddPlayer(world->GetSecondCamera(), Vector3(20.0f, 10.0f, 20.0f), gamepad);
+	AddPlayer(world->GetMainCamera(), Vector3(-20.0f, 35.0f, -15.0f));
+	AddPlayer(world->GetSecondCamera(), Vector3(20.0f, 35.0f, -20.0f), gamepad);
 }
 
 PlayerBase* SplitScreenGame::AddPlayer(Camera* camera, Vector3 position, Gamepad* gamepad) {

@@ -216,14 +216,14 @@ void NetworkedGame::UpdateMinimumState() {
 
 NCL::PlayerBase* NetworkedGame::SpawnPlayer() {
 	if (thisServer) {
-		ServerPlayer = CreatePlayer(Vector3(5.0f, 15.0f, 5.0f));
+		ServerPlayer = CreatePlayer(Vector3(10.0f, 55.0f, 10.0f));
 		world->AddGameObject(ServerPlayer);
 		ServerPlayerID = 1;
 		return ServerPlayer;
 	}
 	if (thisClient) {
 		// send to server that player has been spawned
-		ClientPlayer = CreatePlayer(Vector3(-5.0f, 10.0f, -5.0f));
+		ClientPlayer = CreatePlayer(Vector3(10.0f, 55.0f, -10.0f));
 		world->AddGameObject(ClientPlayer);
 		ClientPlayerID = 2;
 		SpawnPacket packet;

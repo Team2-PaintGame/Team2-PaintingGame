@@ -10,7 +10,6 @@
 #include <Win32Window.h>
 
 
-
 namespace NCL {
 	namespace CSC8508 {
 		IntroScreen::IntroScreen(Window* window)

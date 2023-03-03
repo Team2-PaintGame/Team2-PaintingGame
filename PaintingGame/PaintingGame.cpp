@@ -24,6 +24,8 @@ PaintingGame::PaintingGame(GameTechRenderer* render, GameWorld* game_world, reac
 
 	renderer = render;
 
+	renderer->SetPhysicsWorld(physicsWorld);
+
 	forceMagnitude = 10.0f;
 
 	InitialiseAssets();
@@ -75,7 +77,7 @@ void PaintingGame::InitialiseAssets() {
 	textures.insert(std::make_pair("terrainGTex", renderer->LoadTexture("Terrain/gTex_mudGrass.jpg")));
 	textures.insert(std::make_pair("terrainBTex", renderer->LoadTexture("Terrain/bTex_path.jpg")));
 	textures.insert(std::make_pair("terrainBgTex", renderer->LoadTexture("Terrain/bgTex_grass.jpg")));
-	textures.insert(std::make_pair("boxTGA", renderer->LoadTexture("Maximilian_BodyHands_Albedo.tga")));
+	textures.insert(std::make_pair("boxTGA", renderer->LoadTexture("Maximilian_BodyHands_Albedo.jpg")));
 
 
 	shaders.insert(std::make_pair("basicShader", renderer->LoadShader("scene.vert", "scene.frag")));
@@ -128,7 +130,7 @@ void PaintingGame::InitCamera(Camera& camera, PlayerBase& focus, float aspect_mu
 void PaintingGame::InitWorld() {
 	world->ClearAndErase();
 
-	world->AddGameObject(new Floor(*physicsCommon, physicsWorld, Vector3(0, 0, 0), meshes.at("floorMesh"), CreateConcaveCollision("floorMesh"),  textures.at("basicTex"), shaders.at("basicShader"), 1));
+	world->AddGameObject(new Floor(*physicsCommon, physicsWorld, Vector3(-100, 0, 100), meshes.at("floorMesh"), CreateConcaveCollision("floorMesh"),  textures.at("basicTex"), shaders.at("basicShader"), 1));
 
 	for (int x = 0; x < 15; ++x) {
 		world->AddGameObject(new Box(*physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("cubeMesh"), textures.at("boxTGA"), shaders.at("basicShader"), 2));

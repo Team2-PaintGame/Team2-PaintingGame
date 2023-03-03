@@ -44,6 +44,9 @@ namespace NCL {
 			if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::T)) {
 				window->SetWindowPosition(0, 0);
 			}
+			if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F2)) {
+				renderer->ToggleDebugInfo();
+			}
 			if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::ESCAPE)) {
 				menuHandler->SetGameState(GameState::PauseMenu);
 			}
