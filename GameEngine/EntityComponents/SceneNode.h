@@ -10,7 +10,7 @@ namespace NCL::CSC8508 {
 		void SetRenderObject(RenderObject* newObject) {	renderObject = newObject; }
 		void SetRenderObject(MeshGeometry* mesh, ShaderBase* shader, TextureBase* texture) {
 			renderObject = new RenderObject(NULL, mesh, shader);
-			renderObject->AddTexture(texture);
+			renderObject->SetDefaultTexture(texture);
 		}
 		virtual void Update(float dt) {}
 	protected:

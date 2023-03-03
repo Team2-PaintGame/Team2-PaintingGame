@@ -5,6 +5,7 @@
 #include "ShaderBase.h"
 #include "MeshAnimation.h"
 #include "MeshGeometry.h"
+#include "MeshMaterial.h"
 #include <map>
 
 
@@ -21,26 +22,10 @@ namespace NCL {
 		public:
 			RenderObject(Transform* parentTransform, MeshGeometry* mesh, ShaderBase* shader);
 			~RenderObject();
-
-			void SetDefaultTexture(TextureBase* t) {
-				texture = t;
-			}
-
-			TextureBase* GetDefaultTexture() const {
-				return texture;
-			}
-
-			void AddTexture(TextureBase* t, std::string uniform = "mainTex", int subMeshIndex = 0) {
-				if (t) {
-					if (subMeshTextures.count(subMeshIndex)) {
-						//if this submesh pair already exists, add to the inner map
-						subMeshTextures.at(subMeshIndex).push_back(std::make_pair(uniform, t));
-					}
-					else {
-						subMeshTextures.insert(std::make_pair(subMeshIndex, std::vector<std::pair<std::string, TextureBase*>>{std::make_pair(uniform, t)}));
-					}
-				}
-			}
+			void LoadMaterialTextures();
+			void SetDefaultTexture(TextureBase* t);
+			TextureBase* GetDefaultTexture() const;
+			void AddTexture(TextureBase* t, std::string uniform = "mainTex", int subMeshIndex = 0);
 
 			std::vector<std::pair<std::string, TextureBase*>> GetTextures(int subMeshIndex) const {
 				return subMeshTextures.at(subMeshIndex);
@@ -62,6 +47,11 @@ namespace NCL {
 				colour = c;
 			}
 
+			void SetMeshMaterial(MeshMaterial* m) {
+				multipleTextures = true;
+				material = m;
+			}
+
 			Vector4 GetColour() const {
 				return colour;
 			}
@@ -74,28 +64,31 @@ namespace NCL {
 				return rigged;
 			}
 
-			void GetFrameMatrices(vector<Matrix4>& frameMatrices) const {
-				const std::vector<Matrix4> invBindPose = mesh->GetInverseBindPose();
-				const Matrix4* frameData = animation->GetJointData(currentFrame);
-				for (unsigned int i = 0; i < mesh->GetJointCount(); ++i) {
-					frameMatrices.emplace_back(frameData[i] * invBindPose[i]);
-				}
-				/*OGLShader* shader = (OGLShader*)(this->shader);
-				glUniformMatrix4fv(glGetUniformLocation(shader->GetProgramID(), "joints"), frameMatrices.size(), false, (float*)frameMatrices.data());*/
+			void GetFrameMatrices(vector<Matrix4>& frameMatrices) const;
+
+			MeshAnimation* GetMeshAnimation() const {
+				return animation;
 			}
 
-			MeshAnimation* animation;
+			void SetMeshAnimation(MeshAnimation* a) {
+				animation = a;
+			}
+
 			int currentFrame = 0;
 			float frameTime = 0.0f;
 		protected:
 			MeshGeometry*	mesh;
+			MeshMaterial* material;
+			MeshAnimation* animation;
+			//for mutiple textures
 			std::map<int, std::vector<std::pair<std::string, TextureBase*>>> subMeshTextures;
-
+			//for single texture
 			TextureBase*	texture;
 			ShaderBase*		shader;
 			Transform*		transform;
 			Vector4			colour;
-			bool	rigged = false;
+			bool rigged = false;
+			bool multipleTextures = false;
 		};
 	}
 }
