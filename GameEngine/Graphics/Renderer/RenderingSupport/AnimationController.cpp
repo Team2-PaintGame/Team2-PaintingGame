@@ -75,7 +75,7 @@ void AnimationController::SetRunAnimation(NCL::MeshAnimation* meshAnim)
 void AnimationController::SetCurrentAnimation(NCL::MeshAnimation* meshAnim)
 {
 	gameObject->GetRenderObject()->SetRigged(true);
-	gameObject->GetRenderObject()->animation = meshAnim;
+	gameObject->GetRenderObject()->SetMeshAnimation(meshAnim);
 }
 
 void AnimationController::SetRenderer(NCL::CSC8508::RenderObject* renderObj)
@@ -94,15 +94,15 @@ void AnimationController::UpdateAnimations(float dt)
 		SetCurrentAnimation(IdleAnimation);
 	}*/
 
-	if(gameObject->GetRenderObject()->animation == nullptr && animStateMachine == nullptr && !gameObject->GetRenderObject()->IsRigged()) return;
+	if(gameObject->GetRenderObject()->GetMeshAnimation() == nullptr && animStateMachine == nullptr && !gameObject->GetRenderObject()->IsRigged()) return;
 
 	animStateMachine->Update(dt);
 
 	gameObject->GetRenderObject()->frameTime -= dt;
 
 	while (gameObject->GetRenderObject()->frameTime < 0.0f) {
-		gameObject->GetRenderObject()->currentFrame = (gameObject->GetRenderObject()->currentFrame + 1) % gameObject->GetRenderObject()->animation->GetFrameCount();
-		gameObject->GetRenderObject()->frameTime += 1.0f / gameObject->GetRenderObject()->animation->GetFrameRate();
+		gameObject->GetRenderObject()->currentFrame = (gameObject->GetRenderObject()->currentFrame + 1) % gameObject->GetRenderObject()->GetMeshAnimation()->GetFrameCount();
+		gameObject->GetRenderObject()->frameTime += 1.0f / gameObject->GetRenderObject()->GetMeshAnimation()->GetFrameRate();
 	}
 }
 
