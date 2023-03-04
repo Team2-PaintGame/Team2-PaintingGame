@@ -1,9 +1,5 @@
 #pragma once
-
-#include "Camera.h"
 #include "PlayerBase.h"
-
-class Gamepad;
 
 namespace NCL {
 	using namespace Rendering;
@@ -11,22 +7,19 @@ namespace NCL {
 
 	class PlayerController {
 	public:
-		PlayerController(Camera* cam, GameObject* player,Gamepad* gamepad);
-
+		PlayerController(PlayerBase* player);
 		void Update(float dt);
 
-	protected:
-		void UpdateKeys();
-		void ConnectGamePad();
-		void UpdateGamePad();
+		// Get the input for moving forward
+		virtual bool MoveForward() = 0;
+		virtual bool MoveBackward() = 0;
+		virtual bool MoveRight() = 0;
+		virtual bool MoveLeft() = 0;
 
+		virtual float Pitch() = 0;
+		virtual float Yaw() = 0;
 	protected:
-		Camera* camera;
-		GameObject* playerObject;
-		Gamepad* gamePad = NULL;
-
-		//Gamepad* gamepad = NULL;
-		bool wasConnected = true;
+		PlayerBase* player;
 	};
 }
 

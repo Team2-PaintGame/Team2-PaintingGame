@@ -186,8 +186,8 @@ set(Windowing_and_Input__Win32
 source_group("Windowing and Input\\Win32" FILES ${Windowing_and_Input__Win32})
 
 set(Windowing_and_Input__PS4
-    "./WindowingAndInput/PS4/PS4Input.cpp"
-    "./WindowingAndInput/PS4/PS4Input.h"
+    "./WindowingAndInput/PS4/PS4Gamepad.cpp"
+    "./WindowingAndInput/PS4/PS4Gamepad.h"
     "./WindowingAndInput/PS4/PS4Window.cpp"
     "./WindowingAndInput/PS4/PS4Window.h"
     "./WindowingAndInput/PS4/PS4Frame.cpp"

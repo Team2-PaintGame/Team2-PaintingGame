@@ -5,11 +5,12 @@
 #include "ShaderBase.h"
 #include "MeshMaterial.h"
 #include "AnimationController.h"
-
+#include "Camera.h"
 
 namespace NCL {
 	using namespace Rendering;
 	using namespace CSC8508;
+
 	class PlayerBase : public GameObject {
 	public:
 		PlayerBase() = default;
@@ -17,6 +18,7 @@ namespace NCL {
 		//PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, MeshMaterial* meshMaterial, ShaderBase* shader, int size);
 		virtual void Update(float dt);
 		virtual ~PlayerBase();
+		Camera* GetCamera() const { return camera; }
 	protected:
 		float runSpeed = 50;	// unit: m/s
 		float turnSpeed = 100.0f; // unit: degrees/s
@@ -24,7 +26,7 @@ namespace NCL {
 		float currentTurnSpeed = 0.0f;
 		rp3d::BoxShape* boundingVolume;
 		//rp3d::Collider* collider;
-
+		Camera* camera;
 		AnimationController* animationController;
 	};
 }

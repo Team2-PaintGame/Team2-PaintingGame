@@ -30,6 +30,7 @@ https://research.ncl.ac.uk/game/
 #include <windows.h>
 #include "Win32Mouse.h"
 #include "Win32Keyboard.h"
+#include "PlayerController.h"
 
 namespace NCL::Win32Code {
 	class Win32Mouse;
@@ -72,6 +73,30 @@ namespace NCL::Win32Code {
 
 		Win32Mouse*		winMouse;
 		Win32Keyboard*  winKeyboard;
+	};
+
+	class Win32Controller : public PlayerController {
+	public:
+		// Get the input for moving forward from the Xbox controller
+		bool MoveForward() override {
+			return Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::W);
+		}
+		bool MoveBackward() override {
+			return Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::S);
+		}
+		bool MoveRight() override {
+			return Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::D);
+		}
+		bool MoveLeft() override {
+			return Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::A);
+		}
+
+		float Pitch() override {
+			Window::GetMouse()->GetRelativePosition().y;
+		}
+		float Yaw() override {
+			Window::GetMouse()->GetRelativePosition().x;
+		}
 	};
 }
 #endif //_WIN32

@@ -1,6 +1,6 @@
 #include "InputBase.h"
 
-using namespace NCL::PS4;
+using namespace NCL;
 
 InputBase::InputBase()
 {
@@ -23,21 +23,21 @@ void InputBase::ResetInput() {
 }
 
 AXIS	InputBase::GetAxis(unsigned int i) {
-	if (i > MAX_AXIS) {
+	if (i >= MAX_AXIS) {
 		return AXIS();
 	}
 	return axis[i];
 }
 
 float	InputBase::GetButton(unsigned int i) {
-	if (i > MAX_BUTTONS) {
+	if (i >= MAX_BUTTONS) {
 		return 0.0f;
 	}
 	return buttons[i];
 }
 
 bool	InputBase::GetButtonDown(unsigned int i) {
-	if (i > MAX_BUTTONS) {
+	if (i >= MAX_BUTTONS) {
 		return false;
 	}
 	return buttons[i] > 0.5f ? true : false;

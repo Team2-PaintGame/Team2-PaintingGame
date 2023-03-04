@@ -1,5 +1,5 @@
 #ifdef _ORBIS
-#include "PS4Input.h"
+#include "PS4Gamepad.h"
 #include "pad.h"
 #include <sys\_defines\_sce_ok.h>
 #include <iostream>
@@ -7,25 +7,25 @@
 
 using namespace NCL::PS4;
 
-PS4Input::PS4Input()	{
+PS4Gamepad::PS4Gamepad()	{
 	SceUserServiceInitializeParams params;
 	memset((void*)&params, 0, sizeof(params));
 	params.priority = SCE_KERNEL_PRIO_FIFO_DEFAULT;
 	if (sceUserServiceInitialize(&params) != SCE_OK) {
-		std::cout << "PS4Input: Failed to initialise User Service!" << std::endl;
+		std::cout << "PS4Gamepad: Failed to initialise User Service!" << std::endl;
 	};
 
 	scePadInit();
 	InitController();
 }
 
-PS4Input::~PS4Input()	{
+PS4Gamepad::~PS4Gamepad()	{
 	scePadClose(padHandle);
 
 	sceUserServiceTerminate();
 }
 
-void PS4Input::InitController() {
+void PS4Gamepad::InitController() {
 	//Get the currently logged in player
 	SceUserServiceUserId userId;
 	int ret = sceUserServiceGetInitialUser(&userId);
@@ -41,7 +41,7 @@ void PS4Input::InitController() {
 	}
 }
 
-void PS4Input::Poll() {
+void PS4Gamepad::Poll() {
 	ScePadData data;
 
 	int ret = scePadReadState(padHandle, &data);
