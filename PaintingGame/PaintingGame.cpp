@@ -10,8 +10,7 @@ using namespace CSC8508;
 
 PaintingGame::PaintingGame(GameAssets* assets) {
 	this->assets = assets;
-	this->physicsCommon = physicsCommon;
-	this->physicsWorld = this->physicsCommon->createPhysicsWorld();
+	physicsWorld = physicsCommon.createPhysicsWorld();
 	physicsWorld->setIsGravityEnabled(useGravity);
 
 	//renderer->settings.SetIsDebugRenderingModeEnabled(true);
@@ -20,7 +19,7 @@ PaintingGame::PaintingGame(GameAssets* assets) {
 }
 
 PaintingGame::~PaintingGame() {
-	physicsCommon->destroyPhysicsWorld(physicsWorld);
+	physicsCommon.destroyPhysicsWorld(physicsWorld);
 	world->ClearAndErase();
 }
 
@@ -35,10 +34,10 @@ PaintingGame::~PaintingGame() {
 void PaintingGame::InitWorld() {
 	world->ClearAndErase();
 
-	world->AddGameObject(new Floor(*physicsCommon, physicsWorld, Vector3(0, 0, 0), assets->GetMesh("cubeMesh"), assets->GetTexture("basicTex"), assets->GetShader("basicShader"), 200));
+	world->AddGameObject(new Floor(physicsCommon, physicsWorld, Vector3(0, 0, 0), assets->GetMesh("cubeMesh"), assets->GetTexture("basicTex"), assets->GetShader("basicShader"), 200));
 
 	for (int x = 0; x < 15; ++x) {
-		world->AddGameObject(new Box(*physicsCommon, physicsWorld, Vector3(0, 10, 0), assets->GetMesh("cubeMesh"), assets->GetTexture("doorTex"), assets->GetShader("basicShader"), 2));
+		world->AddGameObject(new Box(physicsCommon, physicsWorld, Vector3(0, 10, 0), assets->GetMesh("cubeMesh"), assets->GetTexture("doorTex"), assets->GetShader("basicShader"), 2));
 	}
 }
 
@@ -55,5 +54,5 @@ PlayerBase* PaintingGame::CreatePlayer(Vector3 position) {
 	animController->SetRunAnimation(assets->GetMeshAnimation("mainCharRunAnim"));
 	animController->SetTauntAnimation(assets->GetMeshAnimation("mainCharTauntAnim"));
 
-	return new PlayerBase(*physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetTexture("basicTex"), animController, assets->GetShader("skinningShader"), 5);
+	return new PlayerBase(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetTexture("basicTex"), animController, assets->GetShader("skinningShader"), 5);
 }
