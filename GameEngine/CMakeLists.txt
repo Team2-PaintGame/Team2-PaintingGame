@@ -91,8 +91,8 @@ set(Graphics_Lights
 source_group("Graphics\\Lights" FILES ${Graphics_Lights})
 
 set(Graphics_Renderer
-    "./Graphics/Renderer/GameTechRenderer.h"
-    "./Graphics/Renderer/GameTechRenderer.cpp"
+    #"./Graphics/Renderer/GameTechRenderer.h"
+    #"./Graphics/Renderer/GameTechRenderer.cpp"
 )
 source_group("Graphics\\Renderer" FILES ${Graphics_Renderer})
 
@@ -170,6 +170,8 @@ set(Windowing_and_Input
     "./WindowingAndInput/Mouse.h"
     "./WindowingAndInput/Window.cpp"
     "./WindowingAndInput/Window.h"
+    "./WindowingAndInput/InputBase.cpp"
+    "./WindowingAndInput/InputBase.h"
 )
 source_group("Windowing and Input" FILES ${Windowing_and_Input})
 
@@ -184,8 +186,6 @@ set(Windowing_and_Input__Win32
 source_group("Windowing and Input\\Win32" FILES ${Windowing_and_Input__Win32})
 
 set(Windowing_and_Input__PS4
-    "./WindowingAndInput/PS4/InputBase.cpp"
-    "./WindowingAndInput/PS4/InputBase.h"
     "./WindowingAndInput/PS4/PS4Input.cpp"
     "./WindowingAndInput/PS4/PS4Input.h"
     "./WindowingAndInput/PS4/PS4Window.cpp"
