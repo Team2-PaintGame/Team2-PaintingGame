@@ -6,6 +6,7 @@
 #include <DirectionalLight.h>
 #include <SpotLight.h>
 #include <PointLight.h>
+#include "SceneNode.h"
 
 class Gamepad;
 class AnimationController;
@@ -19,7 +20,7 @@ namespace NCL {
 			~PaintingGame();
 			virtual void Update(float dt);
 			void Restart() { InitWorld(); }
-
+			virtual GameWorld* GetWorld() const { return world; }
 		protected:
 			//virtual void InitCamera(Camera& camera, PlayerBase& focus, float aspect_multiplier = 1.0f);
 			virtual void InitWorld();

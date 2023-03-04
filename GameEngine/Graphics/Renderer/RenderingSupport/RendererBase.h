@@ -18,7 +18,7 @@ namespace NCL::Rendering {
 		VSync_OFF,
 		VSync_ADAPTIVE
 	};
-	class CSC8508::BaseScreen;
+
 	class RendererBase {
 	public:
 		friend class NCL::Window;
@@ -46,7 +46,7 @@ namespace NCL::Rendering {
 		virtual bool SetVerticalSync(VerticalSyncState s) {
 			return false;
 		}
-		void BindScreen(BaseScreen* screen) { boundScreen = screen; }
+		virtual void BindScreen(void* screen) {};
 	protected:
 		virtual void OnWindowResize(int w, int h) = 0;
 		virtual void OnWindowDetach() {}; //Most renderers won't care about this
@@ -63,7 +63,6 @@ namespace NCL::Rendering {
 
 		bool initState;
 		bool forceValidDebugState;
-		BaseScreen* boundScreen;
 	};
 
 	// The abstract factory interface for creating renderer objects

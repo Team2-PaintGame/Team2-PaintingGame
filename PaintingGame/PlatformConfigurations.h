@@ -1,7 +1,7 @@
 #pragma once
 #include <RendererBase.h>
 #include <AssetLoader.h>
-#include <OGLRenderer.h>
+#include "OGLPaintingGameRenderer.h"
 #include <GNMRenderer.h>
 #include <OGLAssetLoader.h>
 #include <GNMAssetLoader.h>
@@ -13,11 +13,11 @@ namespace NCL {
 			PlatformConfigurations() {
 				// Determine which platform the user is on
 #ifdef _WIN32
-				rendererFactory = new OGLRendererFactory();
+				rendererFactory = new OGLPaintingGameRendererFactory();
 				assetLoaderFactory = new Assets::OGLAssetLoaderFactory();
 #endif
 #ifdef __ORBIS__
-				rendererFactory = new GNMRendererFactory();
+				rendererFactory = new GNMPaintingGameRendererRendererFactory();
 				assetLoaderFactory = new Assets::GNMAssetLoaderFactory();
 #endif
 			}

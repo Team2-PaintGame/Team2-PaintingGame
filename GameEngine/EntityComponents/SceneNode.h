@@ -1,18 +1,15 @@
 #pragma once
 #include "RenderObject.h"
-#include "GameWorld.h"
 
 namespace NCL::CSC8508 {
+	class GameWorld;
 	class SceneNode {
 	public:
 		SceneNode() = default;
-		SceneNode(MeshGeometry* mesh, ShaderBase* shader, TextureBase* texture) { SetRenderObject(mesh, shader, texture); }
+		SceneNode(MeshGeometry* mesh, ShaderBase* shader, TextureBase* texture);
 		RenderObject* GetRenderObject() const { return renderObject; }
-		void SetRenderObject(RenderObject* newObject) {	renderObject = newObject; }
-		void SetRenderObject(MeshGeometry* mesh, ShaderBase* shader, TextureBase* texture) {
-			renderObject = new RenderObject(NULL, mesh, shader);
-			renderObject->SetDefaultTexture(texture);
-		}
+		void SetRenderObject(RenderObject* newObject);
+		void SetRenderObject(MeshGeometry* mesh, ShaderBase* shader, TextureBase* texture);
 		virtual void Update(float dt) {}
 		virtual GameWorld* GetWorld() const { return nullptr; }
 	protected:

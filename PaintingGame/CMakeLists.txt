@@ -38,6 +38,14 @@ set(GameObjects
 )
 source_group("Game Objects" FILES ${GameObjects})
 
+set(Renderers
+    "./Renderers/GNMPaintingGameRenderer.h"
+    "./Renderers/GNMPaintingGameRenderer.cpp"
+    "./Renderers/OGLPaintingGameRenderer.h"
+    "./Renderers/OGLPaintingGameRenderer.cpp"
+)
+source_group("Renderers" FILES ${Renderers})
+
 set(Screens
     "./Screens/SplashScreen.h"
     "./Screens/SplashScreen.cpp" 
@@ -74,6 +82,7 @@ set(ALL_FILES
     ${Header_Files}
     ${Source_Files}
     ${GameObjects}
+    ${Renderers}
     ${Screens}
     ${ImGui}
 )
@@ -227,6 +236,7 @@ endif()
 
 include_directories(".")
 include_directories("./GameObjects")
+include_directories("./Renderers")
 include_directories("./Screens")
 include_directories("../OpenGLRendering/")
 include_directories("../GNMRendering/")
