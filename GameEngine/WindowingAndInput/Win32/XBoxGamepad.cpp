@@ -1,24 +1,24 @@
-#include "Win32XBoxGamepad.h"
+#include "XBoxGamepad.h"
 
 using namespace std;
 using namespace NCL;
 
-bool Win32XBoxGamepad::GetButtonDown(unsigned int i)
+bool XBoxGamepad::GetButtonDown(unsigned int i)
 {
 	return false;
 }
 
-int Win32XBoxGamepad::GetPort()
+int XBoxGamepad::GetPort()
 {
 	return cId + 1;
 }
 
-XINPUT_GAMEPAD* Win32XBoxGamepad::GetState()
+XINPUT_GAMEPAD* XBoxGamepad::GetState()
 {
 	return &state.Gamepad;
 }
 
-bool Win32XBoxGamepad::CheckConnection()
+bool XBoxGamepad::CheckConnection()
 {
 	int controllerId = -1;
 
@@ -37,7 +37,7 @@ bool Win32XBoxGamepad::CheckConnection()
 }
 
 // Returns false if the controller has been disconnected
-bool Win32XBoxGamepad::Refresh()
+bool XBoxGamepad::Refresh()
 {
 	if (cId == -1)
 		CheckConnection();
@@ -77,7 +77,7 @@ bool Win32XBoxGamepad::Refresh()
 	return false;
 }
 
-bool Win32XBoxGamepad::IsPressed(WORD button)
+bool XBoxGamepad::IsPressed(WORD button)
 {
 	return (state.Gamepad.wButtons & button) != 0;
 }

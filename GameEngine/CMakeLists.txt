@@ -180,8 +180,8 @@ set(Windowing_and_Input__Win32
     "./WindowingAndInput/Win32/Win32Mouse.h"
     "./WindowingAndInput/Win32/Win32Window.cpp"
     "./WindowingAndInput/Win32/Win32Window.h"
-    "./WindowingAndInput/Win32/Win32XBoxGamepad.cpp"
-    "./WindowingAndInput/Win32/Win32XBoxGamepad.h" 
+    "./WindowingAndInput/Win32/XBoxGamepad.cpp"
+    "./WindowingAndInput/Win32/XBoxGamepad.h" 
 )
 source_group("Windowing and Input\\Win32" FILES ${Windowing_and_Input__Win32})
 

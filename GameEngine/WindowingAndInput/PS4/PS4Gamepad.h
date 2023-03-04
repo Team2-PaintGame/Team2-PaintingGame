@@ -24,6 +24,8 @@ namespace NCL {
 
 	class PS4Controller : public PlayerController {
 	public:
+		PS4Controller(PlayerBase* player) : PlayerController(player) {}
+
 		// Get the input for moving forward from the Xbox controller
 		bool MoveForward() override {
 			return gamepad.GetAxis(0).y > 0.0f;
@@ -46,6 +48,14 @@ namespace NCL {
 		}
 	protected:
 		PS4Gamepad gamepad;
+	};
+
+	// Concrete factory for creating PS4 Player Controller
+	class PS4ControllerFactory : public PlayerControllerFactory {
+	public:
+		PlayerController* createPlayerController(PlayerBase* player) override {
+			return new PS4Controller(player);
+		}
 	};
 }
 #endif

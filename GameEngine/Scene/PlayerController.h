@@ -21,5 +21,12 @@ namespace NCL {
 	protected:
 		PlayerBase* player;
 	};
+
+	// The abstract factory interface for player controller
+	class PlayerControllerFactory {
+	public:
+		virtual ~PlayerControllerFactory() {}
+		virtual PlayerController* createPlayerController(PlayerBase* player) = 0;
+	};
 }
 

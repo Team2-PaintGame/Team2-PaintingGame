@@ -77,6 +77,8 @@ namespace NCL::Win32Code {
 
 	class Win32Controller : public PlayerController {
 	public:
+		Win32Controller(PlayerBase* player) : PlayerController(player) {}
+
 		// Get the input for moving forward from the Xbox controller
 		bool MoveForward() override {
 			return Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::W);
@@ -96,6 +98,14 @@ namespace NCL::Win32Code {
 		}
 		float Yaw() override {
 			Window::GetMouse()->GetRelativePosition().x;
+		}
+	};
+
+	// Concrete factory for creating Win32 Player Controller
+	class Win32PlayerControllerFactory : public PlayerControllerFactory {
+	public:
+		PlayerController* createPlayerController(PlayerBase* player) override {
+			return new Win32Controller(player);
 		}
 	};
 }

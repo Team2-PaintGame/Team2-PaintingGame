@@ -4,10 +4,10 @@
 #include "PlayerController.h"
 
 namespace NCL {
-	class Win32XBoxGamepad {
+	class XBoxGamepad {
 	public:
-		Win32XBoxGamepad() : deadzoneX(0.05f), deadzoneY(0.02f), leftStickX(0.0f), leftStickY(0.0f), rightStickX(0.0f), rightStickY(0.0f) {}
-		Win32XBoxGamepad(float dzX, float dzY) : deadzoneX(dzX), deadzoneY(dzY) {}
+		XBoxGamepad() : deadzoneX(0.05f), deadzoneY(0.02f), leftStickX(0.0f), leftStickY(0.0f), rightStickX(0.0f), rightStickY(0.0f) {}
+		XBoxGamepad(float dzX, float dzY) : deadzoneX(dzX), deadzoneY(dzY) {}
 
 		bool	GetButtonDown(unsigned int i);
 
@@ -33,6 +33,7 @@ namespace NCL {
 
 	class XboxController : public PlayerController {
 	public:
+		XboxController(PlayerBase* player) : PlayerController(player) {}
 		// Get the input for moving forward from the Xbox controller
 		bool MoveForward() override {
 			return gamepad.leftStickY > 0.0f;
@@ -58,7 +59,15 @@ namespace NCL {
 
 		}
 	protected:
-		Win32XBoxGamepad gamepad;
+		XBoxGamepad gamepad;
 		bool connected = false;
+	};
+
+	// Concrete factory for creating XBox Player Controller
+	class XBoxPlayerControllerFactory : public PlayerControllerFactory {
+	public:
+		PlayerController* createPlayerController(PlayerBase* player) override {
+			return new XboxController(player);
+		}
 	};
 }
