@@ -4,7 +4,6 @@
 #include "Box.h"
 #include "Floor.h"
 #include "AnimationController.h"
-#include "MenuHandler.h"
 
 using namespace NCL;
 using namespace CSC8508;
