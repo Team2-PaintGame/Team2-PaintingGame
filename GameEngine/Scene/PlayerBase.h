@@ -17,11 +17,11 @@ namespace NCL {
 		PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, int size);
 		PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, MeshMaterial* meshMaterial, ShaderBase* shader, int size);
 		virtual ~PlayerBase();
-		const Camera* GetCamera() const { return &camera; }
+		Camera* GetCamera() const { return camera; }
 	protected:
 		void SetMemberVariables(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, ShaderBase* shader, int size);
 		rp3d::BoxShape* boundingVolume;
-		Camera camera;
+		Camera* camera;
 	};
 }
 

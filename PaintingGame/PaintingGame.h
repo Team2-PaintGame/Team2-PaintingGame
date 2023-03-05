@@ -14,6 +14,7 @@ class AnimationController;
 namespace NCL {
 	class MenuHandler;
 	namespace CSC8508 {
+		//typedef std::function<void(Camera*)> CameraFunc;
 		class PaintingGame : public SceneNode {
 		public:
 			PaintingGame(GameAssets* assets);
@@ -21,6 +22,7 @@ namespace NCL {
 			virtual void Update(float dt);
 			void Restart() { InitWorld(); }
 			virtual GameWorld* GetWorld() const { return world; }
+			virtual void OperateOnCameras(CameraFunc f);
 		protected:
 			//virtual void InitCamera(Camera& camera, PlayerBase& focus, float aspect_multiplier = 1.0f);
 			virtual void InitWorld();
@@ -42,6 +44,9 @@ namespace NCL {
 			std::vector<DirectionalLight> directionalLights;
 			std::vector<PointLight> pointLights;
 			std::vector<SpotLight> spotLights;
+
+			//container for cameras
+			std::vector<Camera*> activeCameras;
 		};
 	}
 }

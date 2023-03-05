@@ -32,6 +32,12 @@ PaintingGame::~PaintingGame() {
 //	camera.SetPerspectiveCameraParameters(Window::GetWindow()->GetScreenAspect() * aspect_multiplier);
 //}
 
+void PaintingGame::OperateOnCameras(CameraFunc f) {
+	for (Camera* cam : activeCameras) {
+		f(cam);
+	}
+}
+
 void PaintingGame::InitWorld() {
 	world->ClearAndErase();
 

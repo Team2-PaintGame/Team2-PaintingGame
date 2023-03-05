@@ -19,9 +19,9 @@ SinglePlayerGame::~SinglePlayerGame() {
 	delete playerController;
 }
 
-Player* SinglePlayerGame::AddPlayer(Vector3 position)
-{
+Player* SinglePlayerGame::AddPlayer(Vector3 position) {
 	player = CreatePlayer(position);
+	activeCameras.push_back(player->GetCamera());
 	world->AddGameObject(player);
 	playerController = GameManager::sConfig.playerControllerFactory->createPlayerController(player);
 	return player;

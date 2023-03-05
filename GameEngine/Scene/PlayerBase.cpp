@@ -22,6 +22,8 @@ PlayerBase::~PlayerBase() {
 	}
 
 	physicsCommon.destroyBoxShape(boundingVolume);
+
+	delete camera;
 }
 
 void PlayerBase::SetMemberVariables(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, ShaderBase* shader, int size) {
@@ -39,6 +41,8 @@ void PlayerBase::SetMemberVariables(reactphysics3d::PhysicsCommon& physicsCommon
 	rigidBody->addCollider(boundingVolume, rp3d::Transform::identity()); //collider
 	rigidBody->updateMassPropertiesFromColliders();
 	rigidBody->setLinearDamping(1.5f);
+
+	camera = new Camera();
 }
 
 
