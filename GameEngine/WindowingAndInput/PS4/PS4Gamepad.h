@@ -41,10 +41,10 @@ namespace NCL {
 		}
 
 		float Pitch() override {
-			gamepad.GetAxis(0).y;
+			return gamepad.GetAxis(0).y;
 		}
 		float Yaw() override {
-			gamepad.GetAxis(0).x;
+			return gamepad.GetAxis(0).x;
 		}
 	protected:
 		PS4Gamepad gamepad;

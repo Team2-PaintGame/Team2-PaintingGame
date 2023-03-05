@@ -89,7 +89,7 @@ void NetworkedGame::Update(float dt) {
 
 	if ((thisClient && connected) || thisServer)
 	{
-		world->GetMainCamera()->UpdateCamera(dt);
+		//ServerPlayer->GetCamera()->UpdateCamera(dt);
 		playerController->Update(dt);
 		PaintingGame::Update(dt);
 	}
@@ -241,7 +241,7 @@ NCL::PlayerBase* NetworkedGame::SpawnPlayer() {
 	return nullptr;
 }
 
-NCL::PlayerBase* NetworkedGame::AddPlayer(Camera* camera, Vector3 position, Gamepad* gamepad) {
+NCL::PlayerBase* NetworkedGame::AddPlayer(Vector3 position) {
 	return nullptr;
 }
 

@@ -6,6 +6,8 @@
 using namespace NCL;
 using namespace CSC8508;
 
+PlatformConfigurations GameManager::sConfig = PlatformConfigurations();
+
 GameManager::GameManager(Window* window) {
 	renderer = sConfig.rendererFactory->createRenderer(*window);
 	assetLoader = sConfig.assetLoaderFactory->createAssetLoader();

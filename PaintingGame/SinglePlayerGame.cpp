@@ -13,7 +13,7 @@ SinglePlayerGame::SinglePlayerGame(GameAssets* assets) : PaintingGame(assets) {
 		GameManager::sConfig.playerControllerFactory = new Win32PlayerControllerFactory();
 	}
 	InitWorld();
-	AddPlayer(world->GetMainCamera(), Vector3(0.0f, 10.0f, 0.0f), nullptr);
+	AddPlayer(Vector3(0.0f, 10.0f, 0.0f));
 
 	//InitCamera(*this->world->GetMainCamera(), *player);
 }
@@ -22,7 +22,7 @@ SinglePlayerGame::~SinglePlayerGame() {
 	
 }
 
-PlayerBase* SinglePlayerGame::AddPlayer(Camera* camera, Vector3 position, Gamepad* gamepad)
+PlayerBase* SinglePlayerGame::AddPlayer(Vector3 position)
 {
 	player = CreatePlayer(position);
 	world->AddGameObject(player);
@@ -33,7 +33,7 @@ PlayerBase* SinglePlayerGame::AddPlayer(Camera* camera, Vector3 position, Gamepa
 
 void SinglePlayerGame::Update(float dt) {
 	playerController->Update(dt);
-	world->GetMainCamera()->UpdateCamera(dt);
-
+	//world->GetMainCamera()->UpdateCamera(dt);
+	//player->GetCamera()->UpdateCamera(dt);
 	PaintingGame::Update(dt);
 }

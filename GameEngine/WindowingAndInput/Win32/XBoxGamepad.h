@@ -52,10 +52,10 @@ namespace NCL {
 		}
 
 		float Pitch() override {
-			gamepad.rightStickY;
+			return gamepad.rightStickY;
 		}
 		float Yaw() override {
-			gamepad.rightStickX;
+			return gamepad.rightStickX;
 		}
 
 		void Connect() {

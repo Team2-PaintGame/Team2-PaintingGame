@@ -26,7 +26,7 @@ namespace NCL {
 			virtual void InitWorld();
 
 			virtual PlayerBase* CreatePlayer(Vector3 position);
-			virtual PlayerBase* AddPlayer(Camera* camera, Vector3 position, Gamepad* gamepad = nullptr) { return nullptr; };
+			virtual PlayerBase* AddPlayer(Vector3 position) { return nullptr; };
 
 			GameWorld* world;
 

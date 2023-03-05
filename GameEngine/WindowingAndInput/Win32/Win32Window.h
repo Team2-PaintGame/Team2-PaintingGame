@@ -94,10 +94,10 @@ namespace NCL::Win32Code {
 		}
 
 		float Pitch() override {
-			Window::GetMouse()->GetRelativePosition().y;
+			return Window::GetMouse()->GetRelativePosition().y;
 		}
 		float Yaw() override {
-			Window::GetMouse()->GetRelativePosition().x;
+			return Window::GetMouse()->GetRelativePosition().x;
 		}
 	};
 }
