@@ -48,10 +48,10 @@ void PaintingGame::Update(float dt) {
 	Debug::UpdateRenderables(dt);
 }
 
-PlayerBase* PaintingGame::CreatePlayer(Vector3 position) {
-	/*animController->SetIdleAnimation(assets->GetMeshAnimation("mainCharIdleAnim"));
-	animController->SetRunAnimation(assets->GetMeshAnimation("mainCharRunAnim"));
-	animController->SetTauntAnimation(assets->GetMeshAnimation("mainCharTauntAnim"));*/
+Player* PaintingGame::CreatePlayer(Vector3 position) {
+	std::unordered_map<std::string, MeshAnimation*> animations;
+	animations.insert(std::make_pair("idleAnimation", assets->GetMeshAnimation("mainCharIdleAnim")));
+	animations.insert(std::make_pair("moveAnimation", assets->GetMeshAnimation("mainCharRunAnim")));
 
-	return new PlayerBase(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetTexture("basicTex"), assets->GetShader("skinningShader"), 5);
+	return new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetTexture("basicTex"), assets->GetShader("skinningShader"), animations, 5);
 }

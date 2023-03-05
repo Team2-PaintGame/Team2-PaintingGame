@@ -9,7 +9,7 @@ namespace NCL {
 		public:
 			SplitScreenGame(GameAssets* assets);
 			virtual ~SplitScreenGame();
-			PlayerBase* AddPlayer(Vector3 position) override;
+			Player* AddPlayer(Vector3 position) override;
 			void Update(float dt) override;
 
 		protected:
@@ -19,7 +19,7 @@ namespace NCL {
 		protected:
 			//contains an array of players (2) only
 			const int maxPlayers = 2;
-			std::vector<PlayerBase*> players;
+			std::vector<Player*> players;
 			std::vector<PlayerController*> playerControllers;
 		};
 	}

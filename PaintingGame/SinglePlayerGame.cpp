@@ -22,7 +22,7 @@ SinglePlayerGame::~SinglePlayerGame() {
 	
 }
 
-PlayerBase* SinglePlayerGame::AddPlayer(Vector3 position)
+Player* SinglePlayerGame::AddPlayer(Vector3 position)
 {
 	player = CreatePlayer(position);
 	world->AddGameObject(player);

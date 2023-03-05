@@ -241,7 +241,7 @@ NCL::PlayerBase* NetworkedGame::SpawnPlayer() {
 	return nullptr;
 }
 
-NCL::PlayerBase* NetworkedGame::AddPlayer(Vector3 position) {
+NCL::Player* NetworkedGame::AddPlayer(Vector3 position) {
 	return nullptr;
 }
 

@@ -9,14 +9,14 @@ namespace NCL {
 		public:
 			SinglePlayerGame(GameAssets* assets);
 			virtual ~SinglePlayerGame();
-			PlayerBase* AddPlayer(Vector3 position) override;
+			Player* AddPlayer(Vector3 position) override;
 			void Update(float dt) override;
 
 		protected:
 			//void InitWorld() override;
 
 		protected:
-			PlayerBase* player = NULL;
+			Player* player = NULL;
 			PlayerController* playerController;
 		};
 	}

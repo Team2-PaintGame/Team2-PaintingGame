@@ -34,8 +34,8 @@ void SplitScreenGame::InitPlayers() {
 	AddPlayer(Vector3(20.0f, 10.0f, 20.0f));
 }
 
-PlayerBase* SplitScreenGame::AddPlayer(Vector3 position) {
-	PlayerBase* player = CreatePlayer(position);
+Player* SplitScreenGame::AddPlayer(Vector3 position) {
+	Player* player = CreatePlayer(position);
 	players.push_back(player);
 	world->AddGameObject(player);
 	//playerControllers.push_back(new PlayerController(camera, player, gamepad));

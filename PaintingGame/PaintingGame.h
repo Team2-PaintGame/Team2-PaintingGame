@@ -1,5 +1,5 @@
 #pragma once
-#include "PlayerBase.h"
+#include "Player.h"
 #include "GameAssets.h"
 #include <Camera.h>
 #include <GameWorld.h>
@@ -25,8 +25,8 @@ namespace NCL {
 			//virtual void InitCamera(Camera& camera, PlayerBase& focus, float aspect_multiplier = 1.0f);
 			virtual void InitWorld();
 
-			virtual PlayerBase* CreatePlayer(Vector3 position);
-			virtual PlayerBase* AddPlayer(Vector3 position) { return nullptr; };
+			virtual Player* CreatePlayer(Vector3 position);
+			virtual Player* AddPlayer(Vector3 position) { return nullptr; };
 
 			GameWorld* world;
 
