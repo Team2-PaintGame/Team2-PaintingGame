@@ -18,7 +18,6 @@ namespace NCL {
 		protected:
 			PlayerBase* player = NULL;
 			PlayerController* playerController;
-			Gamepad* gamepad;
 		};
 	}
 }

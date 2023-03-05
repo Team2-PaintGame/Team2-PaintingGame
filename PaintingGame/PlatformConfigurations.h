@@ -5,6 +5,8 @@
 #include <GNMRenderer.h>
 #include <OGLAssetLoader.h>
 #include <GNMAssetLoader.h>
+#include "PlayerController.h"
+#include "PS4Gamepad.h"
 
 namespace NCL {
 	namespace CSC8508 {
@@ -15,18 +17,23 @@ namespace NCL {
 #ifdef _WIN32
 				rendererFactory = new OGLPaintingGameRendererFactory();
 				assetLoaderFactory = new Assets::OGLAssetLoaderFactory();
+				//not assigning player controller factory for windows platform, 
+				//it can either be win32 or xbox depending on type of game selected
 #endif
 #ifdef __ORBIS__
 				rendererFactory = new GNMPaintingGameRendererRendererFactory();
 				assetLoaderFactory = new Assets::GNMAssetLoaderFactory();
+				playerControllerFactory = new PS4ControllerFactory();
 #endif
 			}
 			~PlatformConfigurations() {
 				delete rendererFactory;
 				delete assetLoaderFactory;
+				delete playerControllerFactory;
 			}
-			RendererFactory* rendererFactory;
-			Assets::AssetLoaderFactory* assetLoaderFactory;
+			RendererFactory* rendererFactory = NULL;
+			Assets::AssetLoaderFactory* assetLoaderFactory = NULL;
+			PlayerControllerFactory* playerControllerFactory = NULL;
 		};
 	}
 }

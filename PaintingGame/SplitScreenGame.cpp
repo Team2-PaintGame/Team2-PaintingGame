@@ -1,5 +1,6 @@
 #include "SplitScreenGame.h"
-#include "InputController.h"
+#include "GameManager.h"
+#include "XBoxGamepad.h"
 
 using namespace NCL;
 using namespace CSC8508;
@@ -9,9 +10,9 @@ SplitScreenGame::SplitScreenGame(GameAssets* assets) : PaintingGame(assets) {
 	players.reserve(maxPlayers);
 	//change this through settings obj
 	//render->SetRenderMode(GameTechRenderer::RenderMode::SplitScreen);
-
-	gamepad = new Gamepad();
-
+	if (!GameManager::sConfig.playerControllerFactory) {
+		GameManager::sConfig.playerControllerFactory = new XBoxPlayerControllerFactory();
+	}
 	InitWorld();
 	InitPlayers();
 	//InitCamera(*this->world->GetMainCamera(), *players[0], 0.5f);
@@ -24,23 +25,21 @@ SplitScreenGame::~SplitScreenGame() {
 		delete p;
 	}
 	playerControllers.clear();
-
-	delete gamepad;
 }
 
 void SplitScreenGame::InitPlayers() {
 	players.clear();
 	
 	AddPlayer(world->GetMainCamera(), Vector3(0.0f, 10.0f, 0.0f));
-	AddPlayer(world->GetSecondCamera(), Vector3(20.0f, 10.0f, 20.0f), gamepad);
+	AddPlayer(world->GetSecondCamera(), Vector3(20.0f, 10.0f, 20.0f));
 }
 
 PlayerBase* SplitScreenGame::AddPlayer(Camera* camera, Vector3 position, Gamepad* gamepad) {
 	PlayerBase* player = CreatePlayer(position);
 	players.push_back(player);
 	world->AddGameObject(player);
-	playerControllers.push_back(new PlayerController(camera, player, gamepad));
-
+	//playerControllers.push_back(new PlayerController(camera, player, gamepad));
+	GameManager::sConfig.playerControllerFactory->createPlayerController(player);
 	return player;
 }
 

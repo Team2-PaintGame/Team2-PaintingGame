@@ -100,12 +100,14 @@ namespace NCL::Win32Code {
 			Window::GetMouse()->GetRelativePosition().x;
 		}
 	};
+}
 
+namespace NCL {
 	// Concrete factory for creating Win32 Player Controller
 	class Win32PlayerControllerFactory : public PlayerControllerFactory {
 	public:
 		PlayerController* createPlayerController(PlayerBase* player) override {
-			return new Win32Controller(player);
+			return new Win32Code::Win32Controller(player);
 		}
 	};
 }

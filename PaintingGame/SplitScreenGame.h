@@ -21,7 +21,6 @@ namespace NCL {
 			const int maxPlayers = 2;
 			std::vector<PlayerBase*> players;
 			std::vector<PlayerController*> playerControllers;
-			Gamepad* gamepad;
 		};
 	}
 }

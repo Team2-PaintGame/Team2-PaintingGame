@@ -1,7 +1,10 @@
+#pragma once
+#ifdef _WIN32
 #include<iostream>
 #include<Windows.h>
 #include<Xinput.h>
 #include "PlayerController.h"
+#include "Win32Window.h"
 
 namespace NCL {
 	class XBoxGamepad {
@@ -31,9 +34,9 @@ namespace NCL {
 		float deadzoneY;
 	};
 
-	class XboxController : public PlayerController {
+	class XBoxController : public PlayerController {
 	public:
-		XboxController(PlayerBase* player) : PlayerController(player) {}
+		XBoxController(PlayerBase* player) : PlayerController(player) {}
 		// Get the input for moving forward from the Xbox controller
 		bool MoveForward() override {
 			return gamepad.leftStickY > 0.0f;
@@ -67,7 +70,8 @@ namespace NCL {
 	class XBoxPlayerControllerFactory : public PlayerControllerFactory {
 	public:
 		PlayerController* createPlayerController(PlayerBase* player) override {
-			return new XboxController(player);
+			return new XBoxController(player);
 		}
 	};
 }
+#endif

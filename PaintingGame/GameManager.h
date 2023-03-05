@@ -10,8 +10,8 @@ namespace NCL::CSC8508 {
 		GameManager(Window* window);
 		~GameManager();
 		bool RunGame(float dt);
+		static PlatformConfigurations sConfig;
 	protected:
-		PlatformConfigurations config;
 		RendererBase* renderer;
 		Assets::AssetLoader* assetLoader;
 		GameAssets* gameAssets;

@@ -7,8 +7,8 @@ using namespace NCL;
 using namespace CSC8508;
 
 GameManager::GameManager(Window* window) {
-	renderer = config.rendererFactory->createRenderer(*window);
-	assetLoader = config.assetLoaderFactory->createAssetLoader();
+	renderer = sConfig.rendererFactory->createRenderer(*window);
+	assetLoader = sConfig.assetLoaderFactory->createAssetLoader();
 	gameAssets = new GameAssets(assetLoader);
 	screenManager = new ScreenManager(gameAssets);
 }

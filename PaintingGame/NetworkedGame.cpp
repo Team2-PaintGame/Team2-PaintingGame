@@ -5,6 +5,8 @@
 #include "reactphysics3d/reactphysics3d.h"
 #include "Utils.h"
 #include "PlayerBase.h"
+#include "GameManager.h"
+#include "Win32Window.h"
 
 #define COLLISION_MSG 30
 
@@ -27,6 +29,10 @@ NetworkedGame::NetworkedGame(GameAssets* assets) : PaintingGame(assets) {
 	NetworkBase::Initialise();
 	timeToNextPacket  = 0.0f;
 	packetsToSnapshot = 0;
+
+	if (!GameManager::sConfig.playerControllerFactory) {
+		GameManager::sConfig.playerControllerFactory = new Win32PlayerControllerFactory();
+	}
 }
 
 NetworkedGame::~NetworkedGame()	{
@@ -246,9 +252,7 @@ void NetworkedGame::StartLevel() {
 	PlayerBase* player = SpawnPlayer();
 	//InitCamera(*world->GetMainCamera(), *player, 1.0f );
 
-	playerController = new PlayerController(world->GetMainCamera(), player, nullptr);
-
-
+	playerController = GameManager::sConfig.playerControllerFactory->createPlayerController(player);
 }
 
 void NetworkedGame::ReceivePacket(int type, GamePacket* payload, int source) {
