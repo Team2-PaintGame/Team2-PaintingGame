@@ -9,11 +9,10 @@ namespace NCL {
 		public:
 			SplitScreenGame(GameAssets* assets);
 			virtual ~SplitScreenGame();
-			Player* AddPlayer(Vector3 position) override;
 			void Update(float dt) override;
 
 		protected:
-			//void InitWorld() override;
+			Player* AddPlayer(Vector3 position) override;
 			void InitPlayers();
 
 		protected:

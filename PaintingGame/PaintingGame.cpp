@@ -13,6 +13,7 @@ PaintingGame::PaintingGame(GameAssets* assets) {
 	physicsWorld = physicsCommon.createPhysicsWorld();
 	physicsWorld->setIsGravityEnabled(useGravity);
 
+	InitWorld();
 	//renderer->settings.SetIsDebugRenderingModeEnabled(true);
 	//renderer->settings.debugRendererSettings.SetIsCollisionShapeDisplayed(true);
 	//renderer->settings.debugRendererSettings.SetIsBroadPhaseAABBDisplayed(true);

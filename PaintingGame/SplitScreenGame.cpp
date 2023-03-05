@@ -13,10 +13,7 @@ SplitScreenGame::SplitScreenGame(GameAssets* assets) : PaintingGame(assets) {
 	if (!GameManager::sConfig.playerControllerFactory) {
 		GameManager::sConfig.playerControllerFactory = new XBoxPlayerControllerFactory();
 	}
-	InitWorld();
 	InitPlayers();
-	//InitCamera(*this->world->GetMainCamera(), *players[0], 0.5f);
-	//InitCamera(*this->world->GetSecondCamera(), *players[1], 0.5f);
 }
 
 SplitScreenGame::~SplitScreenGame() {
@@ -38,21 +35,15 @@ Player* SplitScreenGame::AddPlayer(Vector3 position) {
 	Player* player = CreatePlayer(position);
 	players.push_back(player);
 	world->AddGameObject(player);
-	//playerControllers.push_back(new PlayerController(camera, player, gamepad));
-	GameManager::sConfig.playerControllerFactory->createPlayerController(player);
+	playerControllers.push_back(GameManager::sConfig.playerControllerFactory->createPlayerController(player));
 	return player;
 }
 
 void SplitScreenGame::Update(float dt) {
 
-	for (PlayerController* pc : playerControllers)
-	{
+	for (PlayerController* pc : playerControllers) {
 		pc->Update(dt);
 	}
-
-	//world->GetMainCamera()->UpdateCamera(dt);
-	//world->GetSecondCamera()->UpdateCamera(dt);
-
 	PaintingGame::Update(dt);
 }
 
