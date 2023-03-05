@@ -83,7 +83,7 @@ void AnimationController::SetRenderer(NCL::CSC8508::RenderObject* renderObj)
 	this->gameObject->SetRenderObject(renderObj);
 }
 
-void AnimationController::UpdateAnimations(float dt)
+void AnimationController::Update(float dt)
 {
 	//std::cout << gameObject->GetRigidBody()->getLinearVelocity().length() << "\n";
 

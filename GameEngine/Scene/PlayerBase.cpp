@@ -44,8 +44,8 @@ PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysic
 
 void PlayerBase::Update(float dt) {
 
-	animationController->UpdateAnimations(dt);
-	camera.UpdateCamera(dt);
+	animationController->Update(dt);
+	camera.Update(dt);
 }
 
 PlayerBase::~PlayerBase() {

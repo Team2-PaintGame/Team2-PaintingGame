@@ -34,7 +34,7 @@ namespace NCL {
 		void SetOrthographicCameraParameters(float right, float left, float top, float bottom);
 		~Camera(void) = default;
 
-		void UpdateCamera(float dt);
+		void Update(float dt);
 
 		void CalculateFirstPersonView();
 		void CalculateThirdPersonView(bool init = false);

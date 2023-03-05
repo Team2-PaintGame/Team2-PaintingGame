@@ -45,7 +45,7 @@ void Camera::SetOrthographicCameraParameters(float right, float left, float top,
 	camType = CameraType::Orthographic;
 }
 
-void Camera::UpdateCamera(float dt) {
+void Camera::Update(float dt) {
 	
 	if (true) {
 		pitch -= (Window::GetMouse()->GetRelativePosition().y);

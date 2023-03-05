@@ -23,7 +23,7 @@ public:
 	void SetRunAnimation(NCL::MeshAnimation* meshAnim);
 	
 	void SetRenderer(NCL::CSC8508::RenderObject* renderObj);
-	void UpdateAnimations(float dt);
+	void Update(float dt);
 protected:
 	NCL::CSC8508::State* idleState = nullptr;
 	NCL::CSC8508::State* moveState = nullptr;
