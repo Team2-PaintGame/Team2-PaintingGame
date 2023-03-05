@@ -11,7 +11,7 @@ namespace NCL {
 		class GameObject;
 		class AnimationController : public StateMachine {
 		public:
-			AnimationController(GameObject* gameObject, std::unordered_map<std::string, MeshAnimation*> animations);
+			AnimationController(GameObject* gameObject, const std::unordered_map<std::string, MeshAnimation*>& animations);
 			virtual void Update(float dt);
 			MeshAnimation* GetCurrentAnimation() const { return currentAnimation; }
 			int GetCurrentFrame() const { return currentFrame; }

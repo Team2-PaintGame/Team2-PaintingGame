@@ -5,14 +5,14 @@
 using namespace NCL;
 using namespace NCL::CSC8508;
 
-AnimationController::AnimationController(GameObject* gameObject, std::unordered_map<std::string, MeshAnimation*> animations) {
+AnimationController::AnimationController(GameObject* gameObject, const std::unordered_map<std::string, MeshAnimation*>& animations) {
 	this->gameObject = gameObject;
 	State* idleState = new State([&](float dt)->void {
 		currentAnimation = animations.at("idleAnimation");
-		});
+	});
 	State* moveState = new State([&](float dt)->void {
 		currentAnimation = animations.at("moveAnimation");
-		});
+	});
 
 	StateTransition* idleToMoveStateTransition = new StateTransition(idleState, moveState, [&](void)->bool {
 
