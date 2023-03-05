@@ -49,10 +49,9 @@ void PaintingGame::Update(float dt) {
 }
 
 PlayerBase* PaintingGame::CreatePlayer(Vector3 position) {
-	AnimationController* animController = new AnimationController();
-	animController->SetIdleAnimation(assets->GetMeshAnimation("mainCharIdleAnim"));
+	/*animController->SetIdleAnimation(assets->GetMeshAnimation("mainCharIdleAnim"));
 	animController->SetRunAnimation(assets->GetMeshAnimation("mainCharRunAnim"));
-	animController->SetTauntAnimation(assets->GetMeshAnimation("mainCharTauntAnim"));
+	animController->SetTauntAnimation(assets->GetMeshAnimation("mainCharTauntAnim"));*/
 
-	return new PlayerBase(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetTexture("basicTex"), animController, assets->GetShader("skinningShader"), 5);
+	return new PlayerBase(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetTexture("basicTex"), assets->GetShader("skinningShader"), 5);
 }

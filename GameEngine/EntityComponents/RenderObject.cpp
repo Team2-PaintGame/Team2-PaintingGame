@@ -20,6 +20,7 @@ RenderObject::~RenderObject() {
 }
 
 void RenderObject::SetDefaultTexture(TextureBase* t) {
+	multipleTextures = false;
 	texture = t;
 }
 
@@ -27,7 +28,7 @@ TextureBase* RenderObject::GetDefaultTexture() const {
 	return texture;
 }
 
-void RenderObject::LoadMaterialTextures() {
+void RenderObject::LoadMaterialTextures(MeshMaterial* material) {
 	multipleTextures = true;
 	int meshLayers = mesh->GetSubMeshCount();
 	for (int i = 0; i < meshLayers; i++) {
@@ -49,7 +50,7 @@ void RenderObject::AddTexture(TextureBase* t, std::string uniform, int subMeshIn
 
 void RenderObject::GetFrameMatrices(vector<Matrix4>& frameMatrices) const {
 	const std::vector<Matrix4> invBindPose = mesh->GetInverseBindPose();
-	const Matrix4* frameData = animation->GetJointData(currentFrame);
+	const Matrix4* frameData = animationController->GetCurrentAnimation()->GetJointData(animationController->GetCurrentFrame());
 	for (unsigned int i = 0; i < mesh->GetJointCount(); ++i) {
 		frameMatrices.emplace_back(frameData[i] * invBindPose[i]);
 	}

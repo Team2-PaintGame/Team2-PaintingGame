@@ -102,8 +102,6 @@ list(APPEND Graphics_Renderer "./Graphics/Renderer/GameTechVulkanRenderer.cpp")
 endif()
 
 set(Graphics_Renderering_Support
-    "./Graphics/Renderer/RenderingSupport/AnimationController.cpp"
-    "./Graphics/Renderer/RenderingSupport/AnimationController.h"
     "./Graphics/Renderer/RenderingSupport/MeshAnimation.cpp"
     "./Graphics/Renderer/RenderingSupport/MeshAnimation.h"
     "./Graphics/Renderer/RenderingSupport/MeshGeometry.cpp"
@@ -149,6 +147,8 @@ set(Scene
     "./Scene/PlayerBase.cpp" 
     "./Scene/PlayerController.h" 
     "./Scene/PlayerController.cpp" 
+    "./Scene/AnimationController.cpp"
+    "./Scene/AnimationController.h"
 )
 source_group("Scene" FILES ${Scene})
 

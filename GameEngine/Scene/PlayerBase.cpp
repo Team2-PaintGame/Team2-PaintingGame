@@ -6,46 +6,14 @@
 
 using namespace NCL;
 
-PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, TextureBase* texture, AnimationController* animController, ShaderBase* shader, int size): GameObject(physicsCommon, physicsWorld, "BasePlayer") {
-	transform
-		.SetScale(Vector3(size))
-		.SetPosition(position);
-
-	renderObject = new RenderObject(&transform, mesh, shader);
-	this->animationController = animController;
-	//animationController->SetRenderer(renderObject);
-	animationController->SetGameObject(this);
-	animationController->InitStateMachine();
-	//renderObject->AddTexture(texture);
-
-	int subMeshes = mesh->GetSubMeshCount();
-	for (int index = 0; index < subMeshes; ++index) {
-		renderObject->AddTexture(texture, "mainTex", index);
-	}
-	//renderObject->SetRigged(true);
-	//renderObject->animation = meshAnimation;
-	boundingVolume = physicsCommon.createBoxShape(~transform.GetScale() / 2.0f);
-	reactphysics3d::Transform rp3d_transform(~position, rp3d::Quaternion::identity());
-	
-	// Create a rigid body in the physics world
-	rigidBody = physicsWorld->createRigidBody(rp3d_transform);
-	rigidBody->addCollider(boundingVolume, rp3d::Transform::identity()); //collider
-	rigidBody->updateMassPropertiesFromColliders();
-	rigidBody->setLinearDamping(1.5f);
-
-	camera.SetBasicCameraParameters(-15.0f, 315.0f, Vector3(-60, 40, 60), 0.1f, 500.0f);
-	camera.SetPerspectiveCameraParameters(Window::GetWindow()->GetScreenAspect());
-	camera.SetThirdPersonCamera(&transform);
+PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, int size): GameObject(physicsCommon, physicsWorld, "BasePlayer") {
+	SetMemberVariables(physicsCommon, physicsWorld, position, mesh, shader, size);
+	renderObject->SetDefaultTexture(texture);
 }
 
-
-
-
-
-void PlayerBase::Update(float dt) {
-
-	animationController->Update(dt);
-	camera.Update(dt);
+PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, MeshMaterial* meshMaterial, ShaderBase* shader, int size) : GameObject(physicsCommon, physicsWorld, "BasePlayer") {
+	SetMemberVariables(physicsCommon, physicsWorld, position, mesh, shader, size);
+	renderObject->LoadMaterialTextures(meshMaterial);
 }
 
 PlayerBase::~PlayerBase() {
@@ -54,6 +22,23 @@ PlayerBase::~PlayerBase() {
 	}
 
 	physicsCommon.destroyBoxShape(boundingVolume);
+}
+
+void PlayerBase::SetMemberVariables(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, ShaderBase* shader, int size) {
+	transform
+		.SetScale(Vector3(size))
+		.SetPosition(position);
+
+	renderObject = new RenderObject(&transform, mesh, shader);
+
+	boundingVolume = physicsCommon.createBoxShape(~transform.GetScale() / 2.0f);
+	reactphysics3d::Transform rp3d_transform(~position, rp3d::Quaternion::identity());
+
+	// Create a rigid body in the physics world
+	rigidBody = physicsWorld->createRigidBody(rp3d_transform);
+	rigidBody->addCollider(boundingVolume, rp3d::Transform::identity()); //collider
+	rigidBody->updateMassPropertiesFromColliders();
+	rigidBody->setLinearDamping(1.5f);
 }
 
 

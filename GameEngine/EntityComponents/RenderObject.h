@@ -7,7 +7,7 @@
 #include "MeshGeometry.h"
 #include "MeshMaterial.h"
 #include <map>
-
+#include "AnimationController.h"
 
 namespace NCL {
 	using namespace NCL::Rendering;
@@ -22,7 +22,7 @@ namespace NCL {
 		public:
 			RenderObject(Transform* parentTransform, MeshGeometry* mesh, ShaderBase* shader);
 			~RenderObject();
-			void LoadMaterialTextures();
+			void LoadMaterialTextures(MeshMaterial* material);
 			void SetDefaultTexture(TextureBase* t);
 			TextureBase* GetDefaultTexture() const;
 			void AddTexture(TextureBase* t, std::string uniform = "mainTex", int subMeshIndex = 0);
@@ -47,11 +47,6 @@ namespace NCL {
 				colour = c;
 			}
 
-			void SetMeshMaterial(MeshMaterial* m) {
-				multipleTextures = true;
-				material = m;
-			}
-
 			Vector4 GetColour() const {
 				return colour;
 			}
@@ -66,20 +61,12 @@ namespace NCL {
 
 			void GetFrameMatrices(vector<Matrix4>& frameMatrices) const;
 
-			MeshAnimation* GetMeshAnimation() const {
-				return animation;
+			void SetAnimationController(AnimationController* a) {
+				animationController = a;
 			}
-
-			void SetMeshAnimation(MeshAnimation* a) {
-				animation = a;
-			}
-
-			int currentFrame = 0;
-			float frameTime = 0.0f;
 		protected:
 			MeshGeometry*	mesh;
-			MeshMaterial* material;
-			MeshAnimation* animation;
+			AnimationController* animationController;
 			//for mutiple textures
 			std::map<int, std::vector<std::pair<std::string, TextureBase*>>> subMeshTextures;
 			//for single texture
