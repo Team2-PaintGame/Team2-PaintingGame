@@ -32,6 +32,10 @@ PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysic
 	rigidBody->addCollider(boundingVolume, rp3d::Transform::identity()); //collider
 	rigidBody->updateMassPropertiesFromColliders();
 	rigidBody->setLinearDamping(1.5f);
+
+	camera.SetBasicCameraParameters(-15.0f, 315.0f, Vector3(-60, 40, 60), 0.1f, 500.0f);
+	camera.SetPerspectiveCameraParameters(Window::GetWindow()->GetScreenAspect());
+	camera.SetThirdPersonCamera(&transform);
 }
 
 

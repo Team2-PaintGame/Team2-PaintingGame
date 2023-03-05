@@ -21,9 +21,9 @@ void Camera::SetFirstPersonCamera() {
 	CalculateFirstPersonView();
 }
 
-void Camera::SetThirdPersonCamera(PlayerBase* player, float angleAroundPlayer, Vector3 distanceFromPlayer) {
+void Camera::SetThirdPersonCamera(Transform* playerTransform, float angleAroundPlayer, Vector3 distanceFromPlayer) {
 	viewType = ViewType::ThirdPerson;
-	this->player = player;
+	playerTransform = this->playerTransform;
 	this->offsetFromPlayer = offsetFromPlayer;
 	this->angleAroundPlayer = angleAroundPlayer;
 	CalculateThirdPersonView(true);
@@ -113,11 +113,11 @@ void Camera::CalculateThirdPersonView(bool init)
 	//euler angles (x => pitch, y => yaw, z => roll)
 	//yaw angle is the rotation around y axis
 
-	float theta = Maths::DegreesToRadians(player->GetTransform().GetOrientation().ToEuler().y + angleAroundPlayer);
+	float theta = Maths::DegreesToRadians(playerTransform->GetOrientation().ToEuler().y + angleAroundPlayer);
 	float xOffset = hDist * sin(theta);
 	float zOffset = hDist * cos(theta);
 
-	Vector3 playerPosition = player->GetTransform().GetPosition();
+	Vector3 playerPosition = playerTransform->GetPosition();
 
 	position.x = playerPosition.x - xOffset;
 	position.z = playerPosition.z - zOffset;
