@@ -8,8 +8,6 @@ using namespace CSC8508;
 SplitScreenGame::SplitScreenGame(GameAssets* assets) : PaintingGame(assets) {
 	
 	players.reserve(maxPlayers);
-	//change this through settings obj
-	//render->SetRenderMode(GameTechRenderer::RenderMode::SplitScreen);
 	if (!GameManager::sConfig.playerControllerFactory) {
 		GameManager::sConfig.playerControllerFactory = new XBoxPlayerControllerFactory();
 	}
@@ -27,8 +25,13 @@ SplitScreenGame::~SplitScreenGame() {
 void SplitScreenGame::InitPlayers() {
 	players.clear();
 	
-	AddPlayer(Vector3(0.0f, 10.0f, 0.0f));
-	AddPlayer(Vector3(20.0f, 10.0f, 20.0f));
+	Player* player1 = AddPlayer(Vector3(0.0f, 10.0f, 0.0f));
+	Player* player2 = AddPlayer(Vector3(20.0f, 10.0f, 20.0f));
+
+	player1->GetCamera()->SetViewportDivider(0.5f);
+	player2->GetCamera()->SetViewportDivider(0.5f);
+	player1->GetCamera()->SetViewportSize(Vector2(0.0f, 0.0f));
+	player2->GetCamera()->SetViewportSize(Vector2(0.5f, 0.0f));
 }
 
 Player* SplitScreenGame::AddPlayer(Vector3 position) {

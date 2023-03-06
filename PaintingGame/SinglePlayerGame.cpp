@@ -6,9 +6,6 @@ using namespace NCL;
 using namespace CSC8508;
 
 SinglePlayerGame::SinglePlayerGame(GameAssets* assets) : PaintingGame(assets) {
-	//change this through settings obj
-	//renderer->SetRenderMode(GameTechRenderer::RenderMode::SingleViewport);
-	
 	if (!GameManager::sConfig.playerControllerFactory) {
 		GameManager::sConfig.playerControllerFactory = new Win32PlayerControllerFactory();
 	}

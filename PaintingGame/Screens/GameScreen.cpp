@@ -18,10 +18,10 @@ void GameScreen::LoadGame() {
 		sceneNode = new SinglePlayerGame(screenManager->GetGameAssets());
 	break;
 	case ScreenCommand::CreateSplitScreenGame:
-		sceneNode = new SinglePlayerGame(screenManager->GetGameAssets());
+		sceneNode = new SplitScreenGame(screenManager->GetGameAssets());
 		break;
 	case ScreenCommand::CreateNetworkedGame: 
-		sceneNode = new SinglePlayerGame(screenManager->GetGameAssets());
+		sceneNode = new NetworkedGame(screenManager->GetGameAssets());
 		break;
 	default:
 		std::cout << "No instance of game could be created: No appropriate Command Selected." << std::endl;

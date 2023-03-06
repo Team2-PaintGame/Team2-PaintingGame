@@ -39,6 +39,11 @@ void Camera::SetOrthographicCameraParameters(float right, float left, float top,
 	camType = CameraType::Orthographic;
 }
 
+void Camera::SetViewportDivider(float divider) {
+	viewportDivider = divider;
+	aspect *= divider;
+}
+
 void Camera::Update(float dt) {
 	yaw = player->GetYaw();
 	pitch = player->GetPitch();
