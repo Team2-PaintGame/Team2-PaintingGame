@@ -15,7 +15,6 @@ GameObject::GameObject(reactphysics3d::PhysicsCommon& physicsCommon, reactphysic
 }
 
 GameObject::~GameObject()	{
-	delete renderObject;
 	delete networkObject;
 }
 

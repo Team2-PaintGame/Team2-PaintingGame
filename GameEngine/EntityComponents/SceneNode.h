@@ -11,6 +11,7 @@ namespace NCL::CSC8508 {
 	public:
 		SceneNode() = default;
 		SceneNode(MeshGeometry* mesh, ShaderBase* shader, TextureBase* texture);
+		virtual ~SceneNode();
 		RenderObject* GetRenderObject() const { return renderObject; }
 		void SetRenderObject(RenderObject* newObject);
 		void SetRenderObject(MeshGeometry* mesh, ShaderBase* shader, TextureBase* texture);

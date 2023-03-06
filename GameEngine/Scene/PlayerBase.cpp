@@ -41,7 +41,7 @@ void PlayerBase::SetMemberVariables(reactphysics3d::PhysicsCommon& physicsCommon
 	rigidBody->updateMassPropertiesFromColliders();
 	rigidBody->setLinearDamping(1.5f);
   
-  camera = new Camera();
+	camera = new Camera();
 }
 
 

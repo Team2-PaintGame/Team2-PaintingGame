@@ -8,6 +8,10 @@ SceneNode::SceneNode(MeshGeometry* mesh, ShaderBase* shader, TextureBase* textur
 	SetRenderObject(mesh, shader, texture);
 }
 
+SceneNode::~SceneNode() {
+	delete renderObject;
+}
+
 void SceneNode::SetRenderObject(RenderObject* newObject) {
 	renderObject = newObject;
 }

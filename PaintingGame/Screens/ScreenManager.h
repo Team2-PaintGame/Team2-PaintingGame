@@ -35,7 +35,7 @@ namespace NCL::CSC8508 {
 	protected:
 		void LoadScreens();
 		std::unordered_map<ScreenType, std::unique_ptr<BaseScreen>> screens;
-		std::unordered_map<ScreenType, SceneNode> screenSceneNodes;
+		std::unordered_map<ScreenType, std::unique_ptr<SceneNode>> screenSceneNodes;
 		GameAssets* assets;
 		std::unique_ptr<PushdownMachine> machine;
 	};

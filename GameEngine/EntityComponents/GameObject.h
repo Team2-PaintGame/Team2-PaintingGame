@@ -3,6 +3,7 @@
 #include "Layer.h"
 #include <reactphysics3d/reactphysics3d.h>
 #include "SceneNode.h"
+#include "Vector3.h"
 
 using std::vector;
 

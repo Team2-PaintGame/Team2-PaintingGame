@@ -23,7 +23,7 @@ namespace NCL {
 			RenderObject(Transform* parentTransform, MeshGeometry* mesh, ShaderBase* shader);
 
 			//constructor for instanced render objects using the same mesh and shader with different transforms
-			RenderObject(Transform* parentTransform, MeshGeometry* mesh, ShaderBase* shader);
+			RenderObject(const std::vector<Transform*>& parentTransforms, MeshGeometry* mesh, ShaderBase* shader);
 			~RenderObject();
 			void LoadMaterialTextures(MeshMaterial* material);
 			void SetDefaultTexture(TextureBase* t);
