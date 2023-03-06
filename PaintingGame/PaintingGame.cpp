@@ -59,6 +59,12 @@ void PaintingGame::InitialiseAssets() {
 
 	meshMaterials.insert(std::make_pair("goatMat", new MeshMaterial("goat.mat")));
 	meshMaterials.insert(std::make_pair("mainCharMat", new MeshMaterial("Aj_TPose.mat")));
+	meshMaterials.insert(std::make_pair("monaLisaMat", new MeshMaterial("MonaLisa.mat")));
+	meshMaterials.insert(std::make_pair("appleFaceMat", new MeshMaterial("appleFace.mat")));
+	meshMaterials.insert(std::make_pair("handsPaintingMat", new MeshMaterial("handsPainting.mat")));
+	meshMaterials.insert(std::make_pair("nightSkyMat", new MeshMaterial("nightSky.mat")));
+	meshMaterials.insert(std::make_pair("screamPaintMat", new MeshMaterial("screamPaint.mat")));
+	meshMaterials.insert(std::make_pair("sunflowersMat", new MeshMaterial("sunflowers.mat")));
 	//meshMaterials.at("goatMat")->LoadTextures();
 	//meshMaterials.at("mainCharMat")->LoadTextures();
 
@@ -134,6 +140,18 @@ void PaintingGame::InitWorld() {
 	world->ClearAndErase();
 
 	world->AddGameObject(new Floor(*physicsCommon, physicsWorld, Vector3(-100, 0, 100), meshes.at("floorMesh"), CreateConcaveCollision("floorMesh"),  textures.at("basicTex"), shaders.at("basicShader"), 1));
+	world->AddGameObject(new PaintingObject(*physicsCommon, physicsWorld, Vector3(30, 10, 0), meshes.at("cubeMesh"), 
+		meshMaterials.at("monaLisaMat"), shaders.at("basicShader"), 10, "MonaLisa"));
+	world->AddGameObject(new PaintingObject(*physicsCommon, physicsWorld, Vector3(20, 10, 0), meshes.at("cubeMesh"), 
+		meshMaterials.at("appleFaceMat"), shaders.at("basicShader"), 10, "appleFace"));
+	world->AddGameObject(new PaintingObject(*physicsCommon, physicsWorld, Vector3(40, 10, 0), meshes.at("cubeMesh"),
+		meshMaterials.at("handsPaintingMat"), shaders.at("basicShader"), 10, "handsPaint"));
+	world->AddGameObject(new PaintingObject(*physicsCommon, physicsWorld, Vector3(10, 10, 0), meshes.at("cubeMesh"),
+		meshMaterials.at("nightSkyMat"), shaders.at("basicShader"), 10, "nightSky"));
+	world->AddGameObject(new PaintingObject(*physicsCommon, physicsWorld, Vector3(50, 10, 0), meshes.at("cubeMesh"),
+		meshMaterials.at("screamPaintMat"), shaders.at("basicShader"), 10, "screamPaint"));
+	world->AddGameObject(new PaintingObject(*physicsCommon, physicsWorld, Vector3(60, 10, 0), meshes.at("cubeMesh"),
+		meshMaterials.at("sunflowersMat"), shaders.at("basicShader"), 10, "sunflowers"));
 
 	for (int x = 0; x < 15; ++x) {
 		world->AddGameObject(new Box(*physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("cubeMesh"), textures.at("boxTGA"), shaders.at("basicShader"), 2));
@@ -147,7 +165,8 @@ PlayerBase* PaintingGame::CreatePlayer(Vector3 position) {
 	//animController->SetTauntAnimation(meshAnimations.at("mainCharTauntAnim"));
 
 	//SetColorOfMesh(meshes.at("mainChar"), Debug::RED);
-	return new PlayerBase(*physicsCommon, physicsWorld, position, meshes.at("mainChar"), meshMaterials.at("mainCharMat"), animController, shaders.at("skinningShader"), 5);
+	return new PlayerBase(*physicsCommon, physicsWorld, position, meshes.at("mainChar"), 
+		meshMaterials.at("mainCharMat"), animController, shaders.at("skinningShader"), 5);
 }
 
 reactphysics3d::ConcaveMeshShape* NCL::CSC8508::PaintingGame::CreateConcaveCollision(std::string meshName)

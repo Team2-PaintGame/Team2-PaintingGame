@@ -158,7 +158,9 @@ set(Scene
     "./Scene/PlayerController.h" 
     "./Scene/InputController.h" 
     "./Scene/PlayerController.cpp" 
-    "./Scene/InputController.cpp" 
+    "./Scene/InputController.cpp"
+    "./Scene/PaintingObject.h"
+    "./Scene/PaintingObject.cpp"
 )
 source_group("Scene" FILES ${Scene})
 

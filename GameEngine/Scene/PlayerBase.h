@@ -14,7 +14,8 @@ namespace NCL {
 	public:
 		PlayerBase() = default;
 		//PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, TextureBase* texture, AnimationController* meshAnimation, ShaderBase* shader, int size);
-		PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, MeshMaterial* meshMat, AnimationController* animController, ShaderBase* shader, int size);;
+		PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, 
+			MeshMaterial* meshMat, AnimationController* animController, ShaderBase* shader, int size);;
 		//PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, MeshMaterial* meshMaterial, ShaderBase* shader, int size);
 		virtual void Update(float dt);
 		virtual ~PlayerBase();

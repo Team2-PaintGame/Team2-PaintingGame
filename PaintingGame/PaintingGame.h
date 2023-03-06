@@ -11,6 +11,7 @@
 #include <Vector3.h>
 #include <RenderObject.h>
 #include <PlayerBase.h>
+#include <PaintingObject.h>
 #include <PlayerController.h>
 #include <reactphysics3d/reactphysics3d.h>
 #include "InputController.h"
