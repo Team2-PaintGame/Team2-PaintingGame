@@ -38,16 +38,5 @@ void PlayerController::Update(float dt) {
 		player->GetRigidBody()->applyWorldForceAtCenterOfMass(~rightAxis * force * (1 - side_damping));
 	}
 
-	player->yaw -= Yaw();
-	player->pitch -= Pitch();
-
-	player->pitch = std::min(player->pitch, 90.0f);
-	player->pitch = std::max(player->pitch, -90.0f);
-
-	if (player->yaw < 0) {
-		player->yaw += 360.0f;
-	}
-	if (player->yaw > 360.0f) {
-		player->yaw -= 360.0f;
-	}
+	player->SetYawPitch(ViewDx(), ViewDy());
 }

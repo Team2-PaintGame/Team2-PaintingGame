@@ -93,10 +93,10 @@ namespace NCL::Win32Code {
 			return Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::A);
 		}
 
-		float Pitch() override {
+		float ViewDy() override {
 			return Window::GetMouse()->GetRelativePosition().y;
 		}
-		float Yaw() override {
+		float ViewDx() override {
 			return Window::GetMouse()->GetRelativePosition().x;
 		}
 	};

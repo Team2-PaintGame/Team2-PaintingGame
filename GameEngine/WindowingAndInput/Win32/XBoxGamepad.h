@@ -51,10 +51,10 @@ namespace NCL {
 			return gamepad.leftStickX < 0.0f;
 		}
 
-		float Pitch() override {
+		float ViewDy() override {
 			return gamepad.rightStickY;
 		}
-		float Yaw() override {
+		float ViewDx() override {
 			return gamepad.rightStickX;
 		}
 

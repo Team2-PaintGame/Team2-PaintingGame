@@ -19,9 +19,12 @@ namespace NCL {
 		virtual ~PlayerBase();
 		Camera* GetCamera() const { return camera; }
 		virtual void Update(float dt);
+		void SetYawPitch(float dx, float dy);
+		float GetPitch() const { return pitch; }
+		float GetYaw() const { return yaw; }
+	protected:
 		float	yaw = 0.0f;
 		float	pitch = 0.0f;
-	protected:
 		void SetMemberVariables(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, ShaderBase* shader, int size);
 		Camera* camera;
 	};

@@ -16,8 +16,8 @@ namespace NCL {
 		virtual bool MoveRight() = 0;
 		virtual bool MoveLeft() = 0;
 
-		virtual float Pitch() = 0;
-		virtual float Yaw() = 0;
+		virtual float ViewDx() = 0;
+		virtual float ViewDy() = 0;
 	protected:
 		PlayerBase* player;
 	};

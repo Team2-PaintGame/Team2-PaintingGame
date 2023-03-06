@@ -29,6 +29,21 @@ void PlayerBase::Update(float dt) {
 	camera->Update(dt);
 }
 
+void PlayerBase::SetYawPitch(float dx, float dy) {
+	yaw -= dx; 
+	pitch -= dy;
+
+	pitch = std::min(pitch, 90.0f);
+	pitch = std::max(pitch, -90.0f);
+
+	if (yaw < 0) {
+		yaw += 360.0f;
+	}
+	if (yaw > 360.0f) {
+		yaw -= 360.0f;
+	}
+}
+
 void PlayerBase::SetMemberVariables(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, ShaderBase* shader, int size) {
 	transform
 		.SetScale(Vector3(size))

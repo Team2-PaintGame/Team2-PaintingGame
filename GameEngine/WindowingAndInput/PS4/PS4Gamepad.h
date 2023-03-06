@@ -40,10 +40,10 @@ namespace NCL {
 			return gamepad.GetAxis(0).x < 0.0f;
 		}
 
-		float Pitch() override {
+		float ViewDy() override {
 			return gamepad.GetAxis(0).y;
 		}
-		float Yaw() override {
+		float ViewDx() override {
 			return gamepad.GetAxis(0).x;
 		}
 	protected:
