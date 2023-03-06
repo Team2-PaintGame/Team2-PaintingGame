@@ -24,9 +24,9 @@ namespace NCL {
 		}
 	protected:
 		void SetMemberVariables(const std::unordered_map<std::string, MeshAnimation*>& animations) {
-			camera->SetBasicCameraParameters(-15.0f, 315.0f, Vector3(-60, 40, 60), 0.1f, 500.0f);
+			camera->SetBasicCameraParameters(this, 0.1f, 500.0f);
 			camera->SetPerspectiveCameraParameters(Window::GetWindow()->GetScreenAspect());
-			camera->SetThirdPersonCamera(&transform);
+			camera->SetThirdPersonCamera();
 
 			animationController = new AnimationController(this, animations);
 			renderObject->SetRigged(true);

@@ -11,11 +11,10 @@ https://research.ncl.ac.uk/game/
 #include "Vector3.h"
 #include "Quaternion.h"
 #include "Maths.h"
-#include "Transform.h"
 
 namespace NCL {
 	using namespace NCL::Maths;
-	using namespace NCL::CSC8508;
+	class PlayerBase;
 	enum class CameraType {
 		Orthographic,
 		Perspective
@@ -27,17 +26,14 @@ namespace NCL {
 	class Camera {
 	public:
 		Camera(void) = default;
-		void SetBasicCameraParameters(float pitch, float yaw, const Vector3& position, float znear = 1.0f, float zfar = 100.0f);
+		void SetBasicCameraParameters(PlayerBase* player, float znear = 1.0f, float zfar = 100.0f);
 		void SetFirstPersonCamera();
-		void SetThirdPersonCamera(Transform* playerTransform, float angleAroundPlayer = 0.0f, Vector3 distanceFromPlayer = Vector3(0, 3.0f, 13));
+		void SetThirdPersonCamera(Vector3 offsetFromPlayer = Vector3(0, 3.0f, 13));
 		void SetPerspectiveCameraParameters(float aspect, float fov = 45.0f);
 		void SetOrthographicCameraParameters(float right, float left, float top, float bottom);
 		~Camera(void) = default;
 
 		void Update(float dt);
-
-		void CalculateFirstPersonView();
-		void CalculateThirdPersonView(bool init = false);
 		
 		//Builds a view matrix for the current camera variables, suitable for sending straight to a vertex shader (i.e it's already an 'inverse camera matrix').
 		Matrix4 BuildViewMatrix() const;
@@ -72,8 +68,6 @@ namespace NCL {
 
 		//third person camera params
 		Vector3 offsetFromPlayer = Vector3(0, 3.0f, 13);
-		float angleAroundPlayer = 180.0f;
-		Transform* playerTransform;
-		//PlayerBase* player = NULL;
+		PlayerBase* player = NULL;
 	};
 }

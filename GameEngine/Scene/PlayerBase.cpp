@@ -26,7 +26,6 @@ PlayerBase::~PlayerBase() {
 }
 
 void PlayerBase::Update(float dt) {
-	camera->SetThirdPersonCamera(&transform);
 	camera->Update(dt);
 }
 
