@@ -25,6 +25,10 @@ PlayerBase::~PlayerBase() {
 	delete camera;
 }
 
+void PlayerBase::Update(float dt) {
+	camera->Update(dt);
+}
+
 void PlayerBase::SetMemberVariables(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, ShaderBase* shader, int size) {
 	transform
 		.SetScale(Vector3(size))

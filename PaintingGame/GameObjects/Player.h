@@ -16,15 +16,19 @@ namespace NCL {
 		virtual ~Player() {
 			delete animationController;
 		}
+		virtual void Update(float dt) {
+			PlayerBase::Update(dt);
+			animationController->Update(dt);
+		}
 	protected:
 		void SetMemberVariables(const std::unordered_map<std::string, MeshAnimation*>& animations) {
-			renderObject->SetRigged(true);
-
 			camera->SetBasicCameraParameters(-15.0f, 315.0f, Vector3(-60, 40, 60), 0.1f, 500.0f);
 			camera->SetPerspectiveCameraParameters(Window::GetWindow()->GetScreenAspect());
 			camera->SetThirdPersonCamera(&transform);
 
 			animationController = new AnimationController(this, animations);
+			renderObject->SetRigged(true);
+			renderObject->SetAnimationController(animationController);
 		}
 		AnimationController* animationController;
 

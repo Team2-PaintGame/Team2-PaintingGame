@@ -18,7 +18,7 @@ namespace NCL {
 		protected:
 			MeshAnimation* currentAnimation;
 			GameObject* gameObject;
-
+			std::unordered_map<std::string, MeshAnimation*> animations;
 			int currentFrame = 0;
 			float frameTime = 0.0f;
 		};

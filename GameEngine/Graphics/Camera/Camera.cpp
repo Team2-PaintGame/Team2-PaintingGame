@@ -23,7 +23,7 @@ void Camera::SetFirstPersonCamera() {
 
 void Camera::SetThirdPersonCamera(Transform* playerTransform, float angleAroundPlayer, Vector3 distanceFromPlayer) {
 	viewType = ViewType::ThirdPerson;
-	playerTransform = this->playerTransform;
+	this->playerTransform = playerTransform;
 	this->offsetFromPlayer = offsetFromPlayer;
 	this->angleAroundPlayer = angleAroundPlayer;
 	CalculateThirdPersonView(true);
