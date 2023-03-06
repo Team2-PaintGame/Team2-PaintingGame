@@ -20,7 +20,6 @@ namespace NCL {
 		Camera* GetCamera() const { return camera; }
 	protected:
 		void SetMemberVariables(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, ShaderBase* shader, int size);
-		rp3d::BoxShape* boundingVolume;
 		Camera* camera;
 	};
 }

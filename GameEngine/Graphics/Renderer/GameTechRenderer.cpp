@@ -118,7 +118,6 @@ void NCL::CSC8508::GameTechRenderer::RenderInSingleViewport()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	NewRenderLines(*gameWorld.GetMainCamera());
 	NewRenderText();
-
 	RenderGUI();
 	glDisable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
@@ -238,13 +237,16 @@ void GameTechRenderer::RenderShadowMap() {
 	shadowMatrix = biasMatrix * mvMatrix; //we'll use this one later on
 
 	for (const auto&i : activeObjects) {
-		Matrix4 modelMatrix = (*i).GetTransform()->GetMatrix();
-		Matrix4 mvpMatrix	= mvMatrix * modelMatrix;
-		glUniformMatrix4fv(mvpLocation, 1, false, (float*)&mvpMatrix);
-		BindMesh((*i).GetMesh());
-		int layerCount = (*i).GetMesh()->GetSubMeshCount();
-		for (int i = 0; i < layerCount; ++i) {
-			DrawBoundMesh(i);
+		unsigned int numInstances = i->GetInstanceCount();
+		if (!i->GetIsInstanced()) {
+			Matrix4 modelMatrix = (*i).GetTransform()->GetMatrix();
+			Matrix4 mvpMatrix = mvMatrix * modelMatrix;
+			glUniformMatrix4fv(mvpLocation, 1, false, (float*)&mvpMatrix);
+			BindMesh((*i).GetMesh());
+			int layerCount = (*i).GetMesh()->GetSubMeshCount();
+			for (int i = 0; i < layerCount; ++i) {
+				DrawBoundMesh(i, numInstances);
+			}
 		}
 	}
 
@@ -501,11 +503,31 @@ void GameTechRenderer::RenderCamera(Camera& cam) {
 			activeShader = shader;
 		}
 
-		Matrix4 modelMatrix = (*i).GetTransform()->GetMatrix();
-		glUniformMatrix4fv(modelLocation, 1, false, (float*)&modelMatrix);			
-		
-		Matrix4 fullShadowMat = shadowMatrix * modelMatrix;
-		glUniformMatrix4fv(shadowLocation, 1, false, (float*)&fullShadowMat);
+		unsigned int numInstances = i->GetInstanceCount();
+		if (i->GetIsInstanced()) {
+			if (numInstances == 0) {
+				continue;
+			}
+			std::vector<Transform*> transforms = i->GetTransforms();
+			for (int i = 0; i < numInstances; i++) {
+				std::string index = std::to_string(i);
+				Matrix4 modelMatrix = transforms[i]->GetMatrix();
+				int modelArrayLocation = glGetUniformLocation(shader->GetProgramID(), ("modelMatrices[" + index + "]").c_str());
+				glUniformMatrix4fv(modelArrayLocation, 1, false, (float*)&modelMatrix);
+
+				Matrix4 fullShadowMat = shadowMatrix * modelMatrix;
+				int shadowArrayLocation = glGetUniformLocation(shader->GetProgramID(), ("shadowMatrices[" + index + "]").c_str());
+				glUniformMatrix4fv(shadowArrayLocation, 1, false, (float*)&fullShadowMat);
+			}
+		}
+		else {
+			Matrix4 modelMatrix = (*i).GetTransform()->GetMatrix();
+			glUniformMatrix4fv(modelLocation, 1, false, (float*)&modelMatrix);
+
+			Matrix4 fullShadowMat = shadowMatrix * modelMatrix;
+			glUniformMatrix4fv(shadowLocation, 1, false, (float*)&fullShadowMat);
+		}
+	
 
 		Vector4 colour = i->GetColour();
 		glUniform4fv(colourLocation, 1, colour.array);
@@ -528,7 +550,7 @@ void GameTechRenderer::RenderCamera(Camera& cam) {
 				BindTextureToShader(texturepairs.second, texturepairs.first, texunit);
 				texunit++;
 			}
-			DrawBoundMesh(index);
+			DrawBoundMesh(index, numInstances);
 		}
 		if (i->IsRigged()) {
 			vector<Matrix4> frameMatrices;
@@ -544,6 +566,10 @@ MeshGeometry* GameTechRenderer::LoadMesh(const string& name) {
 	mesh->SetPrimitiveType(GeometryPrimitive::Triangles);
 	mesh->UploadToGPU();
 	return mesh;
+}
+
+MeshGeometry* GameTechRenderer::LoadQuad() {
+	return OGLMesh::GenerateQuad();
 }
 
 MeshGeometry* GameTechRenderer::LoadFlatMesh(int hVertexCount, int wVertexCount) {

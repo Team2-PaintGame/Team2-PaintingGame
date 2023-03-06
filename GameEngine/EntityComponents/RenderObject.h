@@ -21,6 +21,9 @@ namespace NCL {
 		{
 		public:
 			RenderObject(Transform* parentTransform, MeshGeometry* mesh, ShaderBase* shader);
+
+			//constructor for instanced render objects using the same mesh and shader with different transforms
+			RenderObject(Transform* parentTransform, MeshGeometry* mesh, ShaderBase* shader);
 			~RenderObject();
 			void LoadMaterialTextures(MeshMaterial* material);
 			void SetDefaultTexture(TextureBase* t);
@@ -31,12 +34,28 @@ namespace NCL {
 				return subMeshTextures.at(subMeshIndex);
 			}
 
+			unsigned int GetInstanceCount()  const {
+				return (unsigned int)numInstances;
+			}
+
+			void SetInstanceCount(unsigned int num) {
+				numInstances = num;
+			}
+
 			MeshGeometry*	GetMesh() const {
 				return mesh;
 			}
 
 			Transform*		GetTransform() const {
 				return transform;
+			}
+
+			std::vector<Transform*> GetTransforms() const {
+				return transforms;
+			}
+
+			void SetTransforms(const std::vector<Transform*>& parentTransforms) {
+				this->transforms = parentTransforms;
 			}
 
 			ShaderBase*		GetShader() const {
@@ -59,6 +78,13 @@ namespace NCL {
 				return rigged;
 			}
 
+			void SetIsInstanced(bool isInstanced) {
+				this->isInstanced = isInstanced;
+			}
+
+			bool GetIsInstanced() const {
+				return isInstanced;
+			}
 			void GetFrameMatrices(vector<Matrix4>& frameMatrices) const;
 
 			void SetAnimationController(AnimationController* a) {
@@ -77,8 +103,11 @@ namespace NCL {
 			TextureBase*	texture;
 			ShaderBase*		shader;
 			Transform*		transform;
+			std::vector<Transform*> transforms;
 			Vector4			colour;
-			bool rigged = false;
+			bool	rigged = false;
+			unsigned int numInstances = 0;
+			bool isInstanced = false;
 			bool multipleTextures = false;
 		};
 	}

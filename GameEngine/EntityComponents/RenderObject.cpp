@@ -9,10 +9,13 @@ RenderObject::RenderObject(Transform* parentTransform, MeshGeometry* mesh, Shade
 	this->mesh		= mesh;
 	this->shader	= shader;
 	this->colour	= Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+}
 
-	/*if (tex) {
-		textures.emplace_back(tex);
-	}*/
+RenderObject::RenderObject(const std::vector<Transform*>& parentTransforms, MeshGeometry* mesh, ShaderBase* shader) {
+	this->transforms = parentTransforms;
+	this->mesh = mesh;
+	this->shader = shader;
+	this->colour = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
 RenderObject::~RenderObject() {

@@ -20,8 +20,7 @@ PlayerBase::~PlayerBase() {
 	if (rigidBody) {
 		physicsWorld->destroyRigidBody(rigidBody);
 	}
-
-	physicsCommon.destroyBoxShape(boundingVolume);
+	physicsCommon.destroyBoxShape(dynamic_cast<rp3d::BoxShape*>(boundingVolume));
 
 	delete camera;
 }
@@ -41,9 +40,10 @@ void PlayerBase::SetMemberVariables(reactphysics3d::PhysicsCommon& physicsCommon
 	rigidBody->addCollider(boundingVolume, rp3d::Transform::identity()); //collider
 	rigidBody->updateMassPropertiesFromColliders();
 	rigidBody->setLinearDamping(1.5f);
-
-	camera = new Camera();
+  
+  camera = new Camera();
 }
+
 
 
 

@@ -279,7 +279,6 @@ void OGLMesh::UpdateGPUBuffers(unsigned int startVertex, unsigned int vertexCoun
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-
 void OGLMesh::RecalculateNormals() {
 	normals.clear();
 

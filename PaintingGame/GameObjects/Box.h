@@ -30,10 +30,12 @@ namespace NCL {
 		}
 		
 		virtual ~Box() {
-			physicsCommon.destroyBoxShape(boundingVolume);
+			if (rigidBody) {
+				physicsWorld->destroyRigidBody(rigidBody);
+			}
+			physicsCommon.destroyBoxShape(dynamic_cast<rp3d::BoxShape*>(boundingVolume));
 		}
 	protected:
-		rp3d::BoxShape* boundingVolume;
 	};
 }
  
