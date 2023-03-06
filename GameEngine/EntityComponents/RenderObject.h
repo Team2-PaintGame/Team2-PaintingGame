@@ -64,6 +64,10 @@ namespace NCL {
 			void SetAnimationController(AnimationController* a) {
 				animationController = a;
 			}
+
+			bool isSingleTextured() const {
+				return !multipleTextures;
+			}
 		protected:
 			MeshGeometry*	mesh;
 			AnimationController* animationController;

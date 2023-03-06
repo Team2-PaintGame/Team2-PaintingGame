@@ -6,6 +6,26 @@
 
 namespace NCL {
 	namespace CSC8508 {
+		struct ShaderVariablesLocations {
+			int projLocation = 0;
+			int viewLocation = 0;
+			int modelLocation = 0;
+			int colourLocation = 0;
+			int hasVColLocation = 0;
+			int hasTexLocation = 0;
+			int useFogLocation = 0;
+			int fogColourLocation = 0;
+			int skyboxTexLocation = 0;
+			int shadowLocation = 0;
+			int shadowTexLocation = 0;
+			int jointsLocation = 0;
+
+			int lightPosLocation = 0;
+			int lightColourLocation = 0;
+			int lightRadiusLocation = 0;
+
+			int cameraLocation = 0;
+		};
 		//class RenderObject;
 		struct DebugLinesRenderer {
 			GLuint vao;
@@ -96,8 +116,14 @@ namespace NCL {
 
 			void BuildObjectList();
 			void SortObjectList();
+
+			void RenderWithDefaultTexture(const ShaderVariablesLocations& locations, const RenderObject* r);
+			void RenderWithMultipleTexture(const ShaderVariablesLocations& locations, const RenderObject* r);
 			vector<const RenderObject*> activeObjects;
 			BaseScreen* boundScreen;
+			Vector4		lightColour;
+			float		lightRadius;
+			Vector3		lightPosition;
 		};
 		
 		// Concrete factory for creating Painting Game OpenGL renderer
