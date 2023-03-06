@@ -10,6 +10,7 @@
 
 #define COLLISION_MSG 30
 
+using namespace NCL;
 using namespace NCL::CSC8508;
 
 struct MessagePacket : public GamePacket {
@@ -222,15 +223,13 @@ void NetworkedGame::UpdateMinimumState() {
 
 NCL::PlayerBase* NetworkedGame::SpawnPlayer() {
 	if (thisServer) {
-		ServerPlayer = CreatePlayer(Vector3(5.0f, 15.0f, 5.0f));
-		world->AddGameObject(ServerPlayer);
+		ServerPlayer = AddPlayer(Vector3(5.0f, 15.0f, 5.0f)); 
 		ServerPlayerID = 1;
 		return ServerPlayer;
 	}
 	if (thisClient) {
 		// send to server that player has been spawned
-		ClientPlayer = CreatePlayer(Vector3(-5.0f, 10.0f, -5.0f));
-		world->AddGameObject(ClientPlayer);
+		ClientPlayer = AddPlayer(Vector3(-5.0f, 10.0f, -5.0f));
 		ClientPlayerID = 2;
 		SpawnPacket packet;
 		packet.position = ClientPlayer->GetTransform().GetPosition();
@@ -241,8 +240,11 @@ NCL::PlayerBase* NetworkedGame::SpawnPlayer() {
 	return nullptr;
 }
 
-NCL::Player* NetworkedGame::AddPlayer(Vector3 position) {
-	return nullptr;
+Player* NetworkedGame::AddPlayer(Vector3 position) {
+	Player* player = CreatePlayer(position);
+	world->AddGameObject(player);
+	activeCameras.push_back(player->GetCamera());
+	return player;
 }
 
 void NetworkedGame::StartLevel() {
@@ -250,7 +252,6 @@ void NetworkedGame::StartLevel() {
 	InitWorld();
 
 	PlayerBase* player = SpawnPlayer();
-	//InitCamera(*world->GetMainCamera(), *player, 1.0f );
 
 	playerController = GameManager::sConfig.playerControllerFactory->createPlayerController(player);
 }

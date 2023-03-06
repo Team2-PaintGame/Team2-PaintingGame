@@ -21,7 +21,8 @@ namespace NCL::CSC8508 {
 		TransitionToPreviousScreen,
 		CreateSinglePlayerGame,
 		CreateSplitScreenGame,
-		CreateNetworkedGame,
+		CreateNetworkedGameAsServer,
+		CreateNetworkedGameAsClient,
 		Exit,
 	};
 	class BaseScreen;
