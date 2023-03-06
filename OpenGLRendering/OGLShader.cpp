@@ -6,6 +6,7 @@ Use as you see fit!
 Comments and queries to: richard-gordon.davison AT ncl.ac.uk
 https://research.ncl.ac.uk/game/
 */
+#ifdef _WIN32
 #include "OGLShader.h"
 #include "Assets.h"
 #include <iostream>
@@ -122,3 +123,4 @@ void	OGLShader::PrintLinkLog(GLuint program) {
 		delete tempData;
 	}
 }
+#endif

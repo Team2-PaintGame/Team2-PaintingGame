@@ -1,5 +1,5 @@
 #pragma once
-#include <GameObject.h>
+#include "PlayerBase.h"
 
 namespace NCL {
 	namespace CSC8508 {

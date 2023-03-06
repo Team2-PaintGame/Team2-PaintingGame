@@ -337,9 +337,9 @@ void GameTechRenderer::RenderDebugInformation(bool isDebugInfo) {
 	if (isDebugInfo == false) { return; }
 	if (settings.GetIsDebugRenderingModeEnabled()) {
 		//render triangles
-		int numTri = settings.debugRendererSettings.debugRenderer.getNbTriangles();
+		int numTri = settings.debugRendererSettings.debugRenderer->getNbTriangles();
 		if (numTri) {
-			const reactphysics3d::DebugRenderer::DebugTriangle* tri = settings.debugRendererSettings.debugRenderer.getTrianglesArray();
+			const reactphysics3d::DebugRenderer::DebugTriangle* tri = settings.debugRendererSettings.debugRenderer->getTrianglesArray();
 			for (int i = 0; i < numTri; i++) {
 				Debug::DrawTriangle(tri->point1, tri->point2, tri->point3, Debug::YELLOW);
 				tri++;
@@ -347,9 +347,9 @@ void GameTechRenderer::RenderDebugInformation(bool isDebugInfo) {
 		}
 
 		//render lines
-		int numLines = settings.debugRendererSettings.debugRenderer.getNbLines();
+		int numLines = settings.debugRendererSettings.debugRenderer->getNbLines();
 		if (numLines) {
-			const reactphysics3d::DebugRenderer::DebugLine* line = settings.debugRendererSettings.debugRenderer.getLinesArray();
+			const reactphysics3d::DebugRenderer::DebugLine* line = settings.debugRendererSettings.debugRenderer->getLinesArray();
 			for (int i = 0; i < numLines; i++) {
 				Debug::DrawLine(line->point1, line->point2, Debug::CYAN);
 				line++;

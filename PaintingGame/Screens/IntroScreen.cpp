@@ -10,7 +10,6 @@
 #include <Win32Window.h>
 
 
-
 namespace NCL {
 	namespace CSC8508 {
 		IntroScreen::IntroScreen(Window* window)
@@ -43,6 +42,7 @@ namespace NCL {
 			delete menuHandler;
 			delete renderer;
 			delete gameWorld;
+			//delete physicsCommon;
 		}
 		PushdownState::PushdownResult IntroScreen::OnUpdate(float dt, PushdownState** newState)
 		{
@@ -82,6 +82,7 @@ namespace NCL {
 		}
 		void IntroScreen::OnAwake()
 		{
+			paintingGame->Restart();
 			renderer->SetRenderMode(GameTechRenderer::RenderMode::MainMenu);
 			menuHandler->SetGameState(GameState::MainMenu);
 

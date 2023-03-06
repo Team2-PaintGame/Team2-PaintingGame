@@ -1,4 +1,5 @@
 #pragma once
+#ifdef _WIN32
 #include <vector>
 #include "OGLMesh.h"
 #include "OGLShader.h"
@@ -44,4 +45,4 @@ namespace NCL {
 		};
 	}
 }
-
+#endif

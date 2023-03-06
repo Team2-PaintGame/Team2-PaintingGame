@@ -22,14 +22,14 @@ namespace NCL {
 			public:
 				class DebugRendererSettings {
 				public:
-					DebugRendererSettings(reactphysics3d::PhysicsWorld* physicsWorld) : debugRenderer(physicsWorld->getDebugRenderer()) {}
+					DebugRendererSettings(reactphysics3d::PhysicsWorld* physicsWorld) : debugRenderer(&physicsWorld->getDebugRenderer()) {}
 					void SetIsCollisionShapeDisplayed(bool boolean) {
-						debugRenderer.setIsDebugItemDisplayed(reactphysics3d::DebugRenderer::DebugItem::COLLISION_SHAPE, boolean);
+						debugRenderer->setIsDebugItemDisplayed(reactphysics3d::DebugRenderer::DebugItem::COLLISION_SHAPE, boolean);
 					}
 					void SetIsBroadPhaseAABBDisplayed(bool boolean) {
-						debugRenderer.setIsDebugItemDisplayed(reactphysics3d::DebugRenderer::DebugItem::COLLIDER_BROADPHASE_AABB, boolean);
+						debugRenderer->setIsDebugItemDisplayed(reactphysics3d::DebugRenderer::DebugItem::COLLIDER_BROADPHASE_AABB, boolean);
 					}
-					reactphysics3d::DebugRenderer& debugRenderer;
+					reactphysics3d::DebugRenderer* debugRenderer;
 				private:
 					bool isCollisionShapeEnabled = false;
 					bool isBroadPhaseAABBEnabled = false;
@@ -49,6 +49,12 @@ namespace NCL {
 				bool GetIsDebugRenderingModeEnabled() {
 					return physicsWorld->getIsDebugRenderingEnabled();
 				}
+
+				void SetPhysicsWorld(reactphysics3d::PhysicsWorld* pworld){
+					physicsWorld = pworld;
+					debugRendererSettings.debugRenderer = &physicsWorld->getDebugRenderer();
+				}
+
 				DebugRendererSettings debugRendererSettings;
 			private:
 				bool isWireFrameModeEnabled = false;
@@ -69,6 +75,9 @@ namespace NCL {
 			virtual void Update(float dt);
 			
 			MeshGeometry*	LoadMesh(const string& name);
+			MeshGeometry* LoadQuadMesh() {
+				return OGLMesh::GenerateQuad();
+			}
 			MeshGeometry* LoadFlatMesh(int hVertexCount = 128, int wVertexCount = 128);
 			MeshGeometry* LoadHeightMap(const std::string& filename, int heightMultiplier = 10);
 			TextureBase*	LoadTexture(const string& name);
@@ -79,7 +88,17 @@ namespace NCL {
 			RendererSettings settings;
 
 			void SetRenderMode(RenderMode mode);
+
+			void SetPhysicsWorld(reactphysics3d::PhysicsWorld* pworld)
+			{
+				if (pworld)
+				{
+					settings.SetPhysicsWorld(pworld);
+				}
+			}
+
 			void ToggleDebugInfo();
+
 		protected:
 			void NewRenderLines(Camera& cam);
 			void NewRenderText();
@@ -88,7 +107,6 @@ namespace NCL {
 			void RenderMainMenu();
 			void RenderFirstFrame();
 			void RenderSecondFrame();
-			
 
 			OGLShader*		defaultShader;
 
@@ -148,9 +166,8 @@ namespace NCL {
 			bool useFog = false;
 			Vector3 fogColour = Vector3(0.6706f, 0.6824f, 0.6902f); //removing alpha value of fog colour to preserve the original transparency value of the fragment
 
-			
+			bool isDebugInfo = false;
 			RenderMode renderMode = RenderMode::MainMenu;
-			bool isDebugInfo = true;
 		};
 	}
 }

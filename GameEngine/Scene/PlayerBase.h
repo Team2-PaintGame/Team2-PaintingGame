@@ -13,7 +13,8 @@ namespace NCL {
 	class PlayerBase : public GameObject {
 	public:
 		PlayerBase() = default;
-		PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, TextureBase* texture, AnimationController* meshAnimation, ShaderBase* shader, int size);
+		//PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, TextureBase* texture, AnimationController* meshAnimation, ShaderBase* shader, int size);
+		PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, MeshMaterial* meshMat, AnimationController* animController, ShaderBase* shader, int size);;
 		//PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, MeshMaterial* meshMaterial, ShaderBase* shader, int size);
 		virtual void Update(float dt);
 		virtual ~PlayerBase();
@@ -22,7 +23,7 @@ namespace NCL {
 		float turnSpeed = 100.0f; // unit: degrees/s
 		float currentRunSpeed = 0.0f;
 		float currentTurnSpeed = 0.0f;
-		rp3d::BoxShape* boundingVolume;
+		rp3d::CapsuleShape* boundingVolume;
 		//rp3d::Collider* collider;
 
 		AnimationController* animationController;

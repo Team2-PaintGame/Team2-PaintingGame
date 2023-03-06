@@ -4,6 +4,7 @@
 #include <GameServer.h>
 #include "reactphysics3d/reactphysics3d.h"
 #include "Utils.h"
+#include "PlayerBase.h"
 
 #define COLLISION_MSG 30
 
@@ -20,17 +21,8 @@ struct MessagePacket : public GamePacket {
 };
 
 NetworkedGame::NetworkedGame(Window* window, GameTechRenderer* rend, GameWorld* gameWorld, reactphysics3d::PhysicsCommon* physicsCommon, MenuHandler* menu) : PaintingGame(rend,gameWorld, physicsCommon,menu, true) {
-	
-	this->menuHandler = menu;
-	this->renderer = rend;
-	this->gameWorld = gameWorld;
-	this->physicsCommon = physicsCommon;
-
 	thisServer = nullptr;
 	thisClient = nullptr;
-
-	is_Networked = true;
-	thirdPersonCamera = true;
 
 	NetworkBase::Initialise();
 	timeToNextPacket  = 0.0f;
@@ -40,6 +32,8 @@ NetworkedGame::NetworkedGame(Window* window, GameTechRenderer* rend, GameWorld* 
 NetworkedGame::~NetworkedGame()	{
 	delete thisServer;
 	delete thisClient;
+
+	delete playerController;
 }
 
 void NetworkedGame::StartAsServer() {
@@ -87,8 +81,12 @@ void NetworkedGame::UpdateGame(float dt) {
 		timeToNextPacket += 1.0f / 60.0f; //60hz server/client update
 	}
 
-	if((thisClient && connected) || thisServer)
-	PaintingGame::UpdateGame(dt);
+	if ((thisClient && connected) || thisServer)
+	{
+		world->GetMainCamera()->UpdateCamera(dt);
+		playerController->Update(dt);
+		PaintingGame::UpdateGame(dt);
+	}
 }
 
 void NetworkedGame::UpdateAsServer(float dt) {
@@ -100,6 +98,7 @@ void NetworkedGame::UpdateAsServer(float dt) {
 	//else {
 	//	BroadcastSnapshot(true);
 	//}
+
 	ServerPacket packet;
 	packet.orientation = ServerPlayer->GetTransform().GetOrientation();
 	packet.position = ServerPlayer->GetTransform().GetPosition();
@@ -129,7 +128,7 @@ void NetworkedGame::ServerCreateClientPlayer(SpawnPacket* payload)
 {
 	// Server create client player and send packet
 	// back to client to create server character
-	ClientPlayer = InitialiseNetworkPlayer();
+	ClientPlayer = CreatePlayer(payload->position);
 	ClientPlayer->GetTransform().SetPosition(payload->position);
 	ClientPlayerID = payload->playerID;
 	SpawnPacket packet;
@@ -142,7 +141,7 @@ void NetworkedGame::ServerCreateClientPlayer(SpawnPacket* payload)
 void NetworkedGame::ClientCreateServerPlayer(SpawnPacket* payload)
 {
 	// client creates server player
-	ServerPlayer = InitialiseNetworkPlayer();
+	ServerPlayer = CreatePlayer(payload->position);
 	ServerPlayerID = payload->playerID;
 }
 
@@ -215,25 +214,41 @@ void NetworkedGame::UpdateMinimumState() {
 	}
 }
 
-void NetworkedGame::SpawnPlayer() {
+NCL::PlayerBase* NetworkedGame::SpawnPlayer() {
 	if (thisServer) {
-		ServerPlayer = InitiliazePlayer();
+		ServerPlayer = CreatePlayer(Vector3(10.0f, 55.0f, 10.0f));
+		world->AddGameObject(ServerPlayer);
 		ServerPlayerID = 1;
+		return ServerPlayer;
 	}
 	if (thisClient) {
 		// send to server that player has been spawned
-		ClientPlayer = InitiliazePlayer();
+		ClientPlayer = CreatePlayer(Vector3(10.0f, 55.0f, -10.0f));
+		world->AddGameObject(ClientPlayer);
 		ClientPlayerID = 2;
 		SpawnPacket packet;
 		packet.position = ClientPlayer->GetTransform().GetPosition();
 		packet.playerID = ClientPlayerID;
 		thisClient->SendPacket(packet);
+		return ClientPlayer;
 	}
+	return nullptr;
+}
+
+NCL::PlayerBase* NetworkedGame::AddPlayer(Camera* camera, Vector3 position, Gamepad* gamepad) {
+	return nullptr;
 }
 
 void NetworkedGame::StartLevel() {
-	SpawnPlayer();
-	InitCamera();
+
+	InitWorld();
+
+	PlayerBase* player = SpawnPlayer();
+	InitCamera(*world->GetMainCamera(), *player, 1.0f );
+
+	playerController = new PlayerController(world->GetMainCamera(), player, nullptr);
+
+
 }
 
 void NetworkedGame::ReceivePacket(int type, GamePacket* payload, int source) {

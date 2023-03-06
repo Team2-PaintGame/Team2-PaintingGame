@@ -6,6 +6,7 @@
 #include "MenuHandler.h"
 #include "Debug.h"
 
+#include "SinglePlayerGame.h"
 #include <Win32Window.h>
 
 namespace NCL {
@@ -17,11 +18,9 @@ namespace NCL {
 			this->menuHandler = menu;
 			this->renderer = rend;
 			this->gameWorld = gameWorld;
-			this->physicsCommon = physicsCommon;		
+			this->physicsCommon = physicsCommon;
 
-			reactphysics3d::PhysicsWorld* physicsWorld = physicsCommon->createPhysicsWorld();
-
-			paintingGame = new PaintingGame(renderer, gameWorld, physicsCommon, menuHandler, false);
+			paintingGame = new SinglePlayerGame(renderer, gameWorld, physicsCommon, menuHandler);
 			paintingGame->GetGameTechRenderer()->SetRenderMode(GameTechRenderer::RenderMode::SingleViewport);
 		}
 
@@ -52,8 +51,6 @@ namespace NCL {
 			}
 
 			window->SetTitle("Gametech frame time:" + std::to_string(1000.0f * dt));
-
-			
 
 			GameState gameState = menuHandler->GetGameState();
 			switch (gameState) {

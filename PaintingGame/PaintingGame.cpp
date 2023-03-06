@@ -22,24 +22,15 @@ PaintingGame::PaintingGame(GameTechRenderer* render, GameWorld* game_world, reac
 #endif
 {
 	world = game_world;
-	gamePad = new Gamepad();
-	animController = new AnimationController();
 
-	/* Code for changing physics system paramaters
-	// Create the world settings 
-	PhysicsWorld::WorldSettings settings; 
-	settings.defaultVelocitySolverNbIterations = 20; 
-	settings.isSleepingEnabled = false; 
-	settings.gravity = Vector3(0,-9.81, 0);
-	*/
-	thirdPersonCamera = true;
-	is_Networked = online;
 	menuHandler = menu;
 
 	this->physicsCommon = physicsCommon;
-	this->physicsWorld = this->physicsCommon->createPhysicsWorld(/*settings*/);
+	this->physicsWorld = this->physicsCommon->createPhysicsWorld();
 
 	renderer = render;
+
+	renderer->SetPhysicsWorld(physicsWorld);
 
 	forceMagnitude = 10.0f;
 
@@ -50,7 +41,6 @@ PaintingGame::PaintingGame(GameTechRenderer* render, GameWorld* game_world, reac
 	renderer->settings.SetIsDebugRenderingModeEnabled(true);
 	renderer->settings.debugRendererSettings.SetIsCollisionShapeDisplayed(true);
 	renderer->settings.debugRendererSettings.SetIsBroadPhaseAABBDisplayed(true);
-	renderer->settings.SetIsWireFrameModeEnabled(true);
 }
 
 /*
@@ -61,15 +51,15 @@ for this module, even in the coursework, but you can add it if you like!
 
 */
 void PaintingGame::InitialiseAssets() {
+	meshes.insert(std::make_pair("floorMesh", renderer->LoadMesh("Arena.msh")));
 	meshes.insert(std::make_pair("cubeMesh", renderer->LoadMesh("cube.msh")));
-	meshes.insert(std::make_pair("mainChar", renderer->LoadMesh("Male_Guard.msh")));
+	meshes.insert(std::make_pair("mainChar", renderer->LoadMesh("Aj_TPose.msh")));
 	meshes.insert(std::make_pair("sphereMesh", renderer->LoadMesh("sphere.msh")));
 	meshes.insert(std::make_pair("goatMesh", renderer->LoadMesh("goat.msh")));
 	meshes.insert(std::make_pair("enemyMesh", renderer->LoadMesh("Keeper.msh")));
 	meshes.insert(std::make_pair("coinMesh", renderer->LoadMesh("coin.msh")));
 	meshes.insert(std::make_pair("capsuleMesh", renderer->LoadMesh("capsule.msh")));
 	meshes.insert(std::make_pair("terrainMesh", renderer->LoadHeightMap("noise.png")));
-	meshes.insert(std::make_pair("sceneMesh", renderer->LoadHeightMap("Scene.msh")));
 
 	
 //	meshes.insert(std::make_pair("throneMesh", renderer->LoadMesh("SanctumThrone.msh")));
@@ -83,13 +73,13 @@ void PaintingGame::InitialiseAssets() {
 	textures.insert(std::make_pair("basicTex", renderer->LoadTexture("checkerboard.png")));
 
 	meshMaterials.insert(std::make_pair("goatMat", new MeshMaterial("goat.mat")));
-	meshMaterials.insert(std::make_pair("mainCharMat", new MeshMaterial("goat.mat")));
+	meshMaterials.insert(std::make_pair("mainCharMat", new MeshMaterial("Aj_TPose.mat")));
 	//meshMaterials.at("goatMat")->LoadTextures();
 	//meshMaterials.at("mainCharMat")->LoadTextures();
 
-	meshAnimations.insert(std::make_pair("mainCharTauntAnim", new MeshAnimation("Taunt.anm")));
-	meshAnimations.insert(std::make_pair("mainCharIdleAnim", new MeshAnimation("Idle1.anm")));
-	meshAnimations.insert(std::make_pair("mainCharRunAnim", new MeshAnimation("StepForward.anm")));
+	//meshAnimations.insert(std::make_pair("mainCharTauntAnim", new MeshAnimation("Taunt.anm")));
+	meshAnimations.insert(std::make_pair("mainCharIdleAnim", new MeshAnimation("AJIdle.anm")));
+	meshAnimations.insert(std::make_pair("mainCharRunAnim", new MeshAnimation("AJRun.anm")));
 
 
 	textures.insert(std::make_pair("basicTex", renderer->LoadTexture("checkerboard.png")));
@@ -104,20 +94,12 @@ void PaintingGame::InitialiseAssets() {
 	textures.insert(std::make_pair("terrainGTex", renderer->LoadTexture("Terrain/gTex_mudGrass.jpg")));
 	textures.insert(std::make_pair("terrainBTex", renderer->LoadTexture("Terrain/bTex_path.jpg")));
 	textures.insert(std::make_pair("terrainBgTex", renderer->LoadTexture("Terrain/bgTex_grass.jpg")));
+	textures.insert(std::make_pair("boxTGA", renderer->LoadTexture("Maximilian_BodyHands_Albedo.jpg")));
 
 
 	shaders.insert(std::make_pair("basicShader", renderer->LoadShader("scene.vert", "scene.frag")));
 	shaders.insert(std::make_pair("terrainShader", renderer->LoadShader("terrain.vert", "terrain.frag")));
 	shaders.insert(std::make_pair("skinningShader", renderer->LoadShader("skinning.vert", "scene.frag")));
-
-	//renderer->AddHudTextures("wolf_color.png", Vector2(0.5,0.5), Vector2(0.25,0.25));
-	//renderer->AddHudTextures("wolf_color.png", Vector2(-0.5, 0.5), Vector2(0.25, 0.25));
-
-	InitWorld();
-	if (!is_Networked) // networked game handles cameras itself
-	{
-		InitCamera();
-	}
 }
 
 PaintingGame::~PaintingGame() {
@@ -139,53 +121,14 @@ PaintingGame::~PaintingGame() {
 	for (const auto& [key, val] : meshAnimations) {
 		delete val;
 	}
-	for (auto& pc : playerControllers)
-	{
-		if (pc)	delete pc;
-	}
 
-	//delete renderer;
-	//delete world;
+	if(menuHandler->GetGameState() != GameState::ExitGame)
+	physicsCommon->destroyPhysicsWorld(physicsWorld);
+	world->ClearAndErase();
 }
 
 void PaintingGame::UpdateGame(float dt) {
-	world->GetMainCamera()->UpdateCamera(dt);
-
-	if (menuHandler->GetGameState() != GameState::MainMenu) // ugly temporary if by an ugly temporary programmer
-	{
-		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::F1)) {
-			thirdPersonCamera = !thirdPersonCamera;
-			if (thirdPersonCamera == false)
-			{
-				world->GetMainCamera()->SetFirstPersonCamera();
-			}
-			else
-			{
-				world->GetMainCamera()->SetThirdPersonCamera(players[0]);
-			}
-		}
-		if (thirdPersonCamera)
-		{
-			for (int i = 0; i < numberOfPlayerControllers; i++)
-			{
-				playerControllers[i]->Update(dt);
-			}
-
-		}
-
-		if (menuHandler->GetGameState() == GameState::SplitScreen) {
-			numberOfPlayerControllers = 2;
-			world->GetSecondCamera()->UpdateCamera(dt);
-		}
-		else if (menuHandler->GetGameState() == GameState::SinglePlayer) {
-			numberOfPlayerControllers = 1;
-		}
-
-
-		world->UpdateWorld(dt);
-
-	}
-
+	world->UpdateWorld(dt);
 	menuHandler->Update(dt);
 	renderer->Render();
 	renderer->Update(dt);
@@ -193,38 +136,23 @@ void PaintingGame::UpdateGame(float dt) {
 	Debug::UpdateRenderables(dt);
 }
 
-void PaintingGame::InitCamera()
+void PaintingGame::InitCamera(Camera& camera, PlayerBase& focus, float aspect_multiplier)
 {
-	//float aspect_divide = renderer->GetGameState() == GameTechRenderer::GameState::SplitScreen ? 2.0f : 1.0f;
+	camera.SetThirdPersonCamera(&focus);
 
-	if (thirdPersonCamera) {
-		world->GetMainCamera()->SetThirdPersonCamera(players[0]);
-	}
-	else {
-		world->GetMainCamera()->SetFirstPersonCamera();
-	}
-
-	world->GetMainCamera()->SetBasicCameraParameters(-15.0f, 315.0f, Vector3(-60, 40, 60), 0.1f, 500.0f);
-	world->GetMainCamera()->SetPerspectiveCameraParameters(Window::GetWindow()->GetScreenAspect());
-
-	
+	camera.SetBasicCameraParameters(-15.0f, 315.0f, Vector3(-60, 40, 60), 0.1f, 500.0f);
+	camera.SetPerspectiveCameraParameters(Window::GetWindow()->GetScreenAspect() * aspect_multiplier);
 }
 
 void PaintingGame::InitWorld() {
 	world->ClearAndErase();
 
-	//TerrainTexturePack terrainTexturePack(textures.at("terrainSplatMap"), textures.at("terrainRTex"), textures.at("terrainGTex"), textures.at("terrainBTex"), textures.at("terrainBgTex"));
-	//world->AddGameObject(new Terrain(*physicsCommon, physicsWorld, Vector2(), meshes.at("terrainMesh"), terrainTexturePack, shaders.at("terrainShader")));
-	//world->AddGameObject(new Terrain(*physicsCommon, physicsWorld, Vector2(0, 1), meshes.at("terrainMesh"), terrainTexturePack, shaders.at("terrainShader")));
+	world->AddGameObject(new Floor(*physicsCommon, physicsWorld, Vector3(-100, 0, 100), meshes.at("floorMesh"), CreateConcaveCollision("floorMesh"),  textures.at("basicTex"), shaders.at("basicShader"), 1));
 
-	if (!is_Networked) // Networked Game handles its own player init
-	{
-		InitiliazePlayer();
-		if (menuHandler->GetGameState() == GameState::SplitScreen) {
-			InitSecondPlayer();
-			InitSecondCamera();
-		}
+	for (int x = 0; x < 15; ++x) {
+		world->AddGameObject(new Box(*physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("cubeMesh"), textures.at("boxTGA"), shaders.at("basicShader"), 2));
 	}
+}
 
 	world->AddGameObject(new Floor(*physicsCommon, physicsWorld, Vector3(0, 0, 0), meshes.at("sceneMesh"), textures.at("basicTex"), shaders.at("basicShader"), 1));
 
@@ -235,30 +163,39 @@ void PaintingGame::InitWorld() {
 	//AddSecurityAI();
 	//world->AddGameObject(new MuseumItem(*physicsCommon, physicsWorld, Vector3(25, 25, 25), meshes.at("throneMesh"), textures.at("basicTex"), shaders.at("basicShader"), Vector3(10, 10, 10), "Throne"));
 	//world->AddGameObject(new MuseumItem(*physicsCommon, physicsWorld, Vector3(50, 25, 50), meshes.at("catMesh"), textures.at("basicTex"), shaders.at("basicShader"), Vector3(10, 10, 10), "Cat"));
-
-}
-
-
-PlayerBase* PaintingGame::InitiliazePlayer() {
+PlayerBase* PaintingGame::CreatePlayer(Vector3 position) {
+	AnimationController* animController = new AnimationController();
 	animController->SetIdleAnimation(meshAnimations.at("mainCharIdleAnim"));
 	animController->SetRunAnimation(meshAnimations.at("mainCharRunAnim"));
-	animController->SetTauntAnimation(meshAnimations.at("mainCharTauntAnim"));
-	players[0] = new PlayerBase(*physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("mainChar"), textures.at("basicTex"), animController, shaders.at("skinningShader"), 5);
-	
+	//animController->SetTauntAnimation(meshAnimations.at("mainCharTauntAnim"));
 
-	world->AddGameObject(players[0]);
-	playerControllers[0] = new PlayerController(world->GetMainCamera(), players[0],NULL);
-
-	return players[0];
+	//SetColorOfMesh(meshes.at("mainChar"), Debug::RED);
+	return new PlayerBase(*physicsCommon, physicsWorld, position, meshes.at("mainChar"), meshMaterials.at("mainCharMat"), animController, shaders.at("skinningShader"), 5);
 }
 
-PlayerBase* PaintingGame::InitialiseNetworkPlayer() {
-	animController->SetIdleAnimation(meshAnimations.at("mainCharIdleAnim"));
-	animController->SetRunAnimation(meshAnimations.at("mainCharRunAnim"));
-	animController->SetTauntAnimation(meshAnimations.at("mainCharTauntAnim"));
-	netPlayer = new PlayerBase(*physicsCommon, physicsWorld, Vector3(0, 50, 10), meshes.at("mainChar"), textures.at("basicTex"), animController, shaders.at("skinningShader"), 5);
-	world->AddGameObject(netPlayer);
-	return netPlayer;
+reactphysics3d::ConcaveMeshShape* NCL::CSC8508::PaintingGame::CreateConcaveCollision(std::string meshName)
+{
+	float nbvertices = meshes.at(meshName)->GetVertexCount();
+	int indices = meshes.at(meshName)->GetIndexCount();
+	int trianglesCount = indices / 3;
+
+	const void* meshVertStart = meshes.at(meshName)->GetPositionData().data();
+	const void* meshIndexStart = meshes.at(meshName)->GetIndexData().data();
+
+	reactphysics3d::TriangleVertexArray* triangleArray =
+		new reactphysics3d::TriangleVertexArray(nbvertices, meshVertStart, sizeof(Vector3), trianglesCount,
+			meshIndexStart, 3 * sizeof(int),
+			reactphysics3d::TriangleVertexArray::VertexDataType::VERTEX_FLOAT_TYPE,
+			reactphysics3d::TriangleVertexArray::IndexDataType::INDEX_INTEGER_TYPE);
+
+	reactphysics3d::TriangleMesh* triangleMesh = physicsCommon->createTriangleMesh();
+
+	// Add the triangle vertex array to the triangle mesh 
+	triangleMesh->addSubpart(triangleArray);
+
+	// Create the concave mesh shape 
+	arenaConcaveMeshCollision = physicsCommon->createConcaveMeshShape(triangleMesh);
+	return arenaConcaveMeshCollision;
 }
 
 GameTechRenderer* PaintingGame::GetGameTechRenderer()
@@ -373,25 +310,31 @@ PlayerBase* PaintingGame::InitSecondPlayer() {
 
 	return players[1];
 }
-
-void PaintingGame::InitSecondCamera() {
-
-	if (thirdPersonCamera) {
-		world->GetSecondCamera()->SetThirdPersonCamera(players[1]);
-		world->GetSecondCamera()->SetGamePad(gamePad);
-	}
-	else {
-		world->GetSecondCamera()->SetFirstPersonCamera();
+void NCL::CSC8508::PaintingGame::SetColorOfMesh(MeshGeometry* mesh, Vector4 color)
+{
+	vector<Vector4> vertexColor;
+	for (int i = 0; i < mesh->GetVertexCount(); i++)
+	{
+		vertexColor.emplace_back(color);
 	}
 
-	world->GetSecondCamera()->SetBasicCameraParameters(-15.0f, 315.0f, Vector3(-60, 40, 60), 0.1f, 500.0f);
-	world->GetSecondCamera()->SetPerspectiveCameraParameters(Window::GetWindow()->GetScreenAspect() / 2.0f);
+	const SubMesh* subMesh = mesh->GetSubMesh(0);
+	vector<unsigned int> indices = mesh->GetIndexData();
+
+	int start = subMesh->start;
+	int end = start + subMesh->count;
+	int A, B, C = 0;
+	for (int i = start; i < end; i += 3)
+	{
+		A = indices[i + 0];
+		B = indices[i + 1];
+		C = indices[i + 2];
+		vertexColor[A] = Vector4(0, 1, 0, 1);
+		vertexColor[B] = Vector4(0, 1, 0, 1);
+		vertexColor[C] = Vector4(0, 1, 0, 1);
+	}
+
+
+	mesh->SetVertexColours(vertexColor);
+	mesh->UploadToGPU();
 }
-
-void PaintingGame::DestroySecondPlayer() {
-
-	players[1]->~PlayerBase();
-	world->GetSecondCamera()->~Camera();
-}
-
-

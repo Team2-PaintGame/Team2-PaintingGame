@@ -6,7 +6,7 @@
 
 using namespace NCL;
 
-PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, TextureBase* texture, AnimationController* animController, ShaderBase* shader, int size): GameObject(physicsCommon, physicsWorld, "BasePlayer") {
+PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, MeshMaterial* meshMat, AnimationController* animController, ShaderBase* shader, int size): GameObject(physicsCommon, physicsWorld, "BasePlayer") {
 	transform
 		.SetScale(Vector3(size))
 		.SetPosition(position);
@@ -18,13 +18,17 @@ PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysic
 	animationController->InitStateMachine();
 	//renderObject->AddTexture(texture);
 
+	meshMat->LoadTextures();
+
 	int subMeshes = mesh->GetSubMeshCount();
 	for (int index = 0; index < subMeshes; ++index) {
+		TextureBase* texture = meshMat->GetMaterialForLayer(index)->GetEntry("Diffuse");
 		renderObject->AddTexture(texture, "mainTex", index);
 	}
 	//renderObject->SetRigged(true);
 	//renderObject->animation = meshAnimation;
-	boundingVolume = physicsCommon.createBoxShape(~transform.GetScale() / 2.0f);
+	//boundingVolume = physicsCommon.createBoxShape(~transform.GetScale() / 2.0f);
+	boundingVolume = physicsCommon.createCapsuleShape(size*.35f, size);
 	reactphysics3d::Transform rp3d_transform(~position, rp3d::Quaternion::identity());
 	
 	// Create a rigid body in the physics world
@@ -45,10 +49,10 @@ void PlayerBase::Update(float dt) {
 
 PlayerBase::~PlayerBase() {
 	if (rigidBody) {
-		physicsWorld->destroyRigidBody(rigidBody);
+		//physicsWorld->destroyRigidBody(rigidBody);
 	}
 
-	physicsCommon.destroyBoxShape(boundingVolume);
+	//physicsCommon.destroyBoxShape(boundingVolume);
 }
 
 
