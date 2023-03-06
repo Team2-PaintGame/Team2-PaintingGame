@@ -62,6 +62,8 @@ void OGLPaintingGameRenderer::RenderBasicScreen() { //change this to render stat
 void OGLPaintingGameRenderer::RenderGameScreen() { //change this to RenderScreen
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
+	glEnable(GL_BLEND);
+	glEnable(GL_DEPTH_TEST);
 	//send camera things and light things to shader
 	boundScreen->GetSceneNode()->OperateOnCameras(
 		[&](Camera* cam) {
