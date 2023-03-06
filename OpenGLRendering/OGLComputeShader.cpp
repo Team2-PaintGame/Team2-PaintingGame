@@ -6,6 +6,7 @@ Use as you see fit!
 Comments and queries to: richard-gordon.davison AT ncl.ac.uk
 https://research.ncl.ac.uk/game/
 */
+#ifdef _WIN32
 #include "OGLComputeShader.h"
 #include "OGLShader.h"
 #include "Assets.h"
@@ -81,3 +82,4 @@ int OGLComputeShader::GetThreadYCount() const {
 int OGLComputeShader::GetThreadZCount() const {
 	return threadsInGroup[2];
 }
+#endif

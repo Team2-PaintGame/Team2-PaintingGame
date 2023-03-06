@@ -12,7 +12,7 @@ namespace NCL {
 	class Floor : public GameObject {
 	public:
 		Floor() = default;
-		Floor(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, int size) : GameObject(physicsCommon, physicsWorld, "Floor") {
+		Floor(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, reactphysics3d::ConcaveMeshShape* concaveMeshShape, TextureBase* texture, ShaderBase* shader, int size) : GameObject(physicsCommon, physicsWorld, "Floor") {
 			transform
 				.SetScale(Vector3(size, 1, size))
 				.SetPosition(position);
@@ -20,7 +20,7 @@ namespace NCL {
 			renderObject = new RenderObject(&transform, mesh, shader);
 			renderObject->AddTexture(texture);
 
-			boundingVolume = physicsCommon.createBoxShape(~transform.GetScale()/2.0f);
+			boundingVolume = concaveMeshShape;
 			reactphysics3d::Transform rp3d_transform(~position, rp3d::Quaternion::identity());
 
 			// Create a rigid body in the physics world
@@ -31,10 +31,10 @@ namespace NCL {
 		}
 
 		virtual ~Floor() {
-			physicsCommon.destroyBoxShape(boundingVolume);
+			physicsCommon.destroyConcaveMeshShape(boundingVolume);
 		}
 	protected:
-		rp3d::BoxShape* boundingVolume;
+		rp3d::ConcaveMeshShape* boundingVolume;
 	};
 }
 

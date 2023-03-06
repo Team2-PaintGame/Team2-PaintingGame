@@ -91,8 +91,7 @@ namespace NCL {
 			MeshGeometry*	mesh;
 			std::map<int, std::vector<std::pair<std::string, TextureBase*>>> subMeshTextures;
 
-			//std::vector<TextureBase*>	textures;
-			TextureBase* texture;
+			TextureBase*	texture;
 			ShaderBase*		shader;
 			Transform*		transform;
 			Vector4			colour;

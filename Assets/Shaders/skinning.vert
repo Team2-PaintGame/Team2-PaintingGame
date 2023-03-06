@@ -9,8 +9,8 @@ layout(location = 0) in vec3 position;
 layout(location = 1) in vec4 colour;
 layout(location = 2) in vec2 texCoord;
 layout(location = 3) in vec3 normal;
-layout(location = 4) in vec4 jointWeights;
-layout(location = 5) in ivec4 jointIndices;
+layout(location = 5) in vec4 jointWeights;
+layout(location = 6) in ivec4 jointIndices;
 
 uniform vec4 		objectColour = vec4(1,1,1,1);
 
@@ -52,5 +52,5 @@ void main(void)
 	if(hasVertexColours) {
 		OUT.colour		= objectColour * colour;
 	}
-	gl_Position		= mvp * vec4(localPos.xyz , 1.0);
+	gl_Position		= mvp * vec4(skelPos.xyz , 1.0);
 }

@@ -3,8 +3,13 @@
 #include <algorithm>
 #include <math.h>
 #include "Utils.h"
+#include"InputController.h"
 
 using namespace NCL;
+NCL::Camera::Camera(Gamepad* gamepad)
+{
+	this->gamepad = gamepad;
+}
 void Camera::SetBasicCameraParameters(float pitch, float yaw, const Vector3& position, float znear, float zfar) {
 	this->pitch = pitch;
 	this->yaw = yaw;
@@ -41,6 +46,10 @@ void Camera::SetOrthographicCameraParameters(float right, float left, float top,
 	this->bottom = bottom;
 	camType = CameraType::Orthographic;
 }
+void NCL::Camera::SetGamePad(Gamepad* gamepad)
+{
+	this->gamepad = gamepad;
+}
 /*
 Polls the camera for keyboard / mouse movement.
 Should be done once per frame! Pass it the msec since
@@ -48,13 +57,21 @@ last frame (default value is for simplicities sake...)
 */
 void Camera::UpdateCamera(float dt) {
 	
-	pitch	-= (Window::GetMouse()->GetRelativePosition().y);
+	if (gamepad == NULL) {
+		pitch -= (Window::GetMouse()->GetRelativePosition().y);
+		yaw -= (Window::GetMouse()->GetRelativePosition().x);
+	}
+	else {
+		pitch -= (gamepad->rightStickY);
+		yaw -= (gamepad->rightStickX);
+	}
+	
 
 	//Bounds check the pitch, to be between straight up and straight down ;)
 	pitch = std::min(pitch, 90.0f);
 	pitch = std::max(pitch, -90.0f);
 
-	yaw -= (Window::GetMouse()->GetRelativePosition().x);
+
 	if (yaw < 0) {
 		yaw += 360.0f;
 	}

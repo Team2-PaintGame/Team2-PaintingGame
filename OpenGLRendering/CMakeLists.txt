@@ -10,6 +10,7 @@ set(Header_Files
     "OGLShader.h"
     "OGLTexture.h"
     "OGLSkybox.h"
+    "OGLAssetLoader.h"
 )
 source_group("Header Files" FILES ${Header_Files})
 
@@ -20,6 +21,7 @@ set(Source_Files
     "OGLShader.cpp"
     "OGLTexture.cpp"
     "OGLSkybox.cpp"
+    "OGLAssetLoader.cpp"
 )
 source_group("Source Files" FILES ${Source_Files})
 

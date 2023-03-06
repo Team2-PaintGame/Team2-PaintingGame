@@ -4,6 +4,7 @@
 #include <NetworkObject.h>
 #include "GameClient.h"
 #include "GameServer.h"
+#include <array>
 
 namespace NCL {
 	namespace CSC8508 {
@@ -13,15 +14,13 @@ namespace NCL {
 
 		class NetworkedGame : public PaintingGame, public PacketReceiver {
 		public:
-			NetworkedGame();
+			NetworkedGame(Window* window, GameTechRenderer* rend, GameWorld* gameWorld, reactphysics3d::PhysicsCommon* physicsCommon, MenuHandler* menu);
 			~NetworkedGame();
 
 			void StartAsServer();
 			void StartAsClient(char a, char b, char c, char d);
 
 			void UpdateGame(float dt) override;
-
-			void SpawnPlayer();
 
 			void StartLevel();
 
@@ -30,6 +29,9 @@ namespace NCL {
 			void OnPlayerCollision(NetworkPlayer* a, NetworkPlayer* b);
 
 		protected:
+			PlayerBase* SpawnPlayer();
+			PlayerBase* AddPlayer(Camera* camera, Vector3 position, Gamepad* gamepad) override;
+
 			void UpdateAsServer(float dt);
 			void UpdateAsClient(float dt);
 
@@ -44,6 +46,9 @@ namespace NCL {
 
 			void BroadcastSnapshot(bool deltaFrame);
 			void UpdateMinimumState();
+
+
+		protected:
 			std::map<int, int> stateIDs;
 
 			GameServer* thisServer;
@@ -53,13 +58,15 @@ namespace NCL {
 
 			std::vector<NetworkObject*> networkObjects;
 
-			std::map<int, GameObject*> serverPlayers;
 			PlayerBase* ServerPlayer;
 			PlayerBase* ClientPlayer;
 			int ServerPlayerID;
 			int ClientPlayerID;
 
+			PlayerController* playerController;
+
 			bool connected = false;
+
 		};
 	}
 }
