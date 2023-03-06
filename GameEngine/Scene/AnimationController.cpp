@@ -9,25 +9,25 @@ AnimationController::AnimationController(GameObject* gameObject, const std::unor
 	this->gameObject = gameObject;
 	this->animations = animations;
 	State* idleState = new State([this](float dt)->void {
-		currentAnimation = this->animations.at("idleAnimation");
+		this->currentAnimation = this->animations.at("idleAnimation");
 	});
 	State* moveState = new State([this](float dt)->void {
-		currentAnimation = this->animations.at("moveAnimation");
+		this->currentAnimation = this->animations.at("moveAnimation");
 	});
 
-	StateTransition* idleToMoveStateTransition = new StateTransition(idleState, moveState, [&](void)->bool {
+	StateTransition* idleToMoveStateTransition = new StateTransition(idleState, moveState, [this](void)->bool {
 
-		if (gameObject->GetRigidBody()->getLinearVelocity().length() > 5.f) {
-			currentFrame = 0;
+		if (this->gameObject->GetRigidBody()->getLinearVelocity().length() > 5.f) {
+			this->currentFrame = 0;
 			return true;
 		}
 		return false;
 	});
 
-	StateTransition* moveToIdleStateTransition = new StateTransition(moveState, idleState, [&](void)->bool {
+	StateTransition* moveToIdleStateTransition = new StateTransition(moveState, idleState, [this](void)->bool {
 
-		if (gameObject->GetRigidBody()->getLinearVelocity().length() < 5.f) {
-			currentFrame = 0;
+		if (this->gameObject->GetRigidBody()->getLinearVelocity().length() < 5.f) {
+			this->currentFrame = 0;
 			return true;
 		}
 		return false;
