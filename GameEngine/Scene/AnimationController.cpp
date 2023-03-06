@@ -17,7 +17,7 @@ AnimationController::AnimationController(GameObject* gameObject, const std::unor
 
 	StateTransition* idleToMoveStateTransition = new StateTransition(idleState, moveState, [this](void)->bool {
 
-		if (this->gameObject->GetRigidBody()->getLinearVelocity().length() > 5.f) {
+		if (this->gameObject->GetRigidBody()->getLinearVelocity().length() > 10.f) {
 			this->currentFrame = 0;
 			return true;
 		}
