@@ -18,7 +18,9 @@ namespace NCL {
 		}
 		virtual void Update(float dt) {
 			PlayerBase::Update(dt);
-			animationController->Update(dt);
+			if (animationController) {
+				animationController->Update(dt);
+			}
 		}
 	protected:
 		void SetMemberVariables(const std::unordered_map<std::string, MeshAnimation*>& animations) {
@@ -30,7 +32,7 @@ namespace NCL {
 			renderObject->SetRigged(true);
 			renderObject->SetAnimationController(animationController);
 		}
-		AnimationController* animationController;
+		AnimationController* animationController = NULL;
 
 	};
 }

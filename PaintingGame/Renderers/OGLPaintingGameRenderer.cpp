@@ -20,7 +20,7 @@ OGLPaintingGameRenderer::~OGLPaintingGameRenderer() {
 	DeleteImGuiContext();
 }
 
-void OGLPaintingGameRenderer::RenderFrame() {
+void OGLPaintingGameRenderer::RenderFrame() {	
 	if (boundScreen) {
 		if (boundScreen->GetScreenType() == ScreenType::GameScreen) {
 			BuildObjectList();
@@ -60,6 +60,8 @@ void OGLPaintingGameRenderer::RenderBasicScreen() { //change this to render stat
 	boundScreen->RenderMenu();
 }
 void OGLPaintingGameRenderer::RenderGameScreen() { //change this to RenderScreen
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
 	//send camera things and light things to shader
 	boundScreen->GetSceneNode()->OperateOnCameras(
 		[&](Camera* cam) {
@@ -71,7 +73,6 @@ void OGLPaintingGameRenderer::RenderGameScreen() { //change this to RenderScreen
 			for (const auto& i : activeObjects) {
 				OGLShader* shader = (OGLShader*)(i)->GetShader();
 				BindShader(shader);
-				BindTextureToShader((OGLTexture*)(*i).GetDefaultTexture(), "mainTex", 0);
 				if (activeShader != shader) {
 					locations.projLocation = glGetUniformLocation(shader->GetProgramID(), "projMatrix");
 					locations.viewLocation = glGetUniformLocation(shader->GetProgramID(), "viewMatrix");
@@ -97,7 +98,7 @@ void OGLPaintingGameRenderer::RenderGameScreen() { //change this to RenderScreen
 					glUniform3fv(locations.lightPosLocation, 1, (float*)&lightPosition);
 					glUniform4fv(locations.lightColourLocation, 1, (float*)&lightColour);
 					glUniform1f(locations.lightRadiusLocation, lightRadius);
-					glUniform1i(locations.shadowTexLocation, 1);
+					//glUniform1i(locations.shadowTexLocation, 1);
 
 					////binding skybox texture to shader:
 					//glUniform1i(locations.skyboxTexLocation, 0);
@@ -112,8 +113,8 @@ void OGLPaintingGameRenderer::RenderGameScreen() { //change this to RenderScreen
 				Matrix4 modelMatrix = (*i).GetTransform()->GetMatrix();
 				glUniformMatrix4fv(locations.modelLocation, 1, false, (float*)&modelMatrix);
 
-				Matrix4 fullShadowMat = modelMatrix;
-				glUniformMatrix4fv(locations.shadowLocation, 1, false, (float*)&fullShadowMat);
+				/*Matrix4 fullShadowMat = modelMatrix;
+				glUniformMatrix4fv(locations.shadowLocation, 1, false, (float*)&fullShadowMat);*/
 
 				Vector4 colour = i->GetColour();
 				glUniform4fv(locations.colourLocation, 1, colour.array);
@@ -159,9 +160,11 @@ void OGLPaintingGameRenderer::SortObjectList() {
 void OGLPaintingGameRenderer::RenderWithDefaultTexture(const ShaderVariablesLocations& locations, const RenderObject* r) {
 	glUniform1i(locations.hasTexLocation, (OGLTexture*)r->GetDefaultTexture() ? 1 : 0);
 	BindMesh(r->GetMesh());
-	BindMesh(r->GetMesh());
 	BindTextureToShader(r->GetDefaultTexture(), "mainTex", 0);
-	DrawBoundMesh();
+	int layercount = r->GetMesh()->GetSubMeshCount();
+	for (int index = 0; index < layercount; ++index) {
+		DrawBoundMesh(index);
+	}
 }
 
 void OGLPaintingGameRenderer::RenderWithMultipleTexture(const ShaderVariablesLocations& locations, const RenderObject* r) {
