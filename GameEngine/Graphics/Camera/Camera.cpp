@@ -87,51 +87,62 @@ void Camera::CalculateFirstPersonView() {
 	}
 }
 
-void Camera::CalculateThirdPersonView(bool init) 
-{
-	/*// Clamp the pitch value further
+void Camera::CalculateThirdPersonView(bool init) {
+	/*Vector3 position = playerTransform->GetOrientation() * (playerTransform->GetPosition() + offsetFromPlayer);
+	Matrix4 y_rotation = Matrix4::Rotation(yaw, { 0, 1, 0 });
+	Matrix4 p_rotation = Matrix4::Rotation(pitch, { 1, 0, 0 });
+	Matrix4 orientation = y_rotation * p_rotation;
+
+	this->position = orientation * position;*/
+
+	/*Matrix4 rotation = Matrix4::Rotation(yaw, { 0, 1, 0 });
+	Vector3 forward = rotation * Vector3(0, 0, -1);
+	Vector3 right = rotation * Vector3(1, 0, 0);*/
+
+	// Clamp the pitch value further
 	pitch = std::clamp(pitch, -25.0f, 25.0f);
 
+	angleAroundPlayer -= Window::GetMouse()->GetRelativePosition().x;
 	Matrix4 rotation = Matrix4::Rotation(yaw, { 0, 1, 0 }) ;
 
-	Vector3 rotated_offset = rotation * Matrix4::Rotation(pitch, { 1, 0, 0 })* offsetFromPlayer;
+	Vector3 rotated_offset = rotation * Matrix4::Rotation(pitch, { 1, 0, 0 }) * offsetFromPlayer;
 
 	Quaternion player_orientation(rotation);
-	player->GetTransform().SetOrientation(player_orientation);
+	playerTransform->SetOrientation(player_orientation);
 
 	// Change the bounding volume orientation as well
-	reactphysics3d::Transform newRBTransform = reactphysics3d::Transform(player->GetRigidBody()->getTransform().getPosition(), ~player_orientation);
-	player->GetRigidBody()->setTransform(newRBTransform);
+	//reactphysics3d::Transform newRBTransform = reactphysics3d::Transform(player->GetRigidBody()->getTransform().getPosition(), ~player_orientation);
+	//player->GetRigidBody()->setTransform(newRBTransform);
 
-	position = player->GetTransform().GetPosition() + rotated_offset;*/
+	position = playerTransform->GetPosition() + rotated_offset;
 
-	angleAroundPlayer -= Window::GetMouse()->GetRelativePosition().x;
+	//angleAroundPlayer -= Window::GetMouse()->GetRelativePosition().x;
 
-	float vDist = offsetFromPlayer.z * cos(Maths::DegreesToRadians(pitch));
-	float hDist = offsetFromPlayer.z * sin(Maths::DegreesToRadians(pitch));
+	//float vDist = offsetFromPlayer.z * cos(Maths::DegreesToRadians(pitch));
+	//float hDist = offsetFromPlayer.z * sin(Maths::DegreesToRadians(pitch));
 
-	//euler angles (x => pitch, y => yaw, z => roll)
-	//yaw angle is the rotation around y axis
+	////euler angles (x => pitch, y => yaw, z => roll)
+	////yaw angle is the rotation around y axis
 
-	float theta = Maths::DegreesToRadians(playerTransform->GetOrientation().ToEuler().y + angleAroundPlayer);
-	float xOffset = hDist * sin(theta);
-	float zOffset = hDist * cos(theta);
+	//float theta = Maths::DegreesToRadians(playerTransform->GetOrientation().ToEuler().y + angleAroundPlayer);
+	//float xOffset = hDist * sin(theta);
+	//float zOffset = hDist * cos(theta);
 
-	Vector3 playerPosition = playerTransform->GetPosition();
+	//Vector3 playerPosition = playerTransform->GetPosition();
 
-	position.x = playerPosition.x - xOffset;
-	position.z = playerPosition.z - zOffset;
-	position.y = playerPosition.y + vDist + offsetFromPlayer.y;
+	//position.x = playerPosition.x - xOffset;
+	//position.z = playerPosition.z - zOffset;
+	//position.y = playerPosition.y + vDist + offsetFromPlayer.y;
 
-	Matrix4 temp = Matrix4::BuildViewMatrix(position, playerPosition, Vector3(0, 1, 0));
+	//Matrix4 temp = Matrix4::BuildViewMatrix(position, playerPosition, Vector3(0, 1, 0));
 
-	Matrix4 modelMat = temp.Inverse();
+	//Matrix4 modelMat = temp.Inverse();
 
-	Quaternion q(modelMat);
-	Vector3 angles = q.ToEuler();
-	if (init) pitch = angles.x;
+	//Quaternion q(modelMat);
+	//Vector3 angles = q.ToEuler();
+	//if (init) pitch = angles.x;
 
-	yaw = angles.y;
+	//yaw = angles.y;
 }
 
 /*
