@@ -23,7 +23,7 @@ PaintingGame::PaintingGame(GameTechRenderer* render, GameWorld* game_world, reac
 
 	this->physicsCommon = physicsCommon;
 	this->physicsWorld = this->physicsCommon->createPhysicsWorld();
-
+	world->physicsWorld = this->physicsWorld;
 	renderer = render;
 
 	renderer->SetPhysicsWorld(physicsWorld);
@@ -31,7 +31,7 @@ PaintingGame::PaintingGame(GameTechRenderer* render, GameWorld* game_world, reac
 	forceMagnitude = 10.0f;
 
 	InitialiseAssets();
-	world->physicsWorld->setIsGravityEnabled(useGravity);
+	physicsWorld->setIsGravityEnabled(useGravity);
 	renderer->UseFog(useFog);
 
 	renderer->settings.SetIsDebugRenderingModeEnabled(true);
@@ -84,7 +84,7 @@ void PaintingGame::InitialiseAssets() {
 
 	shaders.insert(std::make_pair("basicShader", renderer->LoadShader("scene.vert", "scene.frag")));
 	shaders.insert(std::make_pair("terrainShader", renderer->LoadShader("terrain.vert", "terrain.frag")));
-	shaders.insert(std::make_pair("skinningShader", renderer->LoadShader("skinning.vert", "scene.frag")));
+	shaders.insert(std::make_pair("skinningShader", renderer->LoadShader("skinning.vert", "character.frag")));
 }
 
 PaintingGame::~PaintingGame() {
@@ -117,7 +117,8 @@ void PaintingGame::UpdateGame(float dt) {
 	menuHandler->Update(dt);
 	renderer->Render();
 	renderer->Update(dt);
-	world->physicsWorld->update(dt);
+	SelectObject();
+	physicsWorld->update(dt);
 	Debug::UpdateRenderables(dt);
 }
 
