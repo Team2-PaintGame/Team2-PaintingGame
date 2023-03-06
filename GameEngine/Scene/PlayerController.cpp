@@ -48,22 +48,18 @@ void PlayerController::UpdateKeys()
 
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::W)) {
 		playerObject->GetRigidBody()->applyWorldForceAtCenterOfMass( fwdAxis * force);
-		std::cout << "X" << fwdAxis.x << "Y" << fwdAxis.y << fwdAxis.z << "\n";
 	}
 
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::S)) {
 		playerObject->GetRigidBody()->applyWorldForceAtCenterOfMass(-fwdAxis * force);
-		std::cout << "X" << fwdAxis.x << "Y" << fwdAxis.y << fwdAxis.z << "\n";
 	}
 
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::A)) {
 		playerObject->GetRigidBody()->applyWorldForceAtCenterOfMass(-rightAxis3d * force * (1 - side_damping));
-		std::cout << rightAxis3d.x << rightAxis3d.y << rightAxis3d.z << "\n";
 	}
 
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::D)) {
 		playerObject->GetRigidBody()->applyWorldForceAtCenterOfMass(rightAxis3d * force * (1 - side_damping));
-		std::cout << rightAxis3d.x << rightAxis3d.y << rightAxis3d.z << "\n";
 	}
 
 
