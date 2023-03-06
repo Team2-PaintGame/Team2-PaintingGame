@@ -2,6 +2,11 @@
 #include "NetworkPlayer.h"
 #include <GameClient.h>
 #include <GameServer.h>
+#include "reactphysics3d/reactphysics3d.h"
+#include "Utils.h"
+#include "PlayerBase.h"
+#include "GameManager.h"
+#include "Win32Window.h"
 
 #define COLLISION_MSG 30
 
@@ -17,24 +22,33 @@ struct MessagePacket : public GamePacket {
 	}
 };
 
-NetworkedGame::NetworkedGame()	{
+NetworkedGame::NetworkedGame(GameAssets* assets) : PaintingGame(assets) {
 	thisServer = nullptr;
 	thisClient = nullptr;
 
 	NetworkBase::Initialise();
 	timeToNextPacket  = 0.0f;
 	packetsToSnapshot = 0;
+
+	if (!GameManager::sConfig.playerControllerFactory) {
+		GameManager::sConfig.playerControllerFactory = new Win32PlayerControllerFactory();
+	}
 }
 
 NetworkedGame::~NetworkedGame()	{
 	delete thisServer;
 	delete thisClient;
+
+	delete playerController;
 }
 
 void NetworkedGame::StartAsServer() {
 	thisServer = new GameServer(NetworkBase::GetDefaultPort(), 4);
 
 	thisServer->RegisterPacketHandler(Received_State, this);
+	thisServer->RegisterPacketHandler(Client_Update, this);
+	thisServer->RegisterPacketHandler(Spawn_Player, this);
+	thisServer->RegisterPacketHandler(String_Message, this);
 
 	StartLevel();
 }
@@ -47,52 +61,118 @@ void NetworkedGame::StartAsClient(char a, char b, char c, char d) {
 	thisClient->RegisterPacketHandler(Full_State, this);
 	thisClient->RegisterPacketHandler(Player_Connected, this);
 	thisClient->RegisterPacketHandler(Player_Disconnected, this);
+	thisClient->RegisterPacketHandler(Spawn_Player, this);
 
-	StartLevel();
+	thisClient->RegisterPacketHandler(Confirm_Spawn, this);
+	thisClient->RegisterPacketHandler(Server_Update, this);
+	thisClient->RegisterPacketHandler(String_Message, this);
+
 }
 
-void NetworkedGame::UpdateGame(float dt) {
+void NetworkedGame::Update(float dt) {
 	timeToNextPacket -= dt;
 	if (timeToNextPacket < 0) {
 		if (thisServer) {
+			/*StringPacket serverPacket = "Server says hello!" + std::to_string(1);
+			thisServer->SendGlobalPacket(serverPacket);*/
+			std::cout << "Server: sending packet" << std::endl;
 			UpdateAsServer(dt);
 		}
 		else if (thisClient) {
+			/*StringPacket clientPacket = "Client says hello!" + std::to_string(1);
+			thisClient->SendPacket(clientPacket);*/
+			std::cout << "Client: sending packet" << std::endl;
 			UpdateAsClient(dt);
 		}
-		timeToNextPacket += 1.0f / 20.0f; //20hz server/client update
+		timeToNextPacket += 1.0f / 60.0f; //60hz server/client update
 	}
 
-	if (!thisServer && Window::GetKeyboard()->KeyPressed(KeyboardKeys::F9)) {
-		StartAsServer();
+	if ((thisClient && connected) || thisServer)
+	{
+		//ServerPlayer->GetCamera()->UpdateCamera(dt);
+		playerController->Update(dt);
+		PaintingGame::Update(dt);
 	}
-	if (!thisClient && Window::GetKeyboard()->KeyPressed(KeyboardKeys::F10)) {
-		StartAsClient(127,0,0,1);
-	}
-
-	PaintingGame::UpdateGame(dt);
 }
 
 void NetworkedGame::UpdateAsServer(float dt) {
-	packetsToSnapshot--;
-	if (packetsToSnapshot < 0) {
-		BroadcastSnapshot(false);
-		packetsToSnapshot = 5;
-	}
-	else {
-		BroadcastSnapshot(true);
-	}
+	//packetsToSnapshot--;
+	//if (packetsToSnapshot < 0) {
+	//	BroadcastSnapshot(false);
+	//	packetsToSnapshot = 5;
+	//}
+	//else {
+	//	BroadcastSnapshot(true);
+	//}
+
+	ServerPacket packet;
+	packet.orientation = ServerPlayer->GetTransform().GetOrientation();
+	packet.position = ServerPlayer->GetTransform().GetPosition();
+	packet.playerID = ServerPlayerID;
+	thisServer->SendGlobalPacket(packet);
+	thisServer->UpdateServer();
 }
 
 void NetworkedGame::UpdateAsClient(float dt) {
-	ClientPacket newPacket;
-
-	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::SPACE)) {
-		//fire button pressed!
-		newPacket.buttonstates[0] = 1;
-		newPacket.lastID = 0; //You'll need to work this out somehow...
+	if (thisClient->okToSpawn)
+	{
+		StartLevel();
+		thisClient->okToSpawn = false;
+		connected = true;
 	}
-	thisClient->SendPacket(newPacket);
+	else if(connected) {
+		ClientPacket packet;
+		packet.orientation = ClientPlayer->GetTransform().GetOrientation();
+		packet.position = ClientPlayer->GetTransform().GetPosition();
+		packet.playerID = ClientPlayerID;
+		thisClient->SendPacket(packet);
+	}
+	thisClient->UpdateClient();
+}
+
+void NetworkedGame::ServerCreateClientPlayer(SpawnPacket* payload)
+{
+	// Server create client player and send packet
+	// back to client to create server character
+	ClientPlayer = CreatePlayer(payload->position);
+	ClientPlayer->GetTransform().SetPosition(payload->position);
+	ClientPlayerID = payload->playerID;
+	SpawnPacket packet;
+	packet.playerID = ServerPlayerID;
+	packet.position = ServerPlayer->GetTransform().GetPosition();
+	thisServer->SendGlobalPacket(packet);
+	thisServer->UpdateServer();
+}
+
+void NetworkedGame::ClientCreateServerPlayer(SpawnPacket* payload)
+{
+	// client creates server player
+	ServerPlayer = CreatePlayer(payload->position);
+	ServerPlayerID = payload->playerID;
+}
+
+void NetworkedGame::EnactClientUpdatesOnServer(ClientPacket* payload)
+{
+	// any changes to server character or other objects to update client
+	if (ClientPlayer) {
+		ClientPlayer->GetTransform().SetOrientation(payload->orientation);
+		ClientPlayer->GetTransform().SetPosition(payload->position);
+
+		reactphysics3d::Transform newRBTransform = reactphysics3d::Transform(~payload->position, ~payload->orientation);
+		ClientPlayer->GetRigidBody()->setTransform(newRBTransform);
+	}
+}
+
+void NetworkedGame::EnactServerUpdatesOnClient(ServerPacket* payload)
+{
+	// any changes from client to update server
+	if (ServerPlayer) {
+		ServerPlayer->GetTransform().SetOrientation(payload->orientation);
+		ServerPlayer->GetTransform().SetPosition(payload->position);
+
+		reactphysics3d::Transform newRBTransform = reactphysics3d::Transform(~payload->position, ~payload->orientation);
+		ServerPlayer->GetRigidBody()->setTransform(newRBTransform);
+	}
 }
 
 void NetworkedGame::BroadcastSnapshot(bool deltaFrame) {
@@ -106,11 +186,7 @@ void NetworkedGame::BroadcastSnapshot(bool deltaFrame) {
 		if (!o) {
 			continue;
 		}
-		//TODO - you'll need some way of determining
-		//when a player has sent the server an acknowledgement
-		//and store the lastID somewhere. A map between player
-		//and an int could work, or it could be part of a 
-		//NetworkPlayer struct. 
+
 		int playerState = 0;
 		GamePacket* newPacket = nullptr;
 		if (o->WritePacket(&newPacket, deltaFrame, playerState)) {
@@ -144,16 +220,75 @@ void NetworkedGame::UpdateMinimumState() {
 	}
 }
 
-void NetworkedGame::SpawnPlayer() {
+NCL::PlayerBase* NetworkedGame::SpawnPlayer() {
+	if (thisServer) {
+		ServerPlayer = CreatePlayer(Vector3(5.0f, 15.0f, 5.0f));
+		world->AddGameObject(ServerPlayer);
+		ServerPlayerID = 1;
+		return ServerPlayer;
+	}
+	if (thisClient) {
+		// send to server that player has been spawned
+		ClientPlayer = CreatePlayer(Vector3(-5.0f, 10.0f, -5.0f));
+		world->AddGameObject(ClientPlayer);
+		ClientPlayerID = 2;
+		SpawnPacket packet;
+		packet.position = ClientPlayer->GetTransform().GetPosition();
+		packet.playerID = ClientPlayerID;
+		thisClient->SendPacket(packet);
+		return ClientPlayer;
+	}
+	return nullptr;
+}
 
+NCL::Player* NetworkedGame::AddPlayer(Vector3 position) {
+	return nullptr;
 }
 
 void NetworkedGame::StartLevel() {
 
+	InitWorld();
+
+	PlayerBase* player = SpawnPlayer();
+	//InitCamera(*world->GetMainCamera(), *player, 1.0f );
+
+	playerController = GameManager::sConfig.playerControllerFactory->createPlayerController(player);
 }
 
 void NetworkedGame::ReceivePacket(int type, GamePacket* payload, int source) {
-	
+	if (type == String_Message) {
+		StringPacket* realPacket = (StringPacket*)payload;
+
+		string msg = realPacket->GetStringFromData();
+
+		std::cout << " received message : " << msg << std::endl;
+		return;
+	}
+	if (thisServer) {
+		std::cout << "Server: " << payload->type << std::endl;
+		switch (payload->type) {
+		case Spawn_Player:
+			ServerCreateClientPlayer((SpawnPacket*) payload);
+			std::cout << "SPAWN Packet recieved ))))))))))))))";
+			break;
+		case Client_Update:
+			EnactClientUpdatesOnServer((ClientPacket*) payload);
+			break;
+		}
+	}
+	else if (thisClient) {
+		switch (payload->type) {
+		case Spawn_Player:
+			ClientCreateServerPlayer((SpawnPacket*) payload);
+			break;
+		case Server_Update:
+			EnactServerUpdatesOnClient((ServerPacket*) payload);
+			break;
+		case Full_State:
+			// something here
+			break;
+		}
+	}
 }
 
 void NetworkedGame::OnPlayerCollision(NetworkPlayer* a, NetworkPlayer* b) {

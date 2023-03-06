@@ -1,54 +1,40 @@
 #include "PlayerController.h"
-#include "Window.h"
-#include "Vector4.h"
+#include "Utils.h"
 
 using namespace NCL;
 
-PlayerController::PlayerController(Camera* cam, GameObject* player) : camera(cam), playerObject(player)
-{
+PlayerController::PlayerController(PlayerBase* player) : player(player) {}
 
-}
-
-void PlayerController::Update(float dt)
-{
-	UpdateKeys();
-}
-
-void PlayerController::UpdateKeys()
-{
-	Matrix4 view = camera->BuildViewMatrix();
+void PlayerController::Update(float dt) {
+	Matrix4 view = player->GetCamera()->BuildViewMatrix();
 	Matrix4 camWorld = view.Inverse();
 
 	Vector3 rightAxis = Vector3(camWorld.GetColumn(0)); //view is inverse of model!
 
-	reactphysics3d::Vector3 rightAxis3d = reactphysics3d::Vector3(rightAxis.x, rightAxis.y, rightAxis.z);
+	Vector3 rightAxis3d = Vector3(rightAxis.x, rightAxis.y, rightAxis.z);
+	Vector3 upAxis = Vector3(0, 1, 0);
+	Vector3 fwdAxis = Vector3::Cross(upAxis, rightAxis3d);
 
-	//forward is more tricky -  camera forward is 'into' the screen...
-	//so we can take a guess, and use the cross of straight up, and
-	//the right axis, to hopefully get a vector that's good enough!
-	reactphysics3d::Vector3 upAxis = reactphysics3d::Vector3(0, 1, 0);
-	reactphysics3d::Vector3 fwdAxis = upAxis.cross(rightAxis3d);
 	fwdAxis.y = 0.0f;
-	fwdAxis.normalize();
-	rightAxis3d.normalize();
+	fwdAxis.Normalise();
+	rightAxis3d.Normalise();
 
 	float force = 5000.f;
 	float side_damping = 0.33f;
 
-	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::W)) {
-		playerObject->GetRigidBody()->applyWorldForceAtCenterOfMass( fwdAxis * force);
+	if (MoveForward()) {
+		player->GetRigidBody()->applyWorldForceAtCenterOfMass(~fwdAxis * force);
 	}
 
-	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::S)) {
-		playerObject->GetRigidBody()->applyWorldForceAtCenterOfMass(-fwdAxis * force);
+	if (MoveBackward()) {
+		player->GetRigidBody()->applyWorldForceAtCenterOfMass(~-fwdAxis * force);
 	}
 
-	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::A)) {
-		playerObject->GetRigidBody()->applyWorldForceAtCenterOfMass(-rightAxis3d * force * (1 - side_damping));
+	if (MoveLeft()) {
+		player->GetRigidBody()->applyWorldForceAtCenterOfMass(~-rightAxis3d * force * (1 - side_damping));
 	}
 
-	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::D)) {
-		playerObject->GetRigidBody()->applyWorldForceAtCenterOfMass(rightAxis3d * force * (1 - side_damping));
+	if (MoveRight()) {
+		player->GetRigidBody()->applyWorldForceAtCenterOfMass(~rightAxis3d * force * (1 - side_damping));
 	}
 }
-

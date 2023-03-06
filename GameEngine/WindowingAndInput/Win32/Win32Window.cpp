@@ -8,6 +8,11 @@ using namespace NCL;
 using namespace Win32Code;
 
 #define WINDOWCLASS "WindowClass"
+#include "../../Middleware/ImGui/imgui.h"
+#include "../../Middleware/ImGui/imgui_impl_opengl3.h"
+#include "../../Middleware/ImGui/imgui_impl_opengl3_loader.h"
+#include "../../Middleware/ImGui/imgui_impl_win32.h"
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 Win32Window::Win32Window(const std::string& title, int sizeX, int sizeY, bool fullScreen, int offsetX, int offsetY)	{
 	forceQuit		= false;
@@ -210,6 +215,9 @@ void Win32Window::CheckMessages(MSG &msg)	{
 
 LRESULT CALLBACK Win32Window::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)	{
 	Win32Window* thisWindow = (Win32Window*)window;
+	if (ImGui_ImplWin32_WndProcHandler(thisWindow->GetHandle(), message, wParam, lParam)) {
+		return true;
+	}
 
 	bool applyResize = false;
 

@@ -5,8 +5,9 @@
 #include "ShaderBase.h"
 #include "MeshAnimation.h"
 #include "MeshGeometry.h"
+#include "MeshMaterial.h"
 #include <map>
-
+#include "AnimationController.h"
 
 namespace NCL {
 	using namespace NCL::Rendering;
@@ -22,20 +23,12 @@ namespace NCL {
 			RenderObject(Transform* parentTransform, MeshGeometry* mesh, ShaderBase* shader);
 
 			//constructor for instanced render objects using the same mesh and shader with different transforms
-			RenderObject(const std::vector<Transform*>& parentTransforms, MeshGeometry* mesh, ShaderBase* shader);
+			RenderObject(Transform* parentTransform, MeshGeometry* mesh, ShaderBase* shader);
 			~RenderObject();
-
-			void AddTexture(TextureBase* t, std::string uniform = "mainTex", int subMeshIndex = 0) {
-				if (t) {
-					if (subMeshTextures.count(subMeshIndex)) {
-						//if this submesh pair already exists, add to the inner map
-						subMeshTextures.at(subMeshIndex).push_back(std::make_pair(uniform, t));
-					}
-					else {
-						subMeshTextures.insert(std::make_pair(subMeshIndex, std::vector<std::pair<std::string, TextureBase*>>{std::make_pair(uniform, t)}));
-					}
-				}
-			}
+			void LoadMaterialTextures(MeshMaterial* material);
+			void SetDefaultTexture(TextureBase* t);
+			TextureBase* GetDefaultTexture() const;
+			void AddTexture(TextureBase* t, std::string uniform = "mainTex", int subMeshIndex = 0);
 
 			std::vector<std::pair<std::string, TextureBase*>> GetTextures(int subMeshIndex) const {
 				return subMeshTextures.at(subMeshIndex);
@@ -92,25 +85,22 @@ namespace NCL {
 			bool GetIsInstanced() const {
 				return isInstanced;
 			}
+			void GetFrameMatrices(vector<Matrix4>& frameMatrices) const;
 
-			void GetFrameMatrices(vector<Matrix4>& frameMatrices) const {
-				const std::vector<Matrix4> invBindPose = mesh->GetInverseBindPose();
-				const Matrix4* frameData = animation->GetJointData(currentFrame);
-				for (unsigned int i = 0; i < mesh->GetJointCount(); ++i) {
-					frameMatrices.emplace_back(frameData[i] * invBindPose[i]);
-				}
-				/*OGLShader* shader = (OGLShader*)(this->shader);
-				glUniformMatrix4fv(glGetUniformLocation(shader->GetProgramID(), "joints"), frameMatrices.size(), false, (float*)frameMatrices.data());*/
+			void SetAnimationController(AnimationController* a) {
+				animationController = a;
 			}
 
-			MeshAnimation* animation;
-			int currentFrame = 0;
-			float frameTime = 0.0f;
+			bool isSingleTextured() const {
+				return !multipleTextures;
+			}
 		protected:
 			MeshGeometry*	mesh;
+			AnimationController* animationController;
+			//for mutiple textures
 			std::map<int, std::vector<std::pair<std::string, TextureBase*>>> subMeshTextures;
-
-			//std::vector<TextureBase*>	textures;
+			//for single texture
+			TextureBase*	texture;
 			ShaderBase*		shader;
 			Transform*		transform;
 			std::vector<Transform*> transforms;
@@ -118,6 +108,7 @@ namespace NCL {
 			bool	rigged = false;
 			unsigned int numInstances = 0;
 			bool isInstanced = false;
+			bool multipleTextures = false;
 		};
 	}
 }

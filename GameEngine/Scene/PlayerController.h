@@ -1,6 +1,4 @@
 #pragma once
-
-#include "Camera.h"
 #include "PlayerBase.h"
 
 namespace NCL {
@@ -9,16 +7,26 @@ namespace NCL {
 
 	class PlayerController {
 	public:
-		PlayerController(Camera* cam, GameObject* player);
-
+		PlayerController(PlayerBase* player);
 		void Update(float dt);
 
-	protected:
-		void UpdateKeys();
+		// Get the input for moving forward
+		virtual bool MoveForward() = 0;
+		virtual bool MoveBackward() = 0;
+		virtual bool MoveRight() = 0;
+		virtual bool MoveLeft() = 0;
 
+		virtual float Pitch() = 0;
+		virtual float Yaw() = 0;
 	protected:
-		Camera* camera;
-		GameObject* playerObject;
+		PlayerBase* player;
+	};
+
+	// The abstract factory interface for player controller
+	class PlayerControllerFactory {
+	public:
+		virtual ~PlayerControllerFactory() {}
+		virtual PlayerController* createPlayerController(PlayerBase* player) = 0;
 	};
 }
 

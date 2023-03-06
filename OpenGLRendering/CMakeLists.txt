@@ -10,6 +10,7 @@ set(Header_Files
     "OGLShader.h"
     "OGLTexture.h"
     "OGLSkybox.h"
+    "OGLAssetLoader.h"
 )
 source_group("Header Files" FILES ${Header_Files})
 
@@ -20,6 +21,7 @@ set(Source_Files
     "OGLShader.cpp"
     "OGLTexture.cpp"
     "OGLSkybox.cpp"
+    "OGLAssetLoader.cpp"
 )
 source_group("Source Files" FILES ${Source_Files})
 
@@ -100,5 +102,10 @@ include_directories("../GameEngine/Maths/")
 include_directories("../GameEngine/AssetsHandling/")
 include_directories("../GameEngine/WindowingAndInput/")
 include_directories("../GameEngine/WindowingAndInput/Win32/")
+include_directories("../GameEngine/Scene/")
+include_directories("../GameEngine/EntityComponents/")
+include_directories("../GameEngine/AI/PushdownAutomata/")
+include_directories("../GameEngine/AI/StateMachine/")
+include_directories("../GameEngine/Graphics/Camera/")
 
 target_link_libraries(${PROJECT_NAME} PUBLIC "${ADDITIONAL_LIBRARY_DEPENDENCIES}")

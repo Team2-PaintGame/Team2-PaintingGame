@@ -6,6 +6,7 @@ Use as you see fit!
 Comments and queries to: richard-gordon.davison AT ncl.ac.uk
 https://research.ncl.ac.uk/game/
 */
+#ifdef _WIN32
 #include "OGLRenderer.h"
 #include "OGLShader.h"
 #include "OGLMesh.h"
@@ -170,7 +171,7 @@ void OGLRenderer::DrawBoundMesh(int subLayer, int numInstances) {
 			glDrawArrays(mode, 0, count);
 		}
 	}
-	glBindVertexArray(0);
+	//glBindVertexArray(0);
 }
 
 void OGLRenderer::BindTextureToShader(const TextureBase*t, const std::string& uniform, int texUnit) const{
@@ -386,4 +387,5 @@ static void APIENTRY DebugCallback(GLenum source, GLenum type, GLuint id, GLenum
 
 	std::cout << "OpenGL Debug Output: " + sourceName + ", " + typeName + ", " + severityName + ", " + string(message) << std::endl;
 }
+#endif
 #endif

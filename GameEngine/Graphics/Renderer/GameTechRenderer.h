@@ -33,7 +33,8 @@ namespace NCL {
 				private:
 					bool isCollisionShapeEnabled = false;
 					bool isBroadPhaseAABBEnabled = false;
-				};
+				};	
+				//----------------------------- RendererSettings:
 				RendererSettings(reactphysics3d::PhysicsWorld* physicsWorld) : physicsWorld(physicsWorld), debugRendererSettings(physicsWorld) {};
 
 				void SetIsWireFrameModeEnabled(bool boolean) {
@@ -53,12 +54,25 @@ namespace NCL {
 				bool isWireFrameModeEnabled = false;
 				reactphysics3d::PhysicsWorld* physicsWorld;
 			};
+
+
+			enum class RenderMode
+			{
+				MainMenu,
+				SingleViewport,
+				SplitScreen
+			};
+			//----------------------------- GameTechRenderer:
+			
 			GameTechRenderer(GameWorld& world, reactphysics3d::PhysicsWorld* physicsWorld);
 			~GameTechRenderer();
 			virtual void Update(float dt);
 			
 			MeshGeometry*	LoadMesh(const string& name);
 			MeshGeometry* LoadQuad();
+			MeshGeometry* LoadQuadMesh() {
+				return OGLMesh::GenerateQuad();
+			}
 			MeshGeometry* LoadFlatMesh(int hVertexCount = 128, int wVertexCount = 128);
 			MeshGeometry* LoadHeightMap(const std::string& filename, int heightMultiplier = 10);
 			TextureBase*	LoadTexture(const string& name);
@@ -66,13 +80,19 @@ namespace NCL {
 			void AddHudTextures(const string& name, const Vector2& position, const Vector2& scale);
 
 			void UseFog(bool val) { useFog = val; }
-
 			RendererSettings settings;
-		protected:
-			void NewRenderLines();
-			void NewRenderText();
 
+			void SetRenderMode(RenderMode mode);
+
+		protected:
+			void NewRenderLines(Camera& cam);
+			void NewRenderText();
 			void RenderFrame()	override;
+			void RenderInSingleViewport();
+			void RenderMainMenu();
+			void RenderFirstFrame();
+			void RenderSecondFrame();
+			void ToggleDebugInfo();
 
 			OGLShader*		defaultShader;
 
@@ -81,16 +101,19 @@ namespace NCL {
 			void BuildObjectList();
 			void SortObjectList();
 			void RenderShadowMap();
-			void RenderCamera(); 
-			void RenderSkybox();
-			void RenderSky();
+			void RenderCamera(Camera& cam); 
+			void RenderSkybox(Camera& cam);
+			void RenderSky(Camera& cam);
 			void RenderHUD();
-			void RenderDebugInformation(); 
+			void RenderDebugInformation(bool isDebugInfo);
 			void RenderGUI(bool showWindow = true);
+
+			void ShowMainMenuWindow();
+			void ShowPauseMenuWindow();
 
 			void SetDebugStringBufferSizes(size_t newVertCount);
 			void SetDebugLineBufferSizes(size_t newVertCount);
-
+			
 			vector<const RenderObject*> activeObjects;
 
 			OGLShader*  debugShader;
@@ -108,7 +131,6 @@ namespace NCL {
 
 			//Debug data storage things
 			vector<Vector3> debugLineData;
-
 			vector<Vector3> debugTextPos;
 			vector<Vector4> debugTextColours;
 			vector<Vector2> debugTextUVs;
@@ -129,6 +151,9 @@ namespace NCL {
 			vector<TextureHUD> hudTextures;
 			bool useFog = false;
 			Vector3 fogColour = Vector3(0.6706f, 0.6824f, 0.6902f); //removing alpha value of fog colour to preserve the original transparency value of the fragment
+
+			bool isDebugInfo = false;
+			RenderMode renderMode = RenderMode::MainMenu;
 		};
 	}
 }

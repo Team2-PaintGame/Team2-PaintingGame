@@ -7,6 +7,7 @@ Comments and queries to: richard-gordon.davison AT ncl.ac.uk
 https://research.ncl.ac.uk/game/
 */
 #pragma once
+#ifdef _WIN32
 #include "ShaderBase.h"
 #include "glad\gl.h"
 
@@ -42,3 +43,4 @@ namespace NCL {
 		};
 	}
 }
+#endif

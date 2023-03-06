@@ -10,12 +10,12 @@ namespace NCL {
 		public:
 			PushdownMachine(PushdownState* initialState);
 			~PushdownMachine();
-
+			void Reset();
 			bool Update(float dt);
-
+			PushdownState* GetActiveState() const { return activeState; }
 		protected:
-			PushdownState* activeState;
-			PushdownState* initialState;
+			PushdownState* activeState = NULL;
+			PushdownState* initialState = NULL;
 
 			std::stack<PushdownState*> stateStack;
 		};

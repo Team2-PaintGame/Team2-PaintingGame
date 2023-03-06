@@ -15,8 +15,8 @@ using namespace CSC8508;
 
 Matrix4 biasMatrix = Matrix4::Translation(Vector3(0.5f, 0.5f, 0.5f)) * Matrix4::Scale(Vector3(0.5f, 0.5f, 0.5f));
 
-GameTechRenderer::GameTechRenderer(GameWorld& world, reactphysics3d::PhysicsWorld* physicsWorld) : OGLRenderer(*Window::GetWindow()), gameWorld(world), settings(physicsWorld) {
-
+GameTechRenderer::GameTechRenderer(GameWorld& world, reactphysics3d::PhysicsWorld* physicsWorld) : OGLRenderer(*Window::GetWindow()), gameWorld(world), settings(physicsWorld) 
+{
 	skybox = new OGLSkybox();
 
 	glEnable(GL_DEPTH_TEST);
@@ -84,18 +84,115 @@ GameTechRenderer::~GameTechRenderer()	{
 }
 
 void GameTechRenderer::RenderFrame() {
+
+	if (renderMode == RenderMode::MainMenu) {
+		RenderMainMenu();
+		return;
+	}
+	if (renderMode == RenderMode::SingleViewport) {
+		RenderInSingleViewport();
+		return;
+	}
+	if (renderMode == RenderMode::SplitScreen) {
+		RenderFirstFrame();
+		RenderSecondFrame();
+		return;
+	}
+}
+
+void NCL::CSC8508::GameTechRenderer::RenderInSingleViewport()
+{
 	glEnable(GL_CULL_FACE);
 	glClearColor(1, 1, 1, 1);
 	BuildObjectList();
 	SortObjectList();
 	RenderShadowMap();
-	RenderSkybox();
-	RenderCamera();
-	RenderDebugInformation();
+	RenderDebugInformation(isDebugInfo);
+	glViewport(0, 0, windowWidth, windowHeight);
+	RenderSkybox(*gameWorld.GetMainCamera());
+	RenderCamera(*gameWorld.GetMainCamera());
 	RenderHUD();
-	NewRenderLines();
+	glDisable(GL_CULL_FACE); //Todo - text indices are going the wrong way...
+	glDisable(GL_BLEND);
+	glDisable(GL_DEPTH_TEST);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	NewRenderLines(*gameWorld.GetMainCamera());
 	NewRenderText();
-	//RenderGUI();
+	RenderGUI();
+	glDisable(GL_BLEND);
+	glEnable(GL_DEPTH_TEST);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
+
+void GameTechRenderer::RenderMainMenu()
+{
+	glEnable(GL_CULL_FACE);
+	glClearColor(1, 1, 1, 1);
+	glViewport(0, 0, windowWidth, windowHeight);
+	RenderSkybox(*gameWorld.GetMainCamera());
+	RenderGUI(true);
+	glDisable(GL_BLEND);
+	glEnable(GL_DEPTH_TEST);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
+
+
+void NCL::CSC8508::GameTechRenderer::RenderFirstFrame()
+{
+	glEnable(GL_CULL_FACE);
+	glClearColor(1, 1, 1, 1);
+	BuildObjectList();
+	SortObjectList();
+	RenderShadowMap();
+	RenderDebugInformation(isDebugInfo);
+	glViewport(0, 0, windowWidth / 2, windowHeight);
+	RenderSkybox(*gameWorld.GetMainCamera());
+
+	glViewport(windowWidth / 2, 0, windowWidth / 2, windowHeight);
+	RenderSkybox(*gameWorld.GetSecondCamera());
+	glViewport(0, 0, windowWidth / 2, windowHeight);
+
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	RenderCamera(*gameWorld.GetMainCamera());
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	RenderHUD();
+	glDisable(GL_CULL_FACE); //Todo - text indices are going the wrong way...
+	glDisable(GL_BLEND);
+	glDisable(GL_DEPTH_TEST);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	NewRenderLines(*gameWorld.GetMainCamera());
+	NewRenderText();
+	
+	glDisable(GL_BLEND);
+	glEnable(GL_DEPTH_TEST);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
+
+void NCL::CSC8508::GameTechRenderer::RenderSecondFrame()
+{
+	glEnable(GL_CULL_FACE);
+	glClearColor(1, 1, 1, 1);
+	BuildObjectList();
+	SortObjectList();
+	RenderShadowMap();
+	RenderDebugInformation(isDebugInfo);
+	glViewport(windowWidth / 2, 0, windowWidth / 2, windowHeight);
+
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	RenderCamera(*gameWorld.GetSecondCamera());
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	RenderHUD();
+	glDisable(GL_CULL_FACE); //Todo - text indices are going the wrong way...
+	glDisable(GL_BLEND);
+	glDisable(GL_DEPTH_TEST);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	NewRenderLines(*gameWorld.GetSecondCamera());
+	NewRenderText();
+
+	RenderGUI();
+	glDisable(GL_BLEND);
+	glEnable(GL_DEPTH_TEST);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void GameTechRenderer::Update(float dt) {
@@ -160,14 +257,14 @@ void GameTechRenderer::RenderShadowMap() {
 	glCullFace(GL_BACK);
 }
 
-void GameTechRenderer::RenderSky() {
+void GameTechRenderer::RenderSky(Camera& cam) {
 	glDisable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
 	glDisable(GL_DEPTH_TEST);
 
 	//float screenAspect = (float)windowWidth / (float)windowHeight;
-	Matrix4 viewMatrix = gameWorld.GetMainCamera()->BuildViewMatrix();
-	Matrix4 projMatrix = gameWorld.GetMainCamera()->BuildProjectionMatrix();
+	Matrix4 viewMatrix = cam.BuildViewMatrix();
+	Matrix4 projMatrix = cam.BuildProjectionMatrix();
 	Matrix4 transformationMatrix = skybox->GetTransformationMatrix();
 
 
@@ -207,15 +304,15 @@ void GameTechRenderer::RenderSky() {
 	glEnable(GL_DEPTH_TEST);
 }
 
-void GameTechRenderer::RenderSkybox() {
+void GameTechRenderer::RenderSkybox(Camera& cam) {
 	glBindFramebuffer(GL_FRAMEBUFFER, skybox->GetFBO());
-	glClear(GL_COLOR_BUFFER_BIT);
-	RenderSky();
+	//glClear(GL_COLOR_BUFFER_BIT);
+	RenderSky(cam);
 	// ----------------------------------------------------------------------------------------------------
 	
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glClear(GL_COLOR_BUFFER_BIT);
-	RenderSky();
+	//glClear(GL_COLOR_BUFFER_BIT);
+	RenderSky(cam);
 }
 
 void GameTechRenderer::RenderHUD() {
@@ -238,7 +335,8 @@ void GameTechRenderer::RenderHUD() {
 	}
 }
 
-void GameTechRenderer::RenderDebugInformation() {
+void GameTechRenderer::RenderDebugInformation(bool isDebugInfo) {
+	if (isDebugInfo == false) { return; }
 	if (settings.GetIsDebugRenderingModeEnabled()) {
 		//render triangles
 		int numTri = settings.debugRendererSettings.debugRenderer.getNbTriangles();
@@ -264,30 +362,67 @@ void GameTechRenderer::RenderDebugInformation() {
 }
 
 void GameTechRenderer::RenderGUI(bool showWindow) {
-	// Start the Dear ImGui frame
-	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
-	
-	//show Main Window
-	ImGui::ShowDemoWindow(&showWindow);
-	ImGui::EndFrame();
-	
 	// Rendering
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-void GameTechRenderer::RenderCamera() {
-	if (settings.GetIsWireFrameModeEnabled()) {
+void GameTechRenderer::ShowMainMenuWindow()
+{
+	bool isMainMenu = true; //(gameState == MainMenu);
+
+	ImGui::Begin("Splat Main Menu", &isMainMenu);
+	ImGui::Text("This is going to be the splat main menu!");
+
+	if (ImGui::Button("Single Player"))
+	{
+		//SetGameState(SinglePlayer);
+	}
+	if (ImGui::Button("Split Screen"))
+	{
+		//SetGameState(SplitScreen);
+	}
+	if (ImGui::Button("LAN"))
+	{
+		//SetGameState(LAN);
+	}
+	if (ImGui::Button("Exit"))
+	{
+		//SetGameState(ExitGame);
+	}
+	ImGui::End();
+}
+
+void GameTechRenderer::ShowPauseMenuWindow()
+{
+	bool isMainMenu = true;// (gameState == MainMenu);
+	ImGui::Begin("Pause Menu", &isMainMenu);
+	if (ImGui::Button("Resume"))
+	{
+		//SetGameState(previousGameState);
+	}
+	if (ImGui::Button("Toggle Debug Info"))
+	{
+		//ToggleDebugInfo();
+	}
+	if (ImGui::Button("Exit to Main Menu"))
+	{
+		//SetGameState(MainMenu);
+	}
+	ImGui::End();
+}
+
+
+void GameTechRenderer::RenderCamera(Camera& cam) {
+	/*if (settings.GetIsWireFrameModeEnabled()) {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
 	else {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	}
+	}*/
 	//float screenAspect = (float)windowWidth / (float)windowHeight;
-	Matrix4 viewMatrix = gameWorld.GetMainCamera()->BuildViewMatrix();
-	Matrix4 projMatrix = gameWorld.GetMainCamera()->BuildProjectionMatrix();
+	Matrix4 viewMatrix = cam.BuildViewMatrix();
+	Matrix4 projMatrix = cam.BuildProjectionMatrix();
 
 	OGLShader* activeShader = nullptr;
 	int projLocation	= 0;
@@ -316,7 +451,7 @@ void GameTechRenderer::RenderCamera() {
 		OGLShader* shader = (OGLShader*)(*i).GetShader();
 		BindShader(shader);
 
-		//BindTextureToShader((OGLTexture*)(*i).GetDefaultTexture(), "mainTex", 0);
+		BindTextureToShader((OGLTexture*)(*i).GetDefaultTexture(), "mainTex", 0);
 		/*std::vector<TextureBase*> textures = (*i).GetTextures();
 		for (const auto& texture : textures) {
 			BindTextureToShader(texture, "mainTex", 0);
@@ -341,7 +476,7 @@ void GameTechRenderer::RenderCamera() {
 			cameraLocation = glGetUniformLocation(shader->GetProgramID(), "cameraPos");
 			jointsLocation = glGetUniformLocation(shader->GetProgramID(), "joints");
 
-			Vector3 camPos = gameWorld.GetMainCamera()->GetPosition();
+			Vector3 camPos = cam.GetPosition();
 			glUniform3fv(cameraLocation, 1, camPos.array);
 
 			glUniformMatrix4fv(projLocation, 1, false, (float*)&projMatrix);
@@ -399,19 +534,21 @@ void GameTechRenderer::RenderCamera() {
 
 		glUniform1i(hasVColLocation, !(*i).GetMesh()->GetColourData().empty());
 
+		glUniform1i(hasTexLocation, (OGLTexture*)(*i).GetDefaultTexture() ? 1 : 0);
 
+		
 		BindMesh((*i).GetMesh());
-		int layerCount = (*i).GetMesh()->GetSubMeshCount();
-		for (int index = 0; index < layerCount; ++index) {
+		int layercount = (*i).GetMesh()->GetSubMeshCount();
+		for (int index = 0; index < layercount; ++index) {
 
 			glUniform1i(hasTexLocation, i->GetTextures(index).size() ? 1 : 0);
 
 			//for the current submesh, get the vector of textures and send them to shader
-			std::vector<std::pair<std::string, TextureBase*>> subMeshTextures = i->GetTextures(index);
-			int texUnit = 2;
-			for (const auto& texturePairs : subMeshTextures) {
-				BindTextureToShader(texturePairs.second, texturePairs.first, texUnit);
-				texUnit++;
+			std::vector<std::pair<std::string, TextureBase*>> submeshtextures = i->GetTextures(index);
+			int texunit = 2;
+			for (const auto& texturepairs : submeshtextures) {
+				BindTextureToShader(texturepairs.second, texturepairs.first, texunit);
+				texunit++;
 			}
 			DrawBoundMesh(index, numInstances);
 		}
@@ -421,7 +558,7 @@ void GameTechRenderer::RenderCamera() {
 			glUniformMatrix4fv(jointsLocation, frameMatrices.size(), false, (float*)frameMatrices.data());
 		}
 	}
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
 MeshGeometry* GameTechRenderer::LoadMesh(const string& name) {
@@ -443,14 +580,14 @@ MeshGeometry* GameTechRenderer::LoadHeightMap(const std::string& filename, int h
 	return OGLMesh::GenerateHeightMap(filename, heightMultiplier);
 }
 
-void GameTechRenderer::NewRenderLines() {
+void GameTechRenderer::NewRenderLines(Camera& cam) {
 	const std::vector<Debug::DebugLineEntry>& lines = Debug::GetDebugLines();
 	if (lines.empty()) {
 		return;
 	}
 	//float screenAspect = (float)windowWidth / (float)windowHeight;
-	Matrix4 viewMatrix = gameWorld.GetMainCamera()->BuildViewMatrix();
-	Matrix4 projMatrix = gameWorld.GetMainCamera()->BuildProjectionMatrix();
+	Matrix4 viewMatrix = cam.BuildViewMatrix();
+	Matrix4 projMatrix = cam.BuildProjectionMatrix();
 	
 	Matrix4 viewProj  = projMatrix * viewMatrix;
 
@@ -530,8 +667,6 @@ void GameTechRenderer::NewRenderText() {
 	glBindVertexArray(0);
 }
 
-
-
 TextureBase* GameTechRenderer::LoadTexture(const string& name) {
 	return TextureLoader::LoadAPITexture(name);
 }
@@ -610,3 +745,13 @@ void GameTechRenderer::SetDebugLineBufferSizes(size_t newVertCount) {
 		glBindVertexArray(0);
 	}
 }
+
+void GameTechRenderer::SetRenderMode(RenderMode mode)
+{
+	renderMode = mode;
+}
+
+void GameTechRenderer::ToggleDebugInfo() {
+	isDebugInfo = !isDebugInfo;
+}
+

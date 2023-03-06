@@ -6,6 +6,7 @@ Use as you see fit!
 Comments and queries to: richard-gordon.davison AT ncl.ac.uk
 https://research.ncl.ac.uk/game/
 */
+#ifdef _WIN32
 #include "OGLMesh.h"
 #include "Vector2.h"
 #include "Vector3.h"
@@ -131,10 +132,10 @@ OGLMesh* OGLMesh::GenerateQuad() {
 	m->positions.emplace_back(Vector3(-1.0f, -1.0f, 0.0f));
 	m->positions.emplace_back(Vector3(1.0f, 1.0f, 0.0f));
 	m->positions.emplace_back(Vector3(1.0f, -1.0f, 0.0f));
-	m->texCoords.emplace_back(Vector2(0.0f, 1.0f));
 	m->texCoords.emplace_back(Vector2(0.0f, 0.0f));
-	m->texCoords.emplace_back(Vector2(1.0f, 1.0f));
+	m->texCoords.emplace_back(Vector2(0.0f, 1.0f));
 	m->texCoords.emplace_back(Vector2(1.0f, 0.0f));
+	m->texCoords.emplace_back(Vector2(1.0f, 1.0f));
 
 	for (int i = 0; i < 4; ++i) {
 		m->colours.emplace_back(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
@@ -306,3 +307,4 @@ void OGLMesh::RecalculateNormals() {
 
 	}
 }
+#endif

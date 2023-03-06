@@ -7,8 +7,6 @@ using namespace NCL;
 using namespace NCL::CSC8508;
 
 GameWorld::GameWorld()	{
-	mainCamera = new Camera();
-
 	shuffleConstraints	= false;
 	shuffleObjects		= false;
 	worldIDCounter		= 0;
@@ -16,7 +14,6 @@ GameWorld::GameWorld()	{
 }
 
 GameWorld::~GameWorld()	{
-	delete mainCamera;
 	ClearAndErase();
 }
 

@@ -45,6 +45,7 @@ source_group("AI\\Pathfinding" FILES ${AI_Pathfinding})
 set(Asset_Handling
     "./AssetsHandling/Assets.cpp"
     "./AssetsHandling/Assets.h"
+    "./AssetsHandling/AssetLoader.h"
     "./AssetsHandling/SimpleFont.cpp"
     "./AssetsHandling/SimpleFont.h"
     "./AssetsHandling/TextureLoader.cpp"
@@ -72,6 +73,8 @@ set(Entity_Components
     "./EntityComponents/Layer.h"
     "./EntityComponents/ParticleSystem.h"
     "./EntityComponents/ParticleSystem.cpp"
+    "./EntityComponents/SceneNode.h"
+    "./EntityComponents/SceneNode.cpp"
 )
 source_group("Entity Components" FILES ${Entity_Components})
 
@@ -90,8 +93,8 @@ set(Graphics_Lights
 source_group("Graphics\\Lights" FILES ${Graphics_Lights})
 
 set(Graphics_Renderer
-    "./Graphics/Renderer/GameTechRenderer.h"
-    "./Graphics/Renderer/GameTechRenderer.cpp"
+    #"./Graphics/Renderer/GameTechRenderer.h"
+    #"./Graphics/Renderer/GameTechRenderer.cpp"
 )
 source_group("Graphics\\Renderer" FILES ${Graphics_Renderer})
 
@@ -146,6 +149,8 @@ set(Scene
     "./Scene/PlayerBase.cpp" 
     "./Scene/PlayerController.h" 
     "./Scene/PlayerController.cpp" 
+    "./Scene/AnimationController.cpp"
+    "./Scene/AnimationController.h"
 )
 source_group("Scene" FILES ${Scene})
 
@@ -165,6 +170,8 @@ set(Windowing_and_Input
     "./WindowingAndInput/Mouse.h"
     "./WindowingAndInput/Window.cpp"
     "./WindowingAndInput/Window.h"
+    "./WindowingAndInput/InputBase.cpp"
+    "./WindowingAndInput/InputBase.h"
 )
 source_group("Windowing and Input" FILES ${Windowing_and_Input})
 
@@ -175,8 +182,23 @@ set(Windowing_and_Input__Win32
     "./WindowingAndInput/Win32/Win32Mouse.h"
     "./WindowingAndInput/Win32/Win32Window.cpp"
     "./WindowingAndInput/Win32/Win32Window.h"
+    "./WindowingAndInput/Win32/XBoxGamepad.cpp"
+    "./WindowingAndInput/Win32/XBoxGamepad.h" 
 )
 source_group("Windowing and Input\\Win32" FILES ${Windowing_and_Input__Win32})
+
+set(Windowing_and_Input__PS4
+    "./WindowingAndInput/PS4/PS4Gamepad.cpp"
+    "./WindowingAndInput/PS4/PS4Gamepad.h"
+    "./WindowingAndInput/PS4/PS4Window.cpp"
+    "./WindowingAndInput/PS4/PS4Window.h"
+    "./WindowingAndInput/PS4/PS4Frame.cpp"
+    "./WindowingAndInput/PS4/PS4Frame.h"
+    "./WindowingAndInput/PS4/PS4MemoryAware.cpp"
+    "./WindowingAndInput/PS4/PS4MemoryAware.h"
+
+)
+source_group("Windowing and Input\\PS4" FILES ${Windowing_and_Input__PS4})
 
 set(Utils
     "Utils.h"
@@ -196,14 +218,11 @@ set(ALL_FILES
     ${Graphics_Renderer}
     ${Graphics_Renderering_Support}
     ${Maths}
-    #${Networking}
-    #${Networking_enet_Files}
-    #${Physics}
-    #${Physics_Collision_Detection}
     ${Scene}
     ${Scene_Terrain}
     ${Windowing_and_Input}
     ${Windowing_and_Input__Win32}
+    ${Windowing_and_Input__PS4}
     ${Utils}
 )
 
@@ -275,6 +294,7 @@ include_directories("./")
 include_directories("Maths/")
 include_directories("WindowingAndInput/")
 include_directories("WindowingAndInput/Win32/")
+include_directories("WindowingAndInput/PS4/")
 include_directories("Physics/")
 include_directories("Physics/CollisionDetection/")
 include_directories("Scene/")
@@ -292,6 +312,7 @@ include_directories("AI/PathFinding/")
 include_directories("AI/PushdownAutomata/")
 include_directories("AI/StateMachine/")
 include_directories("../OpenGLRendering/")
+include_directories("../GNMRendering/")
 include_directories("../Middleware/ImGui/")
 
 set(ADDITIONAL_LIBRARY_DEPENDENCIES

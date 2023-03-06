@@ -1,10 +1,8 @@
 #pragma once
 #include <random>
 #include <functional>
-#include "Camera.h"
 
 namespace NCL {
-		class Camera;
 	namespace CSC8508 {
 		class GameObject;
 		class Constraint;
@@ -25,10 +23,6 @@ namespace NCL {
 
 			void AddConstraint(Constraint* c);
 			void RemoveConstraint(Constraint* c, bool andDelete = false);
-
-			Camera* GetMainCamera() const {
-				return mainCamera;
-			}
 
 			void ShuffleConstraints(bool state) {
 				shuffleConstraints = state;
@@ -57,8 +51,6 @@ namespace NCL {
 		protected:
 			std::vector<GameObject*> gameObjects;
 			std::vector<Constraint*> constraints;
-
-			Camera* mainCamera;
 
 			bool shuffleConstraints;
 			bool shuffleObjects;

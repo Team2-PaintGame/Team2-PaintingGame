@@ -2,8 +2,10 @@
 #include "Window.h"
 #include <algorithm>
 #include <math.h>
+#include "Utils.h"
 
 using namespace NCL;
+
 void Camera::SetBasicCameraParameters(float pitch, float yaw, const Vector3& position, float znear, float zfar) {
 	this->pitch = pitch;
 	this->yaw = yaw;
@@ -14,14 +16,16 @@ void Camera::SetBasicCameraParameters(float pitch, float yaw, const Vector3& pos
 
 void Camera::SetFirstPersonCamera() {
 	viewType = ViewType::FirstPerson;
-
+	offsetFromPlayer = Vector3(0.0f);
+	angleAroundPlayer = 0.0f;
 	CalculateFirstPersonView();
 }
 
-void Camera::SetThirdPersonCamera(PlayerBase* player) {
+void Camera::SetThirdPersonCamera(Transform* playerTransform, float angleAroundPlayer, Vector3 distanceFromPlayer) {
 	viewType = ViewType::ThirdPerson;
-	this->player = player;
-
+	playerTransform = this->playerTransform;
+	this->offsetFromPlayer = offsetFromPlayer;
+	this->angleAroundPlayer = angleAroundPlayer;
 	CalculateThirdPersonView(true);
 }
 
@@ -40,20 +44,24 @@ void Camera::SetOrthographicCameraParameters(float right, float left, float top,
 	this->bottom = bottom;
 	camType = CameraType::Orthographic;
 }
-/*
-Polls the camera for keyboard / mouse movement.
-Should be done once per frame! Pass it the msec since
-last frame (default value is for simplicities sake...)
-*/
-void Camera::UpdateCamera(float dt) {
+
+void Camera::Update(float dt) {
 	
-	pitch	-= (Window::GetMouse()->GetRelativePosition().y);
+	if (true) {
+		pitch -= (Window::GetMouse()->GetRelativePosition().y);
+		yaw -= (Window::GetMouse()->GetRelativePosition().x);
+	}
+	/*else {
+		pitch -= (gamepad->rightStickY);
+		yaw -= (gamepad->rightStickX);
+	}*/
+	
 
 	//Bounds check the pitch, to be between straight up and straight down ;)
 	pitch = std::min(pitch, 90.0f);
 	pitch = std::max(pitch, -90.0f);
 
-	yaw -= (Window::GetMouse()->GetRelativePosition().x);
+
 	if (yaw < 0) {
 		yaw += 360.0f;
 	}
@@ -61,44 +69,27 @@ void Camera::UpdateCamera(float dt) {
 		yaw -= 360.0f;
 	}
 	
-	if (viewType == ViewType::ThirdPerson) {
+	if (viewType == ViewType::FirstPerson) {
+		CalculateFirstPersonView();
+	}
+	else if (viewType == ViewType::ThirdPerson) {
 		CalculateThirdPersonView();
-	} 
-	else
-	{
-		//Freecam
-		Matrix4 rotation = Matrix4::Rotation(yaw, Vector3(0, 1, 0));
-		Vector3 forward = rotation * Vector3(0, 0, -1);
-		Vector3 right = rotation * Vector3(1, 0, 0);
-		float speed = 10.0f * dt;
-
-		if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::W)) {
-			position += forward * speed;
-		}
-		if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::S)) {
-			position -= forward * speed;
-		}
-		if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::A)) {
-			position -= right * speed;
-		}
-		if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::D)) {
-			position += right * speed;
-		}
-		if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::SHIFT)) {
-			position.y += speed;
-		}
-		if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::SPACE)) {
-			position.y -= speed;
-		}
 	}
 }
 
 void Camera::CalculateFirstPersonView() {
+	yaw -= (Window::GetMouse()->GetRelativePosition().x);
+	if (yaw < 0) {
+		yaw += 360.0f;
+	}
+	if (yaw > 360.0f) {
+		yaw -= 360.0f;
+	}
 }
 
 void Camera::CalculateThirdPersonView(bool init) 
 {
-	// Clamp the pitch value further
+	/*// Clamp the pitch value further
 	pitch = std::clamp(pitch, -25.0f, 25.0f);
 
 	Matrix4 rotation = Matrix4::Rotation(yaw, { 0, 1, 0 }) ;
@@ -108,7 +99,39 @@ void Camera::CalculateThirdPersonView(bool init)
 	Quaternion player_orientation(rotation);
 	player->GetTransform().SetOrientation(player_orientation);
 
-	position = player->GetTransform().GetPosition() + rotated_offset;
+	// Change the bounding volume orientation as well
+	reactphysics3d::Transform newRBTransform = reactphysics3d::Transform(player->GetRigidBody()->getTransform().getPosition(), ~player_orientation);
+	player->GetRigidBody()->setTransform(newRBTransform);
+
+	position = player->GetTransform().GetPosition() + rotated_offset;*/
+
+	angleAroundPlayer -= Window::GetMouse()->GetRelativePosition().x;
+
+	float vDist = offsetFromPlayer.z * cos(Maths::DegreesToRadians(pitch));
+	float hDist = offsetFromPlayer.z * sin(Maths::DegreesToRadians(pitch));
+
+	//euler angles (x => pitch, y => yaw, z => roll)
+	//yaw angle is the rotation around y axis
+
+	float theta = Maths::DegreesToRadians(playerTransform->GetOrientation().ToEuler().y + angleAroundPlayer);
+	float xOffset = hDist * sin(theta);
+	float zOffset = hDist * cos(theta);
+
+	Vector3 playerPosition = playerTransform->GetPosition();
+
+	position.x = playerPosition.x - xOffset;
+	position.z = playerPosition.z - zOffset;
+	position.y = playerPosition.y + vDist + offsetFromPlayer.y;
+
+	Matrix4 temp = Matrix4::BuildViewMatrix(position, playerPosition, Vector3(0, 1, 0));
+
+	Matrix4 modelMat = temp.Inverse();
+
+	Quaternion q(modelMat);
+	Vector3 angles = q.ToEuler();
+	if (init) pitch = angles.x;
+
+	yaw = angles.y;
 }
 
 /*

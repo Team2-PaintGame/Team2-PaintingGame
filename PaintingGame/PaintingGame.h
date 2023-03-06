@@ -1,59 +1,52 @@
 #pragma once
-
-#include <GameObject.h>
-#include <GameTechRenderer.h>
+#include "Player.h"
+#include "GameAssets.h"
+#include <Camera.h>
 #include <GameWorld.h>
-#include <map>
-#include <MeshMaterial.h>
-#include <NavigationGrid.h>
-#include <MeshAnimation.h>
-#include <Vector4.h>
-#include <Vector3.h>
-#include <RenderObject.h>
-#include <PlayerBase.h>
-#include <PlayerController.h>
-#include <reactphysics3d/reactphysics3d.h>
+#include <DirectionalLight.h>
+#include <SpotLight.h>
+#include <PointLight.h>
+#include "SceneNode.h"
+
+class Gamepad;
+class AnimationController;
 
 namespace NCL {
+	class MenuHandler;
 	namespace CSC8508 {
-		class PaintingGame {
+		//typedef std::function<void(Camera*)> CameraFunc;
+		class PaintingGame : public SceneNode {
 		public:
-			PaintingGame();
+			PaintingGame(GameAssets* assets);
 			~PaintingGame();
-			virtual void UpdateGame(float dt);
+			virtual void Update(float dt);
+			void Restart() { InitWorld(); }
+			virtual GameWorld* GetWorld() const { return world; }
+			virtual void OperateOnCameras(CameraFunc f);
 		protected:
-			void InitialiseAssets();
-			void InitCamera();
-			void InitWorld();
-			void InitiliazePlayer();
-#ifdef USEVULKAN
-			GameTechVulkanRenderer* renderer;
-#else
-			GameTechRenderer* renderer;
-#endif
+			//virtual void InitCamera(Camera& camera, PlayerBase& focus, float aspect_multiplier = 1.0f);
+			virtual void InitWorld();
+
+			virtual Player* CreatePlayer(Vector3 position);
+			virtual Player* AddPlayer(Vector3 position) { return nullptr; };
+
 			GameWorld* world;
 
 			bool useGravity = true;
 			bool useFog = true;
-			bool thirdPersonCamera;
-
-			float		forceMagnitude;
-
-			std::map<std::string, MeshGeometry*> meshes;
-			std::map<std::string, MeshMaterial*> meshMaterials;
-			std::map<std::string, MeshAnimation*> meshAnimations;
-
-			std::map<std::string, TextureBase*> textures;
-			std::map<std::string, ShaderBase*> shaders;
-
-			//Coursework Additional functionality	
-			float remainingTime = 30;
-			PlayerBase* player = NULL;
-			PlayerController* playerController;
-			
+		
 			//Create a physics world 
 			reactphysics3d::PhysicsCommon physicsCommon;
-			reactphysics3d::PhysicsWorld* physicsWorld = NULL; 
+			reactphysics3d::PhysicsWorld* physicsWorld = NULL;
+			GameAssets* assets;
+
+			//containers for lights
+			std::vector<DirectionalLight> directionalLights;
+			std::vector<PointLight> pointLights;
+			std::vector<SpotLight> spotLights;
+
+			//container for cameras
+			std::vector<Camera*> activeCameras;
 		};
 	}
 }

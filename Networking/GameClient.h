@@ -17,6 +17,8 @@ namespace NCL {
 			void SendPacket(GamePacket&  payload);
 
 			void UpdateClient();
+			bool okToSpawn;
+
 		protected:	
 			_ENetPeer*	netPeer;
 		};

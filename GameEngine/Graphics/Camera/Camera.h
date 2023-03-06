@@ -11,10 +11,11 @@ https://research.ncl.ac.uk/game/
 #include "Vector3.h"
 #include "Quaternion.h"
 #include "Maths.h"
-#include "PlayerBase.h"
+#include "Transform.h"
 
 namespace NCL {
 	using namespace NCL::Maths;
+	using namespace NCL::CSC8508;
 	enum class CameraType {
 		Orthographic,
 		Perspective
@@ -28,12 +29,12 @@ namespace NCL {
 		Camera(void) = default;
 		void SetBasicCameraParameters(float pitch, float yaw, const Vector3& position, float znear = 1.0f, float zfar = 100.0f);
 		void SetFirstPersonCamera();
-		void SetThirdPersonCamera(PlayerBase* player);
+		void SetThirdPersonCamera(Transform* playerTransform, float angleAroundPlayer = 180.0f, Vector3 distanceFromPlayer = Vector3(0, 3.0f, 13));
 		void SetPerspectiveCameraParameters(float aspect, float fov = 45.0f);
 		void SetOrthographicCameraParameters(float right, float left, float top, float bottom);
 		~Camera(void) = default;
 
-		void UpdateCamera(float dt);
+		void Update(float dt);
 
 		void CalculateFirstPersonView();
 		void CalculateThirdPersonView(bool init = false);
@@ -71,6 +72,8 @@ namespace NCL {
 
 		//third person camera params
 		Vector3 offsetFromPlayer = Vector3(0, 3.0f, 13);
-		PlayerBase* player = NULL;
+		float angleAroundPlayer = 180.0f;
+		Transform* playerTransform;
+		//PlayerBase* player = NULL;
 	};
 }
