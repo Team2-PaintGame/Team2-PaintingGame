@@ -72,13 +72,13 @@ void PaintingGame::InitialiseAssets() {
 	meshes.insert(std::make_pair("sceneMesh", renderer->LoadHeightMap("Scene.msh")));
 
 	
-	meshes.insert(std::make_pair("throneMesh", renderer->LoadMesh("SanctumThrone.msh")));
-	textures.insert(std::make_pair("throneColour", renderer->LoadTexture("SanctumThrone/InSanct_Max_Throne_A_Colour.tga")));
+//	meshes.insert(std::make_pair("throneMesh", renderer->LoadMesh("SanctumThrone.msh")));
+//	textures.insert(std::make_pair("throneColour", renderer->LoadTexture("SanctumThrone/InSanct_Max_Throne_A_Colour.tga")));
 //	textures.insert(std::make_pair("throneMetal", renderer->LoadTexture("SanctumThrone/InSanct_Max_Throne_A_Metal.tga")));
 //	textures.insert(std::make_pair("throneNormal", renderer->LoadTexture("SanctumThrone/InSanct_Max_Throne_A_Normal.tga")));
 
-	meshes.insert(std::make_pair("catMesh", renderer->LoadMesh("SanctumCat.msh")));
-	textures.insert(std::make_pair("catColour", renderer->LoadTexture("SanctumThrone/InSanct_Max_Cat_Colour.tga")));
+//	meshes.insert(std::make_pair("catMesh", renderer->LoadMesh("SanctumCat.msh")));
+//	textures.insert(std::make_pair("catColour", renderer->LoadTexture("SanctumThrone/InSanct_Max_Cat_Colour.tga")));
 
 	textures.insert(std::make_pair("basicTex", renderer->LoadTexture("checkerboard.png")));
 
