@@ -12,7 +12,7 @@ PaintingGame::PaintingGame(GameAssets* assets) {
 	this->assets = assets;
 	physicsWorld = physicsCommon.createPhysicsWorld();
 	physicsWorld->setIsGravityEnabled(useGravity);
-
+	world = new GameWorld;
 	InitWorld();
 	//renderer->settings.SetIsDebugRenderingModeEnabled(true);
 	//renderer->settings.debugRendererSettings.SetIsCollisionShapeDisplayed(true);
@@ -21,7 +21,7 @@ PaintingGame::PaintingGame(GameAssets* assets) {
 
 PaintingGame::~PaintingGame() {
 	physicsCommon.destroyPhysicsWorld(physicsWorld);
-	world->ClearAndErase();
+	delete world;
 }
 
 //void PaintingGame::InitCamera(Camera& camera, PlayerBase& focus, float aspect_multiplier)
