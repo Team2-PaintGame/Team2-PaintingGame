@@ -33,6 +33,10 @@ namespace NCL {
 
 			void Restart() { InitWorld(); }
 
+			void AddSecurityAI();
+			PlayerBase* InitSecondPlayer();
+			void AddStructureFromFile(const NCL::Maths::Vector3& position, const std::string filename);
+
 		protected:
 			void InitialiseAssets();
 
@@ -41,6 +45,7 @@ namespace NCL {
 
 			virtual PlayerBase* CreatePlayer(Vector3 position);
 			virtual PlayerBase* AddPlayer(Camera* camera, Vector3 position, Gamepad* gamepad = nullptr) { return nullptr; };
+			virtual void AddSecurityAI(Vector3 position, PlayerBase* target1, PlayerBase* target2);
 			void SetColorOfMesh(MeshGeometry* mesh, Vector4 color);
 #ifdef USEVULKAN
 			GameTechVulkanRenderer* renderer;

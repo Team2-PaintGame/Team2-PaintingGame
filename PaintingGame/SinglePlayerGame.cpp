@@ -13,6 +13,7 @@ SinglePlayerGame::SinglePlayerGame(GameTechRenderer* render, GameWorld* world, r
 	InitWorld();
 	AddPlayer(world->GetMainCamera(), Vector3(10.0f, 30.0f, 10.0f), nullptr);
 	InitCamera(*this->world->GetMainCamera(), *player);
+	AddSecurityAI(Vector3(0,0,0), player, nullptr);
 }
 
 SinglePlayerGame::~SinglePlayerGame() {

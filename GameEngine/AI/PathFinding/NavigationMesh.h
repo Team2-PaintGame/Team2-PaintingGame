@@ -48,11 +48,11 @@ namespace NCL {
 				}
 			};
 
-
+		public:
 			
 			std::vector<NavTri>		allTris;
 			std::vector<Vector3>	allVerts;
-		public:
+	
 			NavTri* RemoveBestTri(std::vector<NavTri*>& list);
 			/*const*/ NavTri* GetTriForPosition(const Vector3& pos) /*const*/;
 			bool  TriInList(NavTri* n, std::vector<NavTri*>& list) /*const*/;

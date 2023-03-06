@@ -29,10 +29,9 @@ namespace NCL::CSC8508 {
 		callbackPlayerOne = new SecurityCallbackClass(playerOne);
 		callbackPlayerTwo = new SecurityCallbackClass(playerTwo);
 
-		//FindNavigableNodes("GameMaze3.txt", navigableNodes);
-		//navigationGrid = new NavigationGrid("GameMaze3.txt");
-		FindNavigableNodes("SplatAtTheMuseum.txt", navigableNodes);
-		navigationGrid = new NavigationGrid("SplatAtTheMuseum.txt");
+//		FindNavigableNodes("SplatAtTheMuseum.txt", navigableNodes);
+//		navigationGrid = new NavigationGrid("SplatAtTheMuseum.txt");
+		navigationMesh = new NavigationMesh("NewLevel4.navmesh");
 		navigationPath = new NavigationPath();
 
 		InitBehaviorTree();
@@ -42,30 +41,34 @@ namespace NCL::CSC8508 {
 	}
 	SecurityGuard::~SecurityGuard()
 	{
+		
+
+
+		//delete chooseDestination;
+		//delete goToDestination;
+
+		//delete lookForPlayer;
+		//delete chaseThePlayer;
+		//delete attackThePlayer;
+
+		//delete patrolSequence;
+		//delete chaseSequence;
 		delete rootSelector;
-		delete patrolSequence;
-		delete chaseSequence;
-
-		delete chooseDestination;
-		delete goToDestination;
-
-		delete lookForPlayer;
-		delete chaseThePlayer;
-		delete attackThePlayer;
 
 		delete callbackPlayerOne;
 		delete callbackPlayerTwo;
 
-		delete navigationGrid;
+		delete navigationMesh;
 		delete navigationPath;
 
-		delete renderObject; // Is this deleted here or elsewhere?
+	//	delete renderObject; // Is this deleted here or elsewhere?
 
-		physicsCommon.destroyBoxShape(boundingVolume);
+//		physicsCommon.destroyBoxShape(boundingVolume);
 
 	}
 	void SecurityGuard::Update(float dt)
 	{
+		DrawNavTris();
 		DisplayPathfinding();
 		if (state == Initialise) {
 			state = Ongoing;
@@ -80,7 +83,7 @@ namespace NCL::CSC8508 {
 		if (state == Failure) {
 			state = Initialise;
 		}
-
+		
 	}
 	void SecurityGuard::InitBehaviorTree()
 	{
@@ -130,11 +133,21 @@ namespace NCL::CSC8508 {
 			else if (state == Ongoing) {
 				Vector3 destination = ChooseDestination();
 				Vector3 securityPosition = this->GetTransform().GetPosition();
-				securityPosition = FindClosestNode(securityPosition);
-				bool foundPath = navigationGrid->FindPath(securityPosition, destination, *navigationPath);
+//				securityPosition = FindClosestNode(securityPosition);
+				bool foundPath = navigationMesh->FindPath(securityPosition, destination, *navigationPath);
+				if (foundPath) {
+					std::cout << "Choose Destination - Found Path\n";
+					std::cout << "Size of outpath: " << navigationPath->waypoints.size() << "\n";
+					return Success;
+				}
+				else
+				{
+					std::cout << "Choose Destination - Found NOT Path\n";
+					//return Failure;
+				}
 				
-				//std::cout << "Choose Destination - Found Path\n";
-				return Success;
+				
+				
 			}
 			return state;
 			}
@@ -149,7 +162,7 @@ namespace NCL::CSC8508 {
 				state = Ongoing;
 			}
 			else if (state == Ongoing) {
-				
+
 				Vector3 direction = navigationPath->waypoints.back() - this->GetTransform().GetPosition();
 				Vector3 velocity = rigidBody->getLinearVelocity();
 								
@@ -198,6 +211,7 @@ namespace NCL::CSC8508 {
 				chasedPlayer = LookForPlayers();
 				if (chasedPlayer != nullptr) {
 					std::cout << " Looking for Player - Can see Player\n";
+					
 					state = Success;
 				}
 				else {
@@ -211,30 +225,38 @@ namespace NCL::CSC8508 {
 	}
 	void SecurityGuard::InitChaseThePlayer()
 	{
-		chaseThePlayer = new BehaviourAction("Chase the goat ", [&](float dt, BehaviourState state)->BehaviourState {
+		chaseThePlayer = new BehaviourAction("Chase the player ", [&](float dt, BehaviourState state)->BehaviourState {
 
 			if (state == Initialise) {
 				Vector3 playerPosition = chasedPlayer->GetTransform().GetPosition();
 				Vector3 securityPosition = this->GetTransform().GetPosition();
-				playerPosition = FindClosestNode(playerPosition);
-				securityPosition = FindClosestNode(securityPosition);
 
-				navigationGrid->FindPath(securityPosition, playerPosition, *navigationPath);
+
+				bool foundPath = navigationMesh->FindPath(securityPosition, playerPosition, *navigationPath);
+				if (foundPath) {
 					std::cout << " Chase the Player - Path found\n";
-				state = Ongoing;
+					std::cout << "Size of outpath: " << navigationPath->waypoints.size() << "\n";
+					state = Ongoing;
+				}
+				else {
+					std::cout << " Chase the Player - Path NOT found\n";
+					state = Failure;
+				}
+				
 			}
 			else if (state == Ongoing) {
 				Vector3 direction = navigationPath->waypoints.back() - this->GetTransform().GetPosition();
-				Vector3 nextDirection = (navigationPath->waypoints.back() - 1) - this->GetTransform().GetPosition();
+//				Vector3 nextDirection = (navigationPath->waypoints.back() - 1) - this->GetTransform().GetPosition();
 
 				timeAccumulator += dt;
 				if (timeAccumulator >= 1.5) {
 					bool isPlayerVisible = LookForPlayer(chasedPlayer);
-					//	std::cout << "1.5 seconds accumulated\n";
+					std::cout << "1.5 seconds accumulated\n";
 					timeAccumulator = 0.0f;
 					if (isPlayerVisible) {
 						navigationPath->Clear();
-						return Failure;
+						rootSelector->Reset();
+						return Initialise;
 					}
 
 				}
@@ -292,22 +314,39 @@ namespace NCL::CSC8508 {
 	GameObject* SecurityGuard::LookForPlayers()
 	{
 		bool isPlayerOneVisible = LookForPlayer(playerOne);
-		bool isPlayerTwoVisible = LookForPlayer(playerTwo);
 
-		if (isPlayerOneVisible && isPlayerTwoVisible) //both players are visible
+		if (playerTwo == nullptr) // only one player game
 		{
-			return FindClosestPlayer();
+			if (isPlayerOneVisible) 
+			{
+				return playerOne;
+			}
+			else
+			{
+				return nullptr;
+			}
 		}
-		else if (isPlayerOneVisible)
+
+		else					// two player game
 		{
-			return playerOne;
+			bool isPlayerTwoVisible = LookForPlayer(playerTwo);
+			if (isPlayerOneVisible && isPlayerTwoVisible)
+			{
+				return FindClosestPlayer();
+			}
+			else if (isPlayerOneVisible)
+			{
+				return playerOne;
+			}
+			else if (isPlayerTwoVisible)
+			{
+				return playerTwo;
+			}
+			else
+				return nullptr;
+
 		}
-		else if (isPlayerTwoVisible)
-		{
-			return playerTwo;
-		}
-		else 
-			return nullptr;
+
 	}
 
 	GameObject* SecurityGuard::FindClosestPlayer()
@@ -383,11 +422,24 @@ namespace NCL::CSC8508 {
 
 	Vector3 SecurityGuard::ChooseDestination() 
 	{
-		int numNodes = navigableNodes.size();
+		
+		int numNodes = navigationMesh->allTris.size();
 		int randomNum = rand() % numNodes;
-		Vector3 destination = navigableNodes[randomNum];
+		Vector3 destination = navigationMesh->allTris[randomNum].centroid;
 		//std::cout << "ChooseDestination: " << destination << "\n";
 		return destination;
+	}
+	void SecurityGuard::DrawNavTris() {
+		int index1 = -1;
+		int index2 = -1;
+		int index3 = -1;
+		for (auto i : navigationMesh->allTris) {
+			index1 = i.indices[0];
+			index2 = i.indices[1];
+			index3 = i.indices[2];
+			Debug::DrawTriangle(navigationMesh->allVerts[index1], navigationMesh->allVerts[index2], navigationMesh->allVerts[index3]);
+		}
+
 	}
 
 	void SecurityGuard::DisplayPathfinding() {

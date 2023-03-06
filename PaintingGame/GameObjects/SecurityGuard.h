@@ -13,7 +13,7 @@
 #include "SecurityCallbackClass.h"
 #include "NavigationGrid.h"
 #include "NavigationPath.h"
-
+#include "NavigationMesh.h"
 
 namespace NCL::CSC8508 {
 
@@ -48,7 +48,7 @@ namespace NCL::CSC8508 {
 		GameObject* FindClosestPlayer();
 		void DetermineSpeed();
 		void RaycastAgainstPlayer(GameObject* player, SecurityCallbackClass* callbackClass, bool& isPlayerVisible);
-
+		void DrawNavTris();
 		
 
 	protected:
@@ -82,8 +82,9 @@ namespace NCL::CSC8508 {
 
 		vector <Vector3> navigableNodes;
 		
-		NavigationGrid* navigationGrid;
+//		NavigationGrid* navigationGrid;
 		NavigationPath* navigationPath;
+		NavigationMesh* navigationMesh;
 
 		GameObject* playerOne;
 		GameObject* playerTwo;

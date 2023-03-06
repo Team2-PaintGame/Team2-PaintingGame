@@ -51,7 +51,9 @@ for this module, even in the coursework, but you can add it if you like!
 
 */
 void PaintingGame::InitialiseAssets() {
-	meshes.insert(std::make_pair("floorMesh", renderer->LoadMesh("Arena.msh")));
+//	meshes.insert(std::make_pair("floorMesh", renderer->LoadMesh("Arena.msh")));
+	meshes.insert(std::make_pair("floorMesh", renderer->LoadMesh("NewLevel4.msh")));  
+
 	meshes.insert(std::make_pair("cubeMesh", renderer->LoadMesh("cube.msh")));
 	meshes.insert(std::make_pair("mainChar", renderer->LoadMesh("Aj_TPose.msh")));
 	meshes.insert(std::make_pair("sphereMesh", renderer->LoadMesh("sphere.msh")));
@@ -147,23 +149,23 @@ void PaintingGame::InitCamera(Camera& camera, PlayerBase& focus, float aspect_mu
 void PaintingGame::InitWorld() {
 	world->ClearAndErase();
 
-	world->AddGameObject(new Floor(*physicsCommon, physicsWorld, Vector3(-100, 0, 100), meshes.at("floorMesh"), CreateConcaveCollision("floorMesh"),  textures.at("basicTex"), shaders.at("basicShader"), 1));
+	world->AddGameObject(new Floor(*physicsCommon, physicsWorld, Vector3(0, 0, 0), meshes.at("floorMesh"), CreateConcaveCollision("floorMesh"),  textures.at("basicTex"), shaders.at("basicShader"), 1));
 
 	for (int x = 0; x < 15; ++x) {
 		world->AddGameObject(new Box(*physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("cubeMesh"), textures.at("boxTGA"), shaders.at("basicShader"), 2));
 	}
-}
 
-	world->AddGameObject(new Floor(*physicsCommon, physicsWorld, Vector3(0, 0, 0), meshes.at("sceneMesh"), textures.at("basicTex"), shaders.at("basicShader"), 1));
 
-	//for (int x = 0; x < 15; ++x) {
-	//	world->AddGameObject(new Box(physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("cubeMesh"), textures.at("doorTex"), shaders.at("basicShader"), 2));
-	//}
+	//world->AddGameObject(new Floor(*physicsCommon, physicsWorld, Vector3(0, 0, 0), meshes.at("sceneMesh"), textures.at("basicTex"), shaders.at("basicShader"), 1));
+
+	
 	//AddStructureFromFile(Vector3(-75.0, 5.0f, -75.0f), "SplatAtTheMuseum.txt");
 	//AddSecurityAI();
 	//world->AddGameObject(new MuseumItem(*physicsCommon, physicsWorld, Vector3(25, 25, 25), meshes.at("throneMesh"), textures.at("basicTex"), shaders.at("basicShader"), Vector3(10, 10, 10), "Throne"));
 	//world->AddGameObject(new MuseumItem(*physicsCommon, physicsWorld, Vector3(50, 25, 50), meshes.at("catMesh"), textures.at("basicTex"), shaders.at("basicShader"), Vector3(10, 10, 10), "Cat"));
-PlayerBase* PaintingGame::CreatePlayer(Vector3 position) {
+}
+
+PlayerBase* PaintingGame::CreatePlayer(NCL::CSC8508::Vector3 position) {
 	AnimationController* animController = new AnimationController();
 	animController->SetIdleAnimation(meshAnimations.at("mainCharIdleAnim"));
 	animController->SetRunAnimation(meshAnimations.at("mainCharRunAnim"));
@@ -228,14 +230,14 @@ void PaintingGame::AddStructureFromFile(const NCL::Maths::Vector3& position, con
 	// Trying to fuse horizontal walls into one to save on creating too many GameObjects
 	float wall_counter = 1.0f;
 	int column_counter = 1.0f;
-	Vector3 old_pos;
+	NCL::CSC8508::Vector3 old_pos;
 
 	for (int y = 0; y < gridHeight; ++y) {
 		for (int x = 0; x < gridWidth; ++x) {
 			int index = y * gridWidth + x;
 			char type = grid[index];
 
-			Vector3 pos = Vector3((float)(x * nodeSize), 0, (float)(y * nodeSize));
+			NCL::CSC8508::Vector3 pos = NCL::CSC8508::Vector3((float)(x * nodeSize), 0, (float)(y * nodeSize));
 
 			if (wall_counter > 1)
 			{
@@ -290,26 +292,13 @@ void PaintingGame::AddStructureFromFile(const NCL::Maths::Vector3& position, con
 	return;
 }
 
-PlayerBase* PaintingGame::GetPlayer()
-{
-	return players[0];
-}
 
-void PaintingGame::AddSecurityAI()
+void PaintingGame::AddSecurityAI(NCL::CSC8508::Vector3 position, PlayerBase* target1, PlayerBase* target2) // Vector3(-70.0f, 5.0f, 60.0f) // Change the hardcoded two targets
 {
 	if(menuHandler->GetGameState() != GameState::MainMenu)
-	world->AddGameObject(new SecurityGuard(*physicsCommon, physicsWorld, "Security Guard", Vector3(-70.0f, 5.0f, 60.0f), meshes.at("cubeMesh"), textures.at("basicTex"), shaders.at("basicShader"), Vector3(2, 2, 2), players[0], players[1]));
+	world->AddGameObject(new SecurityGuard(*physicsCommon, physicsWorld, "Security Guard", position, meshes.at("cubeMesh"), textures.at("basicTex"), shaders.at("basicShader"), Vector3(2, 2, 2), target1, target2));
 }
-PlayerBase* PaintingGame::InitSecondPlayer() {
-	animController->SetIdleAnimation(meshAnimations.at("mainCharIdleAnim"));
-	animController->SetRunAnimation(meshAnimations.at("mainCharRunAnim"));
-	animController->SetTauntAnimation(meshAnimations.at("mainCharTauntAnim"));
-	players[1] = new PlayerBase(*physicsCommon, physicsWorld, Vector3(10, 10, 0), meshes.at("mainChar"), textures.at("basicTex"), animController, shaders.at("skinningShader"), 5);
-	world->AddGameObject(players[1]);
-	playerControllers[1] = new PlayerController(world->GetSecondCamera(), players[1], gamePad);
 
-	return players[1];
-}
 void NCL::CSC8508::PaintingGame::SetColorOfMesh(MeshGeometry* mesh, Vector4 color)
 {
 	vector<Vector4> vertexColor;
@@ -337,4 +326,4 @@ void NCL::CSC8508::PaintingGame::SetColorOfMesh(MeshGeometry* mesh, Vector4 colo
 
 	mesh->SetVertexColours(vertexColor);
 	mesh->UploadToGPU();
-}
+} 
