@@ -1,6 +1,6 @@
 #include "SinglePlayerGame.h"
 #include "GameManager.h"
-#include "Win32Window.h"
+#include "PlayerControllers.h"
 
 using namespace NCL;
 using namespace CSC8508;

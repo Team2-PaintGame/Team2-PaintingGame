@@ -6,7 +6,7 @@
 #include <OGLAssetLoader.h>
 #include <GNMAssetLoader.h>
 #include "PlayerController.h"
-#include "PS4Gamepad.h"
+#include "PlayerControllers.h"
 
 namespace NCL {
 	namespace CSC8508 {

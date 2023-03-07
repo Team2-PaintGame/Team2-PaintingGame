@@ -19,7 +19,7 @@ PlayerBase::~PlayerBase() {
 	if (rigidBody) {
 		physicsWorld->destroyRigidBody(rigidBody);
 	}
-	physicsCommon.destroyBoxShape(dynamic_cast<rp3d::BoxShape*>(boundingVolume));
+	physicsCommon.destroyCapsuleShape(dynamic_cast<rp3d::CapsuleShape*>(boundingVolume));
 
 	delete camera;
 }
@@ -32,8 +32,7 @@ void PlayerBase::SetYawPitch(float dx, float dy) {
 	yaw -= dx; 
 	pitch -= dy;
 
-	pitch = std::min(pitch, 90.0f);
-	pitch = std::max(pitch, -90.0f);
+	std::clamp(pitch, -25.f, 25.0f);
 
 	if (yaw < 0) {
 		yaw += 360.0f;

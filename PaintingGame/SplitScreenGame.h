@@ -20,7 +20,7 @@ namespace NCL {
 			const int maxPlayers = 2;
 			std::vector<Player*> players;
 			std::vector<PlayerController*> playerControllers;
-			PlayerControllerFactory* secondPlayerControllerFactory;
+			PlayerControllerFactory* secondPlayerControllerFactory = NULL;
 		};
 	}
 }

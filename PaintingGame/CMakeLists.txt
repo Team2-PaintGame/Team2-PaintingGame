@@ -37,11 +37,18 @@ set(GameObjects
     "./GameObjects/Floor.h"
     "./GameObjects/Ink.h"
     "./GameObjects/Ink.cpp"
-    "./GameObjects/Player.h"
-    "./GameObjects/Player.cpp"
     "./GameObjects/PaintingObject.h"
 )
 source_group("Game Objects" FILES ${GameObjects})
+
+set(Player
+    "./Player/Player.h"
+    "./Player/Player.cpp"
+    "./Player/PlayerController.h" 
+    "./Player/PlayerController.cpp" 
+    "./Player/PlayerControllers.h" 
+)
+source_group("Player" FILES ${Player})
 
 set(Renderers
     "./Renderers/GNMPaintingGameRenderer.h"
@@ -79,7 +86,7 @@ set(ImGui
     "../Middleware/ImGui/imstb_rectpack.h" 
     "../Middleware/ImGui/imstb_textedit.h" 
     "../Middleware/ImGui/imstb_truetype.h" 
-     "../Middleware/ImGui/imconfig.h" 
+    "../Middleware/ImGui/imconfig.h" 
 )
 source_group("ImGui Files" FILES ${ImGui})
 
@@ -87,6 +94,7 @@ set(ALL_FILES
     ${Header_Files}
     ${Source_Files}
     ${GameObjects}
+    ${Player}
     ${Renderers}
     ${Screens}
     ${ImGui}
@@ -243,6 +251,7 @@ include_directories(".")
 include_directories("./GameObjects")
 include_directories("./Renderers")
 include_directories("./Screens")
+include_directories("./Player")
 include_directories("../OpenGLRendering/")
 include_directories("../GNMRendering/")
 include_directories("../Networking/")

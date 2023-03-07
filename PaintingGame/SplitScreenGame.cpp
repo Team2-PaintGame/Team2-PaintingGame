@@ -1,6 +1,6 @@
 #include "SplitScreenGame.h"
 #include "GameManager.h"
-#include "XBoxGamepad.h"
+#include "PlayerControllers.h"
 
 using namespace NCL;
 using namespace CSC8508;
@@ -31,7 +31,9 @@ void SplitScreenGame::InitPlayers() {
 	Player* player2 = AddPlayer(Vector3(20.0f, 10.0f, 20.0f));
 
 	playerControllers.push_back(GameManager::sConfig.playerControllerFactory->createPlayerController(player1));
-	playerControllers.push_back(secondPlayerControllerFactory->createPlayerController(player2));
+	if (secondPlayerControllerFactory) {
+		playerControllers.push_back(secondPlayerControllerFactory->createPlayerController(player2));
+	}
 	player1->GetCamera()->SetViewportDivider(0.5f);
 	player2->GetCamera()->SetViewportDivider(0.5f);
 	player1->GetCamera()->SetViewportSize(Vector2(0.0f, 0.0f));
