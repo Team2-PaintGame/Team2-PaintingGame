@@ -60,7 +60,7 @@ Player* PaintingGame::CreatePlayer(Vector3 position) {
 	animations.insert(std::make_pair("idleAnimation", assets->GetMeshAnimation("mainCharIdleAnim")));
 	animations.insert(std::make_pair("moveAnimation", assets->GetMeshAnimation("mainCharRunAnim")));
 
-	return new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetTexture("doorTex"), assets->GetShader("skinningShader"), animations, 5);
+	return new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("mainCharMat"), assets->GetShader("skinningShader"), animations, 5);
 }
 
 //bool PaintingGame::SelectObject() {
