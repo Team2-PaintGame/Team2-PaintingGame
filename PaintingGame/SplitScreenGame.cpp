@@ -20,6 +20,7 @@ SplitScreenGame::~SplitScreenGame() {
 	{
 		delete p;
 	}
+	delete secondPlayerControllerFactory;
 	playerControllers.clear();
 }
 
