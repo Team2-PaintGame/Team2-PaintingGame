@@ -4,6 +4,7 @@
 #include "GameWorld.h"
 #include <OGLTexture.h>
 #include "OGLShader.h"
+#include "Camera.h"
 
 using namespace NCL;
 using namespace CSC8508;

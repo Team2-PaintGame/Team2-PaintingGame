@@ -1,6 +1,6 @@
 #include "SplitScreenGame.h"
 #include "GameManager.h"
-#include "XBoxGamepad.h"
+#include "PlayerControllers.h"
 
 using namespace NCL;
 using namespace CSC8508;

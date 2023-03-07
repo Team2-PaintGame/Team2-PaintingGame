@@ -1,14 +1,13 @@
 #include "PlayerController.h"
 #include "Utils.h"
 #include <algorithm>
-#include "../PaintingGame/Screens/GameScreen.h"
+#include "GameScreen.h"
 using namespace NCL;
 
 PlayerController::PlayerController(PlayerBase* player) : player(player) {}
 
 void PlayerController::Update(float dt) {
-	if (Pause())
-	{
+	if (Pause()) {
 		GameScreen::GamePauseCallback();
 		return;
 	}
@@ -45,6 +44,7 @@ void PlayerController::Update(float dt) {
 	}
 
 	player->SetYawPitch(ViewDx(), ViewDy());
+	
 	if (Shoot()) {
 		player->Shoot();
 	}

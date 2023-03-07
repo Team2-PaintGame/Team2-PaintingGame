@@ -6,7 +6,7 @@
 using namespace NCL;
 using namespace CSC8508;
 
-bool GameScreen::s_pauseCallback = false;
+bool GameScreen::sPauseCallback = false;
 
 void GameScreen::OnAwake() {
 	isMenuDisplayed = false;
@@ -36,10 +36,9 @@ void GameScreen::LoadGame() {
 }
 
 PushdownState::PushdownResult GameScreen::OnUpdate(float dt, PushdownState** newState) {
-	if (s_pauseCallback)
-	{
+	if (sPauseCallback) {
 		isMenuDisplayed = true;
-		s_pauseCallback = false;
+		sPauseCallback = false;
 	}
 	return BaseScreen::OnUpdate(dt, newState);
 }
@@ -69,7 +68,6 @@ PushdownState::PushdownResult GameScreen::onStateChange(PushdownState** newState
 	}
 }
 
-void GameScreen::GamePauseCallback()
-{
-	s_pauseCallback = true;
+void GameScreen::GamePauseCallback() {
+	sPauseCallback = true;
 }

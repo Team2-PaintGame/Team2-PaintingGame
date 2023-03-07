@@ -1,5 +1,5 @@
 #pragma once
-#include "../PaintingGame/GameAssets.h"
+#include "GameAssets.h"
 #include "SceneNode.h"
 #include "PushdownState.h"
 #include <imgui_impl_win32.h>

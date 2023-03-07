@@ -150,8 +150,6 @@ set(Scene
     "./Scene/GameWorld.cpp" 
     "./Scene/PlayerBase.h" 
     "./Scene/PlayerBase.cpp" 
-    "./Scene/PlayerController.h" 
-    "./Scene/PlayerController.cpp" 
     "./Scene/AnimationController.cpp"
     "./Scene/AnimationController.h"
 )
