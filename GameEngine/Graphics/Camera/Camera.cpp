@@ -50,6 +50,26 @@ void Camera::Update(float dt) {
 	Matrix4 rotation = Matrix4::Rotation(yaw, { 0, 1, 0 });
 	Vector3 rotated_offset = rotation * Matrix4::Rotation(pitch, { 1, 0, 0 }) * offsetFromPlayer;
 	position = player->GetTransform().GetPosition() + rotated_offset;
+
+	if (viewType == ViewType::ThirdPerson)
+	{
+		CalculateThirdPersonView();
+	}
+}
+
+void NCL::Camera::CalculateThirdPersonView()
+{
+	pitch = std::clamp(pitch, -25.f, 25.0f);
+
+	Matrix4 rotation = Matrix4::Rotation(yaw,{0,1,0});
+	Vector3 rotation_Offset = rotation * Matrix4::Rotation(pitch, { 1,0,0 }) * offsetFromPlayer;
+	Quaternion player_orientation(rotation);
+	player->GetTransform().SetOrientation(player_orientation);
+
+	reactphysics3d::Transform newRBTransform = reactphysics3d::Transform(player->GetRigidBody()->getTransform().getPosition(),~player_orientation);
+	player->GetRigidBody()->setTransform(newRBTransform);
+	position = player->GetTransform().GetPosition() + rotation_Offset;
+
 }
 
 /*
