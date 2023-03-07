@@ -34,7 +34,7 @@ void PaintingGame::OperateOnCameras(CameraFunc f) {
 void PaintingGame::InitWorld() {
 	world->ClearAndErase();
 
-	world->AddGameObject(new Floor(physicsCommon, physicsWorld, Vector3(100, 0, 100), assets->GetMesh("floorMesh"), assets->GetTexture("basicTex"), assets->GetShader("basicShader"), 200));
+	world->AddGameObject(new Floor(physicsCommon, physicsWorld, Vector3(-30, 0, 60), assets->GetMesh("floorMesh"), assets->GetTexture("basicTex"), assets->GetShader("basicShader"), 1));
 
 	for (int x = 0; x < 15; ++x) {
 		world->AddGameObject(new Box(physicsCommon, physicsWorld, Vector3(0, 10, 0), assets->GetMesh("cubeMesh"), assets->GetTexture("doorTex"), assets->GetShader("basicShader"), 2));

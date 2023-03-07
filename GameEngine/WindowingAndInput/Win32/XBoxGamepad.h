@@ -36,7 +36,7 @@ namespace NCL {
 
 	class XBoxController : public PlayerController {
 	public:
-		XBoxController(PlayerBase* player) : PlayerController(player) {}
+		XBoxController(PlayerBase* player) : PlayerController(player) { Connect(); }
 		// Get the input for moving forward from the Xbox controller
 		bool MoveForward() override {
 			return gamepad.leftStickY > 0.0f;
@@ -62,11 +62,23 @@ namespace NCL {
 		}
 
 		void Connect() {
-
+			if (!gamepad.Refresh())
+			{
+				if (wasConnected)
+				{
+					wasConnected = false;
+					std::cout << "Connect a Gamepad !";
+				}
+			}
+			else if (!wasConnected)
+			{
+				wasConnected = true;
+				std::cout << "COntroller connect on port " << gamepad.GetPort() << "\n";
+			}
 		}
 	protected:
 		XBoxGamepad gamepad;
-		bool connected = false;
+		bool wasConnected = false;
 	};
 
 	// Concrete factory for creating XBox Player Controller
