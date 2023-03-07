@@ -52,7 +52,7 @@ for this module, even in the coursework, but you can add it if you like!
 */
 void PaintingGame::InitialiseAssets() {
 //	meshes.insert(std::make_pair("floorMesh", renderer->LoadMesh("Arena.msh")));
-	meshes.insert(std::make_pair("floorMesh", renderer->LoadMesh("NewLevel4.msh")));  
+	meshes.insert(std::make_pair("floorMesh", renderer->LoadMesh("BasicLVL.msh")));  
 
 	meshes.insert(std::make_pair("cubeMesh", renderer->LoadMesh("cube.msh")));
 	meshes.insert(std::make_pair("mainChar", renderer->LoadMesh("Aj_TPose.msh")));

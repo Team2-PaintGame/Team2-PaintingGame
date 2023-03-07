@@ -31,7 +31,7 @@ namespace NCL::CSC8508 {
 
 //		FindNavigableNodes("SplatAtTheMuseum.txt", navigableNodes);
 //		navigationGrid = new NavigationGrid("SplatAtTheMuseum.txt");
-		navigationMesh = new NavigationMesh("NewLevel4.navmesh");
+		navigationMesh = new NavigationMesh("BasicLVL.navmesh");
 		navigationPath = new NavigationPath();
 
 		InitBehaviorTree();
@@ -235,7 +235,7 @@ namespace NCL::CSC8508 {
 				bool foundPath = navigationMesh->FindPath(securityPosition, playerPosition, *navigationPath);
 				if (foundPath) {
 					std::cout << " Chase the Player - Path found\n";
-					std::cout << "Size of outpath: " << navigationPath->waypoints.size() << "\n";
+					//std::cout << "Size of outpath: " << navigationPath->waypoints.size() << "\n";
 					state = Ongoing;
 				}
 				else {
@@ -246,24 +246,37 @@ namespace NCL::CSC8508 {
 			}
 			else if (state == Ongoing) {
 				Vector3 direction = navigationPath->waypoints.back() - this->GetTransform().GetPosition();
-//				Vector3 nextDirection = (navigationPath->waypoints.back() - 1) - this->GetTransform().GetPosition();
+
 
 				timeAccumulator += dt;
-				if (timeAccumulator >= 1.5) {
-					bool isPlayerVisible = LookForPlayer(chasedPlayer);
-					std::cout << "1.5 seconds accumulated\n";
-					timeAccumulator = 0.0f;
-					if (isPlayerVisible) {
-						navigationPath->Clear();
-						rootSelector->Reset();
-						return Initialise;
-					}
+				//if (timeAccumulator >= 1.5) {
+				//	bool isPlayerVisible = LookForPlayer(chasedPlayer);
+				//	std::cout << "1.5 seconds accumulated\n";
+				//	timeAccumulator = 0.0f;
+				//	if (isPlayerVisible) {
+				//		navigationPath->Clear();
+				//		rootSelector->Reset();
+				//		return Initialise;
+				//	}
 
-				}
+				//}
 
 				if (direction.Length() <= 4 && navigationPath->waypoints.size() >= 2) {
 					navigationPath->waypoints.pop_back();
 						std::cout << " Chase the Player - Chasing player\n";
+
+
+						if (timeAccumulator >= 1.5) {
+							bool isPlayerVisible = LookForPlayer(chasedPlayer);
+							std::cout << "1.5 seconds accumulated\n";
+							timeAccumulator = 0.0f;
+							if (isPlayerVisible) {
+								navigationPath->Clear();
+								rootSelector->Reset();
+								return Initialise;
+							}
+
+						}
 				}
 				if (navigationPath->waypoints.size() == 1) {
 					if (DistanceToTarget(navigationPath->waypoints.back()) <= 4.0f) {

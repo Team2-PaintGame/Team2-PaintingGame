@@ -11,9 +11,9 @@ SinglePlayerGame::SinglePlayerGame(GameTechRenderer* render, GameWorld* world, r
 	gamepad = new Gamepad();
 
 	InitWorld();
-	AddPlayer(world->GetMainCamera(), Vector3(10.0f, 30.0f, 10.0f), nullptr);
+	AddPlayer(world->GetMainCamera(), Vector3(50.0f, 30.0f, 30.0f), nullptr);
 	InitCamera(*this->world->GetMainCamera(), *player);
-	AddSecurityAI(Vector3(0,0,0), player, nullptr);
+	AddSecurityAI(Vector3(20,20,20), player, nullptr);
 }
 
 SinglePlayerGame::~SinglePlayerGame() {

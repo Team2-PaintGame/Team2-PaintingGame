@@ -71,6 +71,9 @@ NavigationMesh::~NavigationMesh()
 
 bool NavigationMesh::FindPath(const Vector3& from, const Vector3& to, NavigationPath& outPath) {
 	/*const*/ NavTri* start	= GetTriForPosition(from);
+	std::cout << "Size of outpath: " << outPath.waypoints.size() << "\n";
+
+	std::cout << "Size of outpath: " << outPath.waypoints.size() << "\n";
 	if (start == nullptr) {
 		std::cout << "start is outside of the navmesh\n";
 		return false;
@@ -97,10 +100,18 @@ bool NavigationMesh::FindPath(const Vector3& from, const Vector3& to, Navigation
 
 		if (currentBestTri == end) {
 			NavTri* tri = end;
+			triRoute.clear();
+			allEdges.clear();
+			//outPath.clear();
 			while (tri != nullptr) {
-				outPath.PushWaypoint(tri->centroid);
+				//outPath.PushWaypoint(tri->centroid);
+				triRoute.emplace_back(*tri);
 				tri = tri->parent;
 			}
+			std::cout << "triRoute Size: " << triRoute.size();
+			FindEdges();
+			std::cout << "\nallEdges size: " << allEdges.size();
+			FindMidPath(outPath);
 			return true;
 		}
 		else {
@@ -135,6 +146,85 @@ bool NavigationMesh::FindPath(const Vector3& from, const Vector3& to, Navigation
 
 	}
 	return false;
+}
+
+void NavigationMesh::StringPull(Vector3 securitytPos) {
+	Vector3 vertexA, vertexB;
+	float angle, nextAngle;
+	VertexIndices indices = FindSharedVertices(triRoute.rbegin()[1]);
+	vertexA = allVerts[indices.a];
+	vertexB = allVerts[indices.b];
+	vertexA -= securitytPos;
+	vertexB -= securitytPos;
+	angle = AngleBetweenVectors(vertexA, vertexB);
+
+
+}
+
+int NavigationMesh::FindNextVertex(VertexIndices vertIndices, NavigationMesh::NavTri tri) {
+	int index;
+	for (int i = 0; i < 3; ++i) {
+		if (tri.indices[i] != vertIndices.a && tri.indices[i] != vertIndices.b) {
+			index = tri.indices[i];
+			break;
+		}
+	}
+	return index;
+}
+
+void NavigationMesh::FindEdges() {
+	int numTris = triRoute.size();
+	vector<NavTri>::reverse_iterator it = triRoute.rbegin() + 1; //2nd last element of triRoute, ie. second waypoint
+	VertexIndices vertexIndices;
+
+	for (; it != triRoute.rend(); it++) {
+		vertexIndices = FindSharedVertices(*it);
+		allEdges.emplace_back(vertexIndices);
+	}
+}
+
+void NavigationMesh::FindMidPath(NavigationPath& outPath) {
+
+	//for (auto i : allEdges) {
+	//	Vector3 vertexA = allVerts[i.a];
+	//	Vector3 vertexB = allVerts[i.b];
+	//	Vector3 vectorAB = vertexA - vertexB;
+	//	Vector3 midPoint = vertexB + (vectorAB * 0.5);
+	//	outPath.PushWaypoint(midPoint);
+	//}
+
+	vector< VertexIndices>::reverse_iterator it = allEdges.rbegin();
+	for (; it != allEdges.rend(); ++it) {
+		Vector3 vertexA = allVerts[it->a];                  
+		Vector3 vertexB = allVerts[it->b];
+		Vector3 vectorAB = vertexA - vertexB;
+		Vector3 midPoint = vertexB + (vectorAB * 0.5);
+		outPath.PushWaypoint(midPoint);
+	}
+}
+
+VertexIndices NavigationMesh::FindSharedVertices(NavTri tri) {
+	int indexA, indexB;
+	VertexIndices vertexIndices;
+	for (int i = 0; i < 3; ++i) {
+		for (int j = 0; j < 3; ++j) {
+			indexA = tri.indices[i];
+			indexB = tri.parent->indices[j];
+			if (indexA == indexB) {
+				vertexIndices.AddIndex(indexA);
+			}
+		}
+	}
+	std::cout << "\nIndexA: " << vertexIndices.a << "\n";
+	std::cout << "IndexB: " << vertexIndices.b << "\n";
+	return vertexIndices;
+}
+
+float NavigationMesh::AngleBetweenVectors(Vector3 a, Vector3 b) {
+	float dot = Vector3::Dot(a, b);
+	float angle;
+	angle = acos(dot / (a.Length() * b.Length()));
+	return angle;
 }
 
 NavigationMesh::NavTri* NavigationMesh::RemoveBestTri(std::vector<NavTri*>& list) {

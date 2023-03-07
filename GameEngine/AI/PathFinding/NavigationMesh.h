@@ -5,6 +5,23 @@
 #include <vector>
 namespace NCL {
 	namespace CSC8508 {
+
+		struct VertexIndices {
+			int a;
+			int b;
+			VertexIndices() {
+				a = -1;
+				b = -1;
+			}
+			void AddIndex(int index) {
+				if (a == -1) {
+					a = index;
+				}
+				else {
+					b = index;
+				}
+			}
+		};
 		class NavigationMesh : public NavigationMap	{
 		public:
 			NavigationMesh();
@@ -12,8 +29,11 @@ namespace NCL {
 			~NavigationMesh();
 
 			bool FindPath(const Vector3& from, const Vector3& to, NavigationPath& outPath) override;
-			
-		
+			void StringPull(Vector3 securitytPos);
+			float AngleBetweenVectors(Vector3 a, Vector3 b);
+			void FindEdges();
+			void FindMidPath(NavigationPath& outPath);
+
 		protected:
 			struct NavTri {
 				Plane   triPlane;
@@ -52,7 +72,11 @@ namespace NCL {
 			
 			std::vector<NavTri>		allTris;
 			std::vector<Vector3>	allVerts;
-	
+			std::vector<NavTri> triRoute;
+			std::vector< VertexIndices> allEdges;
+
+			VertexIndices FindSharedVertices(NavTri tri);
+			int FindNextVertex(VertexIndices vertIndices, NavigationMesh::NavTri tri);
 			NavTri* RemoveBestTri(std::vector<NavTri*>& list);
 			/*const*/ NavTri* GetTriForPosition(const Vector3& pos) /*const*/;
 			bool  TriInList(NavTri* n, std::vector<NavTri*>& list) /*const*/;
