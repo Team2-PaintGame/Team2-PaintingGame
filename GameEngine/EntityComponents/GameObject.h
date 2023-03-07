@@ -11,6 +11,17 @@ namespace NCL::CSC8508 {
 	class NetworkObject;
 	class RenderObject;
 	class PhysicsObject;
+	class GameWorld;
+
+	class GameObjectListener : public reactphysics3d::EventListener {
+	public:
+		GameObjectListener(GameWorld* world) { this->world = world; }
+		~GameObjectListener() {}
+
+		virtual void onContact(const CollisionCallback::CallbackData& callbackData) override;
+	private:
+		GameWorld* world;
+	};
 
 	class GameObject :public SceneNode	{
 	public:
@@ -68,6 +79,7 @@ namespace NCL::CSC8508 {
 
 		void UpdateTransform();
 
+		NCL::Maths::Vector3 collisionPoint;
 
 	protected:
 		/// Reference to the physics common object

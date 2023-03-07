@@ -47,9 +47,20 @@ namespace NCL {
 		virtual Matrix4 BuildProjectionMatrix() const;
 		virtual Matrix4 GenerateInverseProjection() const;
 
-		float GetPitch() { return pitch;	}
-		float GetYaw()	 { return yaw;		}
+		float GetPitch() const { return pitch;	}
+		float GetYaw()	const { return yaw;		}
 
+		float GetNearPlane() const {
+			return znear;
+		}
+
+		float GetFarPlane() const {
+			return zfar;
+		}
+
+		float GetFieldOfVision() const {
+			return fov;
+		}
 		//Gets position in world space
 		Vector3 GetPosition() const { return position; }
 	protected:

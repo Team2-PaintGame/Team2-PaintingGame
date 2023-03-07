@@ -5,7 +5,7 @@
 using namespace NCL;
 using namespace CSC8508;
 
-SinglePlayerGame::SinglePlayerGame(GameAssets* assets) : PaintingGame(assets) {
+SinglePlayerGame::SinglePlayerGame(GameAssets * assets) : PaintingGame(assets) {
 	if (!GameManager::sConfig.playerControllerFactory) {
 		GameManager::sConfig.playerControllerFactory = new Win32PlayerControllerFactory();
 	}

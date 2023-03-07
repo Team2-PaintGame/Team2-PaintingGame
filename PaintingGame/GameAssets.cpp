@@ -33,8 +33,9 @@ ShaderBase* NCL::GameAssets::GetShader(const std::string& identifier) const {
 }
 
 void GameAssets::LoadMeshes() {
+	meshes.insert(std::make_pair("floorMesh", loader->LoadMesh("Arena.msh")));
 	meshes.insert(std::make_pair("cubeMesh", loader->LoadMesh("cube.msh")));
-	meshes.insert(std::make_pair("mainChar", loader->LoadMesh("Male_Guard.msh")));
+	meshes.insert(std::make_pair("mainChar", loader->LoadMesh("Aj_TPose.msh")));
 	meshes.insert(std::make_pair("sphereMesh", loader->LoadMesh("sphere.msh")));
 	meshes.insert(std::make_pair("coinMesh", loader->LoadMesh("coin.msh")));
 	meshes.insert(std::make_pair("capsuleMesh", loader->LoadMesh("capsule.msh")));
@@ -43,13 +44,19 @@ void GameAssets::LoadMeshes() {
 
 void GameAssets::LoadMeshMaterials() {
 	meshMaterials.insert(std::make_pair("goatMat", std::make_unique<MeshMaterial>("goat.mat")));
-	meshMaterials.insert(std::make_pair("mainCharMat", std::make_unique<MeshMaterial>("goat.mat")));
+	meshMaterials.insert(std::make_pair("mainCharMat", new MeshMaterial("Aj_TPose.mat")));
+	meshMaterials.insert(std::make_pair("monaLisaMat", new MeshMaterial("MonaLisa.mat")));
+	meshMaterials.insert(std::make_pair("appleFaceMat", new MeshMaterial("appleFace.mat")));
+	meshMaterials.insert(std::make_pair("handsPaintingMat", new MeshMaterial("handsPainting.mat")));
+	meshMaterials.insert(std::make_pair("nightSkyMat", new MeshMaterial("nightSky.mat")));
+	meshMaterials.insert(std::make_pair("screamPaintMat", new MeshMaterial("screamPaint.mat")));
+	meshMaterials.insert(std::make_pair("sunflowersMat", new MeshMaterial("sunflowers.mat")));
 }
 
 void GameAssets::LoadMeshAnimations() {
 	meshAnimations.insert(std::make_pair("mainCharTauntAnim", std::make_unique<MeshAnimation>("Taunt.anm")));
-	meshAnimations.insert(std::make_pair("mainCharIdleAnim", std::make_unique<MeshAnimation>("Idle1.anm")));
-	meshAnimations.insert(std::make_pair("mainCharRunAnim", std::make_unique<MeshAnimation>("StepForward.anm")));
+	meshAnimations.insert(std::make_pair("mainCharIdleAnim", std::make_unique<MeshAnimation>("AJIdle.anm")));
+	meshAnimations.insert(std::make_pair("mainCharRunAnim", std::make_unique<MeshAnimation>("AJRun.anm")));
 }
 
 void GameAssets::LoadTextures() {

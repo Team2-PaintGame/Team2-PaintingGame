@@ -20,7 +20,7 @@ namespace NCL {
 			renderObject = new RenderObject(&transform, mesh, shader);
 			renderObject->SetDefaultTexture(texture);
 
-			boundingVolume = physicsCommon.createBoxShape(~transform.GetScale()/2.0f);
+			boundingVolume = CreateConcaveCollisionBody(physicsCommon, mesh);
 			reactphysics3d::Transform rp3d_transform(~position, rp3d::Quaternion::identity());
 
 			// Create a rigid body in the physics world
@@ -34,10 +34,8 @@ namespace NCL {
 			if (rigidBody) {
 				physicsWorld->destroyRigidBody(rigidBody);
 			}
-			physicsCommon.destroyBoxShape(dynamic_cast<rp3d::BoxShape*>(boundingVolume));
+			physicsCommon.destroyConcaveMeshShape(dynamic_cast<rp3d::ConcaveMeshShape*>(boundingVolume));
 		}
-	protected:
-		
 	};
 }
 

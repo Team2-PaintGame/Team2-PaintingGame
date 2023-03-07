@@ -6,11 +6,10 @@
 
 using namespace NCL;
 
-PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, int size): GameObject(physicsCommon, physicsWorld, "BasePlayer") {
+PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon & physicsCommon, reactphysics3d::PhysicsWorld * physicsWorld, Vector3 position, MeshGeometry * mesh, TextureBase * texture, ShaderBase * shader, int size) : GameObject(physicsCommon, physicsWorld, "BasePlayer") {
 	SetMemberVariables(physicsCommon, physicsWorld, position, mesh, shader, size);
 	renderObject->SetDefaultTexture(texture);
 }
-
 PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, MeshMaterial* meshMaterial, ShaderBase* shader, int size) : GameObject(physicsCommon, physicsWorld, "BasePlayer") {
 	SetMemberVariables(physicsCommon, physicsWorld, position, mesh, shader, size);
 	renderObject->LoadMaterialTextures(meshMaterial);

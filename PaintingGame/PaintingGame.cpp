@@ -4,6 +4,7 @@
 #include "Box.h"
 #include "Floor.h"
 #include "AnimationController.h"
+#include "PaintingObject.h"
 
 using namespace NCL;
 using namespace CSC8508;
@@ -24,14 +25,6 @@ PaintingGame::~PaintingGame() {
 	delete world;
 }
 
-//void PaintingGame::InitCamera(Camera& camera, PlayerBase& focus, float aspect_multiplier)
-//{
-//	camera.SetThirdPersonCamera(&focus);
-//
-//	camera.SetBasicCameraParameters(-15.0f, 315.0f, Vector3(-60, 40, 60), 0.1f, 500.0f);
-//	camera.SetPerspectiveCameraParameters(Window::GetWindow()->GetScreenAspect() * aspect_multiplier);
-//}
-
 void PaintingGame::OperateOnCameras(CameraFunc f) {
 	for (Camera* cam : activeCameras) {
 		f(cam);
@@ -41,11 +34,18 @@ void PaintingGame::OperateOnCameras(CameraFunc f) {
 void PaintingGame::InitWorld() {
 	world->ClearAndErase();
 
-	world->AddGameObject(new Floor(physicsCommon, physicsWorld, Vector3(0, 0, 0), assets->GetMesh("cubeMesh"), assets->GetTexture("basicTex"), assets->GetShader("basicShader"), 200));
+	world->AddGameObject(new Floor(physicsCommon, physicsWorld, Vector3(100, 0, 100), assets->GetMesh("floorMesh"), assets->GetTexture("basicTex"), assets->GetShader("basicShader"), 200));
 
 	for (int x = 0; x < 15; ++x) {
 		world->AddGameObject(new Box(physicsCommon, physicsWorld, Vector3(0, 10, 0), assets->GetMesh("cubeMesh"), assets->GetTexture("doorTex"), assets->GetShader("basicShader"), 2));
 	}
+
+	world->AddGameObject(new PaintingObject(physicsCommon, physicsWorld, Vector3(30, 10, 0), assets->GetMesh("cubeMesh"), assets->GetMeshMaterial("monaLisaMat"), assets->GetShader("basicShader"), 10, "MonaLisa"));
+	world->AddGameObject(new PaintingObject(physicsCommon, physicsWorld, Vector3(20, 10, 0), assets->GetMesh("cubeMesh"), assets->GetMeshMaterial("appleFaceMat"), assets->GetShader("basicShader"), 10, "appleFace"));
+	world->AddGameObject(new PaintingObject(physicsCommon, physicsWorld, Vector3(40, 10, 0), assets->GetMesh("cubeMesh"), assets->GetMeshMaterial("handsPaintingMat"), assets->GetShader("basicShader"), 10, "handsPaint"));
+	world->AddGameObject(new PaintingObject(physicsCommon, physicsWorld, Vector3(10, 10, 0), assets->GetMesh("cubeMesh"), assets->GetMeshMaterial("nightSkyMat"), assets->GetShader("basicShader"), 10, "nightSky"));
+	world->AddGameObject(new PaintingObject(physicsCommon, physicsWorld, Vector3(50, 10, 0), assets->GetMesh("cubeMesh"), assets->GetMeshMaterial("screamPaintMat"), assets->GetShader("basicShader"), 10, "screamPaint"));
+	world->AddGameObject(new PaintingObject(physicsCommon, physicsWorld, Vector3(60, 10, 0), assets->GetMesh("cubeMesh"), assets->GetMeshMaterial("sunflowersMat"), assets->GetShader("basicShader"), 10, "sunflowers"));
 }
 
 void PaintingGame::Update(float dt) {
@@ -60,5 +60,30 @@ Player* PaintingGame::CreatePlayer(Vector3 position) {
 	animations.insert(std::make_pair("idleAnimation", assets->GetMeshAnimation("mainCharIdleAnim")));
 	animations.insert(std::make_pair("moveAnimation", assets->GetMeshAnimation("mainCharRunAnim")));
 
-	return new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetTexture("basicTex"), assets->GetShader("skinningShader"), animations, 5);
+	return new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetTexture("doorTex"), assets->GetShader("skinningShader"), animations, 5);
 }
+
+//bool PaintingGame::SelectObject() {
+//
+//	if (Window::GetMouse()->ButtonPressed(NCL::MouseButtons::RIGHT)) {
+//
+//		Ray r = CollisionDetection::BuildRayFromMouse(*world->GetMainCamera());
+//		Vector3 startPos = r.GetPosition();
+//		Vector3 endPos = r.GetPosition() + r.GetDirection() * 1000;
+//
+//		reactphysics3d::Ray ray = reactphysics3d::Ray(
+//			reactphysics3d::Vector3(startPos.x, startPos.y + 5, startPos.z),
+//			reactphysics3d::Vector3(endPos.x, endPos.y, endPos.z));
+//
+//		SceneContactPoint* closestCollision = world->Raycast(ray);
+//		Debug::DrawLine(startPos, endPos, Vector4(1, 1, 1, 1), 3);
+//		if (closestCollision->isHit) {
+//			world->painted.push_back(closestCollision->hitPos);
+//			for (Vector4 x : world->painted) {
+//				std::cout << x << "\n";
+//			}
+//			return true;
+//		}
+//	}
+//	return false;
+//}

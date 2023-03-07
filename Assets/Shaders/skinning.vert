@@ -25,6 +25,7 @@ out Vertex
 	vec4 shadowProj;
 	vec3 normal;
 	vec3 worldPos;
+	vec4 localPos;
 } OUT;
 
 void main(void)

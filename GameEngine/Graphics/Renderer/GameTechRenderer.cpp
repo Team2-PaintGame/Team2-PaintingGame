@@ -339,9 +339,9 @@ void GameTechRenderer::RenderDebugInformation(bool isDebugInfo) {
 	if (isDebugInfo == false) { return; }
 	if (settings.GetIsDebugRenderingModeEnabled()) {
 		//render triangles
-		int numTri = settings.debugRendererSettings.debugRenderer.getNbTriangles();
+		int numTri = settings.debugRendererSettings.debugRenderer->getNbTriangles();
 		if (numTri) {
-			const reactphysics3d::DebugRenderer::DebugTriangle* tri = settings.debugRendererSettings.debugRenderer.getTrianglesArray();
+			const reactphysics3d::DebugRenderer::DebugTriangle* tri = settings.debugRendererSettings.debugRenderer->getTrianglesArray();
 			for (int i = 0; i < numTri; i++) {
 				Debug::DrawTriangle(tri->point1, tri->point2, tri->point3, Debug::YELLOW);
 				tri++;
@@ -349,9 +349,9 @@ void GameTechRenderer::RenderDebugInformation(bool isDebugInfo) {
 		}
 
 		//render lines
-		int numLines = settings.debugRendererSettings.debugRenderer.getNbLines();
+		int numLines = settings.debugRendererSettings.debugRenderer->getNbLines();
 		if (numLines) {
-			const reactphysics3d::DebugRenderer::DebugLine* line = settings.debugRendererSettings.debugRenderer.getLinesArray();
+			const reactphysics3d::DebugRenderer::DebugLine* line = settings.debugRendererSettings.debugRenderer->getLinesArray();
 			for (int i = 0; i < numLines; i++) {
 				Debug::DrawLine(line->point1, line->point2, Debug::CYAN);
 				line++;
@@ -436,6 +436,8 @@ void GameTechRenderer::RenderCamera(Camera& cam) {
 	int skyboxTexLocation = 0;
 	int shadowLocation  = 0;
 	int jointsLocation	= 0;
+	int paintedLocation = 0;
+
 
 	int lightPosLocation	= 0;
 	int lightColourLocation = 0;
@@ -477,6 +479,18 @@ void GameTechRenderer::RenderCamera(Camera& cam) {
 			jointsLocation = glGetUniformLocation(shader->GetProgramID(), "joints");
 
 			Vector3 camPos = cam.GetPosition();
+
+			for (int i = 0; i < gameWorld.painted.size(); i++) {
+				Vector4 paintedPos = Vector4(gameWorld.painted[i], 0);
+				char buffer[64];
+				sprintf_s(buffer, "paintedPos[%i]", i);
+				paintedLocation = glGetUniformLocation(shader->GetProgramID(), buffer);
+				glUniform4fv(paintedLocation, 1, paintedPos.array);
+			}
+
+			int splatVectorSize = glGetUniformLocation(shader->GetProgramID(), "numOfSplats");
+			glUniform1i(splatVectorSize, gameWorld.painted.size());
+
 			glUniform3fv(cameraLocation, 1, camPos.array);
 
 			glUniformMatrix4fv(projLocation, 1, false, (float*)&projMatrix);
@@ -491,8 +505,9 @@ void GameTechRenderer::RenderCamera(Camera& cam) {
 			glUniform1f(lightRadiusLocation , lightRadius);
 
 			int shadowTexLocation = glGetUniformLocation(shader->GetProgramID(), "shadowTex");
+
 			glUniform1i(shadowTexLocation, 1);
-			
+						
 			//binding skybox texture to shader:
 			glUniform1i(skyboxTexLocation, 0);
 			glActiveTexture(GL_TEXTURE0);

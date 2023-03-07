@@ -1,3 +1,4 @@
+
 #pragma once
 #include "Player.h"
 #include "GameAssets.h"
@@ -24,7 +25,6 @@ namespace NCL {
 			virtual GameWorld* GetWorld() const { return world; }
 			virtual void OperateOnCameras(CameraFunc f);
 		protected:
-			//virtual void InitCamera(Camera& camera, PlayerBase& focus, float aspect_multiplier = 1.0f);
 			virtual void InitWorld();
 
 			virtual Player* CreatePlayer(Vector3 position);
@@ -34,7 +34,7 @@ namespace NCL {
 
 			bool useGravity = true;
 			bool useFog = true;
-		
+
 			//Create a physics world 
 			reactphysics3d::PhysicsCommon physicsCommon;
 			reactphysics3d::PhysicsWorld* physicsWorld = NULL;
@@ -50,4 +50,3 @@ namespace NCL {
 		};
 	}
 }
-

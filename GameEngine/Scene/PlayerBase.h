@@ -27,6 +27,7 @@ namespace NCL {
 		float	pitch = 0.0f;
 		void SetMemberVariables(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, ShaderBase* shader, int size);
 		Camera* camera;
+		AnimationController* animationController;
 	};
 }
 
