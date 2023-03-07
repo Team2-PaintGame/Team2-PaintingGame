@@ -99,6 +99,9 @@ namespace NCL::Win32Code {
 		float ViewDx() override {
 			return Window::GetMouse()->GetRelativePosition().x;
 		}
+		bool Pause() override {
+			return Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::ESCAPE);
+		}
 	};
 }
 

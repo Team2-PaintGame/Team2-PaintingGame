@@ -10,10 +10,16 @@ namespace NCL {
 				screenType = ScreenType::GameScreen;
 			}
 			void OnAwake() override;
+			PushdownResult OnUpdate(float dt, PushdownState** newState) override;
+
+			static void GamePauseCallback();
 		protected:
 			void LoadGame();
 			virtual void MenuFrame();
 			virtual PushdownResult onStateChange(PushdownState** newState);
+
+		protected:
+			static bool s_pauseCallback;
 		};
 
 	}

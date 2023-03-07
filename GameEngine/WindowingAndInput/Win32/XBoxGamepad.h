@@ -57,6 +57,9 @@ namespace NCL {
 		float ViewDx() override {
 			return gamepad.rightStickX;
 		}
+		bool Pause() override {
+			return gamepad.GetButtonDown(VK_PAD_START);
+		}
 
 		void Connect() {
 
