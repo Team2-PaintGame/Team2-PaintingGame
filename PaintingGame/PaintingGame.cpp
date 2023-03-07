@@ -13,7 +13,7 @@ PaintingGame::PaintingGame(GameAssets* assets) {
 	this->assets = assets;
 	physicsWorld = physicsCommon.createPhysicsWorld();
 	physicsWorld->setIsGravityEnabled(useGravity);
-	world = new GameWorld;
+	world = new GameWorld(physicsWorld);
 	InitWorld();
 	//renderer->settings.SetIsDebugRenderingModeEnabled(true);
 	//renderer->settings.debugRendererSettings.SetIsCollisionShapeDisplayed(true);
@@ -49,9 +49,9 @@ void PaintingGame::InitWorld() {
 }
 
 void PaintingGame::Update(float dt) {
-
 	world->UpdateWorld(dt);
 	physicsWorld->update(dt);
+	CreateSplatOnShoot();
 	Debug::UpdateRenderables(dt);
 }
 
@@ -60,30 +60,5 @@ Player* PaintingGame::CreatePlayer(Vector3 position) {
 	animations.insert(std::make_pair("idleAnimation", assets->GetMeshAnimation("mainCharIdleAnim")));
 	animations.insert(std::make_pair("moveAnimation", assets->GetMeshAnimation("mainCharRunAnim")));
 
-	return new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetTexture("doorTex"), assets->GetShader("skinningShader"), animations, 5);
+	return new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("mainCharMat"), assets->GetShader("skinningShader"), animations, 5);
 }
-
-//bool PaintingGame::SelectObject() {
-//
-//	if (Window::GetMouse()->ButtonPressed(NCL::MouseButtons::RIGHT)) {
-//
-//		Ray r = CollisionDetection::BuildRayFromMouse(*world->GetMainCamera());
-//		Vector3 startPos = r.GetPosition();
-//		Vector3 endPos = r.GetPosition() + r.GetDirection() * 1000;
-//
-//		reactphysics3d::Ray ray = reactphysics3d::Ray(
-//			reactphysics3d::Vector3(startPos.x, startPos.y + 5, startPos.z),
-//			reactphysics3d::Vector3(endPos.x, endPos.y, endPos.z));
-//
-//		SceneContactPoint* closestCollision = world->Raycast(ray);
-//		Debug::DrawLine(startPos, endPos, Vector4(1, 1, 1, 1), 3);
-//		if (closestCollision->isHit) {
-//			world->painted.push_back(closestCollision->hitPos);
-//			for (Vector4 x : world->painted) {
-//				std::cout << x << "\n";
-//			}
-//			return true;
-//		}
-//	}
-//	return false;
-//}

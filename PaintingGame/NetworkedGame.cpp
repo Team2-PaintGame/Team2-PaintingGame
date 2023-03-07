@@ -4,7 +4,7 @@
 #include <GameServer.h>
 #include "reactphysics3d/reactphysics3d.h"
 #include "Utils.h"
-#include "PlayerBase.h"
+#include "Player.h"
 #include "GameManager.h"
 #include "Win32Window.h"
 
@@ -221,7 +221,22 @@ void NetworkedGame::UpdateMinimumState() {
 	}
 }
 
-NCL::PlayerBase* NetworkedGame::SpawnPlayer() {
+void NetworkedGame::CreateSplatOnShoot() {
+	if (thisServer) {
+		SceneContactPoint* closestCollision = world->Raycast(ServerPlayer->GetShootRay());
+		if (closestCollision->isHit) {
+			world->AddPaintedPosition(closestCollision->hitPos);
+		}
+	}
+	if (thisClient) {
+		SceneContactPoint* closestCollision = world->Raycast(ClientPlayer->GetShootRay());
+		if (closestCollision->isHit) {
+			world->AddPaintedPosition(closestCollision->hitPos);
+		}
+	}
+}
+
+NCL::Player* NetworkedGame::SpawnPlayer() {
 	if (thisServer) {
 		ServerPlayer = AddPlayer(Vector3(5.0f, 15.0f, 5.0f)); 
 		ServerPlayerID = 1;
@@ -251,7 +266,7 @@ void NetworkedGame::StartLevel() {
 
 	InitWorld();
 
-	PlayerBase* player = SpawnPlayer();
+	Player* player = SpawnPlayer();
 
 	playerController = GameManager::sConfig.playerControllerFactory->createPlayerController(player);
 }

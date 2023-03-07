@@ -26,7 +26,7 @@ namespace NCL {
 			virtual void OperateOnCameras(CameraFunc f);
 		protected:
 			virtual void InitWorld();
-
+			virtual void CreateSplatOnShoot() = 0;
 			virtual Player* CreatePlayer(Vector3 position);
 			virtual Player* AddPlayer(Vector3 position) { return nullptr; };
 

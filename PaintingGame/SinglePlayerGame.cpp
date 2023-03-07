@@ -16,6 +16,13 @@ SinglePlayerGame::~SinglePlayerGame() {
 	delete playerController;
 }
 
+void SinglePlayerGame::CreateSplatOnShoot() {
+	SceneContactPoint* closestCollision = world->Raycast(player->GetShootRay());
+	if (closestCollision->isHit) {
+		world->AddPaintedPosition(closestCollision->hitPos);
+	}
+}
+
 Player* SinglePlayerGame::AddPlayer(Vector3 position) {
 	player = CreatePlayer(position);
 	activeCameras.push_back(player->GetCamera());

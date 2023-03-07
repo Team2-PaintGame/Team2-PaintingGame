@@ -114,6 +114,8 @@ namespace NCL {
 			void RenderBasicScreen();
 			void RenderGameScreen();
 
+			void RenderPaintSplat(OGLShader* shader);
+
 			void BuildObjectList();
 			void SortObjectList();
 

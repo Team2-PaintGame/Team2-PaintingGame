@@ -30,7 +30,7 @@ namespace NCL {
 			void OnPlayerCollision(NetworkPlayer* a, NetworkPlayer* b);
 
 		protected:
-			PlayerBase* SpawnPlayer();
+			Player* SpawnPlayer();
 			Player* AddPlayer(Vector3 position) override;
 
 			void UpdateAsServer(float dt);
@@ -50,6 +50,7 @@ namespace NCL {
 
 
 		protected:
+			virtual void CreateSplatOnShoot();
 			std::map<int, int> stateIDs;
 
 			GameServer* thisServer;
@@ -59,8 +60,8 @@ namespace NCL {
 
 			std::vector<NetworkObject*> networkObjects;
 
-			PlayerBase* ServerPlayer;
-			PlayerBase* ClientPlayer;
+			Player* ServerPlayer;
+			Player* ClientPlayer;
 			int ServerPlayerID;
 			int ClientPlayerID;
 

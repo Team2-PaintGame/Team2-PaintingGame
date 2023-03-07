@@ -9,6 +9,8 @@ namespace NCL {
 		class Constraint;
 
 		typedef std::function<void(GameObject*)> GameObjectFunc;
+		typedef std::function<void(int, Vector3&)> Vector3Func;
+
 		typedef std::vector<GameObject*>::const_iterator GameObjectIterator;
 
 
@@ -61,7 +63,7 @@ namespace NCL {
 
 		class GameWorld	{
 		public:
-			GameWorld();
+			GameWorld(reactphysics3d::PhysicsWorld* physicsWorld);
 			~GameWorld();
 
 			void Clear();
@@ -84,6 +86,8 @@ namespace NCL {
 			virtual void UpdateWorld(float dt);
 
 			void OperateOnContents(GameObjectFunc f);
+			void OperateOnPaintedPositions(Vector3Func f);
+
 
 			void GetObjectIterators(
 				GameObjectIterator& first,
@@ -102,16 +106,16 @@ namespace NCL {
 				physicsWorld->setEventListener(listener);
 			}
 
-			SceneContactPoint* Raycast(reactphysics3d::Ray& r, GameObject* ignore = nullptr) const;
+			SceneContactPoint* Raycast(const reactphysics3d::Ray& r, GameObject* ignore = nullptr) const;
 
-			vector<Vector3> painted;
-			reactphysics3d::PhysicsWorld* physicsWorld = NULL;
+			void AddPaintedPosition(const Vector3& position);
+			size_t GetNumPaintedPositions() const { return paintedPositions.size(); }
 		protected:
-			
 			RaycastManager* raycastManager;
 			GameObjectListener* collisionManager;
+			reactphysics3d::PhysicsWorld* physicsWorld = NULL;
 
-
+			std::vector<Vector3> paintedPositions;
 			std::vector<GameObject*> gameObjects;
 			std::vector<Constraint*> constraints;
 			bool shuffleConstraints;

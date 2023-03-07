@@ -25,7 +25,8 @@ rp3d::decimal RaycastManager::notifyRaycastHit(const rp3d::RaycastInfo& raycastI
 	return raycastInfo.hitFraction;
 }
 
-GameWorld::GameWorld()	{
+GameWorld::GameWorld(reactphysics3d::PhysicsWorld* physicsWorld)	{
+	this->physicsWorld = physicsWorld;
 	raycastManager = new RaycastManager();
 	shuffleConstraints	= false;
 	shuffleObjects		= false;
@@ -82,6 +83,13 @@ void GameWorld::OperateOnContents(GameObjectFunc f) {
 	}
 }
 
+void GameWorld::OperateOnPaintedPositions(Vector3Func f) {
+	int index = 0;
+	for (Vector3& pos : paintedPositions) {
+		f(index++, pos);
+	}
+}
+
 void GameWorld::UpdateWorld(float dt) {
 	auto rng = std::default_random_engine{};
 
@@ -119,7 +127,7 @@ void GameWorld::GetConstraintIterators(
 	last	= constraints.end();
 }
 
-SceneContactPoint* GameWorld::Raycast(reactphysics3d::Ray& r, GameObject* ignoreThis) const {
+SceneContactPoint* GameWorld::Raycast(const reactphysics3d::Ray& r, GameObject* ignoreThis) const {
 	raycastManager->clear();
 	if (ignoreThis) { raycastManager->setIgnore(ignoreThis->GetRigidBody()); }
 
@@ -140,4 +148,8 @@ SceneContactPoint* GameWorld::Raycast(reactphysics3d::Ray& r, GameObject* ignore
 	}
 
 	return closestHit;
+}
+
+void GameWorld::AddPaintedPosition(const Vector3& position) {
+	paintedPositions.push_back(position);
 }

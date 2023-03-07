@@ -14,7 +14,7 @@ namespace NCL {
 		protected:
 			Player* AddPlayer(Vector3 position) override;
 			void InitPlayers();
-
+			virtual void CreateSplatOnShoot();
 		protected:
 			//contains an array of players (2) only
 			const int maxPlayers = 2;

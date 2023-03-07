@@ -39,6 +39,9 @@ namespace NCL {
 		bool MoveLeft() override {
 			return gamepad.GetAxis(0).x < 0.0f;
 		}
+		bool Shoot() override {
+			return false;
+		}
 
 		float ViewDy() override {
 			return gamepad.GetAxis(0).y;

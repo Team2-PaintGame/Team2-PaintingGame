@@ -22,6 +22,7 @@ namespace NCL {
 		void SetYawPitch(float dx, float dy);
 		float GetPitch() const { return pitch; }
 		float GetYaw() const { return yaw; }
+		virtual void Shoot() {}
 	protected:
 		float	yaw = 0.0f;
 		float	pitch = 0.0f;
