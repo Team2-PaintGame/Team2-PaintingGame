@@ -1,6 +1,9 @@
 #pragma once
 #include <PlayerBase.h>
 #include "Window.h"
+#include <Ray.h>
+#include "Utils.h"
+#include "Vector3.h"
 
 namespace NCL {
 	using namespace Rendering;
@@ -16,23 +19,12 @@ namespace NCL {
 		virtual ~Player() {
 			delete animationController;
 		}
-		virtual void Update(float dt) {
-			PlayerBase::Update(dt);
-			if (animationController) {
-				animationController->Update(dt);
-			}
-		}
+		virtual void Update(float dt);
+		virtual void Shoot();
+		const reactphysics3d::Ray& GetShootRay() const { return shootRay; }
 	protected:
-		void SetMemberVariables(const std::unordered_map<std::string, MeshAnimation*>& animations) {
-			camera->SetBasicCameraParameters(this, 0.1f, 500.0f);
-			camera->SetPerspectiveCameraParameters(Window::GetWindow()->GetScreenAspect());
-			camera->SetThirdPersonCamera();
-
-			animationController = new AnimationController(this, animations);
-			renderObject->SetRigged(true);
-			renderObject->SetAnimationController(animationController);
-		}
+		void SetMemberVariables(const std::unordered_map<std::string, MeshAnimation*>& animations);
 		AnimationController* animationController = NULL;
-
+		reactphysics3d::Ray shootRay = reactphysics3d::Ray(~Maths::Vector3(0), ~Maths::Vector3(0));
 	};
 }

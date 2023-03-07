@@ -15,6 +15,7 @@ namespace NCL {
 		virtual bool MoveBackward() = 0;
 		virtual bool MoveRight() = 0;
 		virtual bool MoveLeft() = 0;
+		virtual bool Shoot() = 0;
 		virtual bool Pause() = 0;
 
 		virtual float ViewDx() = 0;

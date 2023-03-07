@@ -50,6 +50,9 @@ namespace NCL {
 		bool MoveLeft() override {
 			return gamepad.leftStickX < 0.0f;
 		}
+		bool Shoot() override {
+			return false;
+		}
 
 		float ViewDy() override {
 			return gamepad.rightStickY;

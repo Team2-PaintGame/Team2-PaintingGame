@@ -45,4 +45,7 @@ void PlayerController::Update(float dt) {
 	}
 
 	player->SetYawPitch(ViewDx(), ViewDy());
+	if (Shoot()) {
+		player->Shoot();
+	}
 }

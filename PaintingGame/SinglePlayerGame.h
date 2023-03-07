@@ -11,6 +11,7 @@ namespace NCL {
 			virtual ~SinglePlayerGame();
 			void Update(float dt) override;
 		protected:
+			virtual void CreateSplatOnShoot();
 			Player* AddPlayer(Vector3 position) override;
 			Player* player = NULL;
 			PlayerController* playerController;

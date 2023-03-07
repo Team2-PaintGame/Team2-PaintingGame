@@ -135,10 +135,25 @@ void OGLPaintingGameRenderer::RenderGameScreen() { //change this to RenderScreen
 					i->GetFrameMatrices(frameMatrices);
 					glUniformMatrix4fv(locations.jointsLocation, frameMatrices.size(), false, (float*)frameMatrices.data());
 				}
+				RenderPaintSplat(shader);
 			}
 		}
 	);
 	boundScreen->RenderMenu();
+}
+
+void OGLPaintingGameRenderer::RenderPaintSplat(OGLShader* shader) {
+	GameWorld* world = boundScreen->GetSceneNode()->GetWorld();
+	if (world) {
+		world->OperateOnPaintedPositions(
+			[&](int index, Vector3& pos) {
+				std::string i = std::to_string(index);
+				glUniform3fv(glGetUniformLocation(shader->GetProgramID(), ("paintedPos[" + i + "]").c_str()), 1, pos.array);
+			}
+		);
+		int splatVectorSize = glGetUniformLocation(shader->GetProgramID(), "numOfSplats");
+		glUniform1i(splatVectorSize, world->GetNumPaintedPositions());
+	}
 }
 
 void OGLPaintingGameRenderer::BuildObjectList() {

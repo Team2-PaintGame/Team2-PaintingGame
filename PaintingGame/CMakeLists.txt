@@ -38,6 +38,7 @@ set(GameObjects
     "./GameObjects/Ink.h"
     "./GameObjects/Ink.cpp"
     "./GameObjects/Player.h"
+    "./GameObjects/Player.cpp"
     "./GameObjects/PaintingObject.h"
 )
 source_group("Game Objects" FILES ${GameObjects})

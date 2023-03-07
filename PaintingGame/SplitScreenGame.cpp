@@ -38,6 +38,15 @@ void SplitScreenGame::InitPlayers() {
 	player2->GetCamera()->SetViewportSize(Vector2(0.5f, 0.0f));
 }
 
+void SplitScreenGame::CreateSplatOnShoot() {
+	for (const auto& player : players) {
+		SceneContactPoint* closestCollision = world->Raycast(player->GetShootRay());
+		if (closestCollision->isHit) {
+			world->AddPaintedPosition(closestCollision->hitPos);
+		}
+	}
+}
+
 Player* SplitScreenGame::AddPlayer(Vector3 position) {
 	Player* player = CreatePlayer(position);
 	activeCameras.push_back(player->GetCamera());

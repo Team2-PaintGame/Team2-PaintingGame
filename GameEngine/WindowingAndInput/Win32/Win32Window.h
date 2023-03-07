@@ -93,6 +93,10 @@ namespace NCL::Win32Code {
 			return Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::A);
 		}
 
+		bool Shoot() override {
+			return Window::GetMouse()->ButtonPressed(NCL::MouseButtons::RIGHT);
+		}
+
 		float ViewDy() override {
 			return Window::GetMouse()->GetRelativePosition().y;
 		}
