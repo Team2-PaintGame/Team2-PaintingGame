@@ -6,6 +6,8 @@
 using namespace NCL;
 using namespace CSC8508;
 
+bool GameScreen::s_pauseCallback = false;
+
 void GameScreen::OnAwake() {
 	isMenuDisplayed = false;
 	LoadGame();
@@ -33,10 +35,23 @@ void GameScreen::LoadGame() {
 	}
 }
 
+PushdownState::PushdownResult GameScreen::OnUpdate(float dt, PushdownState** newState) {
+	if (s_pauseCallback)
+	{
+		isMenuDisplayed = true;
+		s_pauseCallback = false;
+	}
+	return BaseScreen::OnUpdate(dt, newState);
+}
+
 void GameScreen::MenuFrame() {
 	ImGui::Begin("Painting Game");
-	if (ImGui::Button("Pause")) {
-		isMenuDisplayed = true;
+	if (ImGui::Button("Resume")) {
+		isMenuDisplayed = false;
+	}
+	if (ImGui::Button("Toggle Debug Lines"))
+	{
+
 	}
 	if (ImGui::Button("Quit Game")) {
 		command = ScreenCommand::TransitionToPreviousScreen;
@@ -52,4 +67,9 @@ PushdownState::PushdownResult GameScreen::onStateChange(PushdownState** newState
 		default:
 			return PushdownResult::NoChange;
 	}
+}
+
+void GameScreen::GamePauseCallback()
+{
+	s_pauseCallback = true;
 }

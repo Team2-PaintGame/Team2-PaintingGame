@@ -1,12 +1,18 @@
 #include "PlayerController.h"
 #include "Utils.h"
 #include <algorithm>
-
+#include "../PaintingGame/Screens/GameScreen.h"
 using namespace NCL;
 
 PlayerController::PlayerController(PlayerBase* player) : player(player) {}
 
 void PlayerController::Update(float dt) {
+	if (Pause())
+	{
+		GameScreen::GamePauseCallback();
+		return;
+	}
+
 	Matrix4 view = player->GetCamera()->BuildViewMatrix();
 	Matrix4 camWorld = view.Inverse();
 
