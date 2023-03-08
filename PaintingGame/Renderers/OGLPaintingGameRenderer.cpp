@@ -147,7 +147,7 @@ void OGLPaintingGameRenderer::RenderPaintSplat(OGLShader* shader) {
 				glUniform3fv(glGetUniformLocation(shader->GetProgramID(), ("paintedPos[" + i + "]").c_str()), 1, pos.array);
 			}
 		);
-		int splatVectorSize = glGetUniformLocation(shader->GetProgramID(), "numOfSplats");
+		int splatVectorSize = glGetUniformLocation(shader->GetProgramID(), "numOfSplats"); //not used anywhere in the shader
 		glUniform1i(splatVectorSize, world->GetNumPaintedPositions());
 	}
 }

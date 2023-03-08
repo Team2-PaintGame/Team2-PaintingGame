@@ -33,7 +33,7 @@ ShaderBase* NCL::GameAssets::GetShader(const std::string& identifier) const {
 }
 
 void GameAssets::LoadMeshes() {
-	meshes.insert(std::make_pair("floorMesh", loader->LoadMesh("Arena.msh")));
+	meshes.insert(std::make_pair("floorMesh", loader->LoadMesh("BasicLVL.msh")));
 	meshes.insert(std::make_pair("cubeMesh", loader->LoadMesh("cube.msh")));
 	meshes.insert(std::make_pair("mainChar", loader->LoadMesh("Aj_TPose.msh")));
 	meshes.insert(std::make_pair("sphereMesh", loader->LoadMesh("sphere.msh")));
@@ -44,7 +44,8 @@ void GameAssets::LoadMeshes() {
 
 void GameAssets::LoadMeshMaterials() {
 	meshMaterials.insert(std::make_pair("goatMat", std::make_unique<MeshMaterial>("goat.mat")));
-	meshMaterials.insert(std::make_pair("mainCharMat", new MeshMaterial("Aj_TPose.mat")));
+	meshMaterials.insert(std::make_pair("redMainCharMat", new MeshMaterial("red_Aj_TPose.mat")));
+	meshMaterials.insert(std::make_pair("blueMainCharMat", new MeshMaterial("blue_Aj_TPose.mat")));
 	meshMaterials.insert(std::make_pair("monaLisaMat", new MeshMaterial("MonaLisa.mat")));
 	meshMaterials.insert(std::make_pair("appleFaceMat", new MeshMaterial("appleFace.mat")));
 	meshMaterials.insert(std::make_pair("handsPaintingMat", new MeshMaterial("handsPainting.mat")));

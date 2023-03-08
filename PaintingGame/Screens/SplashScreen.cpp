@@ -18,9 +18,11 @@ PushdownState::PushdownResult SplashScreen::onStateChange(PushdownState** newSta
 	switch (command)
 	{
 		case ScreenCommand::TransitionToNextScreen: 
+			command = ScreenCommand::None;
 			*newState = screenManager->GetScreen(ScreenType::MainMenuScreen);
 			return PushdownResult::Push;
 		case ScreenCommand::Exit: 
+			command = ScreenCommand::None;
 			return PushdownResult::Pop;
 		default: 
 			return PushdownResult::NoChange;

@@ -24,11 +24,17 @@ namespace NCL {
 			void Restart() { InitWorld(); }
 			virtual GameWorld* GetWorld() const { return world; }
 			virtual void OperateOnCameras(CameraFunc f);
+			enum Team
+			{
+				Red,
+				Blue,
+				None
+			};
 		protected:
 			virtual void InitWorld();
 			virtual void CreateSplatOnShoot() = 0;
-			virtual Player* CreatePlayer(Vector3 position);
-			virtual Player* AddPlayer(Vector3 position) { return nullptr; };
+			virtual Player* CreatePlayer(Vector3 position,Team team);
+			virtual Player* AddPlayer(Vector3 position,Team team) { return nullptr; };
 
 			GameWorld* world;
 
@@ -47,6 +53,7 @@ namespace NCL {
 
 			//container for cameras
 			std::vector<Camera*> activeCameras;
+			
 		};
 	}
 }

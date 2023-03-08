@@ -33,10 +33,26 @@ void MainMenuScreen::MenuFrame() {
 }
 
 PushdownState::PushdownResult MainMenuScreen::onStateChange(PushdownState** newState) {
-	if (command == ScreenCommand::CreateSinglePlayerGame || command == ScreenCommand::CreateSplitScreenGame || command == ScreenCommand::CreateNetworkedGameAsServer || command == ScreenCommand::CreateNetworkedGameAsClient) {
+	switch (command)
+	{
+	case ScreenCommand::CreateSinglePlayerGame:
+	case ScreenCommand::CreateSplitScreenGame:
+	case ScreenCommand::CreateNetworkedGameAsServer:
+	case ScreenCommand::CreateNetworkedGameAsClient:
+	{
 		*newState = screenManager->GetScreen(ScreenType::GameScreen);
 		((BaseScreen*)(*newState))->SetCommand(command);
+		command = ScreenCommand::None;
 		return PushdownResult::Push;
 	}
-	return PushdownResult::NoChange;
+	case  ScreenCommand::TransitionToPreviousScreen:
+	{
+		command = ScreenCommand::None;
+		return PushdownResult::Pop;
+	}
+	default:
+	{
+		return PushdownResult::NoChange;
+	}
+	}
 }

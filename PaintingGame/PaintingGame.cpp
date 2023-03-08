@@ -22,8 +22,8 @@ PaintingGame::PaintingGame(GameAssets* assets) {
 }
 
 PaintingGame::~PaintingGame() {
-	physicsCommon.destroyPhysicsWorld(physicsWorld);
 	delete world;
+	physicsCommon.destroyPhysicsWorld(physicsWorld);
 }
 
 void PaintingGame::OperateOnCameras(CameraFunc f) {
@@ -35,20 +35,19 @@ void PaintingGame::OperateOnCameras(CameraFunc f) {
 void PaintingGame::InitWorld() {
 	world->ClearAndErase();
 
-	world->AddGameObject(new Floor(physicsCommon, physicsWorld, Vector3(-30, 0, 60), assets->GetMesh("floorMesh"), assets->GetTexture("basicTex"), assets->GetShader("basicShader"), 1));
+	world->AddGameObject(new Floor(physicsCommon, physicsWorld, Vector3(0, 0, 0), assets->GetMesh("floorMesh"), assets->GetTexture("basicTex"), assets->GetShader("basicShader"), 1));
 
 	for (int x = 0; x < 15; ++x) {
 		world->AddGameObject(new Box(physicsCommon, physicsWorld, Vector3(0, 10, 0), assets->GetMesh("cubeMesh"), assets->GetTexture("doorTex"), assets->GetShader("basicShader"), 2));
 	}
 
-	world->AddGameObject(new PaintingObject(physicsCommon, physicsWorld, Vector3(30, 10, 0), assets->GetMesh("cubeMesh"), assets->GetMeshMaterial("monaLisaMat"), assets->GetShader("basicShader"), 10, "MonaLisa"));
-	world->AddGameObject(new PaintingObject(physicsCommon, physicsWorld, Vector3(20, 10, 0), assets->GetMesh("cubeMesh"), assets->GetMeshMaterial("appleFaceMat"), assets->GetShader("basicShader"), 10, "appleFace"));
-	world->AddGameObject(new PaintingObject(physicsCommon, physicsWorld, Vector3(40, 10, 0), assets->GetMesh("cubeMesh"), assets->GetMeshMaterial("handsPaintingMat"), assets->GetShader("basicShader"), 10, "handsPaint"));
-	world->AddGameObject(new PaintingObject(physicsCommon, physicsWorld, Vector3(10, 10, 0), assets->GetMesh("cubeMesh"), assets->GetMeshMaterial("nightSkyMat"), assets->GetShader("basicShader"), 10, "nightSky"));
-	world->AddGameObject(new PaintingObject(physicsCommon, physicsWorld, Vector3(50, 10, 0), assets->GetMesh("cubeMesh"), assets->GetMeshMaterial("screamPaintMat"), assets->GetShader("basicShader"), 10, "screamPaint"));
-	world->AddGameObject(new PaintingObject(physicsCommon, physicsWorld, Vector3(60, 10, 0), assets->GetMesh("cubeMesh"), assets->GetMeshMaterial("sunflowersMat"), assets->GetShader("basicShader"), 10, "sunflowers"));
-
-	world->AddGameObject(CreateInkStream<SphereParticle>(physicsCommon, physicsWorld, Vector3(0, 10, 0), assets->GetMesh("sphereMesh"), Vector4(0, 1, 0, 1), assets->GetShader("inkShader")));
+	world->AddGameObject(new PaintingObject(physicsCommon, physicsWorld, Vector3(30, 10, 50), assets->GetMesh("cubeMesh"), assets->GetMeshMaterial("monaLisaMat"), assets->GetShader("basicShader"), 10, "MonaLisa"));
+	world->AddGameObject(new PaintingObject(physicsCommon, physicsWorld, Vector3(20, 10, 50), assets->GetMesh("cubeMesh"), assets->GetMeshMaterial("handsPaintingMat"), assets->GetShader("basicShader"), 10, "handsPaint"));
+	world->AddGameObject(new PaintingObject(physicsCommon, physicsWorld, Vector3(10, 10, 50), assets->GetMesh("cubeMesh"), assets->GetMeshMaterial("nightSkyMat"), assets->GetShader("basicShader"), 10, "nightSky"));
+	world->AddGameObject(new PaintingObject(physicsCommon, physicsWorld, Vector3(50, 10, 50), assets->GetMesh("cubeMesh"), assets->GetMeshMaterial("screamPaintMat"), assets->GetShader("basicShader"), 10, "screamPaint"));
+	world->AddGameObject(new PaintingObject(physicsCommon, physicsWorld, Vector3(60, 10, 50), assets->GetMesh("cubeMesh"), assets->GetMeshMaterial("sunflowersMat"), assets->GetShader("basicShader"), 10, "sunflowers"));
+  
+  world->AddGameObject(CreateInkStream<SphereParticle>(physicsCommon, physicsWorld, Vector3(0, 10, 0), assets->GetMesh("sphereMesh"), Vector4(0, 1, 0, 1), assets->GetShader("inkShader")));
 	world->AddGameObject(CreateInkSplash<SphereParticle>(physicsCommon, physicsWorld, Vector3(0, 9.5, 0), assets->GetMesh("sphereMesh"), Vector4(0, 1, 0, 1), assets->GetShader("inkShader")));
 }
 
@@ -59,10 +58,18 @@ void PaintingGame::Update(float dt) {
 	Debug::UpdateRenderables(dt);
 }
 
-Player* PaintingGame::CreatePlayer(Vector3 position) {
+Player* PaintingGame::CreatePlayer(Vector3 position,Team team) {
 	std::unordered_map<std::string, MeshAnimation*> animations;
 	animations.insert(std::make_pair("idleAnimation", assets->GetMeshAnimation("mainCharIdleAnim")));
 	animations.insert(std::make_pair("moveAnimation", assets->GetMeshAnimation("mainCharRunAnim")));
 
-	return new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("mainCharMat"), assets->GetShader("skinningShader"), animations, 5);
+	if (team == Team::Red) {
+		return new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("redMainCharMat"), assets->GetShader("skinningShader"), animations, 5);
+
+	}
+
+	if (team == Team::Blue) {
+		return new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("blueMainCharMat"), assets->GetShader("skinningShader"), animations, 5);
+
+	}
 }
