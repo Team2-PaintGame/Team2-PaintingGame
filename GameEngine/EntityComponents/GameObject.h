@@ -18,7 +18,7 @@ namespace NCL::CSC8508 {
 		GameObjectListener(GameWorld* world) { this->world = world; }
 		~GameObjectListener() {}
 
-		virtual void onContact(const CollisionCallback::CallbackData& callbackData) override;
+		virtual void onTrigger(const reactphysics3d::OverlapCallback::CallbackData& callbackData) override;
 	private:
 		GameWorld* world;
 	};

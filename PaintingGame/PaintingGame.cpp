@@ -19,6 +19,8 @@ PaintingGame::PaintingGame(GameAssets* assets) {
 	//renderer->settings.SetIsDebugRenderingModeEnabled(true);
 	//renderer->settings.debugRendererSettings.SetIsCollisionShapeDisplayed(true);
 	//renderer->settings.debugRendererSettings.SetIsBroadPhaseAABBDisplayed(true);
+	GameObjectListener listener(world);
+	world->SetCollisionListener(&listener);
 }
 
 PaintingGame::~PaintingGame() {

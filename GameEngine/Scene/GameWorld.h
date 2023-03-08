@@ -103,7 +103,7 @@ namespace NCL {
 
 			void SetCollisionListener(GameObjectListener* listener) {
 				collisionManager = listener;
-				physicsWorld->setEventListener(listener);
+				physicsWorld->setEventListener(collisionManager);
 			}
 
 			SceneContactPoint* Raycast(const reactphysics3d::Ray& r, GameObject* ignore = nullptr) const;
