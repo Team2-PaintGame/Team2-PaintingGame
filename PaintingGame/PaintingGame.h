@@ -16,6 +16,11 @@ namespace NCL {
 	class MenuHandler;
 	namespace CSC8508 {
 		//typedef std::function<void(Camera*)> CameraFunc;
+		enum class Team {
+			Red,
+			Blue,
+			None
+		};
 		class PaintingGame : public SceneNode {
 		public:
 			PaintingGame(GameAssets* assets);
@@ -24,17 +29,11 @@ namespace NCL {
 			void Restart() { InitWorld(); }
 			virtual GameWorld* GetWorld() const { return world; }
 			virtual void OperateOnCameras(CameraFunc f);
-			enum Team
-			{
-				Red,
-				Blue,
-				None
-			};
 		protected:
 			virtual void InitWorld();
 			virtual void CreateSplatOnShoot() = 0;
-			virtual Player* CreatePlayer(Vector3 position,Team team);
-			virtual Player* AddPlayer(Vector3 position,Team team) { return nullptr; };
+			virtual Player* CreatePlayer(Vector3 position, Team team);
+			virtual Player* AddPlayer(Vector3 position, Team team) = 0;
 
 			GameWorld* world;
 

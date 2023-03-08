@@ -25,7 +25,7 @@ void SinglePlayerGame::CreateSplatOnShoot() {
 	}
 }
 
-Player* SinglePlayerGame::AddPlayer(Vector3 position,Team team) {
+Player* SinglePlayerGame::AddPlayer(Vector3 position, Team team) {
 	player = CreatePlayer(position, team);
 	activeCameras.push_back(player->GetCamera());
 	world->AddGameObject(player);

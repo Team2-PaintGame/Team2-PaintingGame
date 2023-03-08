@@ -27,13 +27,19 @@ SplitScreenGame::~SplitScreenGame() {
 void SplitScreenGame::InitPlayers() {
 	players.clear();
 	
-	Player* player1 = AddPlayer(Vector3(20.0f, 10.0f, 20.0f),Team::Red);
-	Player* player2 = AddPlayer(Vector3(30.0f, 10.0f, 20.0f),Team::Blue);
+	Player* player1 = AddPlayer(Vector3(20.0f, 10.0f, 20.0f), Team::Red);
+	Player* player2 = AddPlayer(Vector3(30.0f, 10.0f, 20.0f), Team::Blue);
 
 	playerControllers.push_back(GameManager::sConfig.playerControllerFactory->createPlayerController(player1));
+	
+	//if second player controller is not set, use the factory from GameManager::sConfig to create the second player controller
 	if (secondPlayerControllerFactory) {
 		playerControllers.push_back(secondPlayerControllerFactory->createPlayerController(player2));
 	}
+	else {
+		playerControllers.push_back(GameManager::sConfig.playerControllerFactory->createPlayerController(player2));
+	}
+
 	player1->GetCamera()->SetViewportDivider(0.5f);
 	player2->GetCamera()->SetViewportDivider(0.5f);
 	player1->GetCamera()->SetViewportSize(Vector2(0.0f, 0.0f));
