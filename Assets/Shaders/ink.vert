@@ -19,7 +19,7 @@ out Vertex
 {
 	vec4 colour;
 	vec2 texCoord;
-	vec4 shadowProj;
+	//vec4 shadowProj;
 	vec3 normal;
 	vec3 worldPos;
 } OUT;
@@ -27,12 +27,12 @@ out Vertex
 void main(void)
 {
 	mat4 modelMatrix = modelMatrices[gl_InstanceID];
-	mat4 shadowMatrix = shadowMatrices[gl_InstanceID];
+	//mat4 shadowMatrix = shadowMatrices[gl_InstanceID];
 
 	mat4 mvp 		  = (projMatrix * viewMatrix * modelMatrix);
 	mat3 normalMatrix = transpose ( inverse ( mat3 ( modelMatrix )));
 
-	OUT.shadowProj 	=  shadowMatrix * vec4 ( position,1);
+	//OUT.shadowProj 	=  shadowMatrix * vec4 ( position,1);
 	OUT.worldPos 	= ( modelMatrix * vec4 ( position ,1)). xyz ;
 	OUT.normal 		= normalize ( normalMatrix * normalize ( normal ));
 	

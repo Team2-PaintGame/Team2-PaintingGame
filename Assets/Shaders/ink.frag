@@ -4,7 +4,7 @@
 
 uniform vec4 		objectColour;
 uniform sampler2D 	mainTex;
-uniform sampler2DShadow shadowTex;
+//uniform sampler2DShadow shadowTex;
 uniform float time;
 uniform float dt;
 
@@ -20,7 +20,7 @@ in Vertex
 {
 	vec4 colour;
 	vec2 texCoord;
-	vec4 shadowProj;
+	//vec4 shadowProj;
 	vec3 normal;
 	vec3 worldPos;
 } IN;
@@ -31,9 +31,9 @@ void main(void)
 {
 	float shadow = 1.0; // New !
 	
-	if( IN . shadowProj . w > 0.0) { // New !
-		shadow = textureProj ( shadowTex , IN . shadowProj ) * 0.5f;
-	}
+	//if( IN . shadowProj . w > 0.0) { // New !
+	//	shadow = textureProj ( shadowTex , IN . shadowProj ) * 0.5f;
+	//}
 
 	vec3  incident = normalize ( lightPos - IN.worldPos );
 	float lambert  = max (0.0 , dot ( incident , IN.normal )) * 0.9; 
