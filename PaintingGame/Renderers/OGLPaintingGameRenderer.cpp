@@ -61,14 +61,6 @@ void OGLPaintingGameRenderer::RenderBasicScreen() { //change this to render stat
 	boundScreen->RenderMenu();
 }
 void OGLPaintingGameRenderer::RenderGameScreen() { //change this to RenderScreen
-	///*glEnable(GL_CULL_FACE);
-	//glCullFace(GL_BACK);
-	//glEnable(GL_DEPTH_TEST);*/
-
-	//
-	//glDisable(GL_CULL_FACE);
-	//glDisable(GL_DEPTH_TEST);
-
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	//send camera things and light things to shader
@@ -81,6 +73,15 @@ void OGLPaintingGameRenderer::RenderGameScreen() { //change this to RenderScreen
 			ShaderVariablesLocations locations;
 			OGLShader* activeShader = nullptr;
 			for (const auto& i : activeObjects) {
+				if (i->GetIsOccluded()) {
+					glEnable(GL_CULL_FACE);
+					glCullFace(GL_BACK);
+					glEnable(GL_DEPTH_TEST);
+				}
+				else {
+					glDisable(GL_CULL_FACE);
+					glDisable(GL_DEPTH_TEST);
+				}
 				OGLShader* shader = (OGLShader*)(i)->GetShader();
 				BindShader(shader);
 				if (activeShader != shader) {

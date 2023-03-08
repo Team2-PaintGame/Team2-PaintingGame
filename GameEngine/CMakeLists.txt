@@ -121,7 +121,6 @@ set(Graphics_Renderering_Support
     "./Graphics/Renderer/RenderingSupport/ShaderBase.h"
     "./Graphics/Renderer/RenderingSupport/TextureBase.cpp"
     "./Graphics/Renderer/RenderingSupport/TextureBase.h"
-    "./Graphics/Renderer/RenderingSupport/TextureHUD.h"
 )
 source_group("Graphics\\Renderer\\Rendering Support" FILES ${Graphics_Renderering_Support})
 

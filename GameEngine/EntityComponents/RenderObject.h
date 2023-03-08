@@ -94,6 +94,14 @@ namespace NCL {
 			bool isSingleTextured() const {
 				return !multipleTextures;
 			}
+
+			void SetIsOccluded(bool val) {
+				isOccluded = val;
+			}
+
+			bool GetIsOccluded() const {
+				return isOccluded;
+			}
 		protected:
 			MeshGeometry*	mesh;
 			AnimationController* animationController;
@@ -109,6 +117,7 @@ namespace NCL {
 			unsigned int numInstances = 0;
 			bool isInstanced = false;
 			bool multipleTextures = false;
+			bool isOccluded = true; //When an object is occluded, it is not rendered by the graphics pipeline if it is not visible to the viewer
 		};
 	}
 }

@@ -19,6 +19,7 @@ namespace NCL {
 
 			renderObject = new RenderObject(&transform, mesh, shader);
 			renderObject->SetDefaultTexture(texture);
+			renderObject->SetIsOccluded(false);
 		}
 	};
 
