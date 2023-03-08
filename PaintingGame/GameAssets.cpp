@@ -33,7 +33,7 @@ ShaderBase* NCL::GameAssets::GetShader(const std::string& identifier) const {
 }
 
 void GameAssets::LoadMeshes() {
-	meshes.insert(std::make_pair("floorMesh", loader->LoadMesh("Arena.msh")));
+	meshes.insert(std::make_pair("floorMesh", loader->LoadMesh("BasicLVL.msh")));
 	meshes.insert(std::make_pair("cubeMesh", loader->LoadMesh("cube.msh")));
 	meshes.insert(std::make_pair("mainChar", loader->LoadMesh("Aj_TPose.msh")));
 	meshes.insert(std::make_pair("sphereMesh", loader->LoadMesh("sphere.msh")));

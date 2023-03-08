@@ -9,7 +9,7 @@ SinglePlayerGame::SinglePlayerGame(GameAssets * assets) : PaintingGame(assets) {
 	if (!GameManager::sConfig.playerControllerFactory) {
 		GameManager::sConfig.playerControllerFactory = new Win32PlayerControllerFactory();
 	}
-	AddPlayer(Vector3(0.0f, 10.0f, 0.0f));
+	AddPlayer(Vector3(20.0f, 10.0f, 50.0f));
 }
 
 SinglePlayerGame::~SinglePlayerGame() {
