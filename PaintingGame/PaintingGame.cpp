@@ -65,11 +65,9 @@ Player* PaintingGame::CreatePlayer(Vector3 position,Team team) {
 
 	if (team == Team::Red) {
 		return new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("redMainCharMat"), assets->GetShader("skinningShader"), animations, 5);
-
 	}
 
 	if (team == Team::Blue) {
 		return new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("blueMainCharMat"), assets->GetShader("skinningShader"), animations, 5);
-
 	}
 }
