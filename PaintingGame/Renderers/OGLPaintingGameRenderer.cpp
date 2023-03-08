@@ -200,17 +200,19 @@ void OGLPaintingGameRenderer::SendModelMatrices(OGLShader* shader, const RenderO
 }
 
 void OGLPaintingGameRenderer::RenderWithDefaultTexture(const ShaderVariablesLocations& locations, const RenderObject* r) {
+	unsigned int numInstances = r->GetInstanceCount();
 	glUniform1i(locations.hasTexLocation, r->GetDefaultTexture() ? 1 : 0);
 	BindMesh(r->GetMesh());
 	BindTextureToShader(r->GetDefaultTexture(), "mainTex", 0);
 	int layercount = r->GetMesh()->GetSubMeshCount();
 	int index = 0;
 	do {
-		DrawBoundMesh(index++);
+		DrawBoundMesh(index++, numInstances);
 	} while (index < layercount);
 }
 
 void OGLPaintingGameRenderer::RenderWithMultipleTexture(const ShaderVariablesLocations& locations, const RenderObject* r) {
+	unsigned int numInstances = r->GetInstanceCount();
 	BindMesh(r->GetMesh());
 	int layercount = r->GetMesh()->GetSubMeshCount();
 	for (int index = 0; index < layercount; ++index) {
@@ -222,7 +224,7 @@ void OGLPaintingGameRenderer::RenderWithMultipleTexture(const ShaderVariablesLoc
 			BindTextureToShader(texturepairs.second, texturepairs.first, texunit);
 			texunit++;
 		}
-		DrawBoundMesh(index);
+		DrawBoundMesh(index, numInstances);
 	}
 }
 
