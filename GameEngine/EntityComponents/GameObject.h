@@ -11,17 +11,6 @@ namespace NCL::CSC8508 {
 	class NetworkObject;
 	class RenderObject;
 	class PhysicsObject;
-	class GameWorld;
-
-	class GameObjectListener : public reactphysics3d::EventListener {
-	public:
-		GameObjectListener(GameWorld* world) { this->world = world; }
-		~GameObjectListener() {}
-
-		virtual void onTrigger(const reactphysics3d::OverlapCallback::CallbackData& callbackData) override;
-	private:
-		GameWorld* world;
-	};
 
 	class GameObject :public SceneNode	{
 	public:
