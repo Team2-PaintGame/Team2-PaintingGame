@@ -42,6 +42,10 @@ PushdownState::PushdownResult BaseScreen::OnUpdate(float dt, PushdownState** new
 	return onStateChange(newState);
 }
 
+void BaseScreen::OnSleep() {
+	command = ScreenCommand::None;
+}
+
 void BaseScreen::RenderMenu() {
 	// Start the Dear ImGui frame
 	ImGui_ImplOpenGL3_NewFrame();

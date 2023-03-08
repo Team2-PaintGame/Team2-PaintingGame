@@ -47,6 +47,7 @@ namespace NCL::CSC8508 {
 		virtual ~BaseScreen() {}
 		PushdownResult OnUpdate(float dt, PushdownState** newState) override;
 		void OnAwake() override {};
+		virtual void OnSleep();
 		void SetCommand(ScreenCommand command) { this->command = command; };
 		SceneNode* GetSceneNode() const { return sceneNode; }
 		ScreenType GetScreenType() const { return screenType; }
