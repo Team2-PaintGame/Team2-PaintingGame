@@ -9,7 +9,6 @@ namespace NCL {
 		struct ShaderVariablesLocations {
 			int projLocation = 0;
 			int viewLocation = 0;
-			int modelLocation = 0;
 			int colourLocation = 0;
 			int hasVColLocation = 0;
 			int hasTexLocation = 0;
@@ -119,6 +118,7 @@ namespace NCL {
 			void BuildObjectList();
 			void SortObjectList();
 
+			void SendModelMatrices(OGLShader* shader, const RenderObject* r);
 			void RenderWithDefaultTexture(const ShaderVariablesLocations& locations, const RenderObject* r);
 			void RenderWithMultipleTexture(const ShaderVariablesLocations& locations, const RenderObject* r);
 			vector<const RenderObject*> activeObjects;

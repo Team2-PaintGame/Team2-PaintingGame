@@ -80,7 +80,6 @@ void OGLPaintingGameRenderer::RenderGameScreen() { //change this to RenderScreen
 				if (activeShader != shader) {
 					locations.projLocation = glGetUniformLocation(shader->GetProgramID(), "projMatrix");
 					locations.viewLocation = glGetUniformLocation(shader->GetProgramID(), "viewMatrix");
-					locations.modelLocation = glGetUniformLocation(shader->GetProgramID(), "modelMatrix");
 					locations.shadowLocation = glGetUniformLocation(shader->GetProgramID(), "shadowMatrix");
 					locations.colourLocation = glGetUniformLocation(shader->GetProgramID(), "objectColour");
 					locations.hasVColLocation = glGetUniformLocation(shader->GetProgramID(), "hasVertexColours");
@@ -114,11 +113,7 @@ void OGLPaintingGameRenderer::RenderGameScreen() { //change this to RenderScreen
 					activeShader = shader;
 				}
 
-				Matrix4 modelMatrix = (*i).GetTransform()->GetMatrix();
-				glUniformMatrix4fv(locations.modelLocation, 1, false, (float*)&modelMatrix);
-
-				/*Matrix4 fullShadowMat = modelMatrix;
-				glUniformMatrix4fv(locations.shadowLocation, 1, false, (float*)&fullShadowMat);*/
+				SendModelMatrices(shader, i);
 
 				Vector4 colour = i->GetColour();
 				glUniform4fv(locations.colourLocation, 1, colour.array);
@@ -174,6 +169,27 @@ void OGLPaintingGameRenderer::BuildObjectList() {
 
 void OGLPaintingGameRenderer::SortObjectList() {
 
+}
+
+void OGLPaintingGameRenderer::SendModelMatrices(OGLShader* shader, const RenderObject* r) {
+	unsigned int numInstances = r->GetInstanceCount();
+	if (r->GetIsInstanced()) {
+		if (numInstances == 0) {
+			return;
+		}
+		std::vector<Transform*> transforms = r->GetTransforms();
+		for (int i = 0; i < numInstances; i++) {
+			std::string index = std::to_string(i);
+			Matrix4 modelMatrix = transforms[i]->GetMatrix();
+			int modelArrayLocation = glGetUniformLocation(shader->GetProgramID(), ("modelMatrices[" + index + "]").c_str());
+			glUniformMatrix4fv(modelArrayLocation, 1, false, (float*)&modelMatrix);
+		}
+	}
+	else {
+		Matrix4 modelMatrix = r->GetTransform()->GetMatrix();
+		int modelLocation = glGetUniformLocation(shader->GetProgramID(), "modelMatrix");
+		glUniformMatrix4fv(modelLocation, 1, false, (float*)&modelMatrix);
+	}
 }
 
 void OGLPaintingGameRenderer::RenderWithDefaultTexture(const ShaderVariablesLocations& locations, const RenderObject* r) {
