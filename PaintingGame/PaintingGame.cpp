@@ -47,7 +47,7 @@ void PaintingGame::InitWorld() {
 	world->AddGameObject(new PaintingObject(physicsCommon, physicsWorld, Vector3(50, 10, 50), assets->GetMesh("cubeMesh"), assets->GetMeshMaterial("screamPaintMat"), assets->GetShader("basicShader"), 10, "screamPaint"));
 	world->AddGameObject(new PaintingObject(physicsCommon, physicsWorld, Vector3(60, 10, 50), assets->GetMesh("cubeMesh"), assets->GetMeshMaterial("sunflowersMat"), assets->GetShader("basicShader"), 10, "sunflowers"));
   
-  world->AddGameObject(CreateInkStream<SphereParticle>(physicsCommon, physicsWorld, Vector3(0, 10, 0), assets->GetMesh("sphereMesh"), Vector4(0, 1, 0, 1), assets->GetShader("inkShader")));
+	world->AddGameObject(CreateInkStream<SphereParticle>(physicsCommon, physicsWorld, Vector3(0, 10, 0), assets->GetMesh("sphereMesh"), Vector4(0, 1, 0, 1), assets->GetShader("inkShader")));
 	world->AddGameObject(CreateInkSplash<SphereParticle>(physicsCommon, physicsWorld, Vector3(0, 9.5, 0), assets->GetMesh("sphereMesh"), Vector4(0, 1, 0, 1), assets->GetShader("inkShader")));
 }
 
@@ -70,4 +70,8 @@ Player* PaintingGame::CreatePlayer(Vector3 position,Team team) {
 	if (team == Team::Blue) {
 		return new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("blueMainCharMat"), assets->GetShader("skinningShader"), animations, 5);
 	}
+}
+
+FocusPoint* PaintingGame::CreateFocusPoint() {
+	return new FocusPoint(physicsCommon, physicsWorld, assets->GetMesh("quadMesh"), assets->GetTexture("gunFocusTex"), assets->GetShader("hudShader"), Vector2(0.05));
 }

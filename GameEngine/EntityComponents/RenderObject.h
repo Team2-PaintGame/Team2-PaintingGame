@@ -100,7 +100,7 @@ namespace NCL {
 			//for mutiple textures
 			std::map<int, std::vector<std::pair<std::string, TextureBase*>>> subMeshTextures;
 			//for single texture
-			TextureBase*	texture;
+			TextureBase*	texture = NULL;
 			ShaderBase*		shader;
 			Transform*		transform;
 			std::vector<Transform*> transforms;

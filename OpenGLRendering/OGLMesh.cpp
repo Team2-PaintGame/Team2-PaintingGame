@@ -142,7 +142,6 @@ OGLMesh* OGLMesh::GenerateQuad() {
 		m->normals.emplace_back(Vector3(0.0f, 0.0f, -1.0f)); //New!
 		m->tangents.emplace_back(Vector4(1.0f, 0.0f, 0.0f, 1.0f)); //New!
 	}
-
 	m->UploadToGPU();
 	return m;
 }

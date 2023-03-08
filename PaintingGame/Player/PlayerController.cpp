@@ -4,7 +4,7 @@
 #include "GameScreen.h"
 using namespace NCL;
 
-PlayerController::PlayerController(PlayerBase* player) : player(player) {}
+PlayerController::PlayerController(Player* player) : player(player) {}
 
 void PlayerController::Update(float dt) {
 	if (Pause()) {
@@ -48,4 +48,6 @@ void PlayerController::Update(float dt) {
 	if (Shoot()) {
 		player->Shoot();
 	}
+
+	player->targetPosition = GetCursorPosition(dt);
 }

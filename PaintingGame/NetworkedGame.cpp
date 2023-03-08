@@ -263,6 +263,11 @@ Player* NetworkedGame::AddPlayer(Vector3 position, Team team) {
 	Player* player = CreatePlayer(position, team);
 	world->AddGameObject(player);
 	activeCameras.push_back(player->GetCamera());
+
+	FocusPoint* focusPoint = CreateFocusPoint();
+	focusPoint->SetPlayer(player);
+	world->AddGameObject(focusPoint);
+
 	return player;
 }
 

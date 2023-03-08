@@ -1,5 +1,5 @@
 #pragma once
-#include "PlayerBase.h"
+#include "Player.h"
 
 namespace NCL {
 	using namespace Rendering;
@@ -7,7 +7,7 @@ namespace NCL {
 
 	class PlayerController {
 	public:
-		PlayerController(PlayerBase* player);
+		PlayerController(Player* player);
 		void Update(float dt);
 
 		// Get the input for moving forward
@@ -20,15 +20,16 @@ namespace NCL {
 
 		virtual float ViewDx() = 0;
 		virtual float ViewDy() = 0;
+		virtual const Vector2& GetCursorPosition(float dt) = 0;
 	protected:
-		PlayerBase* player;
+		Player* player;
 	};
 
 	// The abstract factory interface for player controller
 	class PlayerControllerFactory {
 	public:
 		virtual ~PlayerControllerFactory() {}
-		virtual PlayerController* createPlayerController(PlayerBase* player) = 0;
+		virtual PlayerController* createPlayerController(Player* player) = 0;
 	};
 }
 

@@ -61,10 +61,16 @@ void OGLPaintingGameRenderer::RenderBasicScreen() { //change this to render stat
 	boundScreen->RenderMenu();
 }
 void OGLPaintingGameRenderer::RenderGameScreen() { //change this to RenderScreen
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
+	///*glEnable(GL_CULL_FACE);
+	//glCullFace(GL_BACK);
+	//glEnable(GL_DEPTH_TEST);*/
+
+	//
+	//glDisable(GL_CULL_FACE);
+	//glDisable(GL_DEPTH_TEST);
+
 	glEnable(GL_BLEND);
-	glEnable(GL_DEPTH_TEST);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	//send camera things and light things to shader
 	boundScreen->GetSceneNode()->OperateOnCameras(
 		[&](Camera* cam) {
@@ -147,7 +153,7 @@ void OGLPaintingGameRenderer::RenderPaintSplat(OGLShader* shader) {
 				glUniform3fv(glGetUniformLocation(shader->GetProgramID(), ("paintedPos[" + i + "]").c_str()), 1, pos.array);
 			}
 		);
-		int splatVectorSize = glGetUniformLocation(shader->GetProgramID(), "numOfSplats"); //not used anywhere in the shader
+		int splatVectorSize = glGetUniformLocation(shader->GetProgramID(), "numOfSplats");
 		glUniform1i(splatVectorSize, world->GetNumPaintedPositions());
 	}
 }
@@ -193,13 +199,14 @@ void OGLPaintingGameRenderer::SendModelMatrices(OGLShader* shader, const RenderO
 }
 
 void OGLPaintingGameRenderer::RenderWithDefaultTexture(const ShaderVariablesLocations& locations, const RenderObject* r) {
-	glUniform1i(locations.hasTexLocation, (OGLTexture*)r->GetDefaultTexture() ? 1 : 0);
+	glUniform1i(locations.hasTexLocation, r->GetDefaultTexture() ? 1 : 0);
 	BindMesh(r->GetMesh());
 	BindTextureToShader(r->GetDefaultTexture(), "mainTex", 0);
 	int layercount = r->GetMesh()->GetSubMeshCount();
-	for (int index = 0; index < layercount; ++index) {
-		DrawBoundMesh(index);
-	}
+	int index = 0;
+	do {
+		DrawBoundMesh(index++);
+	} while (index < layercount);
 }
 
 void OGLPaintingGameRenderer::RenderWithMultipleTexture(const ShaderVariablesLocations& locations, const RenderObject* r) {
