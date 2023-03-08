@@ -21,8 +21,8 @@ PaintingGame::PaintingGame(GameAssets* assets) {
 }
 
 PaintingGame::~PaintingGame() {
-	physicsCommon.destroyPhysicsWorld(physicsWorld);
 	delete world;
+	physicsCommon.destroyPhysicsWorld(physicsWorld);
 }
 
 void PaintingGame::OperateOnCameras(CameraFunc f) {

@@ -14,6 +14,9 @@ void GameScreen::OnAwake() {
 }
 
 void GameScreen::LoadGame() {
+
+	delete sceneNode;
+
 	switch (command)
 	{
 	case ScreenCommand::CreateSinglePlayerGame: 
@@ -50,7 +53,7 @@ void GameScreen::MenuFrame() {
 	}
 	if (ImGui::Button("Toggle Debug Lines"))
 	{
-
+		
 	}
 	if (ImGui::Button("Quit Game")) {
 		command = ScreenCommand::TransitionToPreviousScreen;

@@ -36,6 +36,7 @@ PushdownState::PushdownResult MainMenuScreen::onStateChange(PushdownState** newS
 	if (command == ScreenCommand::CreateSinglePlayerGame || command == ScreenCommand::CreateSplitScreenGame || command == ScreenCommand::CreateNetworkedGameAsServer || command == ScreenCommand::CreateNetworkedGameAsClient) {
 		*newState = screenManager->GetScreen(ScreenType::GameScreen);
 		((BaseScreen*)(*newState))->SetCommand(command);
+		command = ScreenCommand::None;
 		return PushdownResult::Push;
 	}
 	return PushdownResult::NoChange;
