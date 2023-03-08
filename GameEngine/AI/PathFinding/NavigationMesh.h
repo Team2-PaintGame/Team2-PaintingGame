@@ -29,11 +29,12 @@ namespace NCL {
 			~NavigationMesh();
 
 			bool FindPath(const Vector3& from, const Vector3& to, NavigationPath& outPath) override;
-			void StringPull(Vector3 securitytPos);
+			int StringPull(Vector3 startPosition, Vector3 endPosition, NavigationPath& outPath);
 			float AngleBetweenVectors(Vector3 a, Vector3 b);
 			void FindEdges();
 			void FindMidPath(NavigationPath& outPath);
 
+			
 		protected:
 			struct NavTri {
 				Plane   triPlane;
@@ -73,8 +74,9 @@ namespace NCL {
 			std::vector<NavTri>		allTris;
 			std::vector<Vector3>	allVerts;
 			std::vector<NavTri> triRoute;
-			std::vector< VertexIndices> allEdges;
+			std::vector<VertexIndices> allEdges;
 
+			
 			VertexIndices FindSharedVertices(NavTri tri);
 			int FindNextVertex(VertexIndices vertIndices, NavigationMesh::NavTri tri);
 			NavTri* RemoveBestTri(std::vector<NavTri*>& list);

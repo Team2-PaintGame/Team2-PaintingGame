@@ -2,6 +2,7 @@
 #include "Assets.h"
 #include "Maths.h"
 #include <fstream>
+#include "Debug.h"
 using namespace NCL;
 using namespace CSC8508;
 using namespace std;
@@ -12,6 +13,11 @@ NavigationMesh::NavigationMesh()
 
 NavigationMesh::NavigationMesh(const std::string&filename)
 {
+	float ta = Maths::FloatAreaOfTri(Vector3(0,0,0), Vector3(1,1,0), Vector3(1,0,0) );
+	std::cout << "Clockwise: " << ta << endl;
+	ta = Maths::FloatAreaOfTri(Vector3(0, 0, 0), Vector3(1, 0, 0), Vector3(1, 1, 0));
+	std::cout << "AntiClockwise: " << ta << endl;
+
 	ifstream file(Assets::DATADIR + filename);
 
 	int numVertices = 0;
@@ -108,10 +114,11 @@ bool NavigationMesh::FindPath(const Vector3& from, const Vector3& to, Navigation
 				triRoute.emplace_back(*tri);
 				tri = tri->parent;
 			}
-			std::cout << "triRoute Size: " << triRoute.size();
+			
 			FindEdges();
-			std::cout << "\nallEdges size: " << allEdges.size();
-			FindMidPath(outPath);
+			StringPull(from, to, outPath);
+			std::cout << "Outpath size: " << outPath.waypoints.size();
+			//FindMidPath(outPath);
 			return true;
 		}
 		else {
@@ -148,19 +155,6 @@ bool NavigationMesh::FindPath(const Vector3& from, const Vector3& to, Navigation
 	return false;
 }
 
-void NavigationMesh::StringPull(Vector3 securitytPos) {
-	Vector3 vertexA, vertexB;
-	float angle, nextAngle;
-	VertexIndices indices = FindSharedVertices(triRoute.rbegin()[1]);
-	vertexA = allVerts[indices.a];
-	vertexB = allVerts[indices.b];
-	vertexA -= securitytPos;
-	vertexB -= securitytPos;
-	angle = AngleBetweenVectors(vertexA, vertexB);
-
-
-}
-
 int NavigationMesh::FindNextVertex(VertexIndices vertIndices, NavigationMesh::NavTri tri) {
 	int index;
 	for (int i = 0; i < 3; ++i) {
@@ -184,14 +178,6 @@ void NavigationMesh::FindEdges() {
 }
 
 void NavigationMesh::FindMidPath(NavigationPath& outPath) {
-
-	//for (auto i : allEdges) {
-	//	Vector3 vertexA = allVerts[i.a];
-	//	Vector3 vertexB = allVerts[i.b];
-	//	Vector3 vectorAB = vertexA - vertexB;
-	//	Vector3 midPoint = vertexB + (vectorAB * 0.5);
-	//	outPath.PushWaypoint(midPoint);
-	//}
 
 	vector< VertexIndices>::reverse_iterator it = allEdges.rbegin();
 	for (; it != allEdges.rend(); ++it) {
@@ -272,4 +258,140 @@ float NavigationMesh::Heuristic(NavTri* hNode, NavTri* endNode) /*const*/ {
 		return &t;
 	}
 	return nullptr;
+}
+
+inline float vdistsqr(const Vector3 a, const Vector3 b)
+{
+	const float dx = b[0] - a[0];
+	const float dy = b[1] - a[1];
+	const float dz = b[2] - a[2];
+	return dx * dx + dy * dy + dz * dz;
+}
+
+inline bool vequal(const Vector3 a, const Vector3 b)
+{
+	static const float eq = 0.001f * 0.001f;
+	return vdistsqr(a, b) < eq;
+}
+
+
+
+int NavigationMesh::StringPull(Vector3 startPosition, Vector3 endPosition, NavigationPath& outPath) {
+
+	// Find straight path.
+	int npts = 0;
+	int nPortals = allEdges.size();
+	int maxPts = nPortals + 1; //what should the max points be??
+
+	Vector3 portalApex, portalLeft, portalRight;
+	int apexIndex = 0, leftIndex = 0, rightIndex = 0;
+
+	portalLeft = allVerts[allEdges[0].a];
+	portalRight = allVerts[allEdges[0].b];
+	
+	float yPos = triRoute.back().centroid.y;
+	portalApex = startPosition;
+	portalApex.y = yPos;
+
+	// Add start point.
+	outPath.PushWaypoint(portalApex);
+
+	npts++;
+
+	bool equal;
+	float triArea;
+	for (int i = 1; i < nPortals && npts < maxPts; ++i)
+	{
+		Vector3 left = allVerts[allEdges[i].b];
+		Debug::DrawLine(portalApex, left, Debug::RED, 5);
+		Vector3 right = allVerts[allEdges[i].a];
+		Debug::DrawLine(portalApex, right, Debug::BLUE, 5);
+		triArea = Maths::FloatAreaOfTri(portalApex, portalRight, right);
+		std::cout << "triArea: " << triArea << endl;
+		// Update right vertex.
+		if (triArea <= 0.0f)
+		{
+			std::cout << "Update Right Vertex." << endl;
+			equal = vequal(portalApex, portalRight);
+			triArea = Maths::FloatAreaOfTri(portalApex, portalLeft, right);
+			std::cout << "equal: " << equal << endl;
+			std::cout << "triArea: " << triArea << endl;
+			if (equal || triArea > 0.0f)
+			{
+				// Tighten the funnel.
+				std::cout << "Update Right Vertex. Tighten Funnel" << endl;
+				portalRight = right;
+				rightIndex = i;
+			}
+			else
+			{
+				// Right over left, insert left to path and restart scan from portal left point.
+				//outPath.PushWaypoint(portalLeft);
+				std::cout << "Update Right Vertex. Right Over left" << endl;
+				outPath.waypoints.insert(outPath.waypoints.begin(), portalLeft);
+				npts++;
+				// Make current left the new apex.
+				portalApex = portalLeft;
+				apexIndex = leftIndex;
+				// Reset portal
+				portalLeft = portalApex;
+				portalRight = portalApex;
+				leftIndex = apexIndex;
+				rightIndex = apexIndex;
+				// Restart scan
+				i = apexIndex;
+				continue;
+			}
+		}
+		triArea = Maths::FloatAreaOfTri(portalApex, portalLeft, left);
+		std::cout << "triArea: " << triArea << endl;
+		// Update left vertex.
+		if (triArea >= 0.0f)
+		{
+			std::cout << "Update Left Vertex." << endl;
+			equal = vequal(portalApex, portalLeft);
+			triArea = Maths::FloatAreaOfTri(portalApex, portalRight, left);
+			std::cout << "equal: " << equal << endl;
+			std::cout << "triArea: " << triArea << endl;
+			if (equal || triArea < 0.0f)
+			{
+				// Tighten the funnel.
+				std::cout << "Update Left Vertex. Tighten Funnel" << endl;
+				portalLeft = left;
+				leftIndex = i;
+
+			}
+			else
+			{
+				// Left over right, insert right to path and restart scan from portal right point.
+			//	outPath.PushWaypoint(portalRight);
+				std::cout << "Update Left Vertex. Left Over Right" << endl;
+				outPath.waypoints.insert(outPath.waypoints.begin(), portalRight);
+				npts++;
+				// Make current right the new apex.
+				portalApex = portalRight;
+				apexIndex = rightIndex;
+				// Reset portal
+				portalLeft = portalApex;
+				portalRight = portalApex;
+				leftIndex = apexIndex;
+				rightIndex = apexIndex;
+				// Restart scan
+				i = apexIndex;
+				continue;
+
+			}
+		}
+	}
+	if (npts < maxPts)
+	{
+		Vector3 end = endPosition;
+		yPos = triRoute.front().centroid.y;
+		end.y = yPos;
+		outPath.waypoints.insert(outPath.waypoints.begin(), end);
+		npts++;
+	}
+	std::cout << "Number of points : " << npts << endl;
+	std::cout << endl << endl;
+	return npts;
 }
