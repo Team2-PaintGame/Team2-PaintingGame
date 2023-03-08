@@ -13,10 +13,12 @@ NavigationMesh::NavigationMesh()
 
 NavigationMesh::NavigationMesh(const std::string&filename)
 {
-	float ta = Maths::FloatAreaOfTri(Vector3(0,0,0), Vector3(1,1,0), Vector3(1,0,0) );
-	std::cout << "Clockwise: " << ta << endl;
-	ta = Maths::FloatAreaOfTri(Vector3(0, 0, 0), Vector3(1, 0, 0), Vector3(1, 1, 0));
-	std::cout << "AntiClockwise: " << ta << endl;
+	float triArea = Maths::FloatAreaOfTri(Vector3(0.5, 0, 0.5), Vector3(2, 0, 0), Vector3(2, 0, 2));
+
+	std::cout << endl << endl << endl;
+	std::cout << "Tri Area pRight: " << triArea << endl;
+	triArea = Maths::FloatAreaOfTri(Vector3(0.5, 0, 0.5), Vector3(0, 0, 2), Vector3(2, 0, 2));
+	std::cout << "Tri Area pLeft: " << triArea << endl;
 
 	ifstream file(Assets::DATADIR + filename);
 
@@ -117,7 +119,7 @@ bool NavigationMesh::FindPath(const Vector3& from, const Vector3& to, Navigation
 			
 			FindEdges();
 			StringPull(from, to, outPath);
-			std::cout << "Outpath size: " << outPath.waypoints.size();
+		//	std::cout << "Outpath size: " << outPath.waypoints.size();
 			//FindMidPath(outPath);
 			return true;
 		}
@@ -201,8 +203,8 @@ VertexIndices NavigationMesh::FindSharedVertices(NavTri tri) {
 			}
 		}
 	}
-	std::cout << "\nIndexA: " << vertexIndices.a << "\n";
-	std::cout << "IndexB: " << vertexIndices.b << "\n";
+//	std::cout << "\nIndexA: " << vertexIndices.a << "\n";
+//	std::cout << "IndexB: " << vertexIndices.b << "\n";
 	return vertexIndices;
 }
 
@@ -265,7 +267,7 @@ inline float vdistsqr(const Vector3 a, const Vector3 b)
 	const float dx = b[0] - a[0];
 	const float dy = b[1] - a[1];
 	const float dz = b[2] - a[2];
-	return dx * dx + dy * dy + dz * dz;
+	return sqrt(dx * dx + dy * dy + dz * dz);  // maybe this should be square root?
 }
 
 inline bool vequal(const Vector3 a, const Vector3 b)
@@ -274,10 +276,13 @@ inline bool vequal(const Vector3 a, const Vector3 b)
 	return vdistsqr(a, b) < eq;
 }
 
+bool IsLeftOfApex(Vector3 apex, Vector3 midEdge, Vector3 vertex) {
+	return ((midEdge.x - apex.x) * (vertex.z - apex.z) * (midEdge.z - apex.z) * (vertex.x - apex.x)) < 0;
+}
 
 
 int NavigationMesh::StringPull(Vector3 startPosition, Vector3 endPosition, NavigationPath& outPath) {
-
+	outPath.Clear();
 	// Find straight path.
 	int npts = 0;
 	int nPortals = allEdges.size();
@@ -300,12 +305,52 @@ int NavigationMesh::StringPull(Vector3 startPosition, Vector3 endPosition, Navig
 
 	bool equal;
 	float triArea;
+
+	Vector3 midEdgetest;
+	Vector3 lengthEdgetest = allVerts[allEdges[1].a] - allVerts[allEdges[1].b];
+
+	midEdgetest = allVerts[allEdges[1].b] + (lengthEdgetest * 0.5f);
+
+	bool isLeft = IsLeftOfApex(portalApex, midEdgetest, allVerts[allEdges[1].a]);
+
+	Vector3 lefttest, righttest;
+	if (isLeft)
+	{
+		lefttest = allVerts[allEdges[1].a];
+		righttest = allVerts[allEdges[1].b];
+	}
+	else
+	{
+		righttest = allVerts[allEdges[1].a];
+		lefttest = allVerts[allEdges[1].b];
+	}
+
+	Debug::DrawLine(portalApex, lefttest, Debug::YELLOW, 5);
+	Debug::DrawLine(portalApex, righttest, Debug::RED, 5);
+	Debug::DrawLine(portalApex, midEdgetest, Debug::BLUE, 5);
+
 	for (int i = 1; i < nPortals && npts < maxPts; ++i)
 	{
-		Vector3 left = allVerts[allEdges[i].b];
-		Debug::DrawLine(portalApex, left, Debug::RED, 5);
-		Vector3 right = allVerts[allEdges[i].a];
-		Debug::DrawLine(portalApex, right, Debug::BLUE, 5);
+		Vector3 midEdge;
+		Vector3 lengthEdge = allVerts[allEdges[i].a] - allVerts[allEdges[i].b];
+
+		midEdge = allVerts[allEdges[i].b] + (lengthEdge * 0.5f);
+		
+		bool isLeft = IsLeftOfApex(portalApex, midEdge, allVerts[allEdges[i].a]);
+
+		std::cout << "IsLeft: " << isLeft  << endl;
+		Vector3 left, right;
+		if (isLeft) 
+		{
+			left = allVerts[allEdges[i].a];
+			right = allVerts[allEdges[i].b]; // this probably is incorrect, may need to take on from index i and the other from i+1
+		}
+		else
+		{
+			right = allVerts[allEdges[i].a];
+			left = allVerts[allEdges[i].b];
+		}
+				
 		triArea = Maths::FloatAreaOfTri(portalApex, portalRight, right);
 		std::cout << "triArea: " << triArea << endl;
 		// Update right vertex.
@@ -326,7 +371,6 @@ int NavigationMesh::StringPull(Vector3 startPosition, Vector3 endPosition, Navig
 			else
 			{
 				// Right over left, insert left to path and restart scan from portal left point.
-				//outPath.PushWaypoint(portalLeft);
 				std::cout << "Update Right Vertex. Right Over left" << endl;
 				outPath.waypoints.insert(outPath.waypoints.begin(), portalLeft);
 				npts++;

@@ -137,7 +137,7 @@ namespace NCL::CSC8508 {
 				bool foundPath = navigationMesh->FindPath(securityPosition, destination, *navigationPath);
 				if (foundPath) {
 					std::cout << "Choose Destination - Found Path\n";
-					std::cout << "Size of outpath: " << navigationPath->waypoints.size() << "\n";
+					//std::cout << "Size of outpath: " << navigationPath->waypoints.size() << "\n";
 					return Success;
 				}
 				else
@@ -266,17 +266,17 @@ namespace NCL::CSC8508 {
 						std::cout << " Chase the Player - Chasing player\n";
 
 
-						if (timeAccumulator >= 1.5) {
-							bool isPlayerVisible = LookForPlayer(chasedPlayer);
-							std::cout << "1.5 seconds accumulated\n";
-							timeAccumulator = 0.0f;
-							if (isPlayerVisible) {
-								navigationPath->Clear();
-								rootSelector->Reset();
-								return Initialise;
-							}
+						//if (timeAccumulator >= 1.5) {
+						//	bool isPlayerVisible = LookForPlayer(chasedPlayer);
+						//	std::cout << "1.5 seconds accumulated\n";
+						//	timeAccumulator = 0.0f;
+						//	if (isPlayerVisible) {
+						//		navigationPath->Clear();
+						//		rootSelector->Reset();
+						//		return Initialise;
+						//	}
 
-						}
+						//}
 				}
 				if (navigationPath->waypoints.size() == 1) {
 					if (DistanceToTarget(navigationPath->waypoints.back()) <= 4.0f) {
@@ -459,7 +459,7 @@ namespace NCL::CSC8508 {
 		for (int i = 1; i < navigationPath->waypoints.size(); ++i) {
 			Vector3 a = navigationPath->waypoints[i - 1];
 			Vector3 b = navigationPath->waypoints[i];
-			Debug::DrawLine(a, b, Vector4(0, 1, 0, 1), 0.05);
+			Debug::DrawLine(a, b,Debug::BLACK);
 		}
 	}
 
