@@ -32,7 +32,7 @@ namespace NCL {
 		void SetPlayer(Player* p) { player = p; }
 		
 		virtual void Update(float dt) {
-			std::cout << player->targetPosition << std::endl;
+			//std::cout << player->targetPosition << std::endl;
 			transform.SetPosition(player->targetPosition);
 		}
 	protected: 

@@ -37,7 +37,7 @@ namespace NCL {
 			return Window::GetMouse()->GetRelativePosition().x;
 		}
 		const Vector2& GetCursorPosition(float dt) override {
-			return Window::GetMouse()->GetAbsolutePosition() / Window::GetWindow()->GetScreenSize();
+			return Window::GetMouse()->GetAbsolutePosition() / (Window::GetWindow()->GetScreenSize() - 1);
 		}
 	};
 
