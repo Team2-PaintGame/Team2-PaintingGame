@@ -12,13 +12,17 @@ namespace NCL {
 	class Floor : public GameObject {
 	public:
 		Floor() = default;
-		Floor(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, reactphysics3d::ConcaveMeshShape* concaveMeshShape, TextureBase* texture, ShaderBase* shader, int size) : GameObject(physicsCommon, physicsWorld, "Floor") {
+		Floor(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, reactphysics3d::ConcaveMeshShape* concaveMeshShape, TextureBase* tex, ShaderBase* shader, int size) : GameObject(physicsCommon, physicsWorld, "Floor") {
 			transform
 				.SetScale(Vector3(size, 1, size))
 				.SetPosition(position);
 
 			renderObject = new RenderObject(&transform, mesh, shader);
-			renderObject->AddTexture(texture);
+			int subMeshes = mesh->GetSubMeshCount();
+			for (int index = 0; index < subMeshes; ++index) {
+				TextureBase* texture = tex;
+				renderObject->AddTexture(texture, "mainTex", index);
+			}
 
 			boundingVolume = concaveMeshShape;
 			reactphysics3d::Transform rp3d_transform(~position, rp3d::Quaternion::identity());

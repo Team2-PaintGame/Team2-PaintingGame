@@ -13,7 +13,6 @@ PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysic
 
 	renderObject = new RenderObject(&transform, mesh, shader);
 	this->animationController = animController;
-	//animationController->SetRenderer(renderObject);
 	animationController->SetGameObject(this);
 	animationController->InitStateMachine();
 	//renderObject->AddTexture(texture);

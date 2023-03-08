@@ -85,16 +85,8 @@ void AnimationController::SetRenderer(NCL::CSC8508::RenderObject* renderObj)
 
 void AnimationController::UpdateAnimations(float dt)
 {
-	//std::cout << gameObject->GetRigidBody()->getLinearVelocity().length() << "\n";
 
-	/*if(gameObject->GetRigidBody()->getLinearVelocity().length() > 5.f) {
-		SetCurrentAnimation(movingAnimation);
-	}
-	else{
-		SetCurrentAnimation(IdleAnimation);
-	}*/
-
-	if(gameObject->GetRenderObject()->animation == nullptr && animStateMachine == nullptr && !gameObject->GetRenderObject()->IsRigged()) return;
+	if(gameObject->GetRenderObject()->animation != nullptr && animStateMachine != nullptr && !gameObject->GetRenderObject()->IsRigged()) return;
 
 	animStateMachine->Update(dt);
 

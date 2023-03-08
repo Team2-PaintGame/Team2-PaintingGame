@@ -47,7 +47,7 @@ for this module, even in the coursework, but you can add it if you like!
 
 */
 void PaintingGame::InitialiseAssets() {
-	meshes.insert(std::make_pair("floorMesh", renderer->LoadMesh("Arena.msh")));
+	meshes.insert(std::make_pair("floorMesh", renderer->LoadMesh("BasicLVL.msh")));
 	meshes.insert(std::make_pair("cubeMesh", renderer->LoadMesh("cube.msh")));
 	meshes.insert(std::make_pair("mainChar", renderer->LoadMesh("Aj_TPose.msh")));
 	meshes.insert(std::make_pair("sphereMesh", renderer->LoadMesh("sphere.msh")));
@@ -133,7 +133,7 @@ void PaintingGame::InitCamera(Camera& camera, PlayerBase& focus, float aspect_mu
 void PaintingGame::InitWorld() {
 	world->ClearAndErase();
 
-	world->AddGameObject(new Floor(*physicsCommon, physicsWorld, Vector3(-100, 0, 100), meshes.at("floorMesh"), CreateConcaveCollision("floorMesh"),  textures.at("basicTex"), shaders.at("basicShader"), 1));
+	world->AddGameObject(new Floor(*physicsCommon, physicsWorld, Vector3(0, 0, 0), meshes.at("floorMesh"), CreateConcaveCollision("floorMesh"),  textures.at("basicTex"), shaders.at("basicShader"), 1));
 
 	for (int x = 0; x < 15; ++x) {
 		world->AddGameObject(new Box(*physicsCommon, physicsWorld, Vector3(0, 10, 0), meshes.at("cubeMesh"), textures.at("boxTGA"), shaders.at("basicShader"), 2));
@@ -145,7 +145,6 @@ PlayerBase* PaintingGame::CreatePlayer(Vector3 position) {
 	animController->SetIdleAnimation(meshAnimations.at("mainCharIdleAnim"));
 	animController->SetRunAnimation(meshAnimations.at("mainCharRunAnim"));
 	//animController->SetTauntAnimation(meshAnimations.at("mainCharTauntAnim"));
-
 	//SetColorOfMesh(meshes.at("mainChar"), Debug::RED);
 	return new PlayerBase(*physicsCommon, physicsWorld, position, meshes.at("mainChar"), meshMaterials.at("mainCharMat"), animController, shaders.at("skinningShader"), 5);
 }
