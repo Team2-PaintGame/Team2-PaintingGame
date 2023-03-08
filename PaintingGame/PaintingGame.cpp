@@ -5,6 +5,7 @@
 #include "Floor.h"
 #include "AnimationController.h"
 #include "PaintingObject.h"
+#include "Ink.h"
 
 using namespace NCL;
 using namespace CSC8508;
@@ -45,6 +46,9 @@ void PaintingGame::InitWorld() {
 	world->AddGameObject(new PaintingObject(physicsCommon, physicsWorld, Vector3(10, 10, 50), assets->GetMesh("cubeMesh"), assets->GetMeshMaterial("nightSkyMat"), assets->GetShader("basicShader"), 10, "nightSky"));
 	world->AddGameObject(new PaintingObject(physicsCommon, physicsWorld, Vector3(50, 10, 50), assets->GetMesh("cubeMesh"), assets->GetMeshMaterial("screamPaintMat"), assets->GetShader("basicShader"), 10, "screamPaint"));
 	world->AddGameObject(new PaintingObject(physicsCommon, physicsWorld, Vector3(60, 10, 50), assets->GetMesh("cubeMesh"), assets->GetMeshMaterial("sunflowersMat"), assets->GetShader("basicShader"), 10, "sunflowers"));
+  
+  world->AddGameObject(CreateInkStream<SphereParticle>(physicsCommon, physicsWorld, Vector3(0, 10, 0), assets->GetMesh("sphereMesh"), Vector4(0, 1, 0, 1), assets->GetShader("inkShader")));
+	world->AddGameObject(CreateInkSplash<SphereParticle>(physicsCommon, physicsWorld, Vector3(0, 9.5, 0), assets->GetMesh("sphereMesh"), Vector4(0, 1, 0, 1), assets->GetShader("inkShader")));
 }
 
 void PaintingGame::Update(float dt) {

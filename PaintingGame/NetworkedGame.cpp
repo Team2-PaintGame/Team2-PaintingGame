@@ -223,15 +223,19 @@ void NetworkedGame::UpdateMinimumState() {
 
 void NetworkedGame::CreateSplatOnShoot() {
 	if (thisServer) {
-		SceneContactPoint* closestCollision = world->Raycast(ServerPlayer->GetShootRay());
-		if (closestCollision->isHit) {
-			world->AddPaintedPosition(closestCollision->hitPos);
+		if (playerController->Shoot()) {
+			SceneContactPoint* closestCollision = world->Raycast(ServerPlayer->GetShootRay());
+			if (closestCollision->isHit) {
+				world->AddPaintedPosition(closestCollision->hitPos);
+			}
 		}
 	}
 	if (thisClient) {
-		SceneContactPoint* closestCollision = world->Raycast(ClientPlayer->GetShootRay());
-		if (closestCollision->isHit) {
-			world->AddPaintedPosition(closestCollision->hitPos);
+		if (playerController->Shoot()) {
+			SceneContactPoint* closestCollision = world->Raycast(ClientPlayer->GetShootRay());
+			if (closestCollision->isHit) {
+				world->AddPaintedPosition(closestCollision->hitPos);
+			}
 		}
 	}
 }

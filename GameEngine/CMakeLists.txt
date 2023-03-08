@@ -76,6 +76,8 @@ set(Entity_Components
     "./EntityComponents/Layer.h"
     "./EntityComponents/ParticleSystem.h"
     "./EntityComponents/ParticleSystem.cpp"
+    "./EntityComponents/Particle.h"
+    "./EntityComponents/Particle.cpp"
     "./EntityComponents/SceneNode.h"
     "./EntityComponents/SceneNode.cpp"
 )

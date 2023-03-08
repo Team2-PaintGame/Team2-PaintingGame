@@ -41,11 +41,15 @@ void SplitScreenGame::InitPlayers() {
 }
 
 void SplitScreenGame::CreateSplatOnShoot() {
+	int index = 0;
 	for (const auto& player : players) {
-		SceneContactPoint* closestCollision = world->Raycast(player->GetShootRay());
-		if (closestCollision->isHit) {
-			world->AddPaintedPosition(closestCollision->hitPos);
+		if (playerControllers[index]->Shoot()) {
+			SceneContactPoint* closestCollision = world->Raycast(player->GetShootRay());
+			if (closestCollision->isHit) {
+				world->AddPaintedPosition(closestCollision->hitPos);
+			}
 		}
+		index++;
 	}
 }
 
