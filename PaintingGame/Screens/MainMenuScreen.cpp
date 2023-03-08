@@ -42,12 +42,10 @@ PushdownState::PushdownResult MainMenuScreen::onStateChange(PushdownState** newS
 	{
 		*newState = screenManager->GetScreen(ScreenType::GameScreen);
 		((BaseScreen*)(*newState))->SetCommand(command);
-		command = ScreenCommand::None;
 		return PushdownResult::Push;
 	}
 	case  ScreenCommand::TransitionToPreviousScreen:
 	{
-		command = ScreenCommand::None;
 		return PushdownResult::Pop;
 	}
 	default:
