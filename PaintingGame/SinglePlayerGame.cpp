@@ -17,9 +17,11 @@ SinglePlayerGame::~SinglePlayerGame() {
 }
 
 void SinglePlayerGame::CreateSplatOnShoot() {
-	SceneContactPoint* closestCollision = world->Raycast(player->GetShootRay());
-	if (closestCollision->isHit) {
-		world->AddPaintedPosition(closestCollision->hitPos);
+	if (playerController->Shoot()) {
+		SceneContactPoint* closestCollision = world->Raycast(player->GetShootRay());
+		if (closestCollision->isHit) {
+			world->AddPaintedPosition(closestCollision->hitPos);
+		}
 	}
 }
 
