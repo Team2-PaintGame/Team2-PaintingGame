@@ -54,10 +54,18 @@ void PaintingGame::Update(float dt) {
 	Debug::UpdateRenderables(dt);
 }
 
-Player* PaintingGame::CreatePlayer(Vector3 position) {
+Player* PaintingGame::CreatePlayer(Vector3 position,Team team) {
 	std::unordered_map<std::string, MeshAnimation*> animations;
 	animations.insert(std::make_pair("idleAnimation", assets->GetMeshAnimation("mainCharIdleAnim")));
 	animations.insert(std::make_pair("moveAnimation", assets->GetMeshAnimation("mainCharRunAnim")));
 
-	return new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("mainCharMat"), assets->GetShader("skinningShader"), animations, 5);
+	if (team == Team::Red) {
+		return new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("redMainCharMat"), assets->GetShader("skinningShader"), animations, 5);
+
+	}
+
+	if (team == Team::Blue) {
+		return new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("blueMainCharMat"), assets->GetShader("skinningShader"), animations, 5);
+
+	}
 }

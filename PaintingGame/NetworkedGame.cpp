@@ -135,7 +135,7 @@ void NetworkedGame::ServerCreateClientPlayer(SpawnPacket* payload)
 {
 	// Server create client player and send packet
 	// back to client to create server character
-	ClientPlayer = CreatePlayer(payload->position);
+	ClientPlayer = CreatePlayer(payload->position,Team::Blue);
 	ClientPlayer->GetTransform().SetPosition(payload->position);
 	ClientPlayerID = payload->playerID;
 	SpawnPacket packet;
@@ -148,7 +148,7 @@ void NetworkedGame::ServerCreateClientPlayer(SpawnPacket* payload)
 void NetworkedGame::ClientCreateServerPlayer(SpawnPacket* payload)
 {
 	// client creates server player
-	ServerPlayer = CreatePlayer(payload->position);
+	ServerPlayer = CreatePlayer(payload->position,Team::Red);
 	ServerPlayerID = payload->playerID;
 }
 
@@ -238,13 +238,13 @@ void NetworkedGame::CreateSplatOnShoot() {
 
 NCL::Player* NetworkedGame::SpawnPlayer() {
 	if (thisServer) {
-		ServerPlayer = AddPlayer(Vector3(5.0f, 15.0f, 5.0f)); 
+		ServerPlayer = AddPlayer(Vector3(5.0f, 15.0f, 5.0f),Team::Blue);
 		ServerPlayerID = 1;
 		return ServerPlayer;
 	}
 	if (thisClient) {
 		// send to server that player has been spawned
-		ClientPlayer = AddPlayer(Vector3(-5.0f, 10.0f, -5.0f));
+		ClientPlayer = AddPlayer(Vector3(-5.0f, 10.0f, -5.0f),Team::Red);
 		ClientPlayerID = 2;
 		SpawnPacket packet;
 		packet.position = ClientPlayer->GetTransform().GetPosition();
@@ -255,8 +255,8 @@ NCL::Player* NetworkedGame::SpawnPlayer() {
 	return nullptr;
 }
 
-Player* NetworkedGame::AddPlayer(Vector3 position) {
-	Player* player = CreatePlayer(position);
+Player* NetworkedGame::AddPlayer(Vector3 position,Team team) {
+	Player* player = CreatePlayer(position,team);
 	world->AddGameObject(player);
 	activeCameras.push_back(player->GetCamera());
 	return player;

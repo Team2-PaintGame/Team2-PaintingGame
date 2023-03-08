@@ -27,8 +27,8 @@ SplitScreenGame::~SplitScreenGame() {
 void SplitScreenGame::InitPlayers() {
 	players.clear();
 	
-	Player* player1 = AddPlayer(Vector3(0.0f, 10.0f, 0.0f));
-	Player* player2 = AddPlayer(Vector3(20.0f, 10.0f, 20.0f));
+	Player* player1 = AddPlayer(Vector3(20.0f, 10.0f, 20.0f),Team::Red);
+	Player* player2 = AddPlayer(Vector3(30.0f, 10.0f, 20.0f),Team::Blue);
 
 	playerControllers.push_back(GameManager::sConfig.playerControllerFactory->createPlayerController(player1));
 	if (secondPlayerControllerFactory) {
@@ -49,8 +49,8 @@ void SplitScreenGame::CreateSplatOnShoot() {
 	}
 }
 
-Player* SplitScreenGame::AddPlayer(Vector3 position) {
-	Player* player = CreatePlayer(position);
+Player* SplitScreenGame::AddPlayer(Vector3 position,Team team) {
+	Player* player = CreatePlayer(position, team);
 	activeCameras.push_back(player->GetCamera());
 	players.push_back(player);
 	world->AddGameObject(player);
