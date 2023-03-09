@@ -24,7 +24,7 @@ namespace NCL {
 			this->ink = ink;
 		}
 		virtual void Update(float dt) {
-			if (ink) {
+			if (false) {
 				ink->GetTransform()
 					.SetPosition(transform.GetPosition() + (transform.GetOrientation() * inkOffset))
 					.SetOrientation(transform.GetOrientation());
