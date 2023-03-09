@@ -14,7 +14,7 @@ PaintingGame::PaintingGame(GameAssets* assets) {
 	this->assets = assets;
 	physicsWorld = physicsCommon.createPhysicsWorld();
 	physicsWorld->setIsGravityEnabled(useGravity);
-	physicsWorld->setIsDebugRenderingEnabled(true);
+	
 	world = new GameWorld(physicsWorld);
 	InitWorld();
 	//renderer->settings.SetIsDebugRenderingModeEnabled(true);

@@ -8,21 +8,18 @@ namespace NCL {
 		public:
 			GameScreen(ScreenManager* screenManager, SceneNode* sceneNode = NULL) : BaseScreen(screenManager, sceneNode) {
 				screenType = ScreenType::GameScreen;
-				toggleRenderDebug = false;
 			}
 			void OnAwake() override;
 			PushdownResult OnUpdate(float dt, PushdownState** newState) override;
 
 			static void GamePauseCallback();
-
-			bool GetRenderDebugLines() override { return toggleRenderDebug; } 
 		protected:
 			void LoadGame();
 			virtual void MenuFrame();
 			virtual PushdownResult onStateChange(PushdownState** newState);
 
 		protected:
-			bool toggleRenderDebug;
+			bool isDebugRenderingEnabled = false;
 			static bool sPauseCallback;
 		};
 

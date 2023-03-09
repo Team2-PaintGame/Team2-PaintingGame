@@ -229,8 +229,7 @@ void OGLPaintingGameRenderer::RenderWithMultipleTexture(const ShaderVariablesLoc
 //Debug methods
 
 void OGLPaintingGameRenderer::RenderDebugInformation() const {
-	if (boundScreen->GetRenderDebugLines() && boundScreen->GetSceneNode()->GetPhysicsWorld() ) 
-	{
+	if (boundScreen->GetSceneNode()->GetPhysicsWorld() && boundScreen->GetSceneNode()->GetPhysicsWorld()->getIsDebugRenderingEnabled() )  {
 		reactphysics3d::DebugRenderer* debugRenderer = &boundScreen->GetSceneNode()->GetPhysicsWorld()->getDebugRenderer();
 
 		//render triangles
@@ -253,7 +252,6 @@ void OGLPaintingGameRenderer::RenderDebugInformation() const {
 			}
 		}
 	}
-
 }
 
 void OGLPaintingGameRenderer::NewRenderText() {

@@ -11,7 +11,9 @@ bool GameScreen::sPauseCallback = false;
 void GameScreen::OnAwake() {
 	isMenuDisplayed = false;
 	LoadGame();
-	
+	sceneNode->GetPhysicsWorld()->setIsDebugRenderingEnabled(isDebugRenderingEnabled);
+	sceneNode->GetPhysicsWorld()->getDebugRenderer().setIsDebugItemDisplayed(reactphysics3d::DebugRenderer::DebugItem::COLLISION_SHAPE, true);
+	sceneNode->GetPhysicsWorld()->getDebugRenderer().setIsDebugItemDisplayed(reactphysics3d::DebugRenderer::DebugItem::COLLIDER_BROADPHASE_AABB, true);
 }
 
 void GameScreen::LoadGame() {
@@ -52,9 +54,9 @@ void GameScreen::MenuFrame() {
 	if (ImGui::Button("Resume")) {
 		isMenuDisplayed = false;
 	}
-	if (ImGui::Button("Toggle Debug Lines"))
-	{
-		toggleRenderDebug = !toggleRenderDebug;
+	if (ImGui::Button("Toggle Debug Lines")) {
+		isDebugRenderingEnabled = !isDebugRenderingEnabled;
+		sceneNode->GetPhysicsWorld()->setIsDebugRenderingEnabled(isDebugRenderingEnabled);
 	}
 	if (ImGui::Button("Quit Game")) {
 		command = ScreenCommand::TransitionToPreviousScreen;
