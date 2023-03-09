@@ -23,8 +23,16 @@ namespace NCL {
 
 			this->ink = ink;
 		}
+		virtual void Update(float dt) {
+			if (ink) {
+				ink->GetTransform()
+					.SetPosition(transform.GetPosition() + (transform.GetOrientation() * inkOffset))
+					.SetOrientation(transform.GetOrientation());
+			}
+		}
 	protected:
 		Ink* ink;
+		const Vector3 inkOffset = Vector3(0, 0.5, -2);
 	};
 }
  

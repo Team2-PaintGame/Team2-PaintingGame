@@ -88,7 +88,7 @@ Gun* PaintingGame::CreateGun(Vector3 position, Team team) {
 		gun = new Gun(physicsCommon, physicsWorld, position, assets->GetMesh("gunMesh"), assets->GetMeshMaterial("gunMat"), assets->GetShader("basicShader"), 3, Debug::BLUE, ink);
 	}
 
-	world->AddGameObject(ink);
 	world->AddGameObject(gun);
+	world->AddGameObject(ink);
 	return gun;
 }
