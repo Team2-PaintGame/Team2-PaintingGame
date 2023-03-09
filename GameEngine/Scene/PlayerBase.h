@@ -13,6 +13,11 @@ namespace NCL {
 
 	class PlayerBase : public GameObject {
 	public:
+		enum class Team {
+			Red,
+			Blue,
+			None
+		};
 		PlayerBase() = default;
 		PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, int size);
 		PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, MeshMaterial* meshMaterial, ShaderBase* shader, int size);
@@ -22,13 +27,15 @@ namespace NCL {
 		void SetYawPitch(float dx, float dy);
 		float GetPitch() const { return pitch; }
 		float GetYaw() const { return yaw; }
-		virtual void Shoot() {}
+		virtual void Shoot(PlayerBase::Team team) {}
+		Team playerTeam;
 	protected:
 		float	yaw = 0.0f;
 		float	pitch = 0.0f;
 		void SetMemberVariables(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, ShaderBase* shader, int size);
 		Camera* camera;
 		AnimationController* animationController;
+		
 	};
 }
 

@@ -6,6 +6,8 @@
 #include "AnimationController.h"
 #include "PaintingObject.h"
 #include "Ink.h"
+#include "PlayerBase.h"
+
 
 using namespace NCL;
 using namespace CSC8508;
@@ -58,16 +60,16 @@ void PaintingGame::Update(float dt) {
 	Debug::UpdateRenderables(dt);
 }
 
-Player* PaintingGame::CreatePlayer(Vector3 position,Team team) {
+Player* PaintingGame::CreatePlayer(Vector3 position,PlayerBase::Team team) {
 	std::unordered_map<std::string, MeshAnimation*> animations;
 	animations.insert(std::make_pair("idleAnimation", assets->GetMeshAnimation("mainCharIdleAnim")));
 	animations.insert(std::make_pair("moveAnimation", assets->GetMeshAnimation("mainCharRunAnim")));
 
-	if (team == Team::Red) {
-		return new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("redMainCharMat"), assets->GetShader("skinningShader"), animations, 5);
+	if (team == PlayerBase::Team::Red) {
+		return new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("redMainCharMat"),PlayerBase::Team::Red, assets->GetShader("skinningShader"), animations, 5);
 	}
 
-	if (team == Team::Blue) {
-		return new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("blueMainCharMat"), assets->GetShader("skinningShader"), animations, 5);
+	if (team == PlayerBase::Team::Blue) {
+		return new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("blueMainCharMat"), PlayerBase::Team::Blue, assets->GetShader("skinningShader"), animations, 5);
 	}
 }

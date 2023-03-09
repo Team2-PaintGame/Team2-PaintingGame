@@ -12,6 +12,7 @@ set(Header_Files
     "GameManager.h"
     "PlatformConfigurations.h"
     "GameAssets.h"
+    "ScoreManager.h"
 )
 source_group("Header Files" FILES ${Header_Files})
 
@@ -24,6 +25,7 @@ set(Source_Files
     "PaintingGame.cpp"
     "GameManager.cpp"
     "GameAssets.cpp"
+    "ScoreManager.cpp"
 )
 
 if(USE_VULKAN)

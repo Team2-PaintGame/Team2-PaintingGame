@@ -31,7 +31,7 @@ namespace NCL {
 
 		protected:
 			Player* SpawnPlayer();
-			Player* AddPlayer(Vector3 position, Team team) override;
+			Player* AddPlayer(Vector3 position, PlayerBase::Team team) override;
 
 			void UpdateAsServer(float dt);
 			void UpdateAsClient(float dt);

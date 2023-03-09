@@ -13,14 +13,14 @@ namespace NCL {
 		Player(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, const std::unordered_map<std::string, MeshAnimation*>& animations, int size) : PlayerBase(physicsCommon, physicsWorld, position, mesh, texture, shader, size) {
 			SetMemberVariables(animations);
 		}
-		Player(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, MeshMaterial* material, ShaderBase* shader, const std::unordered_map<std::string, MeshAnimation*>& animations, int size) : PlayerBase(physicsCommon, physicsWorld, position, mesh, material, shader, size) {
+		Player(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, MeshMaterial* material, PlayerBase::Team team, ShaderBase* shader, const std::unordered_map<std::string, MeshAnimation*>& animations, int size) : PlayerBase(physicsCommon, physicsWorld, position, mesh, material, shader, size) {
 			SetMemberVariables(animations);
 		}
 		virtual ~Player() {
 			delete animationController;
 		}
 		virtual void Update(float dt);
-		virtual void Shoot();
+		virtual void Shoot(PlayerBase::Team team);
 		const reactphysics3d::Ray& GetShootRay() const { return shootRay; }
 	protected:
 		void SetMemberVariables(const std::unordered_map<std::string, MeshAnimation*>& animations);

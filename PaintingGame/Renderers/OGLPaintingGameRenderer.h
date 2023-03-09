@@ -24,6 +24,8 @@ namespace NCL {
 			int lightRadiusLocation = 0;
 
 			int cameraLocation = 0;
+
+			int paintColourLocation = 0;
 		};
 		//class RenderObject;
 		struct DebugLinesRenderer {
@@ -102,6 +104,7 @@ namespace NCL {
 			OGLPaintingGameRenderer(Window& w);
 			~OGLPaintingGameRenderer();
 			virtual void BindScreen(void* screen) { boundScreen = (BaseScreen*)screen; };
+			void SetPaintColor(Vector4 color) { paintColor = color; };
 			//RendererSettings settings, skybox, shadow!!!!!!!!!!!! lines, debug, set player class and its camera, fix camera class.
 		protected:
 			void RenderFrame()	override;
@@ -126,6 +129,8 @@ namespace NCL {
 			Vector4		lightColour;
 			float		lightRadius;
 			Vector3		lightPosition;
+
+			Vector4 paintColor;
 		};
 		
 		// Concrete factory for creating Painting Game OpenGL renderer

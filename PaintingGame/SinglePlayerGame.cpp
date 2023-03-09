@@ -1,6 +1,8 @@
 #include "SinglePlayerGame.h"
 #include "GameManager.h"
 #include "PlayerControllers.h"
+#include "PlayerBase.h"
+#include "ScoreManager.h"
 
 using namespace NCL;
 using namespace CSC8508;
@@ -9,7 +11,10 @@ SinglePlayerGame::SinglePlayerGame(GameAssets * assets) : PaintingGame(assets) {
 	if (!GameManager::sConfig.playerControllerFactory) {
 		GameManager::sConfig.playerControllerFactory = new Win32PlayerControllerFactory();
 	}
-	AddPlayer(Vector3(20.0f, 10.0f, 50.0f),Team::Blue);
+	AddPlayer(Vector3(20.0f, 10.0f, 50.0f),PlayerBase::Team::Blue);
+
+	scoreManager = new ScoreManager();
+	scoreManager->ShowTimer();
 }
 
 SinglePlayerGame::~SinglePlayerGame() {
@@ -25,7 +30,7 @@ void SinglePlayerGame::CreateSplatOnShoot() {
 	}
 }
 
-Player* SinglePlayerGame::AddPlayer(Vector3 position, Team team) {
+Player* SinglePlayerGame::AddPlayer(Vector3 position, PlayerBase::Team team) {
 	player = CreatePlayer(position, team);
 	activeCameras.push_back(player->GetCamera());
 	world->AddGameObject(player);

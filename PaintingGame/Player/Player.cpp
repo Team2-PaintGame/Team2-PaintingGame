@@ -12,7 +12,7 @@ void Player::Update(float dt) {
 	}
 }
 
-void Player::Shoot() {
+void Player::Shoot(PlayerBase::Team team) {
 	Ray r = CollisionDetection::BuildRayFromMouse(*camera);
 	Vector3 startPos = r.GetPosition();
 	Vector3 endPos = r.GetPosition() + r.GetDirection() * 1000;

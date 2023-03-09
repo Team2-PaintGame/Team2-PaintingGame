@@ -15,6 +15,8 @@ OGLPaintingGameRenderer::OGLPaintingGameRenderer(Window& w) : OGLRenderer(w) {
 	lightColour = Vector4(0.8f, 0.8f, 0.5f, 1.0f);
 	lightRadius = 1000.0f;
 	lightPosition = Vector3(0.0f, 20.0f, 0.0f);
+
+	paintColor = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
 OGLPaintingGameRenderer::~OGLPaintingGameRenderer() {
@@ -89,6 +91,7 @@ void OGLPaintingGameRenderer::RenderGameScreen() { //change this to RenderScreen
 					locations.skyboxTexLocation = glGetUniformLocation(shader->GetProgramID(), "skyboxTex");
 					locations.lightPosLocation = glGetUniformLocation(shader->GetProgramID(), "lightPos");
 					locations.lightColourLocation = glGetUniformLocation(shader->GetProgramID(), "lightColour");
+					locations.paintColourLocation = glGetUniformLocation(shader->GetProgramID(), "paintColor");
 					locations.lightRadiusLocation = glGetUniformLocation(shader->GetProgramID(), "lightRadius");
 					locations.cameraLocation = glGetUniformLocation(shader->GetProgramID(), "cameraPos");
 					locations.jointsLocation = glGetUniformLocation(shader->GetProgramID(), "joints");
@@ -100,6 +103,7 @@ void OGLPaintingGameRenderer::RenderGameScreen() { //change this to RenderScreen
 					glUniformMatrix4fv(locations.viewLocation, 1, false, (float*)&viewMatrix);
 					glUniform3fv(locations.lightPosLocation, 1, (float*)&lightPosition);
 					glUniform4fv(locations.lightColourLocation, 1, (float*)&lightColour);
+					glUniform4fv(locations.paintColourLocation, 1, (float*)&paintColor);
 					glUniform1f(locations.lightRadiusLocation, lightRadius);
 					//glUniform1i(locations.shadowTexLocation, 1);
 

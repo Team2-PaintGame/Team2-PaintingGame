@@ -12,7 +12,7 @@ namespace NCL {
 			void Update(float dt) override;
 
 		protected:
-			Player* AddPlayer(Vector3 position, Team team) override;
+			Player* AddPlayer(Vector3 position, PlayerBase::Team team) override;
 			void InitPlayers();
 			virtual void CreateSplatOnShoot();
 		protected:

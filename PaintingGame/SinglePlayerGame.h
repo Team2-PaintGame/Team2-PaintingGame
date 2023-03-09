@@ -2,6 +2,7 @@
 #include "PaintingGame.h"
 #include <PlayerController.h>
 
+class ScoreManager;
 namespace NCL {
 	namespace CSC8508 {
 
@@ -12,9 +13,10 @@ namespace NCL {
 			void Update(float dt) override;
 		protected:
 			virtual void CreateSplatOnShoot();
-			Player* AddPlayer(Vector3 position, Team team) override;
+			Player* AddPlayer(Vector3 position, PlayerBase::Team team) override;
 			Player* player = NULL;
 			PlayerController* playerController;
+			ScoreManager* scoreManager = nullptr;
 		};
 	}
 }
