@@ -49,7 +49,7 @@ namespace NCL {
 		virtual ~ParticleSystem();
 
 	protected:
-		void SetMemberVariables(Vector3 emitterPosition, MeshGeometry* mesh, ShaderBase* shader, bool enableGravity, float startSize, float startLifetime, float startSpeed);
+		void SetMemberVariables(Vector3 emitterPosition, MeshGeometry* mesh, ShaderBase* shader, bool enableGravity, float startSize, float startLifetime, float startSpeed, float yaw = 0.0f, float pitch = -90);
 		void GenerateParticles();
 		unsigned int maxParticles = 100;
 		float accumulator = 0.0f;
@@ -128,14 +128,14 @@ namespace NCL {
 	}
 
 	template<class T>
-	inline void ParticleSystem<T>::SetMemberVariables(Vector3 emitterPosition, MeshGeometry* mesh, ShaderBase* shader, bool enableGravity, float startSize, float startLifetime, float startSpeed) {
+	inline void ParticleSystem<T>::SetMemberVariables(Vector3 emitterPosition, MeshGeometry* mesh, ShaderBase* shader, bool enableGravity, float startSize, float startLifetime, float startSpeed, float yaw, float pitch) {
 		this->startLifetime = startLifetime;
 		this->startSpeed = startSpeed;
 		this->enableGravity = enableGravity;
 
 		transform.SetPosition(emitterPosition);
 		transform.SetScale(Vector3(startSize));
-		transform.SetOrientation(Quaternion::AxisAngleToQuaterion(Vector3(1, 0, 0), -90));
+		transform.SetOrientation(Quaternion::AxisAngleToQuaterion(Vector3(1, 0, 0), -90) * Quaternion::AxisAngleToQuaterion(Vector3(0, 1, 0), yaw));
 
 		emitter.SetTransform(&transform);
 		//transform.SetOrientation(Quaternion::AxisAngleToQuaterion(Vector3(1, 0, 0), 45) * Quaternion::AxisAngleToQuaterion(Vector3(0, 1, 0), 0));

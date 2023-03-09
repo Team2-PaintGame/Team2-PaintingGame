@@ -10,6 +10,11 @@ void Player::Update(float dt) {
 	if (animationController) {
 		animationController->Update(dt);
 	}
+	if (gun) {
+		gun->GetTransform()
+			.SetPosition(transform.GetPosition() + (transform.GetOrientation() * gunOffset))
+			.SetOrientation(transform.GetOrientation());
+	}
 }
 
 void Player::Shoot() {

@@ -68,10 +68,8 @@ void OGLPaintingGameRenderer::RenderBasicScreen() { //change this to render stat
 	boundScreen->RenderMenu();
 }
 void OGLPaintingGameRenderer::RenderGameScreen() { //change this to RenderScreen
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
 	glEnable(GL_BLEND);
-	glEnable(GL_DEPTH_TEST);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	//send camera things and light things to shader
 	boundScreen->GetSceneNode()->OperateOnCameras(
 		[&](Camera* cam) {
@@ -82,6 +80,15 @@ void OGLPaintingGameRenderer::RenderGameScreen() { //change this to RenderScreen
 			ShaderVariablesLocations locations;
 			OGLShader* activeShader = nullptr;
 			for (const auto& i : activeObjects) {
+				if (i->GetIsOccluded()) {
+					glEnable(GL_CULL_FACE);
+					glCullFace(GL_BACK);
+					glEnable(GL_DEPTH_TEST);
+				}
+				else {
+					glDisable(GL_CULL_FACE);
+					glDisable(GL_DEPTH_TEST);
+				}
 				OGLShader* shader = (OGLShader*)(i)->GetShader();
 				BindShader(shader);
 				if (activeShader != shader) {
@@ -155,7 +162,7 @@ void OGLPaintingGameRenderer::RenderPaintSplat(OGLShader* shader) {
 				glUniform3fv(glGetUniformLocation(shader->GetProgramID(), ("paintedPos[" + i + "]").c_str()), 1, pos.array);
 			}
 		);
-		int splatVectorSize = glGetUniformLocation(shader->GetProgramID(), "numOfSplats"); //not used anywhere in the shader
+		int splatVectorSize = glGetUniformLocation(shader->GetProgramID(), "numOfSplats");
 		glUniform1i(splatVectorSize, world->GetNumPaintedPositions());
 	}
 }
@@ -201,19 +208,23 @@ void OGLPaintingGameRenderer::SendModelMatrices(OGLShader* shader, const RenderO
 }
 
 void OGLPaintingGameRenderer::RenderWithDefaultTexture(const ShaderVariablesLocations& locations, const RenderObject* r) {
-	glUniform1i(locations.hasTexLocation, (OGLTexture*)r->GetDefaultTexture() ? 1 : 0);
+	unsigned int numInstances = r->GetInstanceCount();
+	glUniform1i(locations.hasTexLocation, r->GetDefaultTexture() ? 1 : 0);
 	BindMesh(r->GetMesh());
 	BindTextureToShader(r->GetDefaultTexture(), "mainTex", 0);
 	int layercount = r->GetMesh()->GetSubMeshCount();
-	for (int index = 0; index < layercount; ++index) {
-		DrawBoundMesh(index);
-	}
+	int index = 0;
+	do {
+		DrawBoundMesh(index++, numInstances);
+	} while (index < layercount);
 }
 
 void OGLPaintingGameRenderer::RenderWithMultipleTexture(const ShaderVariablesLocations& locations, const RenderObject* r) {
+	unsigned int numInstances = r->GetInstanceCount();
 	BindMesh(r->GetMesh());
 	int layercount = r->GetMesh()->GetSubMeshCount();
-	for (int index = 0; index < layercount; ++index) {
+	int index = 0;
+	do {
 		glUniform1i(locations.hasTexLocation, r->GetTextures(index).size() ? 1 : 0);
 		//for the current submesh, get the vector of textures and send them to shader
 		std::vector<std::pair<std::string, TextureBase*>> submeshtextures = r->GetTextures(index);
@@ -222,8 +233,8 @@ void OGLPaintingGameRenderer::RenderWithMultipleTexture(const ShaderVariablesLoc
 			BindTextureToShader(texturepairs.second, texturepairs.first, texunit);
 			texunit++;
 		}
-		DrawBoundMesh(index);
-	}
+		DrawBoundMesh(index++, numInstances);
+	} while (index < layercount);
 }
 
 //Debug methods

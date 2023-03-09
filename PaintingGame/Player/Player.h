@@ -4,6 +4,7 @@
 #include <Ray.h>
 #include "Utils.h"
 #include "Vector3.h"
+#include "Gun.h"
 
 namespace NCL {
 	using namespace Rendering;
@@ -19,12 +20,17 @@ namespace NCL {
 		virtual ~Player() {
 			delete animationController;
 		}
+		void SetGun(GameObject* gun) { this->gun = gun; }
+		GameObject* GetGun() const { return gun; }
 		virtual void Update(float dt);
 		virtual void Shoot();
 		const reactphysics3d::Ray& GetShootRay() const { return shootRay; }
+		Vector2 targetPosition;
 	protected:
 		void SetMemberVariables(const std::unordered_map<std::string, MeshAnimation*>& animations);
 		AnimationController* animationController = NULL;
 		reactphysics3d::Ray shootRay = reactphysics3d::Ray(~Maths::Vector3(0), ~Maths::Vector3(0));
+		GameObject* gun = NULL;
+		const Vector3 gunOffset = Vector3(0.5, 1, -4);
 	};
 }

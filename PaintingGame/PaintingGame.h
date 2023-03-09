@@ -8,6 +8,7 @@
 #include <SpotLight.h>
 #include <PointLight.h>
 #include "SceneNode.h"
+#include "HudElement.h"
 
 class Gamepad;
 class AnimationController;
@@ -33,8 +34,10 @@ namespace NCL {
 		protected:
 			virtual void InitWorld();
 			virtual void CreateSplatOnShoot() = 0;
-			virtual Player* CreatePlayer(Vector3 position, Team team);
+			Player* CreatePlayer(Vector3 position, Team team);
 			virtual Player* AddPlayer(Vector3 position, Team team) = 0;
+			FocusPoint* CreateFocusPoint();
+			GameObject* CreateGun(Vector3 position, Team team);
 
 			GameWorld* world;
 
