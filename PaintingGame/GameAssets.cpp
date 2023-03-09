@@ -39,6 +39,7 @@ void GameAssets::LoadMeshes() {
 	meshes.insert(std::make_pair("sphereMesh", loader->LoadMesh("sphere.msh")));
 	meshes.insert(std::make_pair("coinMesh", loader->LoadMesh("coin.msh")));
 	meshes.insert(std::make_pair("capsuleMesh", loader->LoadMesh("capsule.msh")));
+	meshes.insert(std::make_pair("gunMesh", loader->LoadMesh("PaintingGun.msh")));
 	meshes.insert(std::make_pair("quadMesh", loader->LoadMesh(MeshType::Quad)));
 }
 
@@ -52,6 +53,7 @@ void GameAssets::LoadMeshMaterials() {
 	meshMaterials.insert(std::make_pair("nightSkyMat", new MeshMaterial("nightSky.mat")));
 	meshMaterials.insert(std::make_pair("screamPaintMat", new MeshMaterial("screamPaint.mat")));
 	meshMaterials.insert(std::make_pair("sunflowersMat", new MeshMaterial("sunflowers.mat")));
+	meshMaterials.insert(std::make_pair("gunMat", new MeshMaterial("PaintingGun.mat")));
 }
 
 void GameAssets::LoadMeshAnimations() {

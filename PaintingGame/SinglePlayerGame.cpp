@@ -9,7 +9,7 @@ SinglePlayerGame::SinglePlayerGame(GameAssets * assets) : PaintingGame(assets) {
 	if (!GameManager::sConfig.playerControllerFactory) {
 		GameManager::sConfig.playerControllerFactory = new Win32PlayerControllerFactory();
 	}
-	AddPlayer(Vector3(20.0f, 10.0f, 50.0f),Team::Blue);
+	AddPlayer(Vector3(20.0f, 10.0f, 50.0f), Team::Blue);
 }
 
 SinglePlayerGame::~SinglePlayerGame() {
@@ -35,6 +35,9 @@ Player* SinglePlayerGame::AddPlayer(Vector3 position, Team team) {
 	focusPoint->SetPlayer(player);
 	world->AddGameObject(focusPoint);
 
+	GameObject* gun = CreateGun(player->GetTransform().GetPosition(), team);
+	player->SetGun(gun);
+	world->AddGameObject(gun);
 	return player;
 }
 

@@ -67,11 +67,20 @@ Player* PaintingGame::CreatePlayer(Vector3 position,Team team) {
 		return new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("redMainCharMat"), assets->GetShader("skinningShader"), animations, 5);
 	}
 
-	if (team == Team::Blue) {
+	else if (team == Team::Blue) {
 		return new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("blueMainCharMat"), assets->GetShader("skinningShader"), animations, 5);
 	}
 }
 
 FocusPoint* PaintingGame::CreateFocusPoint() {
 	return new FocusPoint(physicsCommon, physicsWorld, assets->GetMesh("quadMesh"), assets->GetTexture("gunFocusTex"), assets->GetShader("hudShader"), Vector2(0.05));
+}
+
+GameObject* PaintingGame::CreateGun(Vector3 position, Team team) {
+	if (team == Team::Red) {
+		return new Gun(physicsCommon, physicsWorld, position, assets->GetMesh("gunMesh"), assets->GetMeshMaterial("gunMat"), assets->GetShader("basicShader"), 3, Debug::RED);
+	}
+	else if (team == Team::Blue) {
+		return new Gun(physicsCommon, physicsWorld, position, assets->GetMesh("gunMesh"), assets->GetMeshMaterial("gunMat"), assets->GetShader("basicShader"), 3, Debug::BLUE);
+	}
 }
