@@ -47,7 +47,7 @@ namespace NCL {
 		}
 		virtual void Update(float dt);
 		virtual ~ParticleSystem();
-
+		void SetLooping(bool val) { looping = val; }
 	protected:
 		void SetMemberVariables(Vector3 emitterPosition, MeshGeometry* mesh, ShaderBase* shader, bool enableGravity, float startSize, float startLifetime, float startSpeed, float yaw = 0.0f, float pitch = -90);
 		void GenerateParticles();
@@ -57,7 +57,7 @@ namespace NCL {
 		std::vector<Transform*> transforms;
 		float elapsedTime = 0.0f;
 		float duration = 15.0f;					// The length of time in seconds for the particle system to run
-		bool looping = true;					// If looping is enabled, the cycle starts once again when the duration time is reached
+		bool looping = false;					// If looping is enabled, the cycle starts once again when the duration time is reached
 		float startLifetime = 5.0f;				// The initial lifetime in seconds for the particles. The particle is destroyed after this elapsed time.
 		float startSpeed = 10.0f;				// The initial speed of the particles. The greater the speed of the particles, the more spread out they will be.
 		bool enableGravity = false;
