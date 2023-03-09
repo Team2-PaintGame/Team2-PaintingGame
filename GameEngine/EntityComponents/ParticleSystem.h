@@ -48,6 +48,7 @@ namespace NCL {
 		virtual void Update(float dt);
 		virtual ~ParticleSystem();
 		void SetLooping(bool val) { looping = val; }
+		void StartEmission();
 	protected:
 		void SetMemberVariables(Vector3 emitterPosition, MeshGeometry* mesh, ShaderBase* shader, bool enableGravity, float startSize, float startLifetime, float startSpeed, float yaw = 0.0f, float pitch = -90);
 		void GenerateParticles();
@@ -114,6 +115,14 @@ namespace NCL {
 	template <class T>
 	inline ParticleSystem<T>::~ParticleSystem() {
 		particles.clear();
+	}
+
+	template<class T>
+	inline void ParticleSystem<T>::StartEmission() {
+		particles.clear();
+		transforms.clear();
+		elapsedTime = 0.0f;
+		accumulator = 0.0f;
 	}
 
 	template <class T>
