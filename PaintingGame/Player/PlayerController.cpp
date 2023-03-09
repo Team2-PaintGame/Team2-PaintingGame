@@ -4,7 +4,7 @@
 #include "GameScreen.h"
 using namespace NCL;
 
-PlayerController::PlayerController(PlayerBase* player) : player(player) {}
+PlayerController::PlayerController(Player* player) : player(player) {}
 
 void PlayerController::Update(float dt) {
 	if (Pause()) {
@@ -43,9 +43,13 @@ void PlayerController::Update(float dt) {
 		player->GetRigidBody()->applyWorldForceAtCenterOfMass(~rightAxis * force * (1 - side_damping));
 	}
 
+	player->GetGun()->SetActive(player->GetIsMoving());
+
 	player->SetYawPitch(ViewDx(), ViewDy());
 	
 	if (Shoot()) {
 		player->Shoot();
 	}
+
+	player->targetPosition = GetCursorPosition(dt);
 }
