@@ -215,7 +215,8 @@ void OGLPaintingGameRenderer::RenderWithMultipleTexture(const ShaderVariablesLoc
 	unsigned int numInstances = r->GetInstanceCount();
 	BindMesh(r->GetMesh());
 	int layercount = r->GetMesh()->GetSubMeshCount();
-	for (int index = 0; index < layercount; ++index) {
+	int index = 0;
+	do {
 		glUniform1i(locations.hasTexLocation, r->GetTextures(index).size() ? 1 : 0);
 		//for the current submesh, get the vector of textures and send them to shader
 		std::vector<std::pair<std::string, TextureBase*>> submeshtextures = r->GetTextures(index);
@@ -224,8 +225,8 @@ void OGLPaintingGameRenderer::RenderWithMultipleTexture(const ShaderVariablesLoc
 			BindTextureToShader(texturepairs.second, texturepairs.first, texunit);
 			texunit++;
 		}
-		DrawBoundMesh(index, numInstances);
-	}
+		DrawBoundMesh(index++, numInstances);
+	} while (index < layercount);
 }
 
 #endif
