@@ -240,6 +240,9 @@ void OGLPaintingGameRenderer::RenderWithMultipleTexture(const ShaderVariablesLoc
 //Debug methods
 
 void OGLPaintingGameRenderer::RenderDebugInformation() const {
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_BLEND);
+	glEnable(GL_DEPTH_TEST);
 	if (boundScreen->GetSceneNode()->GetPhysicsWorld() && boundScreen->GetSceneNode()->GetPhysicsWorld()->getIsDebugRenderingEnabled() )  {
 		reactphysics3d::DebugRenderer* debugRenderer = &boundScreen->GetSceneNode()->GetPhysicsWorld()->getDebugRenderer();
 
