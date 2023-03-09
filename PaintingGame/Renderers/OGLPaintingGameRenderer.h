@@ -102,6 +102,9 @@ namespace NCL {
 			OGLPaintingGameRenderer(Window& w);
 			~OGLPaintingGameRenderer();
 			virtual void BindScreen(void* screen) { boundScreen = (BaseScreen*)screen; };
+
+			void BindDebugShader(ShaderBase* dShader) { debugShader = dShader; }
+
 			//RendererSettings settings, skybox, shadow!!!!!!!!!!!! lines, debug, set player class and its camera, fix camera class.
 		protected:
 			void RenderFrame()	override;
@@ -121,11 +124,30 @@ namespace NCL {
 			void SendModelMatrices(OGLShader* shader, const RenderObject* r);
 			void RenderWithDefaultTexture(const ShaderVariablesLocations& locations, const RenderObject* r);
 			void RenderWithMultipleTexture(const ShaderVariablesLocations& locations, const RenderObject* r);
+
+			//Debug methods
+			void RenderDebugInformation() const;
+			void NewRenderLines();
+			void NewRenderText();
+			void SetDebugStringBufferSizes(size_t newVertCount);
+			void SetDebugLineBufferSizes(size_t newVertCount);
+
+
 			vector<const RenderObject*> activeObjects;
 			BaseScreen* boundScreen;
 			Vector4		lightColour;
 			float		lightRadius;
-			Vector3		lightPosition;
+			Vector3		lightPosition; 
+			ShaderBase* debugShader = nullptr;
+
+			//Debug data storage things
+			vector<Vector3> debugLineData;
+			vector<Vector3> debugTextPos;
+			vector<Vector4> debugTextColours;
+			vector<Vector2> debugTextUVs;
+
+			DebugTextRenderer debugTextRenderer;
+			DebugLinesRenderer debugLineRenderer;
 		};
 		
 		// Concrete factory for creating Painting Game OpenGL renderer

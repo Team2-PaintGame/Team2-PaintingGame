@@ -77,4 +77,5 @@ void GameAssets::LoadShaders() {
 	shaders.insert(std::make_pair("skinningShader", loader->LoadShader("skinning.vert", "scene.frag")));
 	shaders.insert(std::make_pair("screenShader", loader->LoadShader("screen.vert", "screen.frag")));
 	shaders.insert(std::make_pair("inkShader", loader->LoadShader("ink.vert", "ink.frag")));
+	shaders.insert(std::make_pair("debugShader", loader->LoadShader("Debug.vert", "Debug.frag")));
 }

@@ -52,6 +52,8 @@ namespace NCL::CSC8508 {
 		SceneNode* GetSceneNode() const { return sceneNode; }
 		ScreenType GetScreenType() const { return screenType; }
 		void RenderMenu();
+
+		virtual bool GetRenderDebugLines() { return false; } // Function overriden in GameScreen
 	protected:
 		virtual void MenuFrame() = 0;
 		virtual PushdownResult onStateChange(PushdownState** newState) = 0;

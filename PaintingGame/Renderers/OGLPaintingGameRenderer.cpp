@@ -5,6 +5,7 @@
 #include <OGLTexture.h>
 #include "OGLShader.h"
 #include "Camera.h"
+#include "Debug.h"
 
 using namespace NCL;
 using namespace CSC8508;
@@ -15,6 +16,9 @@ OGLPaintingGameRenderer::OGLPaintingGameRenderer(Window& w) : OGLRenderer(w) {
 	lightColour = Vector4(0.8f, 0.8f, 0.5f, 1.0f);
 	lightRadius = 1000.0f;
 	lightPosition = Vector3(0.0f, 20.0f, 0.0f);
+
+	SetDebugStringBufferSizes(10000);
+	SetDebugLineBufferSizes(1000);
 }
 
 OGLPaintingGameRenderer::~OGLPaintingGameRenderer() {
@@ -32,6 +36,9 @@ void OGLPaintingGameRenderer::RenderFrame() {
 			RenderBasicScreen();
 		}
 	}
+
+	NewRenderLines();
+	NewRenderText();
 }
 
 void OGLPaintingGameRenderer::CreateImGuiContext() {
@@ -135,6 +142,7 @@ void OGLPaintingGameRenderer::RenderGameScreen() { //change this to RenderScreen
 			}
 		}
 	);
+	RenderDebugInformation();
 	boundScreen->RenderMenu();
 }
 
@@ -218,4 +226,191 @@ void OGLPaintingGameRenderer::RenderWithMultipleTexture(const ShaderVariablesLoc
 	}
 }
 
+//Debug methods
+
+void OGLPaintingGameRenderer::RenderDebugInformation() const {
+	if (boundScreen->GetRenderDebugLines() && boundScreen->GetSceneNode()->GetPhysicsWorld() ) 
+	{
+		reactphysics3d::DebugRenderer* debugRenderer = &boundScreen->GetSceneNode()->GetPhysicsWorld()->getDebugRenderer();
+
+		//render triangles
+		int numTri = debugRenderer->getNbTriangles();
+		if (numTri) {
+			const reactphysics3d::DebugRenderer::DebugTriangle* tri = debugRenderer->getTrianglesArray();
+			for (int i = 0; i < numTri; i++) {
+				Debug::DrawTriangle(tri->point1, tri->point2, tri->point3, Debug::YELLOW);
+				tri++;
+			}
+		}
+
+		//render lines
+		int numLines = debugRenderer->getNbLines();
+		if (numLines) {
+			const reactphysics3d::DebugRenderer::DebugLine* line = debugRenderer->getLinesArray();
+			for (int i = 0; i < numLines; i++) {
+				Debug::DrawLine(line->point1, line->point2, Debug::CYAN);
+				line++;
+			}
+		}
+	}
+
+}
+
+void OGLPaintingGameRenderer::NewRenderText() {
+	const std::vector<Debug::DebugStringEntry>& strings = Debug::GetDebugStrings();
+	if (strings.empty()) {
+		return;
+	}
+
+	BindShader(debugShader);
+
+	OGLTexture* t = (OGLTexture*)Debug::GetDebugFont()->GetTexture();
+
+	if (t) {
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, t->GetObjectID());
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		BindTextureToShader(t, "mainTex", 0);
+	}
+	Matrix4 proj = Matrix4::Orthographic(0.0, 100.0f, 100, 0, -1.0f, 1.0f);
+
+	int matSlot = glGetUniformLocation(((OGLShader*)debugShader)->GetProgramID(), "viewProjMatrix");
+	glUniformMatrix4fv(matSlot, 1, false, (float*)proj.array);
+
+	GLuint texSlot = glGetUniformLocation(((OGLShader*)debugShader)->GetProgramID(), "useTexture");
+	glUniform1i(texSlot, 1);
+
+	debugTextPos.clear();
+	debugTextColours.clear();
+	debugTextUVs.clear();
+
+	int frameVertCount = 0;
+	for (const auto& s : strings) {
+		frameVertCount += Debug::GetDebugFont()->GetVertexCountForString(s.data);
+	}
+	SetDebugStringBufferSizes(frameVertCount);
+
+	for (const auto& s : strings) {
+		float size = 20.0f;
+		Debug::GetDebugFont()->BuildVerticesForString(s.data, s.position, s.colour, size, debugTextPos, debugTextUVs, debugTextColours);
+	}
+
+
+	glBindBuffer(GL_ARRAY_BUFFER, debugTextRenderer.vertVBO);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, frameVertCount * sizeof(Vector3), debugTextPos.data());
+	glBindBuffer(GL_ARRAY_BUFFER, debugTextRenderer.colourVBO);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, frameVertCount * sizeof(Vector4), debugTextColours.data());
+	glBindBuffer(GL_ARRAY_BUFFER, debugTextRenderer.texCoordVBO);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, frameVertCount * sizeof(Vector2), debugTextUVs.data());
+
+	glBindVertexArray(debugTextRenderer.vao);
+	glDrawArrays(GL_TRIANGLES, 0, frameVertCount);
+	glBindVertexArray(0);
+}
+
+void OGLPaintingGameRenderer::NewRenderLines() {
+	if (!debugShader) return;
+	const std::vector<Debug::DebugLineEntry>& lines = Debug::GetDebugLines();
+	if (lines.empty()) {
+		return;
+	}
+
+	boundScreen->GetSceneNode()->OperateOnCameras(
+		[&](Camera* cam) {
+			//float screenAspect = (float)windowWidth / (float)windowHeight;
+			Matrix4 viewMatrix = cam->BuildViewMatrix();
+			Matrix4 projMatrix = cam->BuildProjectionMatrix();
+
+			Matrix4 viewProj = projMatrix * viewMatrix;
+			BindShader(debugShader);
+			int matSlot = glGetUniformLocation(((OGLShader*)debugShader)->GetProgramID(), "viewProjMatrix");
+			GLuint texSlot = glGetUniformLocation(((OGLShader*)debugShader)->GetProgramID(), "useTexture");
+			glUniform1i(texSlot, 0);
+
+			glUniformMatrix4fv(matSlot, 1, false, (float*)viewProj.array);
+
+			debugLineData.clear();
+
+			int frameLineCount = lines.size() * 2;
+
+			SetDebugLineBufferSizes(frameLineCount);
+
+			glBindBuffer(GL_ARRAY_BUFFER, debugLineRenderer.vertVbo);
+			glBufferSubData(GL_ARRAY_BUFFER, 0, lines.size() * sizeof(Debug::DebugLineEntry), lines.data());
+
+
+			glBindVertexArray(debugLineRenderer.vao);
+			glDrawArrays(GL_LINES, 0, frameLineCount);
+			glBindVertexArray(0);
+		});
+}
+
+void OGLPaintingGameRenderer::SetDebugStringBufferSizes(size_t newVertCount) {
+	if (newVertCount > debugTextRenderer.count) {
+		debugTextRenderer.count = newVertCount;
+
+		glBindBuffer(GL_ARRAY_BUFFER, debugTextRenderer.vertVBO);
+		glBufferData(GL_ARRAY_BUFFER, debugTextRenderer.count * sizeof(Vector3), nullptr, GL_DYNAMIC_DRAW);
+
+		glBindBuffer(GL_ARRAY_BUFFER, debugTextRenderer.colourVBO);
+		glBufferData(GL_ARRAY_BUFFER, debugTextRenderer.count * sizeof(Vector4), nullptr, GL_DYNAMIC_DRAW);
+
+		glBindBuffer(GL_ARRAY_BUFFER, debugTextRenderer.texCoordVBO);
+		glBufferData(GL_ARRAY_BUFFER, debugTextRenderer.count * sizeof(Vector2), nullptr, GL_DYNAMIC_DRAW);
+
+		debugTextPos.reserve(debugTextRenderer.count);
+		debugTextColours.reserve(debugTextRenderer.count);
+		debugTextUVs.reserve(debugTextRenderer.count);
+
+		glBindVertexArray(debugTextRenderer.vao);
+
+		glVertexAttribFormat(0, 3, GL_FLOAT, false, 0);
+		glVertexAttribBinding(0, 0);
+		glBindVertexBuffer(0, debugTextRenderer.vertVBO, 0, sizeof(Vector3));
+
+		glVertexAttribFormat(1, 4, GL_FLOAT, false, 0);
+		glVertexAttribBinding(1, 1);
+		glBindVertexBuffer(1, debugTextRenderer.colourVBO, 0, sizeof(Vector4));
+
+		glVertexAttribFormat(2, 2, GL_FLOAT, false, 0);
+		glVertexAttribBinding(2, 2);
+		glBindVertexBuffer(2, debugTextRenderer.texCoordVBO, 0, sizeof(Vector2));
+
+		glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(1);
+		glEnableVertexAttribArray(2);
+
+		glBindVertexArray(0);
+	}
+}
+
+void OGLPaintingGameRenderer::SetDebugLineBufferSizes(size_t newVertCount) {
+	if (newVertCount > debugLineRenderer.count) {
+		debugLineRenderer.count = newVertCount;
+
+		glBindBuffer(GL_ARRAY_BUFFER, debugLineRenderer.vertVbo);
+		glBufferData(GL_ARRAY_BUFFER, debugLineRenderer.count * sizeof(Debug::DebugLineEntry), nullptr, GL_DYNAMIC_DRAW);
+
+		debugLineData.reserve(debugLineRenderer.count);
+
+		glBindVertexArray(debugLineRenderer.vao);
+
+		int realStride = sizeof(Debug::DebugLineEntry) / 2;
+
+		glVertexAttribFormat(0, 3, GL_FLOAT, false, offsetof(Debug::DebugLineEntry, start));
+		glVertexAttribBinding(0, 0);
+		glBindVertexBuffer(0, debugLineRenderer.vertVbo, 0, realStride);
+
+		glVertexAttribFormat(1, 4, GL_FLOAT, false, offsetof(Debug::DebugLineEntry, colourA));
+		glVertexAttribBinding(1, 0);
+		glBindVertexBuffer(1, debugLineRenderer.vertVbo, sizeof(Vector4), realStride);
+
+		glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(1);
+
+		glBindVertexArray(0);
+	}
+}
 #endif

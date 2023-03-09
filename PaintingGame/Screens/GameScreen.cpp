@@ -11,6 +11,7 @@ bool GameScreen::sPauseCallback = false;
 void GameScreen::OnAwake() {
 	isMenuDisplayed = false;
 	LoadGame();
+	
 }
 
 void GameScreen::LoadGame() {
@@ -53,7 +54,7 @@ void GameScreen::MenuFrame() {
 	}
 	if (ImGui::Button("Toggle Debug Lines"))
 	{
-		
+		toggleRenderDebug = !toggleRenderDebug;
 	}
 	if (ImGui::Button("Quit Game")) {
 		command = ScreenCommand::TransitionToPreviousScreen;

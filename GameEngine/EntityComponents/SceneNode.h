@@ -17,6 +17,7 @@ namespace NCL::CSC8508 {
 		void SetRenderObject(MeshGeometry* mesh, ShaderBase* shader, TextureBase* texture);
 		virtual void Update(float dt) {}
 		virtual GameWorld* GetWorld() const { return nullptr; }
+		virtual reactphysics3d::PhysicsWorld* GetPhysicsWorld() const { return nullptr; }
 		virtual void OperateOnCameras(CameraFunc f) {}
 	protected:
 		RenderObject* renderObject = NULL;
