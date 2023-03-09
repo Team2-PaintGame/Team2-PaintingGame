@@ -22,6 +22,13 @@ namespace NCL {
 				}
 			}
 		};
+
+		struct PortalEdge {
+			Vector3 leftPortal;
+			Vector3 rightPortal;
+
+		};
+
 		class NavigationMesh : public NavigationMap	{
 		public:
 			NavigationMesh();
@@ -33,8 +40,9 @@ namespace NCL {
 			float AngleBetweenVectors(Vector3 a, Vector3 b);
 			void FindEdges();
 			void FindMidPath(NavigationPath& outPath);
+			void FindRouteVertices();
+			void FindPortalEdges();
 
-			
 		protected:
 			struct NavTri {
 				Plane   triPlane;
@@ -75,8 +83,11 @@ namespace NCL {
 			std::vector<Vector3>	allVerts;
 			std::vector<NavTri> triRoute;
 			std::vector<VertexIndices> allEdges;
+			std::vector<Vector3> routeVertices;
+			std::vector<PortalEdge> portalEdges;
 
-			
+			bool IsNextEdgeVertex(Vector3 portalVertex, int triIndex);
+			void FindLeftAndRightVertex(Vector3 portalApex, int triIndex, Vector3& portalLeft, Vector3& portalRight);
 			VertexIndices FindSharedVertices(NavTri tri);
 			int FindNextVertex(VertexIndices vertIndices, NavigationMesh::NavTri tri);
 			NavTri* RemoveBestTri(std::vector<NavTri*>& list);

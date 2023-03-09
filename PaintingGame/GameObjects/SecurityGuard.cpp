@@ -68,8 +68,11 @@ namespace NCL::CSC8508 {
 	}
 	void SecurityGuard::Update(float dt)
 	{
+		
+		
 		DrawNavTris();
 		DisplayPathfinding();
+		DrawTriRoute();
 		if (state == Initialise) {
 			state = Ongoing;
 		}
@@ -543,7 +546,24 @@ namespace NCL::CSC8508 {
 	}
 
 
+	void SecurityGuard::DrawTriRoute() {
+		for (int i = 0; i < navigationMesh->routeVertices.size(); i += 3)
+		{
+//			Debug::DrawTriangle(navigationMesh->routeVertices[i], navigationMesh->routeVertices[i + 1], navigationMesh->routeVertices[i + 2]);
+			
+			/*if (i == 0) {
 
+
+			}
+			else {
+				Debug::DrawTriangle(navigationMesh->routeVertices[i], navigationMesh->routeVertices[i + 1], navigationMesh->routeVertices[i + 2]);
+			}*/
+			Vector3 up(0, 5, 0);
+			Debug::DrawLine(navigationMesh->routeVertices[i], navigationMesh->routeVertices[i] + up, Debug::CYAN, 10);
+			Debug::DrawLine(navigationMesh->routeVertices[i + 1], navigationMesh->routeVertices[i + 1] + up, Debug::CYAN, 10);
+			Debug::DrawLine(navigationMesh->routeVertices[i + 2], navigationMesh->routeVertices[i + 2] + up, Debug::CYAN, 10);
+		}
+	}
 
 
 

@@ -49,7 +49,7 @@ namespace NCL::CSC8508 {
 		void DetermineSpeed();
 		void RaycastAgainstPlayer(GameObject* player, SecurityCallbackClass* callbackClass, bool& isPlayerVisible);
 		void DrawNavTris();
-		
+		void DrawTriRoute();
 
 	protected:
 

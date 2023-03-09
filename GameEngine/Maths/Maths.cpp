@@ -25,8 +25,8 @@ namespace NCL {
 		}
 
 		float FloatAreaOfTri(const Vector3 &a, const Vector3 &b, const Vector3 & c) {
-			float area = ((a.x * b.y) + (b.x * c.y) + (c.x * a.y)) -
-				((b.x * a.y) + (c.x * b.y) + (a.x * c.y));
+			float area = ((a.x * b.z) + (b.x * c.z) + (c.x * a.z)) -
+				((b.x * a.z) + (c.x * b.z) + (a.x * c.z));
 			return (area * 0.5f);
 		}
 
