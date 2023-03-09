@@ -28,7 +28,7 @@ void Player::Shoot() {
 	Debug::DrawLine(startPos, endPos, Vector4(1, 1, 1, 1), 3);
 }
 
-void Player::SetMemberVariables(const std::unordered_map<std::string, MeshAnimation*>& animations) {
+void Player::SetMemberVariables(const std::unordered_map<std::string, MeshAnimation*>& animations, Gun* gun) {
 	camera->SetBasicCameraParameters(this, 0.1f, 500.0f);
 	camera->SetPerspectiveCameraParameters(Window::GetWindow()->GetScreenAspect());
 	camera->SetThirdPersonCamera();
@@ -36,4 +36,6 @@ void Player::SetMemberVariables(const std::unordered_map<std::string, MeshAnimat
 	animationController = new AnimationController(this, animations);
 	renderObject->SetRigged(true);
 	renderObject->SetAnimationController(animationController);
+
+	this->gun = gun;
 }
