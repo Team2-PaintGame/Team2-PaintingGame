@@ -28,16 +28,12 @@ void SinglePlayerGame::CreateSplatOnShoot() {
 Player* SinglePlayerGame::AddPlayer(Vector3 position, Team team) {
 	player = CreatePlayer(position, team);
 	activeCameras.push_back(player->GetCamera());
-	world->AddGameObject(player);
 	playerController = GameManager::sConfig.playerControllerFactory->createPlayerController(player);
 	
 	FocusPoint* focusPoint = CreateFocusPoint();
 	focusPoint->SetPlayer(player);
 	world->AddGameObject(focusPoint);
 
-	GameObject* gun = CreateGun(player->GetTransform().GetPosition(), team);
-	player->SetGun(gun);
-	world->AddGameObject(gun);
 	return player;
 }
 
