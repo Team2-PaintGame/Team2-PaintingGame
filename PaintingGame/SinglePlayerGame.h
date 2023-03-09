@@ -12,6 +12,7 @@ namespace NCL {
 			void Update(float dt) override;
 		protected:
 			virtual void CreateSplatOnShoot();
+			virtual void SplatterOnPlayerCamera();
 			Player* AddPlayer(Vector3 position, Team team) override;
 			Player* player = NULL;
 			PlayerController* playerController;

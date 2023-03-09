@@ -25,6 +25,13 @@ void SinglePlayerGame::CreateSplatOnShoot() {
 	}
 }
 
+void SinglePlayerGame::SplatterOnPlayerCamera() {
+	if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::SPACE)) {
+		HudSplatter* splatter = CreateSplatter(Team::Blue);
+		world->AddGameObject(splatter);
+	}
+}
+
 Player* SinglePlayerGame::AddPlayer(Vector3 position, Team team) {
 	player = CreatePlayer(position, team);
 	activeCameras.push_back(player->GetCamera());

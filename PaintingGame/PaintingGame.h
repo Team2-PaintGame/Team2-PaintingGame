@@ -33,9 +33,11 @@ namespace NCL {
 		protected:
 			virtual void InitWorld();
 			virtual void CreateSplatOnShoot() = 0;
+			virtual void SplatterOnPlayerCamera() = 0;
 			Player* CreatePlayer(Vector3 position, Team team);
 			virtual Player* AddPlayer(Vector3 position, Team team) = 0;
 			FocusPoint* CreateFocusPoint();
+			HudSplatter* CreateSplatter(Team team);
 			GameObject* CreateGun(Vector3 position, Team team);
 
 			GameWorld* world;

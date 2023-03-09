@@ -55,6 +55,7 @@ void PaintingGame::Update(float dt) {
 	world->UpdateWorld(dt);
 	physicsWorld->update(dt);
 	CreateSplatOnShoot();
+	SplatterOnPlayerCamera();
 	Debug::UpdateRenderables(dt);
 }
 
@@ -74,6 +75,15 @@ Player* PaintingGame::CreatePlayer(Vector3 position,Team team) {
 
 FocusPoint* PaintingGame::CreateFocusPoint() {
 	return new FocusPoint(physicsCommon, physicsWorld, assets->GetMesh("quadMesh"), assets->GetTexture("gunFocusTex"), assets->GetShader("hudShader"), Vector2(0.05));
+}
+
+HudSplatter* PaintingGame::CreateSplatter(Team team) {
+	if (team == Team::Blue) {
+		return new HudSplatter(physicsCommon, physicsWorld, { 0,0 }, assets->GetMesh("quadMesh"), assets->GetTexture("splatterTex"), assets->GetShader("hudShader"), Vector2(1), Debug::RED);
+	}
+	else if (team == Team::Red) {
+		return new HudSplatter(physicsCommon, physicsWorld, { 0,0 }, assets->GetMesh("quadMesh"), assets->GetTexture("splatterTex"), assets->GetShader("hudShader"), Vector2(1), Debug::BLUE);
+	}
 }
 
 GameObject* PaintingGame::CreateGun(Vector3 position, Team team) {

@@ -6,13 +6,14 @@
 #include <GameObject.h>
 #include "RenderObject.h"
 #include "Player.h"
-
 namespace NCL {
 	using namespace Rendering;
 	using namespace CSC8508;
+
 	class HudElement : public GameObject {
 	public:
-		HudElement(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector2 position, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, Vector2 scale) : GameObject(physicsCommon, physicsWorld, "HUD") {
+		HudElement(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector2 position, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, Vector2 scale) : 
+			GameObject(physicsCommon, physicsWorld, "HUD") {
 			transform
 				.SetScale(scale)
 				.SetPosition(position);
@@ -37,6 +38,14 @@ namespace NCL {
 		}
 	protected: 
 		Player* player = NULL;
+	};
+
+	class HudSplatter : public HudElement {
+	public:
+		HudSplatter(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector2 position, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, Vector2 scale, Vector4 colour) :
+			HudElement(physicsCommon, physicsWorld, position, mesh, texture, shader, scale) {	
+				renderObject->SetColour(colour);
+		}
 	};
 }
 
