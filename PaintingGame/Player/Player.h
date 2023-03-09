@@ -21,6 +21,7 @@ namespace NCL {
 			delete animationController;
 		}
 		void SetGun(GameObject* gun) { this->gun = gun; }
+		GameObject* GetGun() const { return gun; }
 		virtual void Update(float dt);
 		virtual void Shoot();
 		const reactphysics3d::Ray& GetShootRay() const { return shootRay; }

@@ -43,6 +43,8 @@ void PlayerController::Update(float dt) {
 		player->GetRigidBody()->applyWorldForceAtCenterOfMass(~rightAxis * force * (1 - side_damping));
 	}
 
+	player->GetGun()->SetActive(player->GetIsMoving());
+
 	player->SetYawPitch(ViewDx(), ViewDy());
 	
 	if (Shoot()) {
