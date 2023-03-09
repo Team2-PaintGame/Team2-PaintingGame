@@ -119,8 +119,8 @@ namespace NCL {
 
 	template<class T>
 	inline void ParticleSystem<T>::StartEmission() {
-		particles.clear();
-		transforms.clear();
+		//particles.clear();
+		//transforms.clear();
 		elapsedTime = 0.0f;
 		accumulator = 0.0f;
 	}
