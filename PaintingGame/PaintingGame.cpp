@@ -60,19 +60,16 @@ Player* PaintingGame::CreatePlayer(Vector3 position,Team team) {
 	animations.insert(std::make_pair("idleAnimation", assets->GetMeshAnimation("mainCharIdleAnim")));
 	animations.insert(std::make_pair("moveAnimation", assets->GetMeshAnimation("mainCharRunAnim")));
 	
-	Gun* gun = CreateGun(position, team);
 	Player* player; 
 	if (team == Team::Red) {
-		player =  new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("redMainCharMat"), assets->GetShader("skinningShader"), animations, 5, gun);
+		player =  new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("redMainCharMat"), assets->GetShader("skinningShader"), animations, 5, CreateGun(position, team));
 	}
 
 	else { //blue
-		player =  new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("blueMainCharMat"), assets->GetShader("skinningShader"), animations, 5, gun);
+		player =  new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("blueMainCharMat"), assets->GetShader("skinningShader"), animations, 5, CreateGun(position, team));
 	}
 
 	world->AddGameObject(player);
-	world->AddGameObject(gun);
-
 	return player;
 }
 
@@ -81,10 +78,17 @@ FocusPoint* PaintingGame::CreateFocusPoint() {
 }
 
 Gun* PaintingGame::CreateGun(Vector3 position, Team team) {
+	Gun* gun;
+	Ink* ink = CreateInkStream(physicsCommon, physicsWorld, Vector3(0, 10, 0), assets->GetMesh("sphereMesh"), Vector4(0, 1, 0, 1), assets->GetShader("inkShader"));
+
 	if (team == Team::Red) {
-		return new Gun(physicsCommon, physicsWorld, position, assets->GetMesh("gunMesh"), assets->GetMeshMaterial("gunMat"), assets->GetShader("basicShader"), 3, Debug::RED);
+		gun = new Gun(physicsCommon, physicsWorld, position, assets->GetMesh("gunMesh"), assets->GetMeshMaterial("gunMat"), assets->GetShader("basicShader"), 3, Debug::RED, ink);
 	}
 	else { //blue
-		return new Gun(physicsCommon, physicsWorld, position, assets->GetMesh("gunMesh"), assets->GetMeshMaterial("gunMat"), assets->GetShader("basicShader"), 3, Debug::BLUE);
+		gun = new Gun(physicsCommon, physicsWorld, position, assets->GetMesh("gunMesh"), assets->GetMeshMaterial("gunMat"), assets->GetShader("basicShader"), 3, Debug::BLUE, ink);
 	}
+
+	world->AddGameObject(ink);
+	world->AddGameObject(gun);
+	return gun;
 }
