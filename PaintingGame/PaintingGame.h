@@ -29,6 +29,7 @@ namespace NCL {
 			virtual void Update(float dt);
 			void Restart() { InitWorld(); }
 			virtual GameWorld* GetWorld() const { return world; }
+			virtual reactphysics3d::PhysicsWorld* GetPhysicsWorld() const override { return physicsWorld; }
 			virtual void OperateOnCameras(CameraFunc f);
 		protected:
 			virtual void InitWorld();
