@@ -240,15 +240,15 @@ void NetworkedGame::CreateSplatOnShoot() {
 	}
 }
 
-NCL::Player* NetworkedGame::SpawnPlayer() {
+NCL::Player* NetworkedGame::SpawnNetworkedPlayer() {
 	if (thisServer) {
-		ServerPlayer = AddPlayer(Vector3(5.0f, 15.0f, 5.0f), Team::Red);
+		ServerPlayer = AddPlayer(Vector3(15.0f, 15.0f, 15.0f), Team::Red);
 		ServerPlayerID = 1;
 		return ServerPlayer;
 	}
 	if (thisClient) {
 		// send to server that player has been spawned
-		ClientPlayer = AddPlayer(Vector3(-5.0f, 10.0f, -5.0f), Team::Blue);
+		ClientPlayer = AddPlayer(Vector3(115.0f, 15.0f, 55.0f), Team::Blue);
 		ClientPlayerID = 2;
 		SpawnPacket packet;
 		packet.position = ClientPlayer->GetTransform().GetPosition();
@@ -273,10 +273,15 @@ Player* NetworkedGame::AddPlayer(Vector3 position, Team team) {
 void NetworkedGame::StartLevel() {
 
 	InitWorld();
-
-	Player* player = SpawnPlayer();
-
-	playerController = GameManager::sConfig.playerControllerFactory->createPlayerController(player);
+	SpawnNetworkedPlayer();
+	if (thisServer)
+	{
+		playerController = GameManager::sConfig.playerControllerFactory->createPlayerController(ServerPlayer);
+	}
+	else if (thisClient)
+	{
+		playerController = GameManager::sConfig.playerControllerFactory->createPlayerController(ClientPlayer);
+	}
 }
 
 void NetworkedGame::ReceivePacket(int type, GamePacket* payload, int source) {
