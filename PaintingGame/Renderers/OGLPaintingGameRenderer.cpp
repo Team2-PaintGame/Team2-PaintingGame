@@ -60,6 +60,7 @@ void OGLPaintingGameRenderer::DeleteImGuiContext() {
 	ImGui::DestroyContext();
 }
 void OGLPaintingGameRenderer::RenderBasicScreen() { //change this to render static obj
+	glViewport(0, 0, windowWidth, windowHeight);
 	RenderObject* r = boundScreen->GetSceneNode()->GetRenderObject();
 	BindShader(r->GetShader());
 	BindMesh(r->GetMesh());

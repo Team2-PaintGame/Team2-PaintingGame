@@ -9,8 +9,12 @@ SplitScreenGame::SplitScreenGame(GameAssets* assets) : PaintingGame(assets) {
 	
 	players.reserve(maxPlayers);
 	if (!GameManager::sConfig.playerControllerFactory) {
-		GameManager::sConfig.playerControllerFactory = new XBoxPlayerControllerFactory();
-		secondPlayerControllerFactory = new Win32PlayerControllerFactory();
+		GameManager::sConfig.playerControllerFactory = new Win32PlayerControllerFactory();
+		secondPlayerControllerFactory = new XBoxPlayerControllerFactory();
+	}
+ 	else if (GameManager::sConfig.playerControllerFactory->GetType() != PlayerControllerFactory::Type::PS4) {
+		GameManager::sConfig.playerControllerFactory = new Win32PlayerControllerFactory();
+		secondPlayerControllerFactory = new XBoxPlayerControllerFactory();
 	}
 	InitPlayers();
 }
@@ -63,7 +67,6 @@ Player* SplitScreenGame::AddPlayer(Vector3 position,Team team) {
 	Player* player = CreatePlayer(position, team);
 	activeCameras.push_back(player->GetCamera());
 	players.push_back(player);
-	world->AddGameObject(player);
 
 	FocusPoint* focusPoint = CreateFocusPoint();
 	focusPoint->SetPlayer(player);

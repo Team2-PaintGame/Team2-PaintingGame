@@ -43,7 +43,7 @@ namespace NCL {
 
 	class XBoxController : public PlayerController {
 	public:
-		XBoxController(Player* player) : PlayerController(player) { Connect(); }
+		XBoxController(Player* player) : PlayerController(player), gamepad() { Connect(); }
 		// Get the input for moving forward from the Xbox controller
 		bool MoveForward() override {
 			return gamepad.leftStickY > 0.0f;
@@ -95,8 +95,14 @@ namespace NCL {
 			else if (!wasConnected)
 			{
 				wasConnected = true;
-				std::cout << "COntroller connect on port " << gamepad.GetPort() << "\n";
+				std::cout << "Controller connect on port " << gamepad.GetPort() << "\n";
 			}
+		}
+
+		void Update(float dt) override
+		{
+			Connect();
+			PlayerController::Update(dt);
 		}
 	protected:
 		Vector2 cursorPosition;
@@ -107,6 +113,7 @@ namespace NCL {
 	// Concrete factory for creating Win32 Player Controller
 	class Win32PlayerControllerFactory : public PlayerControllerFactory {
 	public:
+		Win32PlayerControllerFactory() { Type::Win32; }
 		PlayerController* createPlayerController(Player* player) override {
 			return new Win32Controller(player);
 		}
@@ -115,6 +122,7 @@ namespace NCL {
 	// Concrete factory for creating XBox Player Controller
 	class XBoxPlayerControllerFactory : public PlayerControllerFactory {
 	public:
+		XBoxPlayerControllerFactory() { Type::XBox; }
 		PlayerController* createPlayerController(Player* player) override {
 			return new XBoxController(player);
 		}
@@ -171,6 +179,7 @@ namespace NCL {
 	// Concrete factory for creating PS4 Player Controller
 	class PS4ControllerFactory : public PlayerControllerFactory {
 	public:
+		PS4ControllerFactory() { Type::PS4; }
 		PlayerController* createPlayerController(Player* player) override {
 			return new PS4Controller(player);
 		}
