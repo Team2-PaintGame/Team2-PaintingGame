@@ -227,6 +227,8 @@ void NetworkedGame::CreateSplatOnShoot() {
 			SceneContactPoint* closestCollision = world->Raycast(ServerPlayer->GetShootRay());
 			if (closestCollision->isHit) {
 				world->AddPaintedPosition(closestCollision->hitPos);
+
+				//Broadcast Paint Position
 			}
 		}
 	}
@@ -235,6 +237,7 @@ void NetworkedGame::CreateSplatOnShoot() {
 			SceneContactPoint* closestCollision = world->Raycast(ClientPlayer->GetShootRay());
 			if (closestCollision->isHit) {
 				world->AddPaintedPosition(closestCollision->hitPos);
+				//Broadcast Paint Position
 			}
 		}
 	}

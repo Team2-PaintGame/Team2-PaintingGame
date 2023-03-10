@@ -43,7 +43,7 @@ namespace NCL {
 
 	class XBoxController : public PlayerController {
 	public:
-		XBoxController(Player* player) : PlayerController(player) { Connect(); }
+		XBoxController(Player* player) : PlayerController(player), gamepad() { Connect(); }
 		// Get the input for moving forward from the Xbox controller
 		bool MoveForward() override {
 			return gamepad.leftStickY > 0.0f;
@@ -97,6 +97,12 @@ namespace NCL {
 				wasConnected = true;
 				std::cout << "Controller connect on port " << gamepad.GetPort() << "\n";
 			}
+		}
+
+		void Update(float dt) override
+		{
+			Connect();
+			PlayerController::Update(dt);
 		}
 	protected:
 		Vector2 cursorPosition;

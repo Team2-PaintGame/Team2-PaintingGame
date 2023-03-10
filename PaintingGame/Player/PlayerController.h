@@ -7,7 +7,7 @@ namespace NCL {
 	class PlayerController {
 	public:
 		PlayerController(Player* player);
-		void Update(float dt);
+		virtual void Update(float dt);
 
 		// Get the input for moving forward
 		virtual bool MoveForward() = 0;
