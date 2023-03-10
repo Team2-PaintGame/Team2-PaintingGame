@@ -1,10 +1,12 @@
 #include "PlayerBase.h"
 #include "RenderObject.h"
 #include "Window.h"
-#include "Utils.h"
+#include "Debug.h"
+#include "GameWorld.h"
 
 
 using namespace NCL;
+using namespace CSC8508;
 
 PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon & physicsCommon, reactphysics3d::PhysicsWorld * physicsWorld, Vector3 position, MeshGeometry * mesh, TextureBase * texture, ShaderBase * shader, int size) : GameObject(physicsCommon, physicsWorld, "BasePlayer") {
 	SetMemberVariables(physicsCommon, physicsWorld, position, mesh, shader, size);
@@ -13,6 +15,8 @@ PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon & physicsCommon, reactphysi
 PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, MeshMaterial* meshMaterial, ShaderBase* shader, int size) : GameObject(physicsCommon, physicsWorld, "BasePlayer") {
 	SetMemberVariables(physicsCommon, physicsWorld, position, mesh, shader, size);
 	renderObject->LoadMaterialTextures(meshMaterial);
+	raycastManager = new RaycastManager();
+	raycastManager->setIgnore(rigidBody);
 }
 
 PlayerBase::~PlayerBase() {
@@ -26,6 +30,7 @@ PlayerBase::~PlayerBase() {
 
 void PlayerBase::Update(float dt) {
 	camera->Update(dt);
+	CameraSpring(camera);
 }
 
 void PlayerBase::SetYawPitch(float dx, float dy) {
@@ -60,6 +65,26 @@ void PlayerBase::SetMemberVariables(reactphysics3d::PhysicsCommon& physicsCommon
 	rigidBody->setLinearDamping(1.5f);
   
 	camera = new Camera();
+}
+
+void PlayerBase::CameraSpring(Camera* cam) {
+
+	RaycastManager raycastManager = RaycastManager();
+
+	ray = reactphysics3d::Ray(~transform.GetPosition(), ~transform.GetPosition() + ~camera->GetNormalizedRotation() * camera->GetMaxOffSet().Length());
+	Debug::DrawLine(transform.GetPosition(), ray.point2, Vector4(1, 1, 1, 1),1.0f);
+
+	
+	 physicsWorld->raycast(ray, &raycastManager);
+	 if (!raycastManager.isHit()) { //if it hits something
+		 SceneContactPoint* closestCollision = raycastManager.getHit();
+		 Vector3 new_rotated_offset = closestCollision->hitPos - ~transform.GetPosition();
+		 camera->SetoffsetFromPlayer(camera->GetMaxOffSet().Normalised() * new_rotated_offset.Length());
+	 }
+	 else if (raycastManager.isHit()) {
+		 camera->SetoffsetFromPlayer(camera->GetMaxOffSet());
+	 }
+		
 }
 
 
