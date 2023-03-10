@@ -9,8 +9,12 @@ SplitScreenGame::SplitScreenGame(GameAssets* assets) : PaintingGame(assets) {
 	
 	players.reserve(maxPlayers);
 	if (!GameManager::sConfig.playerControllerFactory) {
-		GameManager::sConfig.playerControllerFactory = new XBoxPlayerControllerFactory();
-		secondPlayerControllerFactory = new Win32PlayerControllerFactory();
+		GameManager::sConfig.playerControllerFactory = new Win32PlayerControllerFactory();
+		secondPlayerControllerFactory = new XBoxPlayerControllerFactory();
+	}
+ 	else if (GameManager::sConfig.playerControllerFactory->GetType() != PlayerControllerFactory::Type::PS4) {
+		GameManager::sConfig.playerControllerFactory = new Win32PlayerControllerFactory();
+		secondPlayerControllerFactory = new XBoxPlayerControllerFactory();
 	}
 	InitPlayers();
 }

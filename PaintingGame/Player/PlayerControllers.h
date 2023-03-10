@@ -95,7 +95,7 @@ namespace NCL {
 			else if (!wasConnected)
 			{
 				wasConnected = true;
-				std::cout << "COntroller connect on port " << gamepad.GetPort() << "\n";
+				std::cout << "Controller connect on port " << gamepad.GetPort() << "\n";
 			}
 		}
 	protected:
@@ -107,6 +107,7 @@ namespace NCL {
 	// Concrete factory for creating Win32 Player Controller
 	class Win32PlayerControllerFactory : public PlayerControllerFactory {
 	public:
+		Win32PlayerControllerFactory() { Type::Win32; }
 		PlayerController* createPlayerController(Player* player) override {
 			return new Win32Controller(player);
 		}
@@ -115,6 +116,7 @@ namespace NCL {
 	// Concrete factory for creating XBox Player Controller
 	class XBoxPlayerControllerFactory : public PlayerControllerFactory {
 	public:
+		XBoxPlayerControllerFactory() { Type::XBox; }
 		PlayerController* createPlayerController(Player* player) override {
 			return new XBoxController(player);
 		}
@@ -171,6 +173,7 @@ namespace NCL {
 	// Concrete factory for creating PS4 Player Controller
 	class PS4ControllerFactory : public PlayerControllerFactory {
 	public:
+		PS4ControllerFactory() { Type::PS4; }
 		PlayerController* createPlayerController(Player* player) override {
 			return new PS4Controller(player);
 		}
