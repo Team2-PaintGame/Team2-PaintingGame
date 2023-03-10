@@ -48,9 +48,9 @@ void PlayerBase::SetYawPitch(float dx, float dy) {
 }
 
 void PlayerBase::SetMemberVariables(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, ShaderBase* shader, int size) {
-	transform
-		.SetScale(Vector3(size))
-		.SetPosition(position);
+	
+	transform.SetScale(Vector3(size))
+			 .SetPosition(position);
 
 	renderObject = new RenderObject(&transform, mesh, shader);
 
