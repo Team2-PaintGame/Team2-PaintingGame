@@ -59,8 +59,8 @@ namespace NCL::CSC8508 {
 		int gridHeight;
 
 		float force = 100;
-		const float slowForce = 100;
-		const float walkForce = 150;
+		const float slowForce = 200; // 100
+		const float walkForce = 200;  //150
 		const float runForce = 300;
 
 		float timeAccumulator = 0.0f;

@@ -68,6 +68,10 @@ namespace NCL::CSC8508 {
 	}
 	void SecurityGuard::Update(float dt)
 	{
+		if (navigationPath->waypoints.size() > 0)
+		{
+			Debug::DrawLine(this->GetTransform().GetPosition(), navigationPath->waypoints.back(), Debug::BLACK);
+		}
 		
 		
 		DrawNavTris();
@@ -459,11 +463,14 @@ namespace NCL::CSC8508 {
 	}
 
 	void SecurityGuard::DisplayPathfinding() {
+
 		for (int i = 1; i < navigationPath->waypoints.size(); ++i) {
 			Vector3 a = navigationPath->waypoints[i - 1];
 			Vector3 b = navigationPath->waypoints[i];
 			Debug::DrawLine(a, b,Debug::BLACK);
 		}
+
+
 	}
 
 	void SecurityGuard::MoveSecurityGuard(Vector3 direction)
@@ -547,6 +554,8 @@ namespace NCL::CSC8508 {
 
 
 	void SecurityGuard::DrawTriRoute() {
+
+
 		for (int i = 0; i < navigationMesh->routeVertices.size(); i += 3)
 		{
 //			Debug::DrawTriangle(navigationMesh->routeVertices[i], navigationMesh->routeVertices[i + 1], navigationMesh->routeVertices[i + 2]);

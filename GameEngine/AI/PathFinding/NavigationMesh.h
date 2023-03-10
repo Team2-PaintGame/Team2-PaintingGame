@@ -23,10 +23,13 @@ namespace NCL {
 			}
 		};
 
+
 		struct PortalEdge {
 			Vector3 leftPortal;
 			Vector3 rightPortal;
 
+			Vector3 left;
+			Vector3 right;
 		};
 
 		class NavigationMesh : public NavigationMap	{
@@ -41,7 +44,7 @@ namespace NCL {
 			void FindEdges();
 			void FindMidPath(NavigationPath& outPath);
 			void FindRouteVertices();
-			void FindPortalEdges();
+			void FindPortalEdges(const Vector3& to);
 
 		protected:
 			struct NavTri {
