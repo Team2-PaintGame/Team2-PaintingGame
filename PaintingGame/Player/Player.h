@@ -5,6 +5,7 @@
 #include "Utils.h"
 #include "Vector3.h"
 #include "Gun.h"
+#include "AnimationController.h"
 
 namespace NCL {
 	using namespace Rendering;
