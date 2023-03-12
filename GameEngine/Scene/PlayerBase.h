@@ -4,7 +4,6 @@
 #include "TextureBase.h"
 #include "ShaderBase.h"
 #include "MeshMaterial.h"
-#include "AnimationController.h"
 #include "Camera.h"
 
 namespace NCL {
@@ -30,7 +29,6 @@ namespace NCL {
 		float	pitch = 0.0f;
 		void SetMemberVariables(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, ShaderBase* shader, int size);
 		Camera* camera;
-		AnimationController* animationController;
 		bool isMoving = false;
 	};
 }
