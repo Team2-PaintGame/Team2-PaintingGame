@@ -39,8 +39,8 @@ void Camera::SetOrthographicCameraParameters(float right, float left, float top,
 	camType = CameraType::Orthographic;
 }
 
-void Camera::SetViewportDivider(float divider) {
-	viewportDivider = divider;
+void Camera::SetVpSize(float x, float y) {
+	vpSize = Vector2(x, y);
 }
 
 void Camera::Update(float dt) {

@@ -32,10 +32,11 @@ namespace NCL {
 		void SetThirdPersonCamera(Vector3 offsetFromPlayer = Vector3(0.0f, 3.0f, 13));
 		void SetPerspectiveCameraParameters(float aspect, float fov = 45.0f);
 		void SetOrthographicCameraParameters(float right, float left, float top, float bottom);
-		void SetViewportDivider(float divider);
-		float GetViewportDivider() const { return viewportDivider; }
-		void SetViewportSize(Vector2 v) { viewportSize = v; }
-		Vector2 GetViewportSize() const { return viewportSize; }
+		void SetVpSize(float x = 1.0f, float y = 1.0f);
+		Vector2 GetVpSize() const { return vpSize; }
+		float GetAspectMultiplier() const { return vpSize.x * vpSize.y; }
+		void SetVpStartPos(Vector2 v) { vpStartPos = v; }
+		Vector2 GetVpStartPos() const { return vpStartPos; }
 		~Camera(void) = default;
 
 		void Update(float dt);
@@ -69,8 +70,10 @@ namespace NCL {
 
 		float aspect = 0.0f;
 		float fov = 45.0f;
-		float viewportDivider = 1.0f;
-		Vector2 viewportSize = Vector2(0.0f, 0.0f);
+		
+		//viewport modifiers
+		Vector2 vpSize = Vector2(1.0f, 1.0f);
+		Vector2 vpStartPos = Vector2(0.0f, 0.0f);
 
 		float right = 0.0f;
 		float left = 0.0f;

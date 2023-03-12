@@ -44,10 +44,10 @@ void SplitScreenGame::InitPlayers() {
 		playerControllers.push_back(GameManager::sConfig.playerControllerFactory->createPlayerController(player2));
 	}
 
-	player1->GetCamera()->SetViewportDivider(0.5f);
-	player2->GetCamera()->SetViewportDivider(0.5f);
-	player1->GetCamera()->SetViewportSize(Vector2(0.0f, 0.0f));
-	player2->GetCamera()->SetViewportSize(Vector2(0.5f, 0.0f));
+	player1->GetCamera()->SetVpSize(0.5f);
+	player2->GetCamera()->SetVpSize(0.5f);
+	player1->GetCamera()->SetVpStartPos(Vector2(0.0f, 0.0f));
+	player2->GetCamera()->SetVpStartPos(Vector2(0.5f, 0.0f));
 }
 
 void SplitScreenGame::CreateSplatOnShoot() {
@@ -68,9 +68,9 @@ Player* SplitScreenGame::AddPlayer(Vector3 position,Team team) {
 	activeCameras.push_back(player->GetCamera());
 	players.push_back(player);
 
-	FocusPoint* focusPoint = CreateFocusPoint();
+	/*FocusPoint* focusPoint = CreateFocusPoint();
 	focusPoint->SetPlayer(player);
-	world->AddGameObject(focusPoint);
+	world->AddGameObject(focusPoint);*/
 
 	return player;
 }
