@@ -29,7 +29,7 @@ namespace NCL {
 		Camera(void) = default;
 		void SetBasicCameraParameters(PlayerBase* player, float znear = 1.0f, float zfar = 100.0f);
 		void SetFirstPersonCamera();
-		void SetThirdPersonCamera(Vector3 offsetFromPlayer = Vector3(7.0f, 3.0f, 13));
+		void SetThirdPersonCamera(Vector3 offsetFromPlayer = Vector3(0.0f, 3.0f, 13));
 		void SetPerspectiveCameraParameters(float aspect, float fov = 45.0f);
 		void SetOrthographicCameraParameters(float right, float left, float top, float bottom);
 		void SetViewportDivider(float divider);
@@ -85,7 +85,7 @@ namespace NCL {
 		CameraType camType = CameraType::Perspective;
 
 		//third person camera params
-		Vector3 offsetFromPlayer = Vector3(7.0f, 3.0f, 13);
+		Vector3 offsetFromPlayer = Vector3(0.0f, 3.0f, 13);
 		PlayerBase* player = NULL;
 	};
 }
