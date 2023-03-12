@@ -5,10 +5,17 @@
 #include "ShaderBase.h"
 #include "MeshMaterial.h"
 #include "Camera.h"
+#include "Utils.h"
+
+
 
 namespace NCL {
 	using namespace Rendering;
 	using namespace CSC8508;
+	namespace CSC8508 {
+		class RaycastManager;
+	}
+	
 
 	class PlayerBase : public GameObject {
 	public:
@@ -29,7 +36,10 @@ namespace NCL {
 		float	pitch = 0.0f;
 		void SetMemberVariables(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, ShaderBase* shader, int size);
 		Camera* camera;
+		reactphysics3d::Ray ray = reactphysics3d::Ray(~Maths::Vector3(0), ~Maths::Vector3(0));
+		void CameraSpring(Camera* cam);
 		bool isMoving = false;
+		RaycastManager* raycastManager = NULL;
 	};
 }
 

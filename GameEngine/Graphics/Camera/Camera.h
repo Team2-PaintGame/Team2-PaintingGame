@@ -64,6 +64,11 @@ namespace NCL {
 		}
 		//Gets position in world space
 		Vector3 GetPosition() const { return position; }
+		void SetPosition(Vector3 pos) { position = pos; }
+		void SetOffsetFromPlayer(Vector3 offset) { offsetFromPlayer = offset; }
+		Vector3 GetOffsetFromPlayer() const { return offsetFromPlayer; }
+		Vector3 GetNormalizedRotation() const { return rotated_offset.Normalised(); }
+		Vector3 GetMaxOffSet() const { return maxOffSet; }
 	protected:
 		float znear = 1.0f;
 		float zfar = 100.0f;
@@ -89,6 +94,8 @@ namespace NCL {
 
 		//third person camera params
 		Vector3 offsetFromPlayer = Vector3(0.0f, 3.0f, 13);
+		Vector3 rotated_offset;
+		Vector3 maxOffSet = Vector3(0.0f, 3.0f, 13);
 		PlayerBase* player = NULL;
 	};
 }
