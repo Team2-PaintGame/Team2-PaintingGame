@@ -74,6 +74,7 @@ void OGLPaintingGameRenderer::RenderGameScreen() { //change this to RenderScreen
 	//send camera things and light things to shader
 	boundScreen->GetSceneNode()->OperateOnCameras(
 		[&](Camera* cam) {
+			cam->SetPerspectiveCameraParameters(Window::GetWindow()->GetScreenAspect() * cam->GetViewportDivider());
 			glViewport(cam->GetViewportSize().x * windowWidth, cam->GetViewportSize().y * windowWidth, windowWidth * cam->GetViewportDivider(), windowHeight);
 			Matrix4 viewMatrix = cam->BuildViewMatrix();
 			Matrix4 projMatrix = cam->BuildProjectionMatrix();
@@ -329,6 +330,8 @@ void OGLPaintingGameRenderer::NewRenderLines() {
 
 	boundScreen->GetSceneNode()->OperateOnCameras(
 		[&](Camera* cam) {
+			cam->SetPerspectiveCameraParameters(Window::GetWindow()->GetScreenAspect() * cam->GetViewportDivider());
+			glViewport(cam->GetViewportSize().x * windowWidth, cam->GetViewportSize().y * windowWidth, windowWidth * cam->GetViewportDivider(), windowHeight);
 			//float screenAspect = (float)windowWidth / (float)windowHeight;
 			Matrix4 viewMatrix = cam->BuildViewMatrix();
 			Matrix4 projMatrix = cam->BuildProjectionMatrix();
