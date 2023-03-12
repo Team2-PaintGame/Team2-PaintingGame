@@ -41,7 +41,6 @@ void Camera::SetOrthographicCameraParameters(float right, float left, float top,
 
 void Camera::SetViewportDivider(float divider) {
 	viewportDivider = divider;
-	aspect *= divider;
 }
 
 void Camera::Update(float dt) {
