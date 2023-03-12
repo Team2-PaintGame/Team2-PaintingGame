@@ -25,22 +25,17 @@ namespace NCL {
 			this->ink = ink;
 			this->reticle = reticle;
 		}
-		void SetReticlePosition(Vector2 pos) { reticlePosition = pos; }
 		virtual void Update(float dt) {
 			if (false) {
 				ink->GetTransform()
 					.SetPosition(transform.GetPosition() + (transform.GetOrientation() * inkOffset))
 					.SetOrientation(transform.GetOrientation());
 			}
-			if (reticle) {
-				reticle->GetTransform().SetPosition(reticlePosition);
-			}
 		}
 	protected:
 		Ink* ink = NULL;
 		const Vector3 inkOffset = Vector3(0, 0.5, -2);
 		FocusPoint* reticle = NULL;
-		Vector2 reticlePosition;
 	};
 }
  

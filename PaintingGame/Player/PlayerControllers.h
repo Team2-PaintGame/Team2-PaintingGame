@@ -49,7 +49,6 @@ namespace NCL {
 
 		//	return cursorPosition;
 		//}
-		//Vector2 cursorPosition;
 	};
 
 	class XBoxController : public PlayerController {
@@ -116,7 +115,6 @@ namespace NCL {
 			PlayerController::Update(dt);
 		}
 	protected:
-		Vector2 cursorPosition;
 		XBoxGamepad gamepad;
 		bool wasConnected = false;
 	};
@@ -183,7 +181,6 @@ namespace NCL {
 		//	return cursorPosition;
 		//}
 	protected:
-		Vector2 cursorPosition;
 		PS4::PS4Gamepad gamepad;
 	};
 
