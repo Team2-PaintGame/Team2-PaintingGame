@@ -35,10 +35,10 @@ namespace NCL {
 
 	template <class T> class ParticleSystem : public GameObject {
 	public:
-		ParticleSystem(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 emitterPosition, MeshGeometry* emitterMesh, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, bool enableGravity = false, float startSize = 1.0f, float startLifetime = 4.0f, float startSpeed = 10.0f, std::string name = "Particle System");
-		ParticleSystem(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 emitterPosition, float emissionAngle, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, bool enableGravity = false, float startSize = 1.0f, float startLifetime = 4.0f, float startSpeed = 10.0f, std::string name = "Particle System");
-		ParticleSystem(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 emitterPosition, MeshGeometry* emitterMesh, MeshGeometry* mesh, Vector4 color, ShaderBase* shader, bool enableGravity = false, float startSize = 1.0f, float startLifetime = 4.0f, float startSpeed = 10.0f, std::string name = "Particle System");
-		ParticleSystem(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 emitterPosition, float emissionAngle, MeshGeometry* mesh, Vector4 color, ShaderBase* shader, bool enableGravity = false, float startSize = 1.0f, float startLifetime = 4.0f, float startSpeed = 10.0f, std::string name = "Particle System");
+		ParticleSystem(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 emitterPosition, MeshGeometry* emitterMesh, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, bool enableGravity = false, float startSize = 1.0f, float startLifetime = 4.0f, float startSpeed = 10.0f, bool playOnAwake = false, std::string name = "Particle System");
+		ParticleSystem(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 emitterPosition, float emissionAngle, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, bool enableGravity = false, float startSize = 1.0f, float startLifetime = 4.0f, float startSpeed = 10.0f, bool playOnAwake = false, std::string name = "Particle System");
+		ParticleSystem(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 emitterPosition, MeshGeometry* emitterMesh, MeshGeometry* mesh, Vector4 color, ShaderBase* shader, bool enableGravity = false, float startSize = 1.0f, float startLifetime = 4.0f, float startSpeed = 10.0f, bool playOnAwake = false, std::string name = "Particle System");
+		ParticleSystem(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 emitterPosition, float emissionAngle, MeshGeometry* mesh, Vector4 color, ShaderBase* shader, bool enableGravity = false, float startSize = 1.0f, float startLifetime = 4.0f, float startSpeed = 10.0f, bool playOnAwake = false, std::string name = "Particle System");
 		void SetParticleEmissionRate(int rate) {
 			this->emitter.SetParticleEmissionRate(rate);
 		}
@@ -47,9 +47,10 @@ namespace NCL {
 		}
 		virtual void Update(float dt);
 		virtual ~ParticleSystem();
-
+		void SetLooping(bool val) { looping = val; }
+		void StartEmission();					// If needed to run particle simulation again if looping is not enabled
 	protected:
-		void SetMemberVariables(Vector3 emitterPosition, MeshGeometry* mesh, ShaderBase* shader, bool enableGravity, float startSize, float startLifetime, float startSpeed, float yaw = 0.0f, float pitch = -90);
+		void SetMemberVariables(Vector3 emitterPosition, MeshGeometry* mesh, ShaderBase* shader, bool enableGravity, float startSize, float startLifetime, float startSpeed, bool playOnAwake);
 		void GenerateParticles();
 		unsigned int maxParticles = 100;
 		float accumulator = 0.0f;
@@ -57,7 +58,7 @@ namespace NCL {
 		std::vector<Transform*> transforms;
 		float elapsedTime = 0.0f;
 		float duration = 15.0f;					// The length of time in seconds for the particle system to run
-		bool looping = true;					// If looping is enabled, the cycle starts once again when the duration time is reached
+		bool looping = false;					// If looping is enabled, the cycle starts once again when the duration time is reached
 		float startLifetime = 5.0f;				// The initial lifetime in seconds for the particles. The particle is destroyed after this elapsed time.
 		float startSpeed = 10.0f;				// The initial speed of the particles. The greater the speed of the particles, the more spread out they will be.
 		bool enableGravity = false;
@@ -65,26 +66,26 @@ namespace NCL {
 	};
 
 	template <class T>
-	inline ParticleSystem<T>::ParticleSystem(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 emitterPosition, MeshGeometry* emitterMesh, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, bool enableGravity, float startSize, float startLifetime, float startSpeed, std::string name) : GameObject(physicsCommon, physicsWorld, name), emitter(emitterMesh) {
-		SetMemberVariables(emitterPosition, mesh, shader, enableGravity, startSize, startLifetime, startSpeed);
+	inline ParticleSystem<T>::ParticleSystem(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 emitterPosition, MeshGeometry* emitterMesh, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, bool enableGravity, float startSize, float startLifetime, float startSpeed, bool playOnAwake, std::string name) : GameObject(physicsCommon, physicsWorld, name), emitter(emitterMesh) {
+		SetMemberVariables(emitterPosition, mesh, shader, enableGravity, startSize, startLifetime, startSpeed, playOnAwake);
 		renderObject->AddTexture(texture);
 	}
 
 	template <class T>
-	inline ParticleSystem<T>::ParticleSystem(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 emitterPosition, float emissionAngle, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, bool enableGravity, float startSize, float startLifetime, float startSpeed, std::string name) : GameObject(physicsCommon, physicsWorld, name), emitter(emissionAngle) {
-		SetMemberVariables(emitterPosition, mesh, shader, enableGravity, startSize, startLifetime, startSpeed);
+	inline ParticleSystem<T>::ParticleSystem(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 emitterPosition, float emissionAngle, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, bool enableGravity, float startSize, float startLifetime, float startSpeed, bool playOnAwake, std::string name) : GameObject(physicsCommon, physicsWorld, name), emitter(emissionAngle) {
+		SetMemberVariables(emitterPosition, mesh, shader, enableGravity, startSize, startLifetime, startSpeed, playOnAwake);
 		renderObject->AddTexture(texture);
 	}
 
 	template<class T>
-	inline NCL::ParticleSystem<T>::ParticleSystem(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 emitterPosition, MeshGeometry* emitterMesh, MeshGeometry* mesh, Vector4 color, ShaderBase* shader, bool enableGravity, float startSize, float startLifetime, float startSpeed, std::string name) : GameObject(physicsCommon, physicsWorld, name), emitter(emitterMesh) {
-		SetMemberVariables(emitterPosition, mesh, shader, enableGravity, startSize, startLifetime, startSpeed);
+	inline NCL::ParticleSystem<T>::ParticleSystem(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 emitterPosition, MeshGeometry* emitterMesh, MeshGeometry* mesh, Vector4 color, ShaderBase* shader, bool enableGravity, float startSize, float startLifetime, float startSpeed, bool playOnAwake, std::string name) : GameObject(physicsCommon, physicsWorld, name), emitter(emitterMesh) {
+		SetMemberVariables(emitterPosition, mesh, shader, enableGravity, startSize, startLifetime, startSpeed, playOnAwake);
 		renderObject->SetColour(color);
 	}
 
 	template<class T>
-	inline NCL::ParticleSystem<T>::ParticleSystem(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 emitterPosition, float emissionAngle, MeshGeometry* mesh, Vector4 color, ShaderBase* shader, bool enableGravity, float startSize, float startLifetime, float startSpeed, std::string name) : GameObject(physicsCommon, physicsWorld, name), emitter(emissionAngle) {
-		SetMemberVariables(emitterPosition, mesh, shader, enableGravity, startSize, startLifetime, startSpeed);
+	inline NCL::ParticleSystem<T>::ParticleSystem(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 emitterPosition, float emissionAngle, MeshGeometry* mesh, Vector4 color, ShaderBase* shader, bool enableGravity, float startSize, float startLifetime, float startSpeed, bool playOnAwake, std::string name) : GameObject(physicsCommon, physicsWorld, name), emitter(emissionAngle) {
+		SetMemberVariables(emitterPosition, mesh, shader, enableGravity, startSize, startLifetime, startSpeed, playOnAwake);
 		renderObject->SetColour(color);
 	}
 
@@ -116,11 +117,19 @@ namespace NCL {
 		particles.clear();
 	}
 
+	template<class T>
+	inline void ParticleSystem<T>::StartEmission() {
+		//particles.clear();
+		//transforms.clear();
+		elapsedTime = 0.0f;
+		accumulator = 0.0f;
+	}
+
 	template <class T>
 	inline void ParticleSystem<T>::GenerateParticles() {
 		if (elapsedTime < duration || looping) {
 			while (accumulator > 1.0 / emitter.GetParticleEmissionRate() && particles.size() < maxParticles) {
-				particles.emplace_back(std::make_unique<T>(physicsCommon, physicsWorld, transform, Vector3(), startLifetime, startSpeed, emitter.GetEmissionDirection(), enableGravity));
+				particles.emplace_back(std::make_unique<T>(physicsCommon, physicsWorld, &transform, Vector3(), startLifetime, startSpeed, emitter.GetEmissionDirection(), enableGravity));
 				transforms.emplace_back(&particles.back()->GetTransform());
 				accumulator -= 1.0 / emitter.GetParticleEmissionRate();
 			}
@@ -128,21 +137,23 @@ namespace NCL {
 	}
 
 	template<class T>
-	inline void ParticleSystem<T>::SetMemberVariables(Vector3 emitterPosition, MeshGeometry* mesh, ShaderBase* shader, bool enableGravity, float startSize, float startLifetime, float startSpeed, float yaw, float pitch) {
+	inline void ParticleSystem<T>::SetMemberVariables(Vector3 emitterPosition, MeshGeometry* mesh, ShaderBase* shader, bool enableGravity, float startSize, float startLifetime, float startSpeed, bool playOnAwake) {
 		this->startLifetime = startLifetime;
 		this->startSpeed = startSpeed;
 		this->enableGravity = enableGravity;
 
 		transform.SetPosition(emitterPosition);
 		transform.SetScale(Vector3(startSize));
-		transform.SetOrientation(Quaternion::AxisAngleToQuaterion(Vector3(1, 0, 0), -90) * Quaternion::AxisAngleToQuaterion(Vector3(0, 1, 0), yaw));
 
 		emitter.SetTransform(&transform);
-		//transform.SetOrientation(Quaternion::AxisAngleToQuaterion(Vector3(1, 0, 0), 45) * Quaternion::AxisAngleToQuaterion(Vector3(0, 1, 0), 0));
 
 		renderObject = new RenderObject(transforms, mesh, shader);
 		renderObject->SetInstanceCount(particles.size());
 		renderObject->SetIsInstanced(true);
+
+		if (!playOnAwake) {
+			elapsedTime = FLT_MAX;
+		}
 	}
 }
 
