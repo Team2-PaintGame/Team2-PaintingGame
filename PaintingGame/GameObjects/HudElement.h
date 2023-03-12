@@ -5,7 +5,6 @@
 #include <ShaderBase.h>
 #include <GameObject.h>
 #include "RenderObject.h"
-#include "Player.h"
 
 namespace NCL {
 	using namespace Rendering;
@@ -28,15 +27,6 @@ namespace NCL {
 		FocusPoint(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, Vector2 scale) :
 			HudElement(physicsCommon, physicsWorld, Vector2(), mesh, texture, shader, scale) {
 		}
-
-		void SetPlayer(Player* p) { player = p; }
-		
-		virtual void Update(float dt) {
-			//std::cout << player->targetPosition << std::endl;
-			transform.SetPosition(player->targetPosition);
-		}
-	protected: 
-		Player* player = NULL;
 	};
 }
 

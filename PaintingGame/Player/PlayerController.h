@@ -19,7 +19,6 @@ namespace NCL {
 
 		virtual float ViewDx() = 0;
 		virtual float ViewDy() = 0;
-		virtual const Vector2& GetCursorPosition(float dt) = 0;
 	protected:
 		Player* player;
 	};

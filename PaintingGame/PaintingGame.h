@@ -36,7 +36,6 @@ namespace NCL {
 			virtual void CreateSplatOnShoot() = 0;
 			Player* CreatePlayer(Vector3 position, Team team);
 			virtual Player* AddPlayer(Vector3 position, Team team) = 0;
-			FocusPoint* CreateFocusPoint();
 			Gun* CreateGun(Vector3 position, Team team);
 
 			GameWorld* world;

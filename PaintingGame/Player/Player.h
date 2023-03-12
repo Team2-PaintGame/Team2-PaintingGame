@@ -25,7 +25,6 @@ namespace NCL {
 		virtual void Update(float dt);
 		virtual void Shoot();
 		const reactphysics3d::Ray& GetShootRay() const { return shootRay; }
-		Vector2 targetPosition;
 	protected:
 		void SetMemberVariables(const std::unordered_map<std::string, MeshAnimation*>& animations, Gun* gun);
 		AnimationController* animationController = NULL;
