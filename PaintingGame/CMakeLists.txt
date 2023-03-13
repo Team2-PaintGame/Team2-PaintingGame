@@ -3,28 +3,50 @@ set(PROJECT_NAME PaintingGame)
 ################################################################################
 # Source groups
 ################################################################################
+if(WIN32)
 set(Header_Files
-    "NetworkedGame.h"
     "SplitScreenGame.h"
     "SinglePlayerGame.h"
+    "PaintingGame.h"
+    "GameManager.h"
+    "PlatformConfigurations.h"
+    "GameAssets.h"
+    "NetworkedGame.h"
     "NetworkPlayer.h"
+)
+else()
+set(Header_Files
+    "SplitScreenGame.h"
+    "SinglePlayerGame.h"
     "PaintingGame.h"
     "GameManager.h"
     "PlatformConfigurations.h"
     "GameAssets.h"
 )
+endif()
 source_group("Header Files" FILES ${Header_Files})
 
+if(WIN32)
 set(Source_Files
     "Main.cpp"
-    "NetworkedGame.cpp"
     "SplitScreenGame.cpp"
     "SinglePlayerGame.cpp"
+    "PaintingGame.cpp"
+    "GameManager.cpp"
+    "GameAssets.cpp"
+    "NetworkedGame.cpp"
     "NetworkPlayer.cpp"
+)
+else()
+set(Source_Files
+    "Main.cpp"
+    "SplitScreenGame.cpp"
+    "SinglePlayerGame.cpp"
     "PaintingGame.cpp"
     "GameManager.cpp"
     "GameAssets.cpp"
 )
+endif()
 
 if(USE_VULKAN)
 file(GLOB SHADER_FILES ${ASSET_ROOT}/Shaders/VK/*.*)
@@ -91,6 +113,7 @@ set(ImGui
 )
 source_group("ImGui Files" FILES ${ImGui})
 
+if(WIN32)
 set(ALL_FILES
     ${Header_Files}
     ${Source_Files}
@@ -100,6 +123,16 @@ set(ALL_FILES
     ${Screens}
     ${ImGui}
 )
+else()
+set(ALL_FILES
+    ${Header_Files}
+    ${Source_Files}
+    ${GameObjects}
+    ${Player}
+    ${Renderers}
+    ${Screens}
+)
+endif()
 
 if(USE_VULKAN)
     set(ALL_FILES 
