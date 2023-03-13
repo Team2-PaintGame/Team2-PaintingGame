@@ -1,23 +1,20 @@
 #pragma once
 #include "PaintingGame.h"
+#include <PlayerController.h>
 
 namespace NCL {
 	namespace CSC8508 {
 
 		class SinglePlayerGame : public PaintingGame {
 		public:
-			SinglePlayerGame(GameTechRenderer* render, GameWorld* world, reactphysics3d::PhysicsCommon* physicsCommon, MenuHandler* menu);
+			SinglePlayerGame(GameAssets* assets);
 			virtual ~SinglePlayerGame();
-			PlayerBase* AddPlayer(Camera* camera, Vector3 position, Gamepad* gamepad = nullptr) override;
-			void UpdateGame(float dt) override;
-
+			void Update(float dt) override;
 		protected:
-			//void InitWorld() override;
-
-		protected:
-			PlayerBase* player = NULL;
+			virtual void CreateSplatOnShoot();
+			Player* AddPlayer(Vector3 position, Team team) override;
+			Player* player = NULL;
 			PlayerController* playerController;
-			Gamepad* gamepad;
 		};
 	}
 }

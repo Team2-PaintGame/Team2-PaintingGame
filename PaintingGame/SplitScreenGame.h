@@ -1,26 +1,26 @@
 #pragma once
 #include "PaintingGame.h"
+#include <PlayerController.h>
 
 namespace NCL {
 	namespace CSC8508 {
 		
 		class SplitScreenGame : public PaintingGame {
 		public:
-			SplitScreenGame(GameTechRenderer* render, GameWorld* world, reactphysics3d::PhysicsCommon* physicsCommon, MenuHandler* menu);
+			SplitScreenGame(GameAssets* assets);
 			virtual ~SplitScreenGame();
-			PlayerBase* AddPlayer(Camera* camera, Vector3 position, Gamepad* gamepad = nullptr) override;
-			void UpdateGame(float dt) override;
+			void Update(float dt) override;
 
 		protected:
-			//void InitWorld() override;
+			Player* AddPlayer(Vector3 position, Team team) override;
 			void InitPlayers();
-
+			virtual void CreateSplatOnShoot();
 		protected:
 			//contains an array of players (2) only
 			const int maxPlayers = 2;
-			std::vector<PlayerBase*> players;
+			std::vector<Player*> players;
 			std::vector<PlayerController*> playerControllers;
-			Gamepad* gamepad;
+			PlayerControllerFactory* secondPlayerControllerFactory = NULL;
 		};
 	}
 }

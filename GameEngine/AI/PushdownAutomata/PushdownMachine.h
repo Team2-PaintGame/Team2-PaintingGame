@@ -12,7 +12,7 @@ namespace NCL {
 			~PushdownMachine();
 			void Reset();
 			bool Update(float dt);
-
+			PushdownState* GetActiveState() const { return activeState; }
 		protected:
 			PushdownState* activeState = NULL;
 			PushdownState* initialState = NULL;

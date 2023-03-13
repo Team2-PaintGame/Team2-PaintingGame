@@ -3,6 +3,7 @@
 #include "Layer.h"
 #include <reactphysics3d/reactphysics3d.h>
 #include "SceneNode.h"
+#include "Vector3.h"
 
 using std::vector;
 
@@ -10,6 +11,17 @@ namespace NCL::CSC8508 {
 	class NetworkObject;
 	class RenderObject;
 	class PhysicsObject;
+	class GameWorld;
+
+	class GameObjectListener : public reactphysics3d::EventListener {
+	public:
+		GameObjectListener(GameWorld* world) { this->world = world; }
+		~GameObjectListener() {}
+
+		virtual void onContact(const CollisionCallback::CallbackData& callbackData) override;
+	private:
+		GameWorld* world;
+	};
 
 	class GameObject :public SceneNode	{
 	public:
@@ -67,6 +79,7 @@ namespace NCL::CSC8508 {
 
 		void UpdateTransform();
 
+		NCL::Maths::Vector3 collisionPoint;
 
 	protected:
 		/// Reference to the physics common object
@@ -75,6 +88,7 @@ namespace NCL::CSC8508 {
 
 		/// Body used to simulate the dynamics of the box
 		reactphysics3d::RigidBody* rigidBody;
+		rp3d::CollisionShape* boundingVolume;
 
 		Transform			transform;
 

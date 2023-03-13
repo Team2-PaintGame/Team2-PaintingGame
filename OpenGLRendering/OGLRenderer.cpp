@@ -156,10 +156,20 @@ void OGLRenderer::DrawBoundMesh(int subLayer, int numInstances) {
 	}
 
 	if (boundMesh->GetIndexCount() > 0) {
-		glDrawElements(mode, count, GL_UNSIGNED_INT, (const GLvoid*)(offset * sizeof(unsigned int)));
+		if (numInstances > 0) {
+			glDrawElementsInstanced(mode, count, GL_UNSIGNED_INT, (const GLvoid*)(offset * sizeof(unsigned int)), numInstances);
+		}
+		else {
+			glDrawElements(mode, count, GL_UNSIGNED_INT, (const GLvoid*)(offset * sizeof(unsigned int)));
+		}
 	}
 	else {
-		glDrawArrays(mode, 0, count);
+		if (numInstances > 0) {
+			glDrawArraysInstanced(mode, 0, count, numInstances);
+		}
+		else {
+			glDrawArrays(mode, 0, count);
+		}
 	}
 	//glBindVertexArray(0);
 }

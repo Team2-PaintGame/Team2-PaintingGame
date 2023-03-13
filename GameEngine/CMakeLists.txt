@@ -53,6 +53,9 @@ set(Asset_Handling
     "./AssetsHandling/TextureLoader.h"
     "./AssetsHandling/TextureWriter.cpp"
     "./AssetsHandling/TextureWriter.h"
+    "./AssetsHandling/CollisionDetection.cpp"
+    "./AssetsHandling/CollisionDetection.h"
+    "./AssetsHandling/Ray.h"
 )
 source_group("Asset Handling" FILES ${Asset_Handling})
 
@@ -72,7 +75,12 @@ set(Entity_Components
     "./EntityComponents/Transform.cpp"
     "./EntityComponents/Transform.h"
     "./EntityComponents/Layer.h"
+    "./EntityComponents/ParticleSystem.h"
+    "./EntityComponents/ParticleSystem.cpp"
+    "./EntityComponents/Particle.h"
+    "./EntityComponents/Particle.cpp"
     "./EntityComponents/SceneNode.h"
+    "./EntityComponents/SceneNode.cpp"
 )
 source_group("Entity Components" FILES ${Entity_Components})
 
@@ -91,8 +99,8 @@ set(Graphics_Lights
 source_group("Graphics\\Lights" FILES ${Graphics_Lights})
 
 set(Graphics_Renderer
-    "./Graphics/Renderer/GameTechRenderer.h"
-    "./Graphics/Renderer/GameTechRenderer.cpp"
+    #"./Graphics/Renderer/GameTechRenderer.h"
+    #"./Graphics/Renderer/GameTechRenderer.cpp"
 )
 source_group("Graphics\\Renderer" FILES ${Graphics_Renderer})
 
@@ -102,8 +110,6 @@ list(APPEND Graphics_Renderer "./Graphics/Renderer/GameTechVulkanRenderer.cpp")
 endif()
 
 set(Graphics_Renderering_Support
-    "./Graphics/Renderer/RenderingSupport/AnimationController.cpp"
-    "./Graphics/Renderer/RenderingSupport/AnimationController.h"
     "./Graphics/Renderer/RenderingSupport/MeshAnimation.cpp"
     "./Graphics/Renderer/RenderingSupport/MeshAnimation.h"
     "./Graphics/Renderer/RenderingSupport/MeshGeometry.cpp"
@@ -116,15 +122,8 @@ set(Graphics_Renderering_Support
     "./Graphics/Renderer/RenderingSupport/ShaderBase.h"
     "./Graphics/Renderer/RenderingSupport/TextureBase.cpp"
     "./Graphics/Renderer/RenderingSupport/TextureBase.h"
-    "./Graphics/Renderer/RenderingSupport/TextureHUD.h"
 )
 source_group("Graphics\\Renderer\\Rendering Support" FILES ${Graphics_Renderering_Support})
-
-set(Graphics_UI
-    "./Graphics/UI/MenuHandler.h"
-    "./Graphics/UI/MenuHandler.cpp"
-)
-source_group("Graphics\\UI" FILES ${Graphics_UI})
 
 set(Maths
     "./Maths/Maths.cpp"
@@ -153,10 +152,8 @@ set(Scene
     "./Scene/GameWorld.cpp" 
     "./Scene/PlayerBase.h" 
     "./Scene/PlayerBase.cpp" 
-    "./Scene/PlayerController.h" 
-    "./Scene/InputController.h" 
-    "./Scene/PlayerController.cpp" 
-    "./Scene/InputController.cpp" 
+    "./Scene/AnimationController.cpp"
+    "./Scene/AnimationController.h"
 )
 source_group("Scene" FILES ${Scene})
 
@@ -176,6 +173,8 @@ set(Windowing_and_Input
     "./WindowingAndInput/Mouse.h"
     "./WindowingAndInput/Window.cpp"
     "./WindowingAndInput/Window.h"
+    "./WindowingAndInput/InputBase.cpp"
+    "./WindowingAndInput/InputBase.h"
 )
 source_group("Windowing and Input" FILES ${Windowing_and_Input})
 
@@ -186,14 +185,14 @@ set(Windowing_and_Input__Win32
     "./WindowingAndInput/Win32/Win32Mouse.h"
     "./WindowingAndInput/Win32/Win32Window.cpp"
     "./WindowingAndInput/Win32/Win32Window.h"
+    "./WindowingAndInput/Win32/XBoxGamepad.cpp"
+    "./WindowingAndInput/Win32/XBoxGamepad.h" 
 )
 source_group("Windowing and Input\\Win32" FILES ${Windowing_and_Input__Win32})
 
 set(Windowing_and_Input__PS4
-    "./WindowingAndInput/PS4/InputBase.cpp"
-    "./WindowingAndInput/PS4/InputBase.h"
-    "./WindowingAndInput/PS4/PS4Input.cpp"
-    "./WindowingAndInput/PS4/PS4Input.h"
+    "./WindowingAndInput/PS4/PS4Gamepad.cpp"
+    "./WindowingAndInput/PS4/PS4Gamepad.h"
     "./WindowingAndInput/PS4/PS4Window.cpp"
     "./WindowingAndInput/PS4/PS4Window.h"
     "./WindowingAndInput/PS4/PS4Frame.cpp"
@@ -221,12 +220,7 @@ set(ALL_FILES
     ${Graphics_Lights}
     ${Graphics_Renderer}
     ${Graphics_Renderering_Support}
-	${Graphics_UI}
     ${Maths}
-    #${Networking}
-    #${Networking_enet_Files}
-    #${Physics}
-    #${Physics_Collision_Detection}
     ${Scene}
     ${Scene_Terrain}
     ${Windowing_and_Input}
@@ -311,7 +305,6 @@ include_directories("Scene/Terrain")
 include_directories("../Networking/")
 include_directories("Graphics/Renderer/")
 include_directories("Graphics/Renderer/RenderingSupport/")
-include_directories("Graphics/UI/")
 include_directories("Graphics/Camera/")
 include_directories("Graphics/Lights/")
 include_directories("EntityComponents/")

@@ -18,7 +18,7 @@ namespace NCL {
 				.SetPosition(position);
 
 			renderObject = new RenderObject(&transform, mesh, shader);
-			renderObject->AddTexture(texture);
+			renderObject->SetDefaultTexture(texture);
 
 			boundingVolume = physicsCommon.createBoxShape(~transform.GetScale() / 2.0f);
 			reactphysics3d::Transform rp3d_transform(~position, rp3d::Quaternion::identity());
@@ -30,10 +30,12 @@ namespace NCL {
 		}
 		
 		virtual ~Box() {
-			physicsCommon.destroyBoxShape(boundingVolume);
+			if (rigidBody) {
+				physicsWorld->destroyRigidBody(rigidBody);
+			}
+			physicsCommon.destroyBoxShape(dynamic_cast<rp3d::BoxShape*>(boundingVolume));
 		}
 	protected:
-		rp3d::BoxShape* boundingVolume;
 	};
 }
  

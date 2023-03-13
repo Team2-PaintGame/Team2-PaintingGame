@@ -55,7 +55,7 @@ namespace NCL {
 		std::string("Normals"),
 		std::string("Tangents"),
 		std::string("Joint Weights"),
-		std::string("Joint Indices")
+		std::string("Joint Indices"),
 	};
 
 	struct SubMesh {
@@ -176,7 +176,6 @@ namespace NCL {
 		void SetDebugName(const std::string& debugName);
 
 		virtual void UploadToGPU(Rendering::RendererBase* renderer = nullptr) = 0;
-
 		static MeshGeometry* GenerateTriangle(MeshGeometry* input);
 
 	protected:

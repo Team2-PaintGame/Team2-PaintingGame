@@ -11,15 +11,11 @@ GameObject::GameObject(reactphysics3d::PhysicsCommon& physicsCommon, reactphysic
 	isActive		= true;
 	renderObject	= nullptr;
 	networkObject	= nullptr;
+	rigidBody		= nullptr;
 }
 
 GameObject::~GameObject()	{
-	delete renderObject;
 	delete networkObject;
-
-	/*if (rigidBody) {
-		physicsWorld->destroyRigidBody(rigidBody);
-	}*/
 }
 
 void GameObject::UpdateTransform() {

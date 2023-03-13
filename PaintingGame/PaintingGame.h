@@ -1,85 +1,62 @@
-#pragma once
 
-#include <GameObject.h>
-#include <GameTechRenderer.h>
+#pragma once
+#include "Player.h"
+#include "GameAssets.h"
+#include <Camera.h>
 #include <GameWorld.h>
-#include <map>
-#include <MeshMaterial.h>
-#include <NavigationGrid.h>
-#include <MeshAnimation.h>
-#include <Vector4.h>
-#include <Vector3.h>
-#include <RenderObject.h>
-#include <PlayerBase.h>
-#include <PlayerController.h>
-#include <reactphysics3d/reactphysics3d.h>
-#include "InputController.h"
-#include "AnimationController.h"
+#include <DirectionalLight.h>
+#include <SpotLight.h>
+#include <PointLight.h>
+#include "SceneNode.h"
+#include "HudElement.h"
+
+class Gamepad;
+class AnimationController;
 
 namespace NCL {
 	class MenuHandler;
 	namespace CSC8508 {
+		//typedef std::function<void(Camera*)> CameraFunc;
+		enum class Team {
+			Red,
+			Blue,
+			None
+		};
 		class PaintingGame : public SceneNode {
 		public:
-#ifdef USEVULKAN
-			PaintingGame(GameTechVulkanRenderer* render, GameWorld* world, reactphysics3d::PhysicsWorld* physicsWorld, reactphysics3d::PhysicsCommon* physicsCommon, MenuHandler* menu, bool online = false);
-#else
-			PaintingGame(GameTechRenderer* render, GameWorld* world, reactphysics3d::PhysicsCommon* physicsCommon, MenuHandler* menu, bool online = false);
-#endif
-			
+			PaintingGame(GameAssets* assets);
 			~PaintingGame();
-			virtual void UpdateGame(float dt);
-			GameTechRenderer* GetGameTechRenderer();
-
+			virtual void Update(float dt);
 			void Restart() { InitWorld(); }
-
-			void AddSecurityAI();
-			PlayerBase* InitSecondPlayer();
-			void AddStructureFromFile(const NCL::Maths::Vector3& position, const std::string filename);
-
+			virtual GameWorld* GetWorld() const { return world; }
+			virtual reactphysics3d::PhysicsWorld* GetPhysicsWorld() const override { return physicsWorld; }
+			virtual void OperateOnCameras(CameraFunc f);
 		protected:
-			void InitialiseAssets();
-
-			virtual void InitCamera(Camera& camera, PlayerBase& focus, float aspect_multiplier = 1.0f);
 			virtual void InitWorld();
+			virtual void CreateSplatOnShoot() = 0;
+			Player* CreatePlayer(Vector3 position, Team team);
+			virtual Player* AddPlayer(Vector3 position, Team team) = 0;
+			FocusPoint* CreateFocusPoint();
+			Gun* CreateGun(Vector3 position, Team team);
 
-			virtual PlayerBase* CreatePlayer(Vector3 position);
-			virtual PlayerBase* AddPlayer(Camera* camera, Vector3 position, Gamepad* gamepad = nullptr) { return nullptr; };
-			virtual void AddSecurityAI(Vector3 position, PlayerBase* target1, PlayerBase* target2);
-			void SetColorOfMesh(MeshGeometry* mesh, Vector4 color);
-#ifdef USEVULKAN
-			GameTechVulkanRenderer* renderer;
-#else
-			GameTechRenderer* renderer;
-#endif
 			GameWorld* world;
 
 			bool useGravity = true;
 			bool useFog = true;
 
-			float		forceMagnitude;
-
-			std::map<std::string, MeshGeometry*> meshes;
-			std::map<std::string, MeshMaterial*> meshMaterials;
-			std::map<std::string, MeshAnimation*> meshAnimations;
-
-			std::map<std::string, TextureBase*> textures;
-			std::map<std::string, ShaderBase*> shaders;
-
-			//Coursework Additional functionality	
-			
 			//Create a physics world 
-			reactphysics3d::PhysicsCommon* physicsCommon;
+			reactphysics3d::PhysicsCommon physicsCommon;
 			reactphysics3d::PhysicsWorld* physicsWorld = NULL;
+			GameAssets* assets;
 
-			//UI
-			MenuHandler* menuHandler;
+			//containers for lights
+			std::vector<DirectionalLight> directionalLights;
+			std::vector<PointLight> pointLights;
+			std::vector<SpotLight> spotLights;
 
-			AnimationController* animController;
-
-			reactphysics3d::ConcaveMeshShape* arenaConcaveMeshCollision;
-			reactphysics3d::ConcaveMeshShape* CreateConcaveCollision(std::string meshName);
+			//container for cameras
+			std::vector<Camera*> activeCameras;
+			
 		};
 	}
 }
-

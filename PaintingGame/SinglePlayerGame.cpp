@@ -1,37 +1,44 @@
 #include "SinglePlayerGame.h"
-#include "InputController.h"
+#include "GameManager.h"
+#include "PlayerControllers.h"
 
 using namespace NCL;
 using namespace CSC8508;
 
-SinglePlayerGame::SinglePlayerGame(GameTechRenderer* render, GameWorld* world, reactphysics3d::PhysicsCommon* physicsCommon, MenuHandler* menu) : PaintingGame(render, world, physicsCommon, menu) {
-	//change this through settings obj
-	render->SetRenderMode(GameTechRenderer::RenderMode::SingleViewport);
-
-	gamepad = new Gamepad();
-
-	InitWorld();
-	AddPlayer(world->GetMainCamera(), Vector3(70.0f, 5.0f, 50.0f), nullptr);
-	InitCamera(*this->world->GetMainCamera(), *player);
-	AddSecurityAI(Vector3(20,20,20), player, nullptr);
+SinglePlayerGame::SinglePlayerGame(GameAssets * assets) : PaintingGame(assets) {
+	if (!GameManager::sConfig.playerControllerFactory) {
+		GameManager::sConfig.playerControllerFactory = new Win32PlayerControllerFactory();
+	}
+	AddPlayer(Vector3(20.0f, 10.0f, 50.0f), Team::Blue);
+	AddSecurityAI(Vector3(20, 20, 20), player, nullptr);
 }
 
 SinglePlayerGame::~SinglePlayerGame() {
 	delete playerController;
-	delete gamepad;
 }
 
-PlayerBase* SinglePlayerGame::AddPlayer(Camera* camera, Vector3 position, Gamepad* gamepad)
-{
-	player = CreatePlayer(position);
-	playerController = new PlayerController(world->GetMainCamera(), player, gamepad);
-	world->AddGameObject(player);
+void SinglePlayerGame::CreateSplatOnShoot() {
+	if (playerController->Shoot()) {
+		SceneContactPoint* closestCollision = world->Raycast(player->GetShootRay());
+		if (closestCollision->isHit) {
+			world->AddPaintedPosition(closestCollision->hitPos);
+		}
+	}
+}
+
+Player* SinglePlayerGame::AddPlayer(Vector3 position, Team team) {
+	player = CreatePlayer(position, team);
+	activeCameras.push_back(player->GetCamera());
+	playerController = GameManager::sConfig.playerControllerFactory->createPlayerController(player);
+	
+	FocusPoint* focusPoint = CreateFocusPoint();
+	focusPoint->SetPlayer(player);
+	world->AddGameObject(focusPoint);
+
 	return player;
 }
 
-void SinglePlayerGame::UpdateGame(float dt) {
+void SinglePlayerGame::Update(float dt) {
 	playerController->Update(dt);
-	world->GetMainCamera()->UpdateCamera(dt);
-
-	PaintingGame::UpdateGame(dt);
+	PaintingGame::Update(dt);
 }

@@ -3,32 +3,24 @@
 #include <algorithm>
 #include <math.h>
 #include "Utils.h"
-#include"InputController.h"
+#include "PlayerBase.h"
 
 using namespace NCL;
-NCL::Camera::Camera(Gamepad* gamepad)
-{
-	this->gamepad = gamepad;
-}
-void Camera::SetBasicCameraParameters(float pitch, float yaw, const Vector3& position, float znear, float zfar) {
-	this->pitch = pitch;
-	this->yaw = yaw;
-	this->position = position;
+
+void Camera::SetBasicCameraParameters(PlayerBase* player, float znear, float zfar) {
+	this->player = player;
 	this->znear = znear;
 	this->zfar = zfar;
 }
 
 void Camera::SetFirstPersonCamera() {
 	viewType = ViewType::FirstPerson;
-
-	CalculateFirstPersonView();
+	this->offsetFromPlayer = Vector3(0, 5.0f, 0);
 }
 
-void Camera::SetThirdPersonCamera(PlayerBase* player) {
+void Camera::SetThirdPersonCamera(Vector3 offsetFromPlayer) {
 	viewType = ViewType::ThirdPerson;
-	this->player = player;
-
-	CalculateThirdPersonView(true);
+	this->offsetFromPlayer = offsetFromPlayer;
 }
 
 void Camera::SetPerspectiveCameraParameters(float aspect, float fov) {
@@ -46,91 +38,22 @@ void Camera::SetOrthographicCameraParameters(float right, float left, float top,
 	this->bottom = bottom;
 	camType = CameraType::Orthographic;
 }
-void NCL::Camera::SetGamePad(Gamepad* gamepad)
-{
-	this->gamepad = gamepad;
-}
-/*
-Polls the camera for keyboard / mouse movement.
-Should be done once per frame! Pass it the msec since
-last frame (default value is for simplicities sake...)
-*/
-void Camera::UpdateCamera(float dt) {
-	
-	if (gamepad == NULL) {
-		pitch -= (Window::GetMouse()->GetRelativePosition().y);
-		yaw -= (Window::GetMouse()->GetRelativePosition().x);
-	}
-	else {
-		pitch -= (gamepad->rightStickY);
-		yaw -= (gamepad->rightStickX);
-	}
-	
 
-	//Bounds check the pitch, to be between straight up and straight down ;)
-	pitch = std::min(pitch, 90.0f);
-	pitch = std::max(pitch, -90.0f);
-
-
-	if (yaw < 0) {
-		yaw += 360.0f;
-	}
-	if (yaw > 360.0f) {
-		yaw -= 360.0f;
-	}
-	
-	if (viewType == ViewType::ThirdPerson) {
-		CalculateThirdPersonView();
-	} 
-	else
-	{
-		//Freecam
-		Matrix4 rotation = Matrix4::Rotation(yaw, Vector3(0, 1, 0));
-		Vector3 forward = rotation * Vector3(0, 0, -1);
-		Vector3 right = rotation * Vector3(1, 0, 0);
-		float speed = 10.0f * dt;
-
-		if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::W)) {
-			position += forward * speed;
-		}
-		if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::S)) {
-			position -= forward * speed;
-		}
-		if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::A)) {
-			position -= right * speed;
-		}
-		if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::D)) {
-			position += right * speed;
-		}
-		if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::SHIFT)) {
-			position.y += speed;
-		}
-		if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::SPACE)) {
-			position.y -= speed;
-		}
-	}
+void Camera::SetVpSize(float x, float y) {
+	vpSize = Vector2(x, y);
 }
 
-void Camera::CalculateFirstPersonView() {
-}
+void Camera::Update(float dt) {
+	yaw = player->GetYaw();
+	pitch = player->GetPitch();
+	Matrix4 rotation = Matrix4::Rotation(yaw, { 0, 1, 0 });
+	rotated_offset = rotation * Matrix4::Rotation(pitch, { 1, 0, 0 }) * offsetFromPlayer;
+	position = player->GetTransform().GetPosition() + rotated_offset;
 
-void Camera::CalculateThirdPersonView(bool init) 
-{
-	// Clamp the pitch value further
-	pitch = std::clamp(pitch, -25.0f, 25.0f);
-
-	Matrix4 rotation = Matrix4::Rotation(yaw, { 0, 1, 0 }) ;
-
-	Vector3 rotated_offset = rotation * Matrix4::Rotation(pitch, { 1, 0, 0 })* offsetFromPlayer;
-
+	//setting player's orientation w.r.t. camera
 	Quaternion player_orientation(rotation);
-	player->GetTransform().SetOrientation(player_orientation);
-
-	// Change the bounding volume orientation as well
 	reactphysics3d::Transform newRBTransform = reactphysics3d::Transform(player->GetRigidBody()->getTransform().getPosition(), ~player_orientation);
 	player->GetRigidBody()->setTransform(newRBTransform);
-
-	position = player->GetTransform().GetPosition() + rotated_offset;
 }
 
 /*

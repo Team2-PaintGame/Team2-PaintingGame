@@ -132,17 +132,16 @@ OGLMesh* OGLMesh::GenerateQuad() {
 	m->positions.emplace_back(Vector3(-1.0f, -1.0f, 0.0f));
 	m->positions.emplace_back(Vector3(1.0f, 1.0f, 0.0f));
 	m->positions.emplace_back(Vector3(1.0f, -1.0f, 0.0f));
-	m->texCoords.emplace_back(Vector2(0.0f, 1.0f));
 	m->texCoords.emplace_back(Vector2(0.0f, 0.0f));
-	m->texCoords.emplace_back(Vector2(1.0f, 1.0f));
+	m->texCoords.emplace_back(Vector2(0.0f, 1.0f));
 	m->texCoords.emplace_back(Vector2(1.0f, 0.0f));
+	m->texCoords.emplace_back(Vector2(1.0f, 1.0f));
 
 	for (int i = 0; i < 4; ++i) {
 		m->colours.emplace_back(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 		m->normals.emplace_back(Vector3(0.0f, 0.0f, -1.0f)); //New!
 		m->tangents.emplace_back(Vector4(1.0f, 0.0f, 0.0f, 1.0f)); //New!
 	}
-
 	m->UploadToGPU();
 	return m;
 }
@@ -278,7 +277,6 @@ void OGLMesh::UpdateGPUBuffers(unsigned int startVertex, unsigned int vertexCoun
 	}
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
-
 
 void OGLMesh::RecalculateNormals() {
 	normals.clear();

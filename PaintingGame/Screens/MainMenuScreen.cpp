@@ -12,33 +12,45 @@ void MainMenuScreen::MenuFrame() {
 		command = ScreenCommand::CreateSplitScreenGame;
 	}
 	if (ImGui::Button("LAN Game")) {
-		command = ScreenCommand::CreateNetworkedGame;
+		ImGui::OpenPopup("Select Networked Game Mode");
 	}	
 	if (ImGui::Button("Exit")) {
-		command = ScreenCommand::Exit;
+		command = ScreenCommand::TransitionToPreviousScreen;
+	}
+	if (ImGui::BeginPopupModal("Select Networked Game Mode"))
+	{
+		if (ImGui::Button("Start As Server")) {
+			command = ScreenCommand::CreateNetworkedGameAsServer;
+			ImGui::CloseCurrentPopup();
+		}
+		if (ImGui::Button("Start As Client")) {
+			command = ScreenCommand::CreateNetworkedGameAsClient;
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::EndPopup();
 	}
 	ImGui::End();
 }
 
 PushdownState::PushdownResult MainMenuScreen::onStateChange(PushdownState** newState) {
-	switch (command) {
-		case ScreenCommand::CreateSinglePlayerGame: {
-			*newState = screenManager->GetScreen(ScreenType::GameScreen);
-			return PushdownResult::Push;
-		}
-		case ScreenCommand::CreateSplitScreenGame: {
-			*newState = screenManager->GetScreen(ScreenType::GameScreen);
-			return PushdownResult::Push;
-		}
-		case ScreenCommand::CreateNetworkedGame: {
-			*newState = screenManager->GetScreen(ScreenType::GameScreen);
-			return PushdownResult::Push;
-		}
-		case ScreenCommand::Exit: {
-			return PushdownResult::Pop;
-		}
-		default: {
-			return PushdownResult::NoChange;
-		}
+	switch (command)
+	{
+	case ScreenCommand::CreateSinglePlayerGame:
+	case ScreenCommand::CreateSplitScreenGame:
+	case ScreenCommand::CreateNetworkedGameAsServer:
+	case ScreenCommand::CreateNetworkedGameAsClient:
+	{
+		*newState = screenManager->GetScreen(ScreenType::GameScreen);
+		((BaseScreen*)(*newState))->SetCommand(command);
+		return PushdownResult::Push;
+	}
+	case  ScreenCommand::TransitionToPreviousScreen:
+	{
+		return PushdownResult::Pop;
+	}
+	default:
+	{
+		return PushdownResult::NoChange;
+	}
 	}
 }

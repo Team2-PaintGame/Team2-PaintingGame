@@ -75,6 +75,7 @@ namespace NCL {
 			virtual void Update(float dt);
 			
 			MeshGeometry*	LoadMesh(const string& name);
+			MeshGeometry* LoadQuad();
 			MeshGeometry* LoadQuadMesh() {
 				return OGLMesh::GenerateQuad();
 			}

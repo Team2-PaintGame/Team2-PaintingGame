@@ -1,20 +1,22 @@
 #include "SplitScreenGame.h"
+#include "GameManager.h"
+#include "PlayerControllers.h"
 
 using namespace NCL;
 using namespace CSC8508;
 
-SplitScreenGame::SplitScreenGame(GameTechRenderer* render, GameWorld* world, reactphysics3d::PhysicsCommon* physicsCommon, MenuHandler* menu) : PaintingGame(render, world, physicsCommon, menu) {
+SplitScreenGame::SplitScreenGame(GameAssets* assets) : PaintingGame(assets) {
 	
 	players.reserve(maxPlayers);
-	//change this through settings obj
-	render->SetRenderMode(GameTechRenderer::RenderMode::SplitScreen);
-
-	gamepad = new Gamepad();
-
-	InitWorld();
+	if (!GameManager::sConfig.playerControllerFactory) {
+		GameManager::sConfig.playerControllerFactory = new Win32PlayerControllerFactory();
+		secondPlayerControllerFactory = new XBoxPlayerControllerFactory();
+	}
+ 	else if (GameManager::sConfig.playerControllerFactory->GetType() != PlayerControllerFactory::Type::PS4) {
+		GameManager::sConfig.playerControllerFactory = new Win32PlayerControllerFactory();
+		secondPlayerControllerFactory = new XBoxPlayerControllerFactory();
+	}
 	InitPlayers();
-	InitCamera(*this->world->GetMainCamera(), *players[0], 0.5f);
-	InitCamera(*this->world->GetSecondCamera(), *players[1], 0.5f);
 }
 
 SplitScreenGame::~SplitScreenGame() {
@@ -22,38 +24,63 @@ SplitScreenGame::~SplitScreenGame() {
 	{
 		delete p;
 	}
+	delete secondPlayerControllerFactory;
 	playerControllers.clear();
-
-	delete gamepad;
 }
 
 void SplitScreenGame::InitPlayers() {
 	players.clear();
 	
-	AddPlayer(world->GetMainCamera(), Vector3(-20.0f, 35.0f, -15.0f));
-	AddPlayer(world->GetSecondCamera(), Vector3(20.0f, 35.0f, -20.0f), gamepad);
+	Player* player1 = AddPlayer(Vector3(20.0f, 10.0f, 20.0f), Team::Red);
+	Player* player2 = AddPlayer(Vector3(30.0f, 10.0f, 20.0f), Team::Blue);
+
+	playerControllers.push_back(GameManager::sConfig.playerControllerFactory->createPlayerController(player1));
+	
+	//if second player controller is not set, use the factory from GameManager::sConfig to create the second player controller
+	if (secondPlayerControllerFactory) {
+		playerControllers.push_back(secondPlayerControllerFactory->createPlayerController(player2));
+	}
+	else {
+		playerControllers.push_back(GameManager::sConfig.playerControllerFactory->createPlayerController(player2));
+	}
+
+	player1->GetCamera()->SetVpSize(0.5f);
+	player2->GetCamera()->SetVpSize(0.5f);
+	player1->GetCamera()->SetVpStartPos(Vector2(0.0f, 0.0f));
+	player2->GetCamera()->SetVpStartPos(Vector2(0.5f, 0.0f));
 }
 
-PlayerBase* SplitScreenGame::AddPlayer(Camera* camera, Vector3 position, Gamepad* gamepad) {
-	PlayerBase* player = CreatePlayer(position);
+void SplitScreenGame::CreateSplatOnShoot() {
+	int index = 0;
+	for (const auto& player : players) {
+		if (playerControllers[index]->Shoot()) {
+			SceneContactPoint* closestCollision = world->Raycast(player->GetShootRay());
+			if (closestCollision->isHit) {
+				world->AddPaintedPosition(closestCollision->hitPos);
+			}
+		}
+		index++;
+	}
+}
+
+Player* SplitScreenGame::AddPlayer(Vector3 position,Team team) {
+	Player* player = CreatePlayer(position, team);
+	activeCameras.push_back(player->GetCamera());
 	players.push_back(player);
-	world->AddGameObject(player);
-	playerControllers.push_back(new PlayerController(camera, player, gamepad));
+
+	/*FocusPoint* focusPoint = CreateFocusPoint();
+	focusPoint->SetPlayer(player);
+	world->AddGameObject(focusPoint);*/
 
 	return player;
 }
 
-void SplitScreenGame::UpdateGame(float dt) {
+void SplitScreenGame::Update(float dt) {
 
-	for (PlayerController* pc : playerControllers)
-	{
+	for (PlayerController* pc : playerControllers) {
 		pc->Update(dt);
 	}
-
-	world->GetMainCamera()->UpdateCamera(dt);
-	world->GetSecondCamera()->UpdateCamera(dt);
-
-	PaintingGame::UpdateGame(dt);
+	PaintingGame::Update(dt);
 }
 
 

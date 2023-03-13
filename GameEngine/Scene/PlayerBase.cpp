@@ -1,59 +1,92 @@
 #include "PlayerBase.h"
 #include "RenderObject.h"
 #include "Window.h"
-#include "Utils.h"
+#include "Debug.h"
+#include "GameWorld.h"
 
 
 using namespace NCL;
+using namespace CSC8508;
 
-PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, MeshMaterial* meshMat, AnimationController* animController, ShaderBase* shader, int size): GameObject(physicsCommon, physicsWorld, "BasePlayer") {
-	transform
-		.SetScale(Vector3(size))
-		.SetPosition(position);
+PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon & physicsCommon, reactphysics3d::PhysicsWorld * physicsWorld, Vector3 position, MeshGeometry * mesh, TextureBase * texture, ShaderBase * shader, int size) : GameObject(physicsCommon, physicsWorld, "BasePlayer") {
+	SetMemberVariables(physicsCommon, physicsWorld, position, mesh, shader, size);
+	renderObject->SetDefaultTexture(texture);
+}
+PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, MeshMaterial* meshMaterial, ShaderBase* shader, int size) : GameObject(physicsCommon, physicsWorld, "BasePlayer") {
+	SetMemberVariables(physicsCommon, physicsWorld, position, mesh, shader, size);
+	renderObject->LoadMaterialTextures(meshMaterial);
+	raycastManager = new RaycastManager();
+	raycastManager->setIgnore(rigidBody);
+}
+
+PlayerBase::~PlayerBase() {
+	if (rigidBody) {
+		physicsWorld->destroyRigidBody(rigidBody);
+	}
+	physicsCommon.destroyCapsuleShape(dynamic_cast<rp3d::CapsuleShape*>(boundingVolume));
+
+	delete camera;
+}
+
+void PlayerBase::Update(float dt) {
+	camera->Update(dt);
+	CameraSpring(camera);
+}
+
+void PlayerBase::SetYawPitch(float dx, float dy) {
+	yaw -= dx; 
+	pitch -= dy;
+
+	std::clamp(pitch, -25.f, 25.0f);
+
+	if (yaw < 0) {
+		yaw += 360.0f;
+	}
+	if (yaw > 360.0f) {
+		yaw -= 360.0f;
+	}
+}
+
+void PlayerBase::SetMemberVariables(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, ShaderBase* shader, int size) {
+	
+	transform.SetScale(Vector3(size))
+			 .SetPosition(position);
 
 	renderObject = new RenderObject(&transform, mesh, shader);
-	this->animationController = animController;
-	//animationController->SetRenderer(renderObject);
-	animationController->SetGameObject(this);
-	animationController->InitStateMachine();
-	//renderObject->AddTexture(texture);
 
-	meshMat->LoadTextures();
-
-	int subMeshes = mesh->GetSubMeshCount();
-	for (int index = 0; index < subMeshes; ++index) {
-		TextureBase* texture = meshMat->GetMaterialForLayer(index)->GetEntry("Diffuse");
-		renderObject->AddTexture(texture, "mainTex", index);
-	}
-	//renderObject->SetRigged(true);
-	//renderObject->animation = meshAnimation;
 	//boundingVolume = physicsCommon.createBoxShape(~transform.GetScale() / 2.0f);
-	boundingVolume = physicsCommon.createCapsuleShape(size*.35f, size);
+	boundingVolume = physicsCommon.createCapsuleShape(size*.35f,size);
 	reactphysics3d::Transform rp3d_transform(~position, rp3d::Quaternion::identity());
-	
+
 	// Create a rigid body in the physics world
 	rigidBody = physicsWorld->createRigidBody(rp3d_transform);
 	rigidBody->addCollider(boundingVolume, rp3d::Transform::identity()); //collider
 	rigidBody->updateMassPropertiesFromColliders();
 	rigidBody->setLinearDamping(1.5f);
+  
+	camera = new Camera();
 }
 
+void PlayerBase::CameraSpring(Camera* cam) {
 
+	RaycastManager raycastManager = RaycastManager();
 
+	ray = reactphysics3d::Ray(~transform.GetPosition(), ~transform.GetPosition() + ~camera->GetNormalizedRotation() * camera->GetMaxOffSet().Length());
+	//Debug::DrawLine(transform.GetPosition(), ray.point2, Vector4(1, 1, 1, 1),1.0f);
 
-
-void PlayerBase::Update(float dt) {
-
-	animationController->UpdateAnimations(dt);
+	
+	 physicsWorld->raycast(ray, &raycastManager);
+	 if (raycastManager.isHit()) { //if it hits something
+		 SceneContactPoint* closestCollision = raycastManager.getHit();
+		 Vector3 new_rotated_offset = closestCollision->hitPos - ~transform.GetPosition();
+		 camera->SetOffsetFromPlayer(camera->GetMaxOffSet().Normalised() * new_rotated_offset.Length());
+	 }
+	 else {
+		 camera->SetOffsetFromPlayer(camera->GetMaxOffSet());
+	 }
+		
 }
 
-PlayerBase::~PlayerBase() {
-	if (rigidBody) {
-		//physicsWorld->destroyRigidBody(rigidBody);
-	}
-
-	//physicsCommon.destroyBoxShape(boundingVolume);
-}
 
 
 

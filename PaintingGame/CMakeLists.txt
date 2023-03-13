@@ -35,6 +35,10 @@ source_group("Source Files" FILES ${Source_Files})
 set(GameObjects
     "./GameObjects/Box.h"
     "./GameObjects/Floor.h"
+    "./GameObjects/Ink.h"
+    "./GameObjects/PaintingObject.h"
+    "./GameObjects/HudElement.h"
+    "./GameObjects/Gun.h"
     "./GameObjects/SecurityGuard.h"
     "./GameObjects/SecurityGuard.cpp"
      "./GameObjects/Wall.h"
@@ -43,17 +47,24 @@ set(GameObjects
 )
 source_group("Game Objects" FILES ${GameObjects})
 
+set(Player
+    "./Player/Player.h"
+    "./Player/Player.cpp"
+    "./Player/PlayerController.h" 
+    "./Player/PlayerController.cpp" 
+    "./Player/PlayerControllers.h" 
+)
+source_group("Player" FILES ${Player})
+
+set(Renderers
+    "./Renderers/GNMPaintingGameRenderer.h"
+    "./Renderers/GNMPaintingGameRenderer.cpp"
+    "./Renderers/OGLPaintingGameRenderer.h"
+    "./Renderers/OGLPaintingGameRenderer.cpp"
+)
+source_group("Renderers" FILES ${Renderers})
+
 set(Screens
-    "./Screens/IntroScreen.h"
-    "./Screens/IntroScreen.cpp"
-    "./Screens/SinglePlayerScreen.h"
-    "./Screens/SinglePlayerScreen.cpp"
-    "./Screens/SplitScreen.h"
-    "./Screens/SplitScreen.cpp"
-    "./Screens/LanScreen.h"
-    "./Screens/LanScreen.cpp"
-    "./Screens/PauseScreen.h"
-    "./Screens/PauseScreen.cpp"  
     "./Screens/SplashScreen.h"
     "./Screens/SplashScreen.cpp" 
     "./Screens/MainMenuScreen.h"
@@ -81,7 +92,7 @@ set(ImGui
     "../Middleware/ImGui/imstb_rectpack.h" 
     "../Middleware/ImGui/imstb_textedit.h" 
     "../Middleware/ImGui/imstb_truetype.h" 
-     "../Middleware/ImGui/imconfig.h" 
+    "../Middleware/ImGui/imconfig.h" 
 )
 source_group("ImGui Files" FILES ${ImGui})
 
@@ -89,6 +100,8 @@ set(ALL_FILES
     ${Header_Files}
     ${Source_Files}
     ${GameObjects}
+    ${Player}
+    ${Renderers}
     ${Screens}
     ${ImGui}
 )
@@ -242,7 +255,9 @@ endif()
 
 include_directories(".")
 include_directories("./GameObjects")
+include_directories("./Renderers")
 include_directories("./Screens")
+include_directories("./Player")
 include_directories("../OpenGLRendering/")
 include_directories("../GNMRendering/")
 include_directories("../Networking/")

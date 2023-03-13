@@ -4,6 +4,7 @@
 #include "PushdownState.h"
 #include <imgui_impl_win32.h>
 #include <imgui_impl_opengl3.h>
+#include "PushdownMachine.h"
 
 namespace NCL::CSC8508 {
 	enum class ScreenType {
@@ -16,10 +17,12 @@ namespace NCL::CSC8508 {
 	};
 	enum class ScreenCommand {
 		None,
-		Transition,
+		TransitionToNextScreen,
+		TransitionToPreviousScreen,
 		CreateSinglePlayerGame,
 		CreateSplitScreenGame,
-		CreateNetworkedGame,
+		CreateNetworkedGameAsServer,
+		CreateNetworkedGameAsClient,
 		Exit,
 	};
 	class BaseScreen;
@@ -27,25 +30,35 @@ namespace NCL::CSC8508 {
 	public:
 		ScreenManager(GameAssets* assets);
 		BaseScreen* GetScreen(ScreenType screenType) const;
+		BaseScreen* GetActiveScreen() const;
+		GameAssets* GetGameAssets() const { return assets; }
+		bool Update(float dt);
 	protected:
+		void LoadScreens();
 		std::unordered_map<ScreenType, std::unique_ptr<BaseScreen>> screens;
-		std::unordered_map<ScreenType, SceneNode> screenSceneNodes;
+		std::unordered_map<ScreenType, std::unique_ptr<SceneNode>> screenSceneNodes;
+		GameAssets* assets;
+		std::unique_ptr<PushdownMachine> machine;
 	};
 	class BaseScreen : public PushdownState
 	{
 	public:
-		BaseScreen(ScreenManager* screenManager, SceneNode* sceneNode) : screenManager(screenManager), sceneNode(sceneNode) {}
+		BaseScreen(ScreenManager* screenManager, SceneNode* sceneNode = NULL) : screenManager(screenManager), sceneNode(sceneNode) {}
 		virtual ~BaseScreen() {}
 		PushdownResult OnUpdate(float dt, PushdownState** newState) override;
 		void OnAwake() override {};
+		virtual void OnSleep();
+		void SetCommand(ScreenCommand command) { this->command = command; };
+		SceneNode* GetSceneNode() const { return sceneNode; }
+		ScreenType GetScreenType() const { return screenType; }
+		void RenderMenu();
 	protected:
-		//void RenderMenu();
 		virtual void MenuFrame() = 0;
 		virtual PushdownResult onStateChange(PushdownState** newState) = 0;
-		virtual void onCommand() {};
 		SceneNode* sceneNode = NULL;
 		bool isMenuDisplayed = true;
 		ScreenCommand command = ScreenCommand::None;
 		ScreenManager* screenManager;
+		ScreenType screenType = ScreenType::None;
 	};
 }

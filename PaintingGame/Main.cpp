@@ -4,32 +4,15 @@
 #include "PaintingGame.h"
 #include <imgui_impl_win32.h>
 #include <imgui_impl_opengl3.h>
-#include <Win32Window.h>
-#include "NetworkedGame.h"
-
-#include "PushdownMachine.h"
-#include "IntroScreen.h"
-#include "MenuHandler.h"
+//#include <Win32Window.h>
 #include "GameManager.h"
-
-#define NETWORKING_ENABLED	(0)	// (0) - off, (1) - on
 
 using namespace NCL;
 using namespace CSC8508;
 
-void PushdownAutomata(Window* window) {
-	//PushdownMachine machine(new IntroScreen(window, paintingGame));
-	PushdownMachine machine(new IntroScreen(window));
-	while (window->UpdateWindow()) {
-		float dt = window->GetTimer()->GetTimeDeltaSeconds();
-		if (!machine.Update(dt)) {
-			return;
-		}
-	}
-}
 
 int main() {
-	Window* w = Window::CreateGameWindow("CSC8508 Game technology!", 1280, 720);
+	Window* w = Window::CreateGameWindow("Painting Game", 1280, 720);
 	GameManager gameManager(w);
 	if (!w->HasInitialised()) {
 		return -1;
@@ -37,17 +20,19 @@ int main() {
 
 	w->ShowOSPointer(true);
 	w->LockMouseToWindow(true);
-	w->GetTimer()->GetTimeDeltaSeconds(); //Clear the timer so we don't get a larget first dt!
-
-
-	w->GetTimer()->GetTimeDeltaSeconds(); //Clear the timer so we don't get a larget first dt!
-
-	PushdownAutomata(w);
 	
+	w->GetTimer()->GetTimeDeltaSeconds(); //Clear the timer so we don't get a larget first dt!
 
-	// ImGUI Cleanup
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplWin32_Shutdown();
-	ImGui::DestroyContext();
+	while (w->UpdateWindow()) {
+		float dt = w->GetTimer()->GetTimeDeltaSeconds();
+		if (dt > 0.1f) {
+			std::cout << "Skipping large time delta" << std::endl;
+			continue; //must have hit a breakpoint or something to have a 1 second frame time!
+		}
+		w->SetTitle("Painting Game Frame time: " + std::to_string(1000.0f * dt));
+		if (!gameManager.RunGame(dt)) 
+			return 0;
+	}
+
 	Window::DestroyGameWindow();
 }
