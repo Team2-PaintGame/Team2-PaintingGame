@@ -1,4 +1,5 @@
 #include "Debug.h"
+#include "Window.h"
 using namespace NCL;
 
 std::vector<Debug::DebugStringEntry>	Debug::stringEntries;
@@ -16,6 +17,12 @@ const Vector4 Debug::WHITE		= Vector4(1, 1, 1, 1);
 const Vector4 Debug::YELLOW		= Vector4(1, 1, 0, 1);
 const Vector4 Debug::MAGENTA	= Vector4(1, 0, 1, 1);
 const Vector4 Debug::CYAN		= Vector4(0, 1, 1, 1);
+
+int Debug::frames = 0;
+double Debug::startTime = 0;
+double Debug::currentTime = 0;
+bool Debug::first = true;
+float Debug::fps = 0.0f;
 
 void Debug::Print(const std::string& text, const Vector2& pos, const Vector4& colour) {
 	DebugStringEntry newEntry;
@@ -93,4 +100,24 @@ const std::vector<Debug::DebugStringEntry>& Debug::GetDebugStrings() {
 
 const std::vector<Debug::DebugLineEntry>& Debug::GetDebugLines() {
 	return lineEntries;
+}
+
+void NCL::Debug::DrawFPS()
+{
+	if (first)
+	{
+		frames = 0;
+		startTime = Window::GetTimer()->GetTotalTimeSeconds();
+		first = false;
+	}
+	frames++;
+	currentTime = Window::GetTimer()->GetTotalTimeSeconds();
+	if (currentTime - startTime > 0.25 && frames > 10)
+	{
+		fps = (double)frames / (currentTime - startTime);
+		startTime = currentTime;
+		frames = 0;
+	}
+
+	std::cout << "FPS: " << fps << "\n";
 }

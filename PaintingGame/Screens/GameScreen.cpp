@@ -2,6 +2,7 @@
 #include "SinglePlayerGame.h"
 #include "SplitScreenGame.h"
 #include "NetworkedGame.h"
+#include "Window.h"
 
 using namespace NCL;
 using namespace CSC8508;
