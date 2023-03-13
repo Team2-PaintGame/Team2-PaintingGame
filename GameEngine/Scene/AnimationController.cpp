@@ -40,6 +40,7 @@ AnimationController::AnimationController(PlayerBase* gameObject, const std::unor
 	this->AddTransition(idleToMoveStateTransition);
 	this->AddTransition(moveToIdleStateTransition);
 }
+
 void AnimationController::Update(float dt) {
 	StateMachine::Update(dt);
 

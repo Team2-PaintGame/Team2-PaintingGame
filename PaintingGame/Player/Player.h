@@ -12,10 +12,14 @@ namespace NCL {
 	using namespace CSC8508;
 	class Player : public PlayerBase {
 	public:
-		Player(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, const std::unordered_map<std::string, MeshAnimation*>& animations, int size, Gun* gun) : PlayerBase(physicsCommon, physicsWorld, position, mesh, texture, shader, size) {
+		Player(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, 
+			TextureBase* texture, ShaderBase* shader, const std::unordered_map<std::string, MeshAnimation*>& animations, int size, Gun* gun) 
+			: PlayerBase(physicsCommon, physicsWorld, position, mesh, texture, shader, size) {
 			SetMemberVariables(animations, gun);
 		}
-		Player(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, MeshMaterial* material, ShaderBase* shader, const std::unordered_map<std::string, MeshAnimation*>& animations, int size, Gun* gun) : PlayerBase(physicsCommon, physicsWorld, position, mesh, material, shader, size) {
+		Player(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh,
+			MeshMaterial* material, ShaderBase* shader, const std::unordered_map<std::string, MeshAnimation*>& animations, int size, Gun* gun) 
+			: PlayerBase(physicsCommon, physicsWorld, position, mesh, material, shader, size) {
 			SetMemberVariables(animations, gun);
 		}
 		virtual ~Player() {

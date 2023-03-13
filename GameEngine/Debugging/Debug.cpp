@@ -119,5 +119,5 @@ void NCL::Debug::DrawFPS()
 		frames = 0;
 	}
 
-	std::cout << "FPS: " << fps << "\n";
+	//std::cout << "FPS: " << fps << "\n";
 }

@@ -4,9 +4,45 @@
 #include <cmath>
 
 namespace NCL::CSC8508 {
+	//SecurityGuard::SecurityGuard(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, std::string objectName, Vector3 position, MeshGeometry* mesh,
+	//	TextureBase* texture, ShaderBase* shader, Vector3 size, GameObject* playerOne, GameObject* playerTwo)
+	//	: GameObject(physicsCommon, physicsWorld, objectName)
+	//{
+
+	//	this->playerOne = playerOne;
+	//	this->playerTwo = playerTwo;
+	//	this->physicsWorld = physicsWorld;
+	//	chasedPlayer = nullptr;
+	//	transform.SetScale(size).SetPosition(position);
+	//	renderObject = new RenderObject(&transform, mesh, shader);
+	//	renderObject->AddTexture(texture);
+	//	renderObject->SetColour(Debug::RED);
+	//	boundingVolume = physicsCommon.createBoxShape(~transform.GetScale() / 2.0f);
+	//	reactphysics3d::Transform rp3d_transform(~position, rp3d::Quaternion::identity());
+
+	//	// Create a rigid body in the physics world
+	//	rigidBody = physicsWorld->createRigidBody(rp3d_transform);
+	//	rigidBody->addCollider(boundingVolume, rp3d::Transform::identity()); //collider
+	//	rigidBody->updateMassPropertiesFromColliders();
+	//	rigidBody->setLinearDamping(1.5f);
+	//	rigidBody->setAngularDamping(1.5f);
+	//	callbackPlayerOne = new SecurityCallbackClass(playerOne);
+	//	callbackPlayerTwo = new SecurityCallbackClass(playerTwo);
+
+	//	navigationMesh = new NavigationMesh("BasicLVL.navmesh");
+	//	navigationPath = new NavigationPath();
+
+	//	InitBehaviorTree();
+
+
+
+	//}
+
 	SecurityGuard::SecurityGuard(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, std::string objectName, Vector3 position, MeshGeometry* mesh,
-		TextureBase* texture, ShaderBase* shader, Vector3 size, GameObject* playerOne, GameObject* playerTwo)
-		: GameObject(physicsCommon, physicsWorld, objectName)
+		MeshMaterial* material, ShaderBase* shader, const std::unordered_map<std::string, MeshAnimation*>& animations, int size, GameObject* playerOne, GameObject* playerTwo)
+	//	: GameObject(physicsCommon, physicsWorld, objectName)
+		: PlayerBase(physicsCommon, physicsWorld, position, mesh, material, shader, size)
+	
 	{
 
 		this->playerOne = playerOne;
@@ -15,9 +51,14 @@ namespace NCL::CSC8508 {
 		chasedPlayer = nullptr;
 		transform.SetScale(size).SetPosition(position);
 		renderObject = new RenderObject(&transform, mesh, shader);
-		renderObject->AddTexture(texture);
-		renderObject->SetColour(Debug::RED);
-		boundingVolume = physicsCommon.createBoxShape(~transform.GetScale() / 2.0f);
+		renderObject->LoadMaterialTextures(material);
+		
+		animationController = new AnimationController(this, animations);
+		renderObject->SetRigged(true);
+		renderObject->SetAnimationController(animationController);
+		//renderObject->SetColour(Debug::RED);
+//		boundingVolume = physicsCommon.createBoxShape(~transform.GetScale() / 2.0f);
+		boundingVolume = physicsCommon.createCapsuleShape(size * .35f, size);
 		reactphysics3d::Transform rp3d_transform(~position, rp3d::Quaternion::identity());
 
 		// Create a rigid body in the physics world
@@ -37,6 +78,8 @@ namespace NCL::CSC8508 {
 
 
 	}
+
+
 	SecurityGuard::~SecurityGuard()
 	{
 		//delete chooseDestination;
@@ -56,6 +99,8 @@ namespace NCL::CSC8508 {
 		delete navigationMesh;
 		delete navigationPath;
 
+		delete animationController;
+
 	//	delete renderObject; // Is this deleted here or elsewhere?
 
 //		physicsCommon.destroyBoxShape(boundingVolume);
@@ -68,7 +113,7 @@ namespace NCL::CSC8508 {
 			Debug::DrawLine(this->GetTransform().GetPosition(), navigationPath->waypoints.back(), Debug::BLACK);
 		}
 		
-		
+		animationController->Update(dt);
 		DrawNavTris();
 		DisplayPathfinding();
 		DrawTriRoute();

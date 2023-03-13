@@ -101,30 +101,17 @@ Gun* PaintingGame::CreateGun(Vector3 position, Team team) {
 	world->AddGameObject(ink);
 	return gun;
 }
+
 void PaintingGame::AddSecurityAI(NCL::CSC8508::Vector3 position, PlayerBase* target1, PlayerBase* target2) // Vector3(-70.0f, 5.0f, 60.0f) // Change the hardcoded two targets
 {
+	std::unordered_map<std::string, MeshAnimation*> animations;
+	animations.insert(std::make_pair("idleAnimation", assets->GetMeshAnimation("mainCharIdleAnim")));
+	animations.insert(std::make_pair("moveAnimation", assets->GetMeshAnimation("mainCharRunAnim")));
 
-	world->AddGameObject(new SecurityGuard(physicsCommon, physicsWorld, "Security Guard", position, assets->GetMesh("cubeMesh"), assets->GetTexture("basicTex"), assets->GetShader("basicShader"), Vector3(2, 2, 2), target1, target2));
+//	world->AddGameObject(new SecurityGuard(physicsCommon, physicsWorld, "Security Guard", position, assets->GetMesh("mainChar"), assets->GetTexture("basicTex"), assets->GetShader("basicShader"), Vector3(5, 5, 5), target1, target2));
+
+
+	world->AddGameObject(new SecurityGuard(physicsCommon, physicsWorld, "Security Guard", position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("blueMainCharMat"), assets->GetShader("skinningShader"), animations, 2, target1, target2));
+	//world->AddGameObject(new SecurityGuard(physicsCommon, physicsWorld, "Security Guard", position, assets->GetMesh("cubeMesh"), assets->GetTexture("basicTex"), assets->GetShader("basicShader"), Vector3(2, 2, 2), target1, target2));
 }
 
-
-//
-//void NCL::CSC8508::PaintingGame::SetColorOfMesh(MeshGeometry* mesh, Vector4 color)
-//{
-//	vector<Vector4> vertexColor;
-//	for (int i = 0; i < mesh->GetVertexCount(); i++)
-//	{
-//		vertexColor.emplace_back(color);
-//	}
-//	else { //blue
-//		gun = new Gun(physicsCommon, physicsWorld, position, assets->GetMesh("gunMesh"), assets->GetMeshMaterial("gunMat"), assets->GetShader("basicShader"), 3, Debug::BLUE, ink);
-//	}
-//
-//	world->AddGameObject(gun);
-//	world->AddGameObject(ink);
-//	return gun;
-//}
-
-//	mesh->SetVertexColours(vertexColor);
-//	mesh->UploadToGPU();
-//} 
