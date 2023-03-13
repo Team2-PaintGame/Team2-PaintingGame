@@ -50,6 +50,8 @@ void PaintingGame::InitWorld() {
 }
 
 void PaintingGame::Update(float dt) {
+	Debug::DrawFPS();
+
 	world->UpdateWorld(dt);
 	physicsWorld->update(dt);
 	CreateSplatOnShoot();

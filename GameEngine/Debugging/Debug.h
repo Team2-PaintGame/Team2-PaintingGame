@@ -38,6 +38,13 @@ namespace NCL {
 		static const std::vector<DebugStringEntry>& GetDebugStrings();
 		static const std::vector<DebugLineEntry>& GetDebugLines();
 
+		static void DrawFPS();
+		static int frames;
+		static double startTime;
+		static double currentTime;
+		static bool first;
+		static float fps;
+
 
 		static const Vector4 RED;
 		static const Vector4 GREEN;
