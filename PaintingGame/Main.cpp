@@ -6,6 +6,9 @@
 #include <imgui_impl_opengl3.h>
 //#include <Win32Window.h>
 #include "GameManager.h"
+#include <windows.h>
+#include <stdio.h>
+#include <Psapi.h>
 
 using namespace NCL;
 using namespace CSC8508;
@@ -30,8 +33,10 @@ int main() {
 			continue; //must have hit a breakpoint or something to have a 1 second frame time!
 		}
 		w->SetTitle("Painting Game Frame time: " + std::to_string(1000.0f * dt));
-		if (!gameManager.RunGame(dt)) 
+		if (!gameManager.RunGame(dt)) {
 			return 0;
+		}
+			
 	}
 
 	Window::DestroyGameWindow();

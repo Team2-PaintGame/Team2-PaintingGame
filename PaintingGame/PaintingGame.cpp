@@ -36,6 +36,7 @@ void PaintingGame::OperateOnCameras(CameraFunc f) {
 void PaintingGame::InitWorld() {
 	world->ClearAndErase();
 
+
 	world->AddGameObject(new Floor(physicsCommon, physicsWorld, Vector3(0, 0, 0), assets->GetMesh("floorMesh"), assets->GetTexture("basicTex"), assets->GetShader("basicShader"), 1));
 
 	for (int x = 0; x < 15; ++x) {
@@ -51,6 +52,7 @@ void PaintingGame::InitWorld() {
 
 void PaintingGame::Update(float dt) {
 	Debug::DrawFPS();
+	//Debug::ShowMemoryUsage();
 
 	world->UpdateWorld(dt);
 	physicsWorld->update(dt);

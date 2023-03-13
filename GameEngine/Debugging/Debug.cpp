@@ -1,5 +1,6 @@
 #include "Debug.h"
 #include "Window.h"
+
 using namespace NCL;
 
 std::vector<Debug::DebugStringEntry>	Debug::stringEntries;
@@ -119,5 +120,38 @@ void NCL::Debug::DrawFPS()
 		frames = 0;
 	}
 
-	std::cout << "FPS: " << fps << "\n";
+	//std::cout << "FPS: " << fps << "\n";
+}
+
+void NCL::Debug::ShowMemoryUsage(/*DWORD processID*/)
+{
+	//HANDLE hProcess;
+	PROCESS_MEMORY_COUNTERS pmc;
+
+	// Print the process identifier.
+
+	//printf("\nProcess ID: %u\n", processID);
+
+	// Print information about the memory usage of the process.
+
+	/*hProcess = OpenProcess(PROCESS_QUERY_INFORMATION |
+		PROCESS_VM_READ,
+		FALSE, processID);
+	if (NULL == hProcess)
+		return;*/
+
+	if (GetProcessMemoryInfo(GetCurrentProcess(), &pmc, sizeof(pmc)))
+	{
+		std::cout << "PageFaultCount:" <<  pmc.PageFaultCount << std::endl;
+		std::cout << "PeakWorkingSetSize:" <<pmc.PeakWorkingSetSize << std::endl;
+		std::cout << "WorkingSetSize:" << pmc.WorkingSetSize << std::endl;
+		std::cout << "QuotaPeakPagedPoolUsage:" << pmc.QuotaPeakPagedPoolUsage << std::endl;
+		std::cout << "QuotaPagedPoolUsage:" << pmc.QuotaPagedPoolUsage << std::endl;
+		std::cout << "QuotaPeakNonPagedPoolUsage:" << pmc.QuotaPeakNonPagedPoolUsage << std::endl;
+		std::cout << "QuotaNonPagedPoolUsage:" << pmc.QuotaNonPagedPoolUsage << std::endl;
+		std::cout << "PagefileUsage:" << pmc.PagefileUsage << std::endl;
+		std::cout << "PeakPagefileUsage:" << pmc.PeakPagefileUsage << std::endl;
+	}
+
+	//CloseHandle(hProcess);
 }
