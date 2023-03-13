@@ -16,7 +16,7 @@ Particle::Particle(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d:
 void Particle::Update(float dt) {
 	elapsedTime += dt;
 
-	rigidBody->applyWorldForceAtCenterOfMass(~(transform.GetOrientation() * direction * speed));
+	rigidBody->applyWorldForceAtCenterOfMass(~(transform.GetOrientation() * direction  * speed));
 	
 	//need to call this here because particles itself are not part of game world
 	GameObject::UpdateTransform();
@@ -52,6 +52,7 @@ SphereParticle::SphereParticle(reactphysics3d::PhysicsCommon& physicsCommon, rea
 	rp3d::Collider* collider = rigidBody->addCollider(boundingVolume, rp3d::Transform::identity());
 	collider->setIsTrigger(true);
 	rigidBody->enableGravity(enableGravity);
+	rigidBody->setMass(50.f);
 }
 
 SphereParticle::~SphereParticle() {

@@ -26,7 +26,7 @@ namespace NCL {
 			this->reticle = reticle;
 		}
 		virtual void Update(float dt) {
-			if (false) {
+			if (ink) {
 				ink->GetTransform()
 					.SetPosition(transform.GetPosition() + (transform.GetOrientation() * inkOffset))
 					.SetOrientation(transform.GetOrientation());
