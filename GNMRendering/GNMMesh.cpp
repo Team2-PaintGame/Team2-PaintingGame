@@ -1,4 +1,4 @@
-#ifdef _ORBIS
+#ifdef __ORBIS__
 #include "GNMMesh.h"
 #include "Vector2.h"
 #include "Vector3.h"

@@ -1,4 +1,4 @@
-#ifdef _ORBIS
+#ifdef __ORBIS__
 #include "PS4MemoryAware.h"
 #include <.\graphics\api_gnm\toolkit\allocators.h>
 #include <.\graphics\api_gnm\toolkit\stack_allocator.h>

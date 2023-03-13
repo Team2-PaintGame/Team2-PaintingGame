@@ -2,7 +2,7 @@
 #include <RendererBase.h>
 #include <AssetLoader.h>
 #include "OGLPaintingGameRenderer.h"
-#include <GNMRenderer.h>
+#include <GNMPaintingGameRenderer.h>
 #include <OGLAssetLoader.h>
 #include <GNMAssetLoader.h>
 #include "PlayerController.h"

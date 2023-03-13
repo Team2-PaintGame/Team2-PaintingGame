@@ -1,5 +1,5 @@
 #pragma once
-#ifdef _ORBIS
+#ifdef __ORBIS__
 #include <gnm.h>
 #include <gnmx\context.h>
 

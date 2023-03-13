@@ -1,4 +1,4 @@
-#ifdef _ORBIS
+#ifdef __ORBIS__
 #include "GNMRenderer.h"
 #include "PS4Window.h"
 #include <video_out.h>	//Video System

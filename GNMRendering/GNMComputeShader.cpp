@@ -1,4 +1,4 @@
-#ifdef _ORBIS
+#ifdef __ORBIS__
 #include "GNMComputeShader.h"
 using namespace NCL::PS4;
 

@@ -1,4 +1,4 @@
-#ifdef _ORBIS
+#ifdef __ORBIS__
 #include "GNMTexture.h"
 #include <fstream>
 #include <gnf.h>

@@ -1,5 +1,5 @@
 #pragma once
-#ifdef _ORBIS
+#ifdef __ORBIS__
 #include "TextureBase.h"
 #include <string>
 #include <gnm\texture.h>

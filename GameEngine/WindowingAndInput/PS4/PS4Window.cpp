@@ -1,4 +1,4 @@
-#ifdef _ORBIS
+#ifdef __ORBIS__
 #include "PS4Window.h"
 
 using namespace NCL;

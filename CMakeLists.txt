@@ -12,9 +12,9 @@ if(NOT CMAKE_VS_PLATFORM_NAME)
 endif()
 message("${CMAKE_VS_PLATFORM_NAME} architecture in use")
 
-if(NOT ("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64"))
-    message(FATAL_ERROR "${CMAKE_VS_PLATFORM_NAME} arch is not supported!")
-endif()
+#if(NOT ("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64"))
+   # message(FATAL_ERROR "${CMAKE_VS_PLATFORM_NAME} arch is not supported!")
+#endif()
 
 ################################################################################
 # Global configuration types
@@ -61,9 +61,13 @@ set(ASSET_ROOT "${CMAKE_SOURCE_DIR}/Assets/" CACHE STRING "" FORCE)
 add_compile_definitions(ASSETROOTLOCATION="${ASSET_ROOT}") 
 
 set(USE_VULKAN CACHE BOOL FORCE)
+set(BUILD_PS4 CACHE BOOL FORCE)
 if(USE_VULKAN)
     add_compile_definitions("USEVULKAN") 
 endif() 
+if(BUILD_PS4)
+    set(CMAKE_TOOLCHAIN_FILE "C:/Program Files (x86)/SCE/ORBIS/Tools/CMake/PS4.cmake")
+endif()
 ################################################################################
 # Sub-projects
 ################################################################################
