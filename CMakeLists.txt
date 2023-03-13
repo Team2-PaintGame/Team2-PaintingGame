@@ -1,5 +1,10 @@
 cmake_minimum_required(VERSION 3.16.0 FATAL_ERROR)
 
+if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
+	set(BUILD_PS4 ON)
+else()
+	set(BUILD_PS4 OFF)
+endif()
 set(CMAKE_SYSTEM_VERSION 10.0 CACHE STRING "" FORCE)
 
 project(PaintingGame CXX)
@@ -61,19 +66,21 @@ set(ASSET_ROOT "${CMAKE_SOURCE_DIR}/Assets/" CACHE STRING "" FORCE)
 add_compile_definitions(ASSETROOTLOCATION="${ASSET_ROOT}") 
 
 set(USE_VULKAN CACHE BOOL FORCE)
-set(BUILD_PS4 CACHE BOOL FORCE)
 if(USE_VULKAN)
     add_compile_definitions("USEVULKAN") 
 endif() 
-if(BUILD_PS4)
-    set(CMAKE_TOOLCHAIN_FILE "C:/Program Files (x86)/SCE/ORBIS/Tools/CMake/PS4.cmake")
-endif()
+#if(BUILD_PS4)
+#    set(CMAKE_TOOLCHAIN_FILE "C:/Program Files (x86)/SCE/ORBIS/Tools/CMake/PS4.cmake")
+#endif()
+
 ################################################################################
 # Sub-projects
 ################################################################################
 add_subdirectory(GameEngine)
+if(WIN32)
 add_subdirectory(Networking)
 add_subdirectory(OpenGLRendering)
+endif()
 add_subdirectory(GNMRendering)
 add_subdirectory(PaintingGame)
 if(USE_VULKAN)
