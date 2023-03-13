@@ -32,6 +32,9 @@ namespace NCL {
 					.SetOrientation(transform.GetOrientation());
 			}
 		}
+		void Shoot() {
+			ink->StartEmission();
+		}
 	protected:
 		Ink* ink = NULL;
 		const Vector3 inkOffset = Vector3(0, 0.5, -2);
