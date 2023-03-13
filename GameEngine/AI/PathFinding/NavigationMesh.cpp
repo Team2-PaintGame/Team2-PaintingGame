@@ -13,13 +13,6 @@ NavigationMesh::NavigationMesh()
 
 NavigationMesh::NavigationMesh(const std::string&filename)
 {
-	float triArea = Maths::FloatAreaOfTri(Vector3(0.5, 0, 0.5), Vector3(2, 0, 0), Vector3(2, 0, 2));
-
-	std::cout << endl << endl << endl;
-	std::cout << "Tri Area pRight: " << triArea << endl;
-	triArea = Maths::FloatAreaOfTri(Vector3(0.5, 0, 0.5), Vector3(0, 0, 2), Vector3(2, 0, 2));
-	std::cout << "Tri Area pLeft: " << triArea << endl;
-
 	ifstream file(Assets::DATADIR + filename);
 
 	int numVertices = 0;
@@ -79,9 +72,7 @@ NavigationMesh::~NavigationMesh()
 
 bool NavigationMesh::FindPath(const Vector3& from, const Vector3& to, NavigationPath& outPath) {
 	/*const*/ NavTri* start	= GetTriForPosition(from);
-	std::cout << "Size of outpath: " << outPath.waypoints.size() << "\n";
 
-	std::cout << "Size of outpath: " << outPath.waypoints.size() << "\n";
 	if (start == nullptr) {
 		std::cout << "start is outside of the navmesh\n";
 		return false;
@@ -95,12 +86,11 @@ bool NavigationMesh::FindPath(const Vector3& from, const Vector3& to, Navigation
 	std::vector<NavTri*> openList;
 	std::vector<NavTri*> closedList;
 
-	openList.emplace_back(start); // can't use push_back????
+	openList.emplace_back(start); 
 
 	start->f = 0;
 	start->g = 0;
 	start->parent = nullptr;
-
 	NavTri* currentBestTri = nullptr;
 
 	while (!openList.empty()) {
@@ -109,21 +99,16 @@ bool NavigationMesh::FindPath(const Vector3& from, const Vector3& to, Navigation
 		if (currentBestTri == end) {
 			NavTri* tri = end;
 			triRoute.clear();
-			allEdges.clear();
-
 			while (tri != nullptr) {
 				triRoute.emplace_back(*tri);
 				tri = tri->parent;
 			}
-			
-//			FindEdges();
-			std::cout << "TriRoute size: " << triRoute.size() << endl;
-			routeVertices.clear();
-			FindRouteVertices();
-			FindPortalEdges(to);
+			if (triRoute.size() > 2)
+			{
+				FindRouteVertices();
+				FindPortalEdges(to);
+			}
 			StringPull(from, to, outPath);
-		//	std::cout << "Outpath size: " << outPath.waypoints.size();
-			//FindMidPath(outPath);
 			return true;
 		}
 		else {
@@ -153,27 +138,15 @@ bool NavigationMesh::FindPath(const Vector3& from, const Vector3& to, Navigation
 				}
 			}
 			closedList.emplace_back(currentBestTri);
-
 		}
-
 	}
 	return false;
 }
 
-int NavigationMesh::FindNextVertex(VertexIndices vertIndices, NavigationMesh::NavTri tri) {
-	int index;
-	for (int i = 0; i < 3; ++i) {
-		if (tri.indices[i] != vertIndices.a && tri.indices[i] != vertIndices.b) {
-			index = tri.indices[i];
-			break;
-		}
-	}
-	return index;
-}
 
 void NavigationMesh::FindRouteVertices() {
+	routeVertices.clear();
 	vector<NavTri>::reverse_iterator rit = triRoute.rbegin();
-
 	for (; rit != triRoute.rend(); rit++) {
 		for (int i = 0; i < 3; ++i)
 		{
@@ -181,55 +154,226 @@ void NavigationMesh::FindRouteVertices() {
 			routeVertices.emplace_back(vertex);
 		}
 	}
-
 }
 
-
-void NavigationMesh::FindEdges() {
-	int numTris = triRoute.size();
-	vector<NavTri>::reverse_iterator it = triRoute.rbegin() + 1; //2nd last element of triRoute, ie. second waypoint
-	VertexIndices vertexIndices;
-
-	for (; it != triRoute.rend(); it++) {
-		vertexIndices = FindSharedVertices(*it);
-		allEdges.emplace_back(vertexIndices);
-	}
+inline float vdistsqr(const Vector3 a, const Vector3 b)
+{
+	const float dx = b[0] - a[0];
+	const float dy = b[1] - a[1];
+	const float dz = b[2] - a[2];
+	float ans = dx * dx + dy * dy + dz * dz;
+	//sqrt(ans);
+	return ans;  // maybe this should be square root?
 }
 
-void NavigationMesh::FindMidPath(NavigationPath& outPath) {
-
-	vector< VertexIndices>::reverse_iterator it = allEdges.rbegin();
-	for (; it != allEdges.rend(); ++it) {
-		Vector3 vertexA = allVerts[it->a];                  
-		Vector3 vertexB = allVerts[it->b];
-		Vector3 vectorAB = vertexA - vertexB;
-		Vector3 midPoint = vertexB + (vectorAB * 0.5);
-		outPath.PushWaypoint(midPoint);
-	}
+inline bool vequal(const Vector3 a, const Vector3 b)
+{
+	static const float eq = 0.001f * 0.001f;
+	return vdistsqr(a, b) < eq;
 }
 
-VertexIndices NavigationMesh::FindSharedVertices(NavTri tri) {
-	int indexA, indexB;
-	VertexIndices vertexIndices;
-	for (int i = 0; i < 3; ++i) {
-		for (int j = 0; j < 3; ++j) {
-			indexA = tri.indices[i];
-			indexB = tri.parent->indices[j];
-			if (indexA == indexB) {
-				vertexIndices.AddIndex(indexA);
+void NavigationMesh::FindLeftAndRightVertex(Vector3 portalApex, int triIndex, Vector3& portalLeft, Vector3& portalRight) {
+	int k = 0;
+	Vector3 edgeVertex[2];
+	
+	for (int i = triIndex * 3; i < (triIndex * 3) + 3; ++i)
+	{
+		for (int j = (triIndex * 3 ) +3; j < (triIndex * 3 ) + 6; ++j)
+		{
+			if (routeVertices[i] == routeVertices[j])
+			{
+				edgeVertex[k] = routeVertices[i];
+				++k;
 			}
 		}
 	}
-//	std::cout << "\nIndexA: " << vertexIndices.a << "\n";
-//	std::cout << "IndexB: " << vertexIndices.b << "\n";
-	return vertexIndices;
+	Vector3 midEdge = (edgeVertex[0] - edgeVertex[1]) * 0.5f;
+	midEdge += edgeVertex[0];
+
+	float triArea = Maths::FloatAreaOfTri(portalApex, edgeVertex[0], edgeVertex[1]);
+
+	if (triArea <= 0.0f)
+	{
+		portalLeft = edgeVertex[1];
+		portalRight = edgeVertex[0];
+	}
+	else
+	{
+		portalLeft = edgeVertex[0];
+		portalRight = edgeVertex[1];
+	}
+
 }
 
-float NavigationMesh::AngleBetweenVectors(Vector3 a, Vector3 b) {
-	float dot = Vector3::Dot(a, b);
-	float angle;
-	angle = acos(dot / (a.Length() * b.Length()));
-	return angle;
+void NavigationMesh::StringPull(Vector3 startPosition, Vector3 endPosition, NavigationPath& outPath) {
+
+	outPath.Clear();
+	if (triRoute.size() <= 2)
+	{
+		float yPos = triRoute.back().centroid.y;
+		Vector3 end = endPosition;
+		end.y = yPos;
+		outPath.PushWaypoint(end);
+		return;
+	}
+
+	// Find straight path.
+	int npts = 0;
+		
+	int maxPts = triRoute.size(); //what should the max points be??
+	int nPortals = maxPts - 1;
+	Vector3 portalApex, portalLeft, portalRight;
+	int apexIndex = 0, leftIndex = 0, rightIndex = 0;
+
+	float yPos = triRoute.back().centroid.y;
+	portalApex = startPosition;
+	portalApex.y = yPos;
+
+	portalLeft = portalEdges[0].leftPortal;
+	portalRight = portalEdges[0].rightPortal;
+	Vector3 left, right;
+
+	// Add start point.
+	outPath.PushWaypoint(portalApex);
+	npts++;
+
+	bool equal;
+	float triArea;
+	
+
+
+	for (int i = 1; i < nPortals && npts < maxPts; ++i)
+	{
+		left = portalEdges[i-1].left;
+		right = portalEdges[i-1].right;
+
+		triArea = Maths::FloatAreaOfTri(portalApex, portalRight, right);
+		// Update right vertex.
+		if (triArea <= 0.0f) // if right tightens the funnel
+		{
+			equal = vequal(portalApex, portalRight);
+			triArea = Maths::FloatAreaOfTri(portalApex, portalLeft, right);
+			if (equal || triArea > 0.0f) // check if right is also inside leftportal
+			{
+				// Tighten the funnel.
+				portalRight = right;
+				rightIndex = i;
+			}
+			else
+			{
+				// Right over left, insert left to path and restart scan from portal left point.
+				outPath.waypoints.insert(outPath.waypoints.begin(), portalLeft);
+				npts++;
+				// Make current left the new apex.
+				portalApex = portalLeft;
+				apexIndex = leftIndex;
+
+				// Reset portal
+				portalLeft = portalApex;
+				portalRight = portalApex;
+
+				leftIndex = apexIndex;
+				rightIndex = apexIndex;
+				// Restart scan
+				i = apexIndex;
+				continue;
+			}
+		}
+		triArea = Maths::FloatAreaOfTri(portalApex, portalLeft, left);
+		// Update left vertex.
+		if (triArea >= 0.0f)
+		{
+			equal = vequal(portalApex, portalLeft);
+			triArea = Maths::FloatAreaOfTri(portalApex, portalRight, left);
+			if (equal || triArea < 0.0f)
+			{
+				// Tighten the funnel.
+				portalLeft = left;
+				leftIndex = i;
+			}
+			else
+			{
+				// Left over right, insert right to path and restart scan from portal right point.
+				outPath.waypoints.insert(outPath.waypoints.begin(), portalRight);
+				npts++;
+				// Make current right the new apex.
+				portalApex = portalRight;
+				apexIndex = rightIndex;
+				// Reset portal
+				portalLeft = portalApex;
+				portalRight = portalApex;
+				leftIndex = apexIndex;
+				rightIndex = apexIndex;
+				// Restart scan
+				i = apexIndex;
+				continue;
+
+			}
+		}
+	}
+	if (npts < maxPts)
+	{
+		Vector3 end = endPosition;
+		yPos = triRoute.front().centroid.y;
+		end.y = yPos;
+		outPath.waypoints.insert(outPath.waypoints.begin(), end);
+		npts++;
+	}
+	return;
+}
+
+void NavigationMesh::FindPortalEdges(const Vector3& to) {
+	int numTris = triRoute.size();
+	vector<NavTri>::reverse_iterator it = triRoute.rbegin();
+	int i = 0;
+	portalEdges.clear();
+	for (; it != triRoute.rend() - 1; it++)
+	{
+		PortalEdge portalEdge;
+		Vector3 portalLeft, portalRight;
+		FindLeftAndRightVertex(it->centroid, i, portalLeft, portalRight);
+		portalEdge.leftPortal = portalLeft;
+		portalEdge.rightPortal = portalRight;
+		portalEdges.emplace_back(portalEdge);
+		i++;
+	}
+
+	
+	for (int i = 0; i < portalEdges.size(); ++i)
+	{
+		if (i == portalEdges.size() - 1)
+		{
+			int count = 0;
+			Vector3 lastVertex;
+			for (int j = routeVertices.size()  - 3; j < routeVertices.size(); ++j) //last triangle vertices
+			{
+				if (routeVertices[j] != portalEdges[i].leftPortal && routeVertices[j] != portalEdges[i].rightPortal)
+				{
+					lastVertex = routeVertices[j];
+				}
+			}
+
+			if (portalEdges[i].leftPortal == portalEdges[i - 1].leftPortal)
+			{
+				// last vertex is set to left
+				portalEdges[i].right = portalEdges[i].rightPortal;
+				portalEdges[i].left = lastVertex;
+			}
+			else if (portalEdges[i].rightPortal == portalEdges[i - 1].rightPortal)
+			{
+				// last vertex is set to right
+				portalEdges[i].left = portalEdges[i].leftPortal;
+				portalEdges[i].right = lastVertex;
+				
+			}
+	
+		}
+		else
+		{
+			portalEdges[i].left = portalEdges[i + 1].leftPortal;
+			portalEdges[i].right = portalEdges[i + 1].rightPortal;
+		}
+	}
 }
 
 NavigationMesh::NavTri* NavigationMesh::RemoveBestTri(std::vector<NavTri*>& list) {
@@ -271,303 +415,11 @@ float NavigationMesh::Heuristic(NavTri* hNode, NavTri* endNode) /*const*/ {
 
 		float areaSum = ta + tb + tc;
 
-		if (abs(areaSum - t.area)  > 0.001f) { //floating points are annoying! Are we more or less inside the triangle?
+		if (abs(areaSum - t.area) > 0.001f) { //floating points are annoying! Are we more or less inside the triangle?
 			continue;
 		}
 		return &t;
 	}
 	return nullptr;
 }
-
-
-
-inline float vdistsqr(const Vector3 a, const Vector3 b)
-{
-	const float dx = b[0] - a[0];
-	const float dy = b[1] - a[1];
-	const float dz = b[2] - a[2];
-	float ans = dx * dx + dy * dy + dz * dz;
-	sqrt(ans);
-	std::cout << "ans: " << ans << endl;
-	return ans;  // maybe this should be square root?
-}
-
-inline bool vequal(const Vector3 a, const Vector3 b)
-{
-	static const float eq = 0.001f * 0.001f;
-	return vdistsqr(a, b) < eq;
-}
-
-bool IsLeftOfApex(Vector3 apex, Vector3 midEdge, Vector3 vertex) {
-	return ((midEdge.x - apex.x) * (vertex.z - apex.z) * (midEdge.z - apex.z) * (vertex.x - apex.x)) < 0;
-}
-
-void NavigationMesh::FindLeftAndRightVertex(Vector3 portalApex, int triIndex, Vector3& portalLeft, Vector3& portalRight) {
-	int k = 0;
-	Vector3 edgeVertex[2];
-	
-	for (int i = triIndex * 3; i < (triIndex * 3) + 3; ++i)
-	{
-		for (int j = (triIndex * 3 ) +3; j < (triIndex * 3 ) + 6; ++j)
-		{
-			if (routeVertices[i] == routeVertices[j])
-			{
-				edgeVertex[k] = routeVertices[i];
-				++k;
-			}
-		}
-	}
-	Vector3 midEdge = (edgeVertex[0] - edgeVertex[1]) * 0.5f;
-	midEdge += edgeVertex[0];
-
-//	bool isLeft = IsLeftOfApex(portalApex, midEdge, edgeVertex[0]);
-
-	float triArea = Maths::FloatAreaOfTri(portalApex, edgeVertex[0], edgeVertex[1]);
-
-	if (triArea <= 0.0f)
-	{
-		
-
-		portalLeft = edgeVertex[1];
-		portalRight = edgeVertex[0];
-	}
-	else
-	{
-		portalLeft = edgeVertex[0];
-		portalRight = edgeVertex[1];
-	}
-	//if (isLeft)
-	//{
-	//	portalLeft = edgeVertex[0];
-	//	portalRight = edgeVertex[1];
-	//}
-	//else
-	//{ 
-	//	portalLeft = edgeVertex[1];
-	//	portalRight = edgeVertex[0];
-	//}
-}
-
-bool NavigationMesh::IsNextEdgeVertex(Vector3 portalVertex, int triIndex) {
-	bool isNextEdge = false;
-	for (int i = triIndex * 3; i < (triIndex * 3) + 3; ++i)
-	{
-		if (portalVertex == routeVertices[i])
-		{
-			isNextEdge = true;
-			break;
-		}
-	}
-	return isNextEdge;
-}
-
-int NavigationMesh::StringPull(Vector3 startPosition, Vector3 endPosition, NavigationPath& outPath) {
-
-	if (routeVertices.size() < 6)
-	{
-		return -1;
-	}
-	outPath.Clear();
-	// Find straight path.
-	int npts = 0;
-
-	
-	int maxPts = triRoute.size(); //what should the max points be??
-	int nPortals = maxPts - 1;
-	Vector3 portalApex, portalLeft, portalRight;
-	int apexIndex = 0, leftIndex = 0, rightIndex = 0;
-
-	float yPos = triRoute.back().centroid.y;
-	portalApex = startPosition;
-	portalApex.y = yPos;
-
-	portalLeft = portalEdges[0].leftPortal;
-	portalRight = portalEdges[0].rightPortal;
-	Vector3 left;
-	Vector3 right;
-
-//	Debug::DrawLine(portalApex, portalLeft, Debug::YELLOW, 5);
-//	Debug::DrawLine(portalApex, portalRight, Debug::RED, 5);
-
-	// Add start point.
-	outPath.PushWaypoint(portalApex);
-	npts++;
-
-	bool equal;
-	float triArea;
-	
-
-
-	for (int i = 1; i < nPortals && npts < maxPts; ++i)
-	{
-		/*
-		if (i == nPortals - 1) {
-			left = portalEdges[i].left;
-			right = portalEdges[i].right;
-		}
-		else
-		{
-			left = portalEdges[i].leftPortal;
-			right = portalEdges[i].rightPortal;
-		}
-		*/
-		left = portalEdges[i-1].left;
-		right = portalEdges[i-1].right;
-
-
-		triArea = Maths::FloatAreaOfTri(portalApex, portalRight, right);
-		//std::cout << "R triArea: " << triArea << endl;
-		// Update right vertex.
-		if (triArea <= 0.0f) // if right tightens the funnel
-		{
-			equal = vequal(portalApex, portalRight);
-			triArea = Maths::FloatAreaOfTri(portalApex, portalLeft, right);
-			if (equal || triArea > 0.0f) // check if right is also inside leftportal
-			{
-				// Tighten the funnel.
-				//std::cout << "Update Right Vertex. Tighten Funnel" << endl;
-				portalRight = right;
-				
-				rightIndex = i;
-			}
-			else
-			{
-				// Right over left, insert left to path and restart scan from portal left point.
-				std::cout << "Update Right Vertex. Right Over left" << endl;
-				outPath.waypoints.insert(outPath.waypoints.begin(), portalLeft);
-				npts++;
-				// Make current left the new apex.
-				portalApex = portalLeft;
-
-				apexIndex = leftIndex;
-
-				// Reset portal
-				portalLeft = portalApex;
-				portalRight = portalApex;
-
-				leftIndex = apexIndex;
-				rightIndex = apexIndex;
-				// Restart scan
-				i = apexIndex;
-				continue;
-			}
-		}
-		triArea = Maths::FloatAreaOfTri(portalApex, portalLeft, left);
-		//std::cout << "L triArea: " << triArea << endl;
-		// Update left vertex.
-		if (triArea >= 0.0f)
-		{
-			//std::cout << "Update Left Vertex." << endl;
-			equal = vequal(portalApex, portalLeft);
-			triArea = Maths::FloatAreaOfTri(portalApex, portalRight, left);
-			//std::cout << "Left equal: " << equal << endl;
-			//std::cout << "Left triArea: " << triArea << endl;
-			if (equal || triArea < 0.0f)
-			{
-				// Tighten the funnel.
-				//std::cout << "Update Left Vertex. Tighten Funnel" << endl;
-				portalLeft = left;
-
-				leftIndex = i;
-			}
-			else
-			{
-				// Left over right, insert right to path and restart scan from portal right point.
-
-				std::cout << "Update Left Vertex. Left Over Right" << endl;
-				outPath.waypoints.insert(outPath.waypoints.begin(), portalRight);
-				npts++;
-				// Make current right the new apex.
-				portalApex = portalRight;
-				apexIndex = rightIndex;
-				// Reset portal
-				portalLeft = portalApex;
-				portalRight = portalApex;
-				leftIndex = apexIndex;
-				rightIndex = apexIndex;
-				// Restart scan
-				i = apexIndex;
-				continue;
-
-			}
-		}
-
-		///////////// For loop end
-	}
-	if (npts < maxPts)
-	{
-		Vector3 end = endPosition;
-		yPos = triRoute.front().centroid.y;
-		end.y = yPos;
-		outPath.waypoints.insert(outPath.waypoints.begin(), end);
-		npts++;
-	}
-	std::cout << "Number of points : " << npts << endl;
-	std::cout << endl << endl;
-	return npts;
-}
-
-void NavigationMesh::FindPortalEdges(const Vector3& to) {
-	int numTris = triRoute.size();
-	vector<NavTri>::reverse_iterator it = triRoute.rbegin();
-	int i = 0;
-	portalEdges.clear();
-	for (; it != triRoute.rend() - 1; it++)
-	{
-		PortalEdge portalEdge;
-		Vector3 portalLeft, portalRight;
-		FindLeftAndRightVertex(it->centroid, i, portalLeft, portalRight);
-		portalEdge.leftPortal = portalLeft;
-		portalEdge.rightPortal = portalRight;
-		portalEdges.emplace_back(portalEdge);
-		i++;
-		//Debug::DrawLine(it->centroid, portalLeft, Debug::YELLOW, 5);
-		//Debug::DrawLine(it->centroid, portalRight, Debug::RED, 5);
-	}
-
-	
-	for (int i = 0; i < portalEdges.size(); ++i)
-	{
-		if (i == portalEdges.size() - 1)
-		{
-			int count = 0;
-			Vector3 lastVertex;
-			for (int j = routeVertices.size()  - 3; j < routeVertices.size(); ++j) //last triangle vertices
-			{
-				if (routeVertices[j] != portalEdges[i].leftPortal && routeVertices[j] != portalEdges[i].rightPortal)
-				{
-					lastVertex = routeVertices[j];
-				}
-			}
-
-			if (portalEdges[i].leftPortal == portalEdges[i - 1].leftPortal)
-			{
-				// last vertex is set to left
-				portalEdges[i].right = portalEdges[i].rightPortal;
-				portalEdges[i].left = lastVertex;
-			}
-			else if (portalEdges[i].rightPortal == portalEdges[i - 1].rightPortal)
-			{
-				// last vertex is set to right
-				portalEdges[i].left = portalEdges[i].leftPortal;
-				portalEdges[i].right = lastVertex;
-				
-			}
-			
-			
-		//	portalEdges[i].left = portalEdges[i-1].leftPortal;
-		//	portalEdges[i].right = portalEdges[i-1].rightPortal;
-		}
-		else
-		{
-			portalEdges[i].left = portalEdges[i + 1].leftPortal;
-			portalEdges[i].right = portalEdges[i + 1].rightPortal;
-		}
-
-
-
-	}
-}
-
-
 

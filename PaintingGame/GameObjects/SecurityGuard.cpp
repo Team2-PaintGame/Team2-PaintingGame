@@ -29,8 +29,6 @@ namespace NCL::CSC8508 {
 		callbackPlayerOne = new SecurityCallbackClass(playerOne);
 		callbackPlayerTwo = new SecurityCallbackClass(playerTwo);
 
-//		FindNavigableNodes("SplatAtTheMuseum.txt", navigableNodes);
-//		navigationGrid = new NavigationGrid("SplatAtTheMuseum.txt");
 		navigationMesh = new NavigationMesh("BasicLVL.navmesh");
 		navigationPath = new NavigationPath();
 
@@ -41,9 +39,6 @@ namespace NCL::CSC8508 {
 	}
 	SecurityGuard::~SecurityGuard()
 	{
-		
-
-
 		//delete chooseDestination;
 		//delete goToDestination;
 
@@ -140,7 +135,6 @@ namespace NCL::CSC8508 {
 			else if (state == Ongoing) {
 				Vector3 destination = ChooseDestination();
 				Vector3 securityPosition = this->GetTransform().GetPosition();
-//				securityPosition = FindClosestNode(securityPosition);
 				bool foundPath = navigationMesh->FindPath(securityPosition, destination, *navigationPath);
 				if (foundPath) {
 					std::cout << "Choose Destination - Found Path\n";
@@ -152,9 +146,6 @@ namespace NCL::CSC8508 {
 					std::cout << "Choose Destination - Found NOT Path\n";
 					//return Failure;
 				}
-				
-				
-				
 			}
 			return state;
 			}
@@ -253,37 +244,23 @@ namespace NCL::CSC8508 {
 			}
 			else if (state == Ongoing) {
 				Vector3 direction = navigationPath->waypoints.back() - this->GetTransform().GetPosition();
-
-
 				timeAccumulator += dt;
-				//if (timeAccumulator >= 1.5) {
-				//	bool isPlayerVisible = LookForPlayer(chasedPlayer);
-				//	std::cout << "1.5 seconds accumulated\n";
-				//	timeAccumulator = 0.0f;
-				//	if (isPlayerVisible) {
-				//		navigationPath->Clear();
-				//		rootSelector->Reset();
-				//		return Initialise;
-				//	}
+				if (timeAccumulator >= 1.5) {
+					bool isPlayerVisible = LookForPlayer(chasedPlayer);
+					std::cout << "1.5 seconds accumulated\n";
+					timeAccumulator = 0.0f;
+					if (isPlayerVisible) {
+						navigationPath->Clear();
+						rootSelector->Reset();
+						return Initialise;
+					}
 
-				//}
+				}
 
 				if (direction.Length() <= 4 && navigationPath->waypoints.size() >= 2) {
 					navigationPath->waypoints.pop_back();
 						std::cout << " Chase the Player - Chasing player\n";
 
-
-						//if (timeAccumulator >= 1.5) {
-						//	bool isPlayerVisible = LookForPlayer(chasedPlayer);
-						//	std::cout << "1.5 seconds accumulated\n";
-						//	timeAccumulator = 0.0f;
-						//	if (isPlayerVisible) {
-						//		navigationPath->Clear();
-						//		rootSelector->Reset();
-						//		return Initialise;
-						//	}
-
-						//}
 				}
 				if (navigationPath->waypoints.size() == 1) {
 					if (DistanceToTarget(navigationPath->waypoints.back()) <= 4.0f) {
@@ -414,31 +391,31 @@ namespace NCL::CSC8508 {
 		callbackClass->ResetObjectDistances();
 	}
 
-	void SecurityGuard::FindNavigableNodes(const std::string& filename, vector<Vector3>& navigableNodes)
-	{
-		std::ifstream infile(Assets::DATADIR + filename);
+	//void SecurityGuard::FindNavigableNodes(const std::string& filename, vector<Vector3>& navigableNodes)
+	//{
+	//	std::ifstream infile(Assets::DATADIR + filename);
 
-		infile >> nodeSize;
-		infile >> gridWidth;
-		infile >> gridHeight;
+	//	infile >> nodeSize;
+	//	infile >> gridWidth;
+	//	infile >> gridHeight;
 
-		GridNode* allNodes = new GridNode[gridWidth * gridHeight];
+	//	GridNode* allNodes = new GridNode[gridWidth * gridHeight];
 
-		for (int y = 0; y < gridHeight; ++y) {
-			for (int x = 0; x < gridWidth; ++x) {
-				GridNode& n = allNodes[(gridWidth * y) + x];
-				char type = 0;
-				infile >> type;
-				n.type = type;
-				n.position = Vector3((float)(x * nodeSize) - 75, 2.5, (float)(y * nodeSize) -75);
-				if (n.type == '.') {
-					navigableNodes.push_back(n.position);
-					//std::cout << "Navigble Node Pos: " << n.position << "\n";
-				}
+	//	for (int y = 0; y < gridHeight; ++y) {
+	//		for (int x = 0; x < gridWidth; ++x) {
+	//			GridNode& n = allNodes[(gridWidth * y) + x];
+	//			char type = 0;
+	//			infile >> type;
+	//			n.type = type;
+	//			n.position = Vector3((float)(x * nodeSize) - 75, 2.5, (float)(y * nodeSize) -75);
+	//			if (n.type == '.') {
+	//				navigableNodes.push_back(n.position);
+	//				//std::cout << "Navigble Node Pos: " << n.position << "\n";
+	//			}
 
-			}
-		}
-	}
+	//		}
+	//	}
+	//}
 
 	Vector3 SecurityGuard::ChooseDestination() 
 	{
@@ -485,19 +462,6 @@ namespace NCL::CSC8508 {
 		return (destination - this->GetTransform().GetPosition()).Length();
 	}
 
-	Vector3 SecurityGuard::FindClosestNode(Vector3 position)
-	{
-		Vector3 closestNode;
-		float closestDistance = 100;
-		for (auto i : navigableNodes) {
-			if ((position - i).Length() < closestDistance) {
-				closestNode = i;
-				closestDistance = (position - i).Length();
-			}
-		}
-		//	std::cout << "Closest Node: " << closestNode << "\n";
-		return closestNode;
-	}
 	void SecurityGuard::DetermineSpeed()
 	{
 		int numWaypoints = navigationPath->waypoints.size();
@@ -527,7 +491,6 @@ namespace NCL::CSC8508 {
 				++i;
 			}
 			Vector3 playerPos = this->GetTransform().GetPosition();
-			playerPos = FindClosestNode(playerPos);
 			Vector3 firstWaypointDirection, secondWaypointDirection, thirdWaypointDirection;
 			firstWaypointDirection = (nextThreeWaypoints[0] - playerPos).Normalised();
 			secondWaypointDirection = (nextThreeWaypoints[1] - playerPos).Normalised();

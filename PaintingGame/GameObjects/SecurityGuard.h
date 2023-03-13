@@ -39,12 +39,10 @@ namespace NCL::CSC8508 {
 
 		bool LookForPlayer(GameObject* player);
 		GameObject* LookForPlayers();
-		void FindNavigableNodes(const std::string& filename, vector<Vector3>& navigableNodes);
 		Vector3 ChooseDestination();
 		void DisplayPathfinding();
 		void MoveSecurityGuard(Vector3 direction);
 		float DistanceToTarget(Vector3 destination);
-		Vector3 FindClosestNode(Vector3 position);
 		GameObject* FindClosestPlayer();
 		void DetermineSpeed();
 		void RaycastAgainstPlayer(GameObject* player, SecurityCallbackClass* callbackClass, bool& isPlayerVisible);
