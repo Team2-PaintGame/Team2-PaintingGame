@@ -67,7 +67,7 @@ Player* PaintingGame::CreatePlayer(Vector3 position,Team team) {
 	}
 
 	else { //blue
-		player =  new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("blueMainCharMat"), assets->GetShader("skinningShader"), animations, 5, CreateGun(position, team));
+		player =  new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("blueMainCharMat"), assets->GetShader("SecondskinningShader"), animations, 5, CreateGun(position, team));
 	}
 
 	world->AddGameObject(player);
