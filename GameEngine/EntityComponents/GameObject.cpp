@@ -24,3 +24,23 @@ void GameObject::UpdateTransform() {
 		transform.SetOrientation(rigidBody->getTransform().getOrientation());
 	}
 }
+
+//void NCL::CSC8508::GameObjectListener::onTrigger(const reactphysics3d::OverlapCallback::CallbackData& callbackData)
+//{
+//	for (int p = 0; p < callbackData.getNbOverlappingPairs(); p++) 
+//	{
+//		GameObjectIterator first;
+//		GameObjectIterator last;
+//		world->GetObjectIterators(first, last);
+//
+//		reactphysics3d::OverlapCallback::OverlapPair overlapPair = callbackData.getOverlappingPair(p);
+//		
+//		for (auto iter = first; iter < last; iter++) 
+//		{
+//			GameObject* obj = *iter;
+//
+//			if (obj->GetRigidBody() == overlapPair.getBody2()) {}
+//		}
+//
+//	}
+//}

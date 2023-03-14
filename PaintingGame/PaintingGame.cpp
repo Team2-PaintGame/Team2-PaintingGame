@@ -6,6 +6,8 @@
 #include "AnimationController.h"
 #include "PaintingObject.h"
 #include "Ink.h"
+#include "EventListener.h"
+
 
 using namespace NCL;
 using namespace CSC8508;
@@ -20,6 +22,7 @@ PaintingGame::PaintingGame(GameAssets* assets) {
 	//renderer->settings.SetIsDebugRenderingModeEnabled(true);
 	//renderer->settings.debugRendererSettings.SetIsCollisionShapeDisplayed(true);
 	//renderer->settings.debugRendererSettings.SetIsBroadPhaseAABBDisplayed(true);
+	world->AddEventListener(new GameEventListener(&world->GetPhysicsWorld(), world));
 }
 
 PaintingGame::~PaintingGame() {
