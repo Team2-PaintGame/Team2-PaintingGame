@@ -298,8 +298,6 @@ else()
     list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../Middleware/ReactPhysics3D/ORBIS") 
 endif() 
 
-set(OPENAL_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/../Middleware/OpenAL/Win32/lib/Debug")
-
 #Import the ReactPhysics3D library 
 find_package(ReactPhysics3D REQUIRED)
 find_package(OpenAL REQUIRED)
@@ -335,3 +333,11 @@ set(ADDITIONAL_LIBRARY_DEPENDENCIES
 
 target_link_libraries(${PROJECT_NAME} PUBLIC "${ADDITIONAL_LIBRARY_DEPENDENCIES}" "${OPENAL_LIBRARY}/OpenAL32.lib")
 
+
+################################################################################
+# OpenAL config
+################################################################################
+include_directories("../Middleware/OpenAL/Win32/include")
+link_directories("../Middleware/OpenAL/Win32/lib/Debug/")
+
+target_link_libraries(${PROJECT_NAME} LINK_PUBLIC  ${CMAKE_SOURCE_DIR}/Middleware/OpenAL/Win32/lib/Debug/OpenAL32.lib)

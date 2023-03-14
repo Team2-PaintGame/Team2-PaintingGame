@@ -4,6 +4,7 @@
 #include <reactphysics3d/reactphysics3d.h>
 #include "SceneNode.h"
 #include "Vector3.h"
+#include <al/al.h>
 
 using std::vector;
 

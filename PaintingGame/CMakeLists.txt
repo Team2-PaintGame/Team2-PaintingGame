@@ -279,6 +279,13 @@ else()
     )
 endif()
 
+################################################################################
+# OpenAL config
+################################################################################
+include_directories("../Middleware/OpenAL/Win32/include")
+link_directories("../Middleware/OpenAL/Win32/lib/Debug/")
+
+target_link_libraries(${PROJECT_NAME} LINK_PUBLIC  ${CMAKE_SOURCE_DIR}/Middleware/OpenAL/Win32/lib/Debug/OpenAL32.lib)
 
 ################################################################################
 # Dependencies
@@ -320,9 +327,12 @@ include_directories("../GameEngine/AI/StateMachine/")
 include_directories("../Middleware/ImGui/")
 
 target_link_libraries(${PROJECT_NAME} LINK_PUBLIC GameEngine)
+if(WIN32)
 target_link_libraries(${PROJECT_NAME} LINK_PUBLIC OpenGLRendering)
 target_link_libraries(${PROJECT_NAME} LINK_PUBLIC Networking)
+else()
 target_link_libraries(${PROJECT_NAME} LINK_PUBLIC GNMRendering)
+endif()
 
 
 if(USE_VULKAN)
