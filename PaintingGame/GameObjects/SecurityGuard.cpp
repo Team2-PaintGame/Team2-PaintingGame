@@ -4,44 +4,9 @@
 #include <cmath>
 
 namespace NCL::CSC8508 {
-	//SecurityGuard::SecurityGuard(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, std::string objectName, Vector3 position, MeshGeometry* mesh,
-	//	TextureBase* texture, ShaderBase* shader, Vector3 size, GameObject* playerOne, GameObject* playerTwo)
-	//	: GameObject(physicsCommon, physicsWorld, objectName)
-	//{
-
-	//	this->playerOne = playerOne;
-	//	this->playerTwo = playerTwo;
-	//	this->physicsWorld = physicsWorld;
-	//	chasedPlayer = nullptr;
-	//	transform.SetScale(size).SetPosition(position);
-	//	renderObject = new RenderObject(&transform, mesh, shader);
-	//	renderObject->AddTexture(texture);
-	//	renderObject->SetColour(Debug::RED);
-	//	boundingVolume = physicsCommon.createBoxShape(~transform.GetScale() / 2.0f);
-	//	reactphysics3d::Transform rp3d_transform(~position, rp3d::Quaternion::identity());
-
-	//	// Create a rigid body in the physics world
-	//	rigidBody = physicsWorld->createRigidBody(rp3d_transform);
-	//	rigidBody->addCollider(boundingVolume, rp3d::Transform::identity()); //collider
-	//	rigidBody->updateMassPropertiesFromColliders();
-	//	rigidBody->setLinearDamping(1.5f);
-	//	rigidBody->setAngularDamping(1.5f);
-	//	callbackPlayerOne = new SecurityCallbackClass(playerOne);
-	//	callbackPlayerTwo = new SecurityCallbackClass(playerTwo);
-
-	//	navigationMesh = new NavigationMesh("BasicLVL.navmesh");
-	//	navigationPath = new NavigationPath();
-
-	//	InitBehaviorTree();
-
-
-
-	//}
-
 	SecurityGuard::SecurityGuard(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, std::string objectName, Vector3 position, MeshGeometry* mesh,
 		MeshMaterial* material, ShaderBase* shader, const std::unordered_map<std::string, MeshAnimation*>& animations, int size, GameObject* playerOne, GameObject* playerTwo)
-	//	: GameObject(physicsCommon, physicsWorld, objectName)
-		: PlayerBase(physicsCommon, physicsWorld, position, mesh, material, shader, size)
+		: PlayerBase(physicsCommon, physicsWorld, position, mesh, material, shader, size, objectName)
 	
 	{
 
@@ -56,8 +21,6 @@ namespace NCL::CSC8508 {
 		animationController = new AnimationController(this, animations);
 		renderObject->SetRigged(true);
 		renderObject->SetAnimationController(animationController);
-		//renderObject->SetColour(Debug::RED);
-//		boundingVolume = physicsCommon.createBoxShape(~transform.GetScale() / 2.0f);
 		boundingVolume = physicsCommon.createCapsuleShape(size * .35f, size);
 		reactphysics3d::Transform rp3d_transform(~position, rp3d::Quaternion::identity());
 
@@ -70,6 +33,7 @@ namespace NCL::CSC8508 {
 
 		Vector3 lockXZAxis(0, 1, 0);
 		rigidBody->setAngularLockAxisFactor(~lockXZAxis);
+
 		callbackPlayerOne = new SecurityCallbackClass(playerOne);
 		callbackPlayerTwo = new SecurityCallbackClass(playerTwo);
 
@@ -77,11 +41,7 @@ namespace NCL::CSC8508 {
 		navigationPath = new NavigationPath();
 
 		InitBehaviorTree();
-
-
-
 	}
-
 
 	SecurityGuard::~SecurityGuard()
 	{
@@ -103,12 +63,8 @@ namespace NCL::CSC8508 {
 		delete navigationPath;
 
 		delete animationController;
-
-	//	delete renderObject; // Is this deleted here or elsewhere?
-
-//		physicsCommon.destroyBoxShape(boundingVolume);
-
 	}
+
 	void SecurityGuard::Update(float dt)
 	{
 		if (navigationPath->waypoints.size() > 0)
@@ -269,6 +225,7 @@ namespace NCL::CSC8508 {
 			}
 		);
 	}
+
 	void SecurityGuard::InitChaseThePlayer()
 	{
 		chaseThePlayer = new BehaviourAction("Chase the player ", [&](float dt, BehaviourState state)->BehaviourState {
@@ -325,9 +282,6 @@ namespace NCL::CSC8508 {
 			}
 		);
 	}
-		
-
-	
 
 	void SecurityGuard::InitAttackThePlayer()
 	{
@@ -343,7 +297,7 @@ namespace NCL::CSC8508 {
 				}
 				else {
 					// Respawns player at position location
-					reactphysics3d::Vector3 position(0, 20, 0);
+					reactphysics3d::Vector3 position(20.0f, 10.0f, 50.0f);
 					reactphysics3d::Transform rp3d_transform(position, rp3d::Quaternion::identity());
 					chasedPlayer->GetRigidBody()->setTransform(rp3d_transform);
 					state = Success;
@@ -462,65 +416,40 @@ namespace NCL::CSC8508 {
 	}
 
 	void SecurityGuard::DisplayPathfinding() {
-
 		for (int i = 1; i < navigationPath->waypoints.size(); ++i) {
 			Vector3 a = navigationPath->waypoints[i - 1];
 			Vector3 b = navigationPath->waypoints[i];
 			Debug::DrawLine(a, b,Debug::BLACK);
 		}
-
-
 	}
-	Matrix3 MakeRotationDirection(const Vector3& direction, const Vector3& up = Vector3(0, 1, 0))
-	{
-		Vector3 xAxis = Vector3::Cross(up, direction);
-		xAxis.Normalised();
 
-		Vector3 yAxis = Vector3::Cross(xAxis, direction);
-		yAxis.Normalised();
+	//Matrix3 MakeRotationDirection(const Vector3& direction, const Vector3& up = Vector3(0, 1, 0))
+	//{
+	//	Vector3 xAxis = Vector3::Cross(up, direction);
+	//	xAxis.Normalised();
 
-		Matrix3 rotation;
-		rotation.SetRow(0, xAxis);
-		rotation.SetRow(1, yAxis);
-		rotation.SetRow(2, direction);
-		return rotation;
-	}
+	//	Vector3 yAxis = Vector3::Cross(xAxis, direction);
+	//	yAxis.Normalised();
+
+	//	Matrix3 rotation;
+	//	rotation.SetRow(0, xAxis);
+	//	rotation.SetRow(1, yAxis);
+	//	rotation.SetRow(2, direction);
+	//	return rotation;
+	//}
 
 	void SecurityGuard::MoveSecurityGuard(Vector3 direction)
 	{
 		reactphysics3d::Vector3 forceDirection;
 		forceDirection = ~direction.Normalised();
 
-
-		/*Matrix3 rotation = MakeRotationDirection(direction);
-		Quaternion orientation(rotation);
-		reactphysics3d::Transform transform = reactphysics3d::Transform(this->GetRigidBody()->getTransform().getPosition(), ~orientation);
-		this->GetRigidBody()->setTransform(transform);*/
-
-
-
-		
-
-		//Matrix4 modelMatrix = this->GetTransform().GetMatrix();
-		//Vector3 rightAxis = Vector3(modelMatrix.GetColumn(0));
-		//Vector3 upAxis = Vector3(0, 1, 0);
-		//Vector3 fwdAxis = Vector3::Cross(upAxis, rightAxis);
-
-
-		//float angle = Vector3::Dot(direction.Normalised(), fwdAxis.Normalised());
-		//angle = angle * 180 / PI;
-		//Quaternion rotation = Quaternion::AxisAngleToQuaterion(Vector3(0, 1, 0), angle);
-		//reactphysics3d::Transform transform = reactphysics3d::Transform(this->GetRigidBody()->getTransform().getPosition(), ~rotation);
-		//this->GetRigidBody()->setTransform(transform); 
 		Vector3 up(0, 1, 0);
 		Vector3 negDirection(-direction.x, -direction.y, -direction.z);
 		Quaternion rotation = Quaternion::LookRotation(negDirection, up);
 
 		reactphysics3d::Transform transform = reactphysics3d::Transform(this->GetRigidBody()->getTransform().getPosition(), ~rotation);
-		std::cout << transform.isValid() << "\n";
 		if (transform.isValid()) {
 			this->GetRigidBody()->setTransform(transform);
-			
 		}
 		this->GetRigidBody()->applyWorldForceAtCenterOfMass(forceDirection * force);// '~' converts NCL Vector3 to reactphysics3d Vector3
 		
@@ -590,15 +519,6 @@ namespace NCL::CSC8508 {
 
 		for (int i = 0; i < navigationMesh->routeVertices.size(); i += 3)
 		{
-//			Debug::DrawTriangle(navigationMesh->routeVertices[i], navigationMesh->routeVertices[i + 1], navigationMesh->routeVertices[i + 2]);
-			
-			/*if (i == 0) {
-
-
-			}
-			else {
-				Debug::DrawTriangle(navigationMesh->routeVertices[i], navigationMesh->routeVertices[i + 1], navigationMesh->routeVertices[i + 2]);
-			}*/
 			Vector3 up(0, 5, 0);
 			Debug::DrawLine(navigationMesh->routeVertices[i], navigationMesh->routeVertices[i] + up, Debug::CYAN, 10);
 			Debug::DrawLine(navigationMesh->routeVertices[i + 1], navigationMesh->routeVertices[i + 1] + up, Debug::CYAN, 10);

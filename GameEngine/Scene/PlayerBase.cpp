@@ -21,6 +21,11 @@ PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysic
 	raycastManager->setIgnore(rigidBody);
 }
 
+PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, MeshMaterial* meshMaterial, ShaderBase* shader, int size, std::string objectName)
+	: GameObject(physicsCommon, physicsWorld, objectName) {
+
+}
+
 PlayerBase::~PlayerBase() {
 	if (rigidBody) {
 		physicsWorld->destroyRigidBody(rigidBody);
