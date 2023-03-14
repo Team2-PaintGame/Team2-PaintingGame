@@ -2,6 +2,7 @@
 #include "GNMMesh.h"
 #include "Vector2.h"
 #include "Vector3.h"
+#include "Vector4.h"
 
 using namespace NCL::Maths;
 using namespace NCL::GNM;
