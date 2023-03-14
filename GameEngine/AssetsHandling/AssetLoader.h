@@ -21,10 +21,10 @@ namespace NCL::Assets {
 	};
 	class AssetLoader {
 	public:
-		virtual TextureBase* LoadTexture(const string& name) { return TextureLoader::LoadAPITexture(name); }
-		virtual MeshGeometry* LoadMesh(const string& name)												= 0;
+		virtual TextureBase* LoadTexture(const std::string& name) { return TextureLoader::LoadAPITexture(name); }
+		virtual MeshGeometry* LoadMesh(const std::string& name)												= 0;
 		virtual MeshGeometry* LoadMesh(const MeshType& meshType)										= 0;
-		virtual ShaderBase* LoadShader(const string& vertex, const string& fragment)					= 0;
+		virtual ShaderBase* LoadShader(const std::string& vertex, const std::string& fragment)					= 0;
 		virtual MeshGeometry* LoadFlatMesh(int hVertexCount = 128, int wVertexCount = 128)				= 0;
 		virtual MeshGeometry* LoadHeightMap(const std::string& filename, int heightMultiplier = 10)		= 0;
 	};
