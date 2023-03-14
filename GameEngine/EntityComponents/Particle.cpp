@@ -2,7 +2,7 @@
 
 using namespace NCL;
 
-Particle::Particle(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Transform* emitterTransform, Vector3 particlePosition, float lifeSpan, float speed, Vector3 direction, bool enableGravity) : GameObject(physicsCommon, physicsWorld) {
+Particle::Particle(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Transform* emitterTransform, Vector3 particlePosition, float lifeSpan, float speed, Vector3 direction, bool enableGravity) : GameObject(physicsCommon, physicsWorld, "Particle") {
 	transform
 		.SetPosition(emitterTransform->GetPosition() + particlePosition)
 		.SetScale(emitterTransform->GetScale())
@@ -11,6 +11,8 @@ Particle::Particle(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d:
 	this->lifeSpan = lifeSpan;
 	this->speed = speed;
 	this->direction = direction;
+
+	layer = Layer::Paint;
 }
 
 void Particle::Update(float dt) {
@@ -55,6 +57,7 @@ SphereParticle::SphereParticle(reactphysics3d::PhysicsCommon& physicsCommon, rea
 	collider->setIsTrigger(true);
 	rigidBody->enableGravity(enableGravity);
 	rigidBody->setMass(1.f); 
+	rigidBody->setUserData(this);
 }
 
 SphereParticle::~SphereParticle() {

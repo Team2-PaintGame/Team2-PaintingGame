@@ -6,7 +6,8 @@ enum class Layer {
 	Collectibles,
 	Player,
 	Enemy,
-	StaticObjects
+	StaticObjects,
+	Paint
 };
 
 

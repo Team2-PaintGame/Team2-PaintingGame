@@ -151,6 +151,8 @@ namespace NCL {
 		renderObject->SetInstanceCount(particles.size());
 		renderObject->SetIsInstanced(true);
 
+		layer = Layer::Paint;
+
 		if (!playOnAwake) {
 			elapsedTime = FLT_MAX;
 		}

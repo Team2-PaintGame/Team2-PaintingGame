@@ -59,7 +59,7 @@ void PaintingGame::Update(float dt) {
 
 	world->UpdateWorld(dt);
 	physicsWorld->update(dt);
-	CreateSplatOnShoot();
+	//CreateSplatOnShoot();
 	Debug::UpdateRenderables(dt);
 }
 

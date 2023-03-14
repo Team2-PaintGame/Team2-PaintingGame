@@ -61,10 +61,13 @@ void PlayerBase::SetMemberVariables(reactphysics3d::PhysicsCommon& physicsCommon
 	// Create a rigid body in the physics world
 	rigidBody = physicsWorld->createRigidBody(rp3d_transform);
 	reactphysics3d::Collider* collider = rigidBody->addCollider(boundingVolume, rp3d::Transform::identity()); //collider
-	collider->setIsTrigger(true);
+	//collider->setIsTrigger(true);
 	rigidBody->updateMassPropertiesFromColliders();
 	rigidBody->setLinearDamping(1.5f);
+	rigidBody->setUserData(this);
   
+	layer = Layer::Player;
+
 	camera = new Camera();
 }
 
