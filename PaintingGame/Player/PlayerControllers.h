@@ -8,7 +8,7 @@ namespace NCL {
 #ifdef _WIN32
 	class Win32Controller : public PlayerController {
 	public:
-		Win32Controller(PlayerBase* player) : PlayerController(player) {}
+		Win32Controller(Player* player) : PlayerController(player) {}
 
 		// Get the input for moving forward from the Xbox controller
 		bool MoveForward() override {
@@ -23,9 +23,11 @@ namespace NCL {
 		bool MoveLeft() override {
 			return Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::A);
 		}
-
 		bool Shoot() override {
 			return Window::GetMouse()->ButtonPressed(NCL::MouseButtons::RIGHT);
+		}
+		bool Pause() override {
+			return Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::ESCAPE);
 		}
 
 		float ViewDy() override {
@@ -34,14 +36,14 @@ namespace NCL {
 		float ViewDx() override {
 			return Window::GetMouse()->GetRelativePosition().x;
 		}
-		bool Pause() override {
-			return Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::ESCAPE);
+		const Vector2& GetCursorPosition(float dt) override {
+			return Window::GetMouse()->GetAbsolutePosition() / (Window::GetWindow()->GetScreenSize() - 1);
 		}
 	};
 
 	class XBoxController : public PlayerController {
 	public:
-		XBoxController(PlayerBase* player) : PlayerController(player) { Connect(); }
+		XBoxController(Player* player) : PlayerController(player), gamepad() { Connect(); }
 		// Get the input for moving forward from the Xbox controller
 		bool MoveForward() override {
 			return gamepad.leftStickY > 0.0f;
@@ -58,6 +60,9 @@ namespace NCL {
 		bool Shoot() override {
 			return false;
 		}
+		bool Pause() override {
+			return gamepad.GetButtonDown(VK_PAD_START);
+		}
 
 		float ViewDy() override {
 			return gamepad.rightStickY;
@@ -65,8 +70,17 @@ namespace NCL {
 		float ViewDx() override {
 			return gamepad.rightStickX;
 		}
-		bool Pause() override {
-			return gamepad.GetButtonDown(VK_PAD_START);
+		const Vector2& GetCursorPosition(float dt) override {
+			// these are not actual positions but the change between last frame and now
+			float speed = 2; //pixels per second
+			float h = speed * gamepad.rightStickX * dt;
+			float v = speed * gamepad.rightStickY * dt;
+
+			// add the changes to the actual cursor position
+			cursorPosition.x += h;
+			cursorPosition.y += v;
+
+			return cursorPosition;
 		}
 
 		void Connect() {
@@ -81,10 +95,17 @@ namespace NCL {
 			else if (!wasConnected)
 			{
 				wasConnected = true;
-				std::cout << "COntroller connect on port " << gamepad.GetPort() << "\n";
+				std::cout << "Controller connect on port " << gamepad.GetPort() << "\n";
 			}
 		}
+
+		void Update(float dt) override
+		{
+			Connect();
+			PlayerController::Update(dt);
+		}
 	protected:
+		Vector2 cursorPosition;
 		XBoxGamepad gamepad;
 		bool wasConnected = false;
 	};
@@ -92,7 +113,8 @@ namespace NCL {
 	// Concrete factory for creating Win32 Player Controller
 	class Win32PlayerControllerFactory : public PlayerControllerFactory {
 	public:
-		PlayerController* createPlayerController(PlayerBase* player) override {
+		Win32PlayerControllerFactory() { Type::Win32; }
+		PlayerController* createPlayerController(Player* player) override {
 			return new Win32Controller(player);
 		}
 	};
@@ -100,7 +122,8 @@ namespace NCL {
 	// Concrete factory for creating XBox Player Controller
 	class XBoxPlayerControllerFactory : public PlayerControllerFactory {
 	public:
-		PlayerController* createPlayerController(PlayerBase* player) override {
+		XBoxPlayerControllerFactory() { Type::XBox; }
+		PlayerController* createPlayerController(Player* player) override {
 			return new XBoxController(player);
 		}
 	};
@@ -108,7 +131,7 @@ namespace NCL {
 #ifdef _ORBIS
 	class PS4Controller : public PlayerController {
 	public:
-		PS4Controller(PlayerBase* player) : PlayerController(player) {}
+		PS4Controller(Player* player) : PlayerController(player) {}
 
 		// Get the input for moving forward from the Xbox controller
 		bool MoveForward() override {
@@ -131,19 +154,33 @@ namespace NCL {
 		}
 
 		float ViewDy() override {
-			return gamepad.GetAxis(0).y;
+			return gamepad.GetAxis(1).y;
 		}
 		float ViewDx() override {
-			return gamepad.GetAxis(0).x;
+			return gamepad.GetAxis(1).x;
+		}
+		const Vector2& GetCursorPosition(float dt) override {
+			// these are not actual positions but the change between last frame and now
+			float speed = 2; //pixels per second
+			float h = speed * gamepad.GetAxis(1).x * dt;
+			float v = speed * gamepad.GetAxis(1).y * dt;
+
+			// add the changes to the actual cursor position
+			cursorPosition.x += h;
+			cursorPosition.y += v;
+
+			return cursorPosition;
 		}
 	protected:
+		Vector2 cursorPosition;
 		PS4::PS4Gamepad gamepad;
 	};
 
 	// Concrete factory for creating PS4 Player Controller
 	class PS4ControllerFactory : public PlayerControllerFactory {
 	public:
-		PlayerController* createPlayerController(PlayerBase* player) override {
+		PS4ControllerFactory() { Type::PS4; }
+		PlayerController* createPlayerController(Player* player) override {
 			return new PS4Controller(player);
 		}
 	};

@@ -30,8 +30,8 @@ namespace NCL {
 			void OnPlayerCollision(NetworkPlayer* a, NetworkPlayer* b);
 
 		protected:
-			Player* SpawnPlayer();
-			Player* AddPlayer(Vector3 position,Team team) override;
+			Player* SpawnNetworkedPlayer();
+			Player* AddPlayer(Vector3 position, Team team) override;
 
 			void UpdateAsServer(float dt);
 			void UpdateAsClient(float dt);

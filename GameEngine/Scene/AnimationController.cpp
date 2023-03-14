@@ -1,33 +1,35 @@
 #include "AnimationController.h"
 #include "MeshAnimation.h"
-#include "GameObject.h"
+#include "PlayerBase.h"
 
 using namespace NCL;
 using namespace NCL::CSC8508;
 
-AnimationController::AnimationController(GameObject* gameObject, const std::unordered_map<std::string, MeshAnimation*>& animations) {
+AnimationController::AnimationController(PlayerBase* gameObject, const std::unordered_map<std::string, MeshAnimation*>& animations) {
 	this->gameObject = gameObject;
 	this->animations = animations;
-	State* idleState = new State([this](float dt)->void {
-		this->currentAnimation = this->animations.at("idleAnimation");
+	State* idleState = new State([&](float dt)->void {
+		currentAnimation = this->animations.at("idleAnimation");
 	});
-	State* moveState = new State([this](float dt)->void {
-		this->currentAnimation = this->animations.at("moveAnimation");
+	State* moveState = new State([&](float dt)->void {
+		currentAnimation = this->animations.at("moveAnimation");
 	});
 
-	StateTransition* idleToMoveStateTransition = new StateTransition(idleState, moveState, [this](void)->bool {
+	StateTransition* idleToMoveStateTransition = new StateTransition(idleState, moveState, [&](void)->bool {
 
-		if (this->gameObject->GetRigidBody()->getLinearVelocity().length() > 10.f) {
-			this->currentFrame = 0;
+		if (this->gameObject->GetRigidBody()->getLinearVelocity().length() > 5.f) {
+			currentFrame = 0;
+			this->gameObject->SetIsMoving(true);
 			return true;
 		}
 		return false;
 	});
 
-	StateTransition* moveToIdleStateTransition = new StateTransition(moveState, idleState, [this](void)->bool {
+	StateTransition* moveToIdleStateTransition = new StateTransition(moveState, idleState, [&](void)->bool {
 
 		if (this->gameObject->GetRigidBody()->getLinearVelocity().length() < 5.f) {
-			this->currentFrame = 0;
+			currentFrame = 0;
+			this->gameObject->SetIsMoving(false);
 			return true;
 		}
 		return false;

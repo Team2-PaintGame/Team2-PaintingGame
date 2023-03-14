@@ -1,7 +1,5 @@
 #version 400 core
 
-//#define iTim (time + fract(1e4*sin(dot(gl_FragCoord.xy,vec2(137,-13))))* dt)
-
 uniform vec4 		objectColour;
 uniform sampler2D 	mainTex;
 //uniform sampler2DShadow shadowTex;
@@ -47,13 +45,12 @@ void main(void)
 	vec4 albedo = objectColour;//IN.colour;
 	
 	if(hasTexture) {
-	 albedo *= texture(mainTex, IN.texCoord);
-	 //fragColor = texture(mainTex, IN.texCoord);
+	 	albedo *= texture(mainTex, IN.texCoord);
 	}
 
-	//else {
-		//fragColor = objectColour;
-	//}
+	else {
+		fragColor = objectColour;
+	}
 	
 	albedo.rgb = pow(albedo.rgb, vec3(2.2));
 	
@@ -66,27 +63,4 @@ void main(void)
 	fragColor.rgb = pow(fragColor.rgb, vec3(1.0 / 2.2f));
 	
 	fragColor.a = albedo.a;
-
-//	fragColor = texture(mainTex, IN.texCoord);
-
-	//float T = iTim;   
-    
-	//vec4 o = vec4(0);
-
-    //for(vec4 p = vec4(10.*cos(T), 0, 0, 30.+30.*sin(T)-40.*T), i = o-2.; o.x > (p*.1*i+i).y; i+=.002) {
-	//	o = i* texture(mainTex, p.xw/2e2),
-	//	p.xy += IN.texCoord/1280 * 0.1;
-	//	p-=.05;
-	//	o++;
-	//}
-
-	//fragColor = o;
-
-//fragColor.rgb = IN.normal;
-
-	//fragColor = IN.colour;
-	
-	//fragColor.xy = IN.texCoord.xy;
-	
-	//fragColor = IN.colour;
 }

@@ -9,8 +9,12 @@ SplitScreenGame::SplitScreenGame(GameAssets* assets) : PaintingGame(assets) {
 	
 	players.reserve(maxPlayers);
 	if (!GameManager::sConfig.playerControllerFactory) {
-		GameManager::sConfig.playerControllerFactory = new XBoxPlayerControllerFactory();
-		secondPlayerControllerFactory = new Win32PlayerControllerFactory();
+		GameManager::sConfig.playerControllerFactory = new Win32PlayerControllerFactory();
+		secondPlayerControllerFactory = new XBoxPlayerControllerFactory();
+	}
+ 	else if (GameManager::sConfig.playerControllerFactory->GetType() != PlayerControllerFactory::Type::PS4) {
+		GameManager::sConfig.playerControllerFactory = new Win32PlayerControllerFactory();
+		secondPlayerControllerFactory = new XBoxPlayerControllerFactory();
 	}
 	InitPlayers();
 }
@@ -27,17 +31,23 @@ SplitScreenGame::~SplitScreenGame() {
 void SplitScreenGame::InitPlayers() {
 	players.clear();
 	
-	Player* player1 = AddPlayer(Vector3(20.0f, 10.0f, 20.0f),Team::Red);
-	Player* player2 = AddPlayer(Vector3(30.0f, 10.0f, 20.0f),Team::Blue);
+	Player* player1 = AddPlayer(Vector3(20.0f, 10.0f, 20.0f), Team::Red);
+	Player* player2 = AddPlayer(Vector3(30.0f, 10.0f, 20.0f), Team::Blue);
 
 	playerControllers.push_back(GameManager::sConfig.playerControllerFactory->createPlayerController(player1));
+	
+	//if second player controller is not set, use the factory from GameManager::sConfig to create the second player controller
 	if (secondPlayerControllerFactory) {
 		playerControllers.push_back(secondPlayerControllerFactory->createPlayerController(player2));
 	}
-	player1->GetCamera()->SetViewportDivider(0.5f);
-	player2->GetCamera()->SetViewportDivider(0.5f);
-	player1->GetCamera()->SetViewportSize(Vector2(0.0f, 0.0f));
-	player2->GetCamera()->SetViewportSize(Vector2(0.5f, 0.0f));
+	else {
+		playerControllers.push_back(GameManager::sConfig.playerControllerFactory->createPlayerController(player2));
+	}
+
+	player1->GetCamera()->SetVpSize(0.5f);
+	player2->GetCamera()->SetVpSize(0.5f);
+	player1->GetCamera()->SetVpStartPos(Vector2(0.0f, 0.0f));
+	player2->GetCamera()->SetVpStartPos(Vector2(0.5f, 0.0f));
 }
 
 void SplitScreenGame::CreateSplatOnShoot() {
@@ -57,7 +67,11 @@ Player* SplitScreenGame::AddPlayer(Vector3 position,Team team) {
 	Player* player = CreatePlayer(position, team);
 	activeCameras.push_back(player->GetCamera());
 	players.push_back(player);
-	world->AddGameObject(player);
+
+	/*FocusPoint* focusPoint = CreateFocusPoint();
+	focusPoint->SetPlayer(player);
+	world->AddGameObject(focusPoint);*/
+
 	return player;
 }
 

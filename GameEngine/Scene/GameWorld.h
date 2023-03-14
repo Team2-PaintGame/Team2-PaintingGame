@@ -33,7 +33,7 @@ namespace NCL {
 			virtual rp3d::decimal notifyRaycastHit(const rp3d::RaycastInfo& raycastInfo) override;
 
 			bool isHit() {
-				return /*!*/hitPoints.empty();
+				return !hitPoints.empty();
 			}
 
 			void setIgnore(reactphysics3d::RigidBody* ignoreThis) {

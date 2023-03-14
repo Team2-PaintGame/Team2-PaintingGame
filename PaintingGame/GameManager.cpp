@@ -13,6 +13,8 @@ GameManager::GameManager(Window* window) {
 	assetLoader = sConfig.assetLoaderFactory->createAssetLoader();
 	gameAssets = new GameAssets(assetLoader);
 	screenManager = new ScreenManager(gameAssets);
+
+	renderer->BindDebugShader(gameAssets->GetShader("debugShader"));
 }
 
 GameManager::~GameManager() {

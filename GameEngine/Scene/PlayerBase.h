@@ -4,12 +4,18 @@
 #include "TextureBase.h"
 #include "ShaderBase.h"
 #include "MeshMaterial.h"
-#include "AnimationController.h"
 #include "Camera.h"
+#include "Utils.h"
+
+
 
 namespace NCL {
 	using namespace Rendering;
 	using namespace CSC8508;
+	namespace CSC8508 {
+		class RaycastManager;
+	}
+	
 
 	class PlayerBase : public GameObject {
 	public:
@@ -23,12 +29,17 @@ namespace NCL {
 		float GetPitch() const { return pitch; }
 		float GetYaw() const { return yaw; }
 		virtual void Shoot() {}
+		void SetIsMoving(bool val) { isMoving = val; }
+		bool GetIsMoving() const { return isMoving; }
 	protected:
 		float	yaw = 0.0f;
 		float	pitch = 0.0f;
 		void SetMemberVariables(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, ShaderBase* shader, int size);
 		Camera* camera;
-		AnimationController* animationController;
+		reactphysics3d::Ray ray = reactphysics3d::Ray(~Maths::Vector3(0), ~Maths::Vector3(0));
+		void CameraSpring(Camera* cam);
+		bool isMoving = false;
+		RaycastManager* raycastManager = NULL;
 	};
 }
 

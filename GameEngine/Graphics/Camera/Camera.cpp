@@ -39,16 +39,15 @@ void Camera::SetOrthographicCameraParameters(float right, float left, float top,
 	camType = CameraType::Orthographic;
 }
 
-void Camera::SetViewportDivider(float divider) {
-	viewportDivider = divider;
-	aspect *= divider;
+void Camera::SetVpSize(float x, float y) {
+	vpSize = Vector2(x, y);
 }
 
 void Camera::Update(float dt) {
 	yaw = player->GetYaw();
 	pitch = player->GetPitch();
 	Matrix4 rotation = Matrix4::Rotation(yaw, { 0, 1, 0 });
-	Vector3 rotated_offset = rotation * Matrix4::Rotation(pitch, { 1, 0, 0 }) * offsetFromPlayer;
+	rotated_offset = rotation * Matrix4::Rotation(pitch, { 1, 0, 0 }) * offsetFromPlayer;
 	position = player->GetTransform().GetPosition() + rotated_offset;
 
 	//setting player's orientation w.r.t. camera

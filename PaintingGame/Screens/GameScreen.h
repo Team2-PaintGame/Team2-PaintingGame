@@ -19,6 +19,7 @@ namespace NCL {
 			virtual PushdownResult onStateChange(PushdownState** newState);
 
 		protected:
+			bool isDebugRenderingEnabled = false;
 			static bool sPauseCallback;
 		};
 

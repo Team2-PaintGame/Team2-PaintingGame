@@ -47,6 +47,8 @@ namespace NCL::Rendering {
 			return false;
 		}
 		virtual void BindScreen(void* screen) {};
+
+		virtual void BindDebugShader(ShaderBase* shader) {} //Currently we only override it in OGLPaintingGameRenderer
 	protected:
 		virtual void OnWindowResize(int w, int h) = 0;
 		virtual void OnWindowDetach() {}; //Most renderers won't care about this

@@ -1,14 +1,13 @@
 #pragma once
-#include "PlayerBase.h"
+#include "Player.h"
 
 namespace NCL {
 	using namespace Rendering;
 	using namespace CSC8508;
-
 	class PlayerController {
 	public:
-		PlayerController(PlayerBase* player);
-		void Update(float dt);
+		PlayerController(Player* player);
+		virtual void Update(float dt);
 
 		// Get the input for moving forward
 		virtual bool MoveForward() = 0;
@@ -20,15 +19,25 @@ namespace NCL {
 
 		virtual float ViewDx() = 0;
 		virtual float ViewDy() = 0;
+		virtual const Vector2& GetCursorPosition(float dt) = 0;
 	protected:
-		PlayerBase* player;
+		Player* player;
 	};
 
 	// The abstract factory interface for player controller
 	class PlayerControllerFactory {
 	public:
+		enum class Type {
+			None,
+			PS4,
+			XBox,
+			Win32,
+		};
 		virtual ~PlayerControllerFactory() {}
-		virtual PlayerController* createPlayerController(PlayerBase* player) = 0;
+		virtual PlayerController* createPlayerController(Player* player) = 0;
+		const Type& GetType() const { return type; }
+	protected:
+		Type type = Type::None;
 	};
 }
 
