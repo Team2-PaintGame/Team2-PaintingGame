@@ -7,6 +7,7 @@
 #include "GNMShader.h"
 
 using namespace NCL;
+using namespace GNM;
 using namespace Assets;
 	
 GNMAssetLoader::GNMAssetLoader() {
@@ -30,7 +31,7 @@ MeshGeometry* GNMAssetLoader::LoadMesh(const MeshType& meshType) {
 }
 
 ShaderBase* GNMAssetLoader::LoadShader(const string& vertex, const string& fragment) {
-	return new GNMShader(vertex, fragment);
+	return GNMShader::GenerateShader(vertex, fragment);
 }
 
 MeshGeometry* GNMAssetLoader::LoadFlatMesh(int hVertexCount, int wVertexCount) {

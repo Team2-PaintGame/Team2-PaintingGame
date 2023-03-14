@@ -25,7 +25,7 @@ namespace NCL::GNM {
 		static GNMMesh* GenerateFlatMesh(int hVertexCount = 128, int wVertexCount = 128) { return nullptr; }
 		static GNMMesh* GenerateHeightMap(const std::string& filename, int heightMultiplier = 10) { return nullptr; }
 
-		void	UploadToGPU(Rendering::RendererBase* renderer) override;
+		void	UploadToGPU(Rendering::RendererBase* renderer = nullptr) override;
 		void	SubmitDraw(Gnmx::GnmxGfxContext& cmdList, Gnm::ShaderStage stage);
 
 		void	InitAttributeBuffer(sce::Gnm::Buffer& buffer, Gnm::DataFormat format, void* offset);

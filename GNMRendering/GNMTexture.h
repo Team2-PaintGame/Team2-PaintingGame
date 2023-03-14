@@ -3,10 +3,11 @@
 #include "TextureBase.h"
 #include <string>
 #include <gnm\texture.h>
+#include "PS4MemoryAware.h"
 
 namespace NCL {
 	namespace Rendering {
-		class GNMTexture : public TextureBase
+		class GNMTexture : public TextureBase, public PS4::PS4MemoryAware
 		{
 		public:
 			GNMTexture();

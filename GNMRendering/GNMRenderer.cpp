@@ -5,10 +5,6 @@
 #include "GNMShader.h"
 #include "GNMMesh.h"
 #include <gnmx\basegfxcontext.h>
-
-#include <.\graphics\api_gnm\toolkit\allocators.h>
-#include <.\graphics\api_gnm\toolkit\stack_allocator.h>
-
 #include "Matrix4.h"
 
 using namespace sce::Vectormath::Scalar::Aos;
@@ -18,13 +14,14 @@ namespace SonyMath = sce::Vectormath::Scalar::Aos;
 #include <iostream>
 
 using namespace NCL;
+using namespace GNM;
 using namespace NCL::PS4;
 
 sce::Gnmx::Toolkit::IAllocator	oAllocator;
 sce::Gnmx::Toolkit::IAllocator	gAllocator;
 
-GNMRenderer::GNMRenderer(PS4Window*window)
-	: RendererBase(*window),
+GNMRenderer::GNMRenderer(Window& w) : 
+	RendererBase(w),
 	_MaxCMDBufferCount(3),
 	  _bufferCount(3),
 	  _GarlicMemory(1024 * 1024 * 512),
@@ -39,11 +36,14 @@ GNMRenderer::GNMRenderer(PS4Window*window)
 
 	currentGFXContext	 = nullptr;
 
+	windowWidth = (int)w.GetScreenSize().x;
+	windowHeight = (int)w.GetScreenSize().y;
+
 	InitialiseMemoryAllocators();
 
 	InitialiseGCMRendering();
 	InitialiseVideoSystem();
-	window->SetRenderer(this);
+	w.SetRenderer(this);
 	SwapScreenBuffer();
 	SwapCommandBuffer();//always swap at least once...
 }
@@ -74,7 +74,7 @@ void	GNMRenderer::InitialiseVideoSystem() {
 		screenBuffers[0]->colourTarget.getPitch()
 	);
 
-	void* bufferAddresses[_bufferCount];
+	void* bufferAddresses[3]; //previously was bufferCount
 
 	for (int i = 0; i < _bufferCount; ++i) {
 		bufferAddresses[i] = screenBuffers[i]->colourTarget.getBaseAddress();
@@ -192,8 +192,8 @@ void	GNMRenderer::DestroyVideoSystem() {
 }
 
 void	GNMRenderer::OnWindowResize(int w, int h)  {
-	currentWidth	= w;
-	currentHeight	= h;
+	windowWidth	= w;
+	windowHeight = h;
 }
 
 void	GNMRenderer::BeginFrame()   {

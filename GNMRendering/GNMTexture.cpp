@@ -2,13 +2,12 @@
 #include "GNMTexture.h"
 #include <fstream>
 #include <gnf.h>
-
-#include <.\graphics\api_gnm\toolkit\allocators.h>
-#include <.\graphics\api_gnm\toolkit\stack_allocator.h>
+#include <..\samples\sample_code\graphics\api_gnm\toolkit\allocators.h>
+#include <..\samples\sample_code\graphics\api_gnm\toolkit\stack_allocator.h>
 
 using namespace sce;
-using namespace NCL::PS4;
-using namespace NCL::GNM;
+using namespace NCL;
+using namespace Rendering;
 
 GNMTexture::GNMTexture()
 {
