@@ -67,6 +67,9 @@ namespace NCL::CSC8508 {
 		rigidBody->updateMassPropertiesFromColliders();
 		rigidBody->setLinearDamping(1.5f);
 		rigidBody->setAngularDamping(1.5f);
+
+		Vector3 lockXZAxis(0, 1, 0);
+		rigidBody->setAngularLockAxisFactor(~lockXZAxis);
 		callbackPlayerOne = new SecurityCallbackClass(playerOne);
 		callbackPlayerTwo = new SecurityCallbackClass(playerTwo);
 
@@ -436,32 +439,6 @@ namespace NCL::CSC8508 {
 		callbackClass->ResetObjectDistances();
 	}
 
-	//void SecurityGuard::FindNavigableNodes(const std::string& filename, vector<Vector3>& navigableNodes)
-	//{
-	//	std::ifstream infile(Assets::DATADIR + filename);
-
-	//	infile >> nodeSize;
-	//	infile >> gridWidth;
-	//	infile >> gridHeight;
-
-	//	GridNode* allNodes = new GridNode[gridWidth * gridHeight];
-
-	//	for (int y = 0; y < gridHeight; ++y) {
-	//		for (int x = 0; x < gridWidth; ++x) {
-	//			GridNode& n = allNodes[(gridWidth * y) + x];
-	//			char type = 0;
-	//			infile >> type;
-	//			n.type = type;
-	//			n.position = Vector3((float)(x * nodeSize) - 75, 2.5, (float)(y * nodeSize) -75);
-	//			if (n.type == '.') {
-	//				navigableNodes.push_back(n.position);
-	//				//std::cout << "Navigble Node Pos: " << n.position << "\n";
-	//			}
-
-	//		}
-	//	}
-	//}
-
 	Vector3 SecurityGuard::ChooseDestination() 
 	{
 		
@@ -494,12 +471,59 @@ namespace NCL::CSC8508 {
 
 
 	}
+	Matrix3 MakeRotationDirection(const Vector3& direction, const Vector3& up = Vector3(0, 1, 0))
+	{
+		Vector3 xAxis = Vector3::Cross(up, direction);
+		xAxis.Normalised();
+
+		Vector3 yAxis = Vector3::Cross(xAxis, direction);
+		yAxis.Normalised();
+
+		Matrix3 rotation;
+		rotation.SetRow(0, xAxis);
+		rotation.SetRow(1, yAxis);
+		rotation.SetRow(2, direction);
+		return rotation;
+	}
 
 	void SecurityGuard::MoveSecurityGuard(Vector3 direction)
 	{
 		reactphysics3d::Vector3 forceDirection;
 		forceDirection = ~direction.Normalised();
+
+
+		/*Matrix3 rotation = MakeRotationDirection(direction);
+		Quaternion orientation(rotation);
+		reactphysics3d::Transform transform = reactphysics3d::Transform(this->GetRigidBody()->getTransform().getPosition(), ~orientation);
+		this->GetRigidBody()->setTransform(transform);*/
+
+
+
+		
+
+		//Matrix4 modelMatrix = this->GetTransform().GetMatrix();
+		//Vector3 rightAxis = Vector3(modelMatrix.GetColumn(0));
+		//Vector3 upAxis = Vector3(0, 1, 0);
+		//Vector3 fwdAxis = Vector3::Cross(upAxis, rightAxis);
+
+
+		//float angle = Vector3::Dot(direction.Normalised(), fwdAxis.Normalised());
+		//angle = angle * 180 / PI;
+		//Quaternion rotation = Quaternion::AxisAngleToQuaterion(Vector3(0, 1, 0), angle);
+		//reactphysics3d::Transform transform = reactphysics3d::Transform(this->GetRigidBody()->getTransform().getPosition(), ~rotation);
+		//this->GetRigidBody()->setTransform(transform); 
+		Vector3 up(0, 1, 0);
+		Vector3 negDirection(-direction.x, -direction.y, -direction.z);
+		Quaternion rotation = Quaternion::LookRotation(negDirection, up);
+
+		reactphysics3d::Transform transform = reactphysics3d::Transform(this->GetRigidBody()->getTransform().getPosition(), ~rotation);
+		std::cout << transform.isValid() << "\n";
+		if (transform.isValid()) {
+			this->GetRigidBody()->setTransform(transform);
+			
+		}
 		this->GetRigidBody()->applyWorldForceAtCenterOfMass(forceDirection * force);// '~' converts NCL Vector3 to reactphysics3d Vector3
+		
 	}
 
 	float SecurityGuard::DistanceToTarget(Vector3 destination) 
