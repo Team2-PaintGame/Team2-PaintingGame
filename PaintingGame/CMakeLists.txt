@@ -322,6 +322,7 @@ include_directories("../Middleware/ImGui/")
 target_link_libraries(${PROJECT_NAME} LINK_PUBLIC GameEngine)
 target_link_libraries(${PROJECT_NAME} LINK_PUBLIC OpenGLRendering)
 target_link_libraries(${PROJECT_NAME} LINK_PUBLIC Networking)
+target_link_libraries(${PROJECT_NAME} LINK_PUBLIC GNMRendering)
 
 
 if(USE_VULKAN)
