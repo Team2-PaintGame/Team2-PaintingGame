@@ -13,7 +13,7 @@ namespace NCL {
 	class Emitter {
 	public:
 		Emitter(MeshGeometry* emitterMesh);
-		Emitter(float angle = 20.0f);
+		Emitter(float angle = 2.0f);
 		Vector3 GetEmissionDirection();
 		unsigned int GetParticleEmissionRate() {
 			return particleEmissionRate;

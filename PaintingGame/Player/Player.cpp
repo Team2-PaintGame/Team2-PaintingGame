@@ -13,8 +13,12 @@ void Player::Update(float dt) {
 	if (gun) {
 		gun->GetTransform()
 			.SetPosition(transform.GetPosition() + (transform.GetOrientation() * gunOffset))
-			.SetOrientation(transform.GetOrientation());
+			//.SetOrientation(transform.GetOrientation());
+			.SetOrientation(Quaternion::EulerAnglesToQuaternion(pitch, yaw, 0));
+
 	}
+
+	
 }
 
 void Player::Shoot() {

@@ -37,7 +37,7 @@ void PlayerBase::SetYawPitch(float dx, float dy) {
 	yaw -= dx; 
 	pitch -= dy;
 
-	std::clamp(pitch, -25.f, 25.0f);
+	pitch = std::clamp(pitch, -25.f, 25.0f);
 
 	if (yaw < 0) {
 		yaw += 360.0f;
