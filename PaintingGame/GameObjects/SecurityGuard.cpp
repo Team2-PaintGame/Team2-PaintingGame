@@ -3,6 +3,8 @@
 #include "Assets.h"
 #include <cmath>
 
+#include <Window.h>
+
 namespace NCL::CSC8508 {
 	SecurityGuard::SecurityGuard(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, std::string objectName, Vector3 position, MeshGeometry* mesh,
 		MeshMaterial* material, ShaderBase* shader, const std::unordered_map<std::string, MeshAnimation*>& animations, int size, GameObject* playerOne, GameObject* playerTwo)
@@ -69,13 +71,14 @@ namespace NCL::CSC8508 {
 	{
 		if (navigationPath->waypoints.size() > 0)
 		{
-			Debug::DrawLine(this->GetTransform().GetPosition(), navigationPath->waypoints.back(), Debug::BLACK);
+		//	Debug::DrawLine(this->GetTransform().GetPosition(), navigationPath->waypoints.back(), Debug::BLACK);
 		}
-		
+		Vector3 forward = GetForwardVector();
+		Debug::DrawLine(this->GetTransform().GetPosition(), this->GetTransform().GetPosition() - forward * 10, Debug::RED, 0.25);
 		animationController->Update(dt);
-		DrawNavTris();
-		DisplayPathfinding();
-		DrawTriRoute();
+//		DrawNavTris();
+//		DisplayPathfinding();
+//		DrawTriRoute();
 		if (state == Initialise) {
 			state = Ongoing;
 		}
@@ -348,6 +351,12 @@ namespace NCL::CSC8508 {
 
 	}
 
+	Vector3 SecurityGuard::GetForwardVector()
+	{
+		return this->GetTransform().GetMatrix().GetColumn(2);
+		
+	}
+
 	GameObject* SecurityGuard::FindClosestPlayer()
 	{
 		Vector3 securityPosition = this->GetTransform().GetPosition();
@@ -423,34 +432,82 @@ namespace NCL::CSC8508 {
 		}
 	}
 
-	//Matrix3 MakeRotationDirection(const Vector3& direction, const Vector3& up = Vector3(0, 1, 0))
-	//{
-	//	Vector3 xAxis = Vector3::Cross(up, direction);
-	//	xAxis.Normalised();
-
-	//	Vector3 yAxis = Vector3::Cross(xAxis, direction);
-	//	yAxis.Normalised();
-
-	//	Matrix3 rotation;
-	//	rotation.SetRow(0, xAxis);
-	//	rotation.SetRow(1, yAxis);
-	//	rotation.SetRow(2, direction);
-	//	return rotation;
-	//}
-
 	void SecurityGuard::MoveSecurityGuard(Vector3 direction)
 	{
 		reactphysics3d::Vector3 forceDirection;
 		forceDirection = ~direction.Normalised();
 
-		Vector3 up(0, 1, 0);
-		Vector3 negDirection(-direction.x, -direction.y, -direction.z);
-		Quaternion rotation = Quaternion::LookRotation(negDirection, up);
+		//Vector3 up(0, 1, 0);
+		//Vector3 negDirection(-direction.x, -direction.y, -direction.z);
+		//Quaternion rotation = Quaternion::LookRotation(negDirection, up);
 
+		//reactphysics3d::Transform transform = reactphysics3d::Transform(this->GetRigidBody()->getTransform().getPosition(), ~rotation);
+		//if (transform.isValid()) {
+		//	this->GetRigidBody()->setTransform(transform);
+		//}
+
+		Vector3 forward = GetForwardVector();
+		float angle = Vector3::Dot(forward, direction);
+		angle = acos(angle / (forward.Length() * direction.Length()));
+		angle = angle * 180 / PI;
+	//	std::cout << "Angle: " << angle ;
+		Vector3 securityPos = this->GetTransform().GetPosition();
+		float triArea = Maths::FloatAreaOfTri(Vector3(0,0,0), forward, direction);
+	//	std::cout << " -- TriArea: " << triArea << "\n";
+
+		Quaternion rot = this->GetTransform().GetOrientation();
+		Vector3 euler = rot.ToEuler();
+	//	std::cout << "Euler Yaw: " << euler.y << "\n";
+		float newAngle;
+		float eulerAngle = euler.y;
+		if (triArea < 0)
+		{
+			newAngle = eulerAngle + angle - 180;
+		}
+		else
+		{
+			newAngle = eulerAngle - angle -180;
+		}
+
+
+		Quaternion rotation = Quaternion::AxisAngleToQuaterion(Vector3(0, 1, 0), newAngle);
 		reactphysics3d::Transform transform = reactphysics3d::Transform(this->GetRigidBody()->getTransform().getPosition(), ~rotation);
-		if (transform.isValid()) {
+		this->GetRigidBody()->setTransform(transform);
+
+//		Debug::DrawLine(Vector3(0, 0, 0), this->GetTransform().GetPosition(), Debug::YELLOW, 1);
+//		Debug::DrawLine(Vector3(10, 0, 0), this->GetTransform().GetPosition(), Debug::YELLOW, 1);
+
+
+		
+
+		if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::UP))
+		{
+			Quaternion rotation = Quaternion::AxisAngleToQuaterion(Vector3(0, 1, 0), 0);
+			reactphysics3d::Transform transform = reactphysics3d::Transform(this->GetRigidBody()->getTransform().getPosition(), ~rotation);
 			this->GetRigidBody()->setTransform(transform);
 		}
+		if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::DOWN))
+		{
+			Quaternion rotation = Quaternion::AxisAngleToQuaterion(Vector3(0, 1, 0), 180);
+			reactphysics3d::Transform transform = reactphysics3d::Transform(this->GetRigidBody()->getTransform().getPosition(), ~rotation);
+			this->GetRigidBody()->setTransform(transform);
+		}
+		if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::RIGHT))
+		{
+			Quaternion rotation = Quaternion::AxisAngleToQuaterion(Vector3(0, 1, 0), 90);
+			reactphysics3d::Transform transform = reactphysics3d::Transform(this->GetRigidBody()->getTransform().getPosition(), ~rotation);
+			this->GetRigidBody()->setTransform(transform);
+		}
+
+		if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::LEFT))
+		{
+			Quaternion rotation = Quaternion::AxisAngleToQuaterion(Vector3(0, 1, 0), 270);
+			reactphysics3d::Transform transform = reactphysics3d::Transform(this->GetRigidBody()->getTransform().getPosition(), ~rotation);
+			this->GetRigidBody()->setTransform(transform);
+		}
+
+
+
 		this->GetRigidBody()->applyWorldForceAtCenterOfMass(forceDirection * force);// '~' converts NCL Vector3 to reactphysics3d Vector3
 		
 	}

@@ -52,6 +52,7 @@ namespace NCL::CSC8508 {
 		void RaycastAgainstPlayer(GameObject* player, SecurityCallbackClass* callbackClass, bool& isPlayerVisible);
 		void DrawNavTris();
 		void DrawTriRoute();
+		Vector3 GetForwardVector();
 
 	protected:
 
@@ -61,9 +62,9 @@ namespace NCL::CSC8508 {
 		int gridHeight;
 
 		float force = 100;
-		const float slowForce = 300; // 100
-		const float walkForce = 300;  //150
-		const float runForce = 300;
+		const float slowForce = 100; // 100
+		const float walkForce = 100;  //150
+		const float runForce = 100;
 
 		float timeAccumulator = 0.0f;
 
