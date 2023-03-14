@@ -109,7 +109,8 @@ namespace NCL {
 			SceneContactPoint* Raycast(const reactphysics3d::Ray& r, GameObject* ignore = nullptr) const;
 
 			void AddPaintedPosition(const Vector3& position);
-			size_t GetNumPaintedPositions() const { return paintedPositions.size(); }
+			size_t GetNumPaintedPositions() const { return paintedPositions.size();}
+			size_t GetNumberOfGameObjects() const { return gameObjects.size();}
 		protected:
 			RaycastManager* raycastManager;
 			GameObjectListener* collisionManager;

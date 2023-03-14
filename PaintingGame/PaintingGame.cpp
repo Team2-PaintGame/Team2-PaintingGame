@@ -52,7 +52,9 @@ void PaintingGame::InitWorld() {
 
 void PaintingGame::Update(float dt) {
 	Debug::DrawFPS();
-	//Debug::ShowMemoryUsage();
+	Debug::ShowMemoryUsage();
+	Debug::ShowNumberOfGameObjects(world->GetNumberOfGameObjects());
+	Debug::ShowNumberOfPaintedPositions(world->GetNumPaintedPositions());
 
 	world->UpdateWorld(dt);
 	physicsWorld->update(dt);
@@ -85,7 +87,6 @@ FocusPoint* PaintingGame::CreateFocusPoint() {
 Gun* PaintingGame::CreateGun(Vector3 position, Team team) {
 	Gun* gun;
 	Ink* ink = CreateInkStream(physicsCommon, physicsWorld, Vector3(0, 10, 0), assets->GetMesh("sphereMesh"), Vector4(0, 1, 0, 1), assets->GetShader("inkShader"));
-
 	if (team == Team::Red) {
 		gun = new Gun(physicsCommon, physicsWorld, position, assets->GetMesh("gunMesh"), assets->GetMeshMaterial("gunMat"), assets->GetShader("basicShader"), 3, Debug::RED, ink);
 	}

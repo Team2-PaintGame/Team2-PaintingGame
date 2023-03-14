@@ -55,6 +55,9 @@ void BaseScreen::RenderMenu() {
 	if (isMenuDisplayed) {
 		MenuFrame();
 	}
+	if (isDebugDisplayed) {
+		DebugWindow();
+	}
 
 	ImGui::EndFrame();
 
