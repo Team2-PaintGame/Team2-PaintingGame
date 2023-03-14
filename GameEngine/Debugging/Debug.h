@@ -3,6 +3,9 @@
 #include "Vector4.h"
 #include "Matrix4.h"
 #include "SimpleFont.h"
+#include <windows.h>
+#include <stdio.h>
+#include <Psapi.h>
 
 namespace NCL {
 	using namespace NCL::Maths;
@@ -37,6 +40,14 @@ namespace NCL {
 
 		static const std::vector<DebugStringEntry>& GetDebugStrings();
 		static const std::vector<DebugLineEntry>& GetDebugLines();
+
+		static void DrawFPS();
+		static void ShowMemoryUsage(/*DWORD processID*/);
+		static int frames;
+		static double startTime;
+		static double currentTime;
+		static bool first;
+		static float fps;
 
 
 		static const Vector4 RED;
