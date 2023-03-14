@@ -1,6 +1,6 @@
 #pragma once
 #ifdef __ORBIS__
-#include "../../Common/Window.h"
+#include "Window.h"
 
 namespace NCL {
 	namespace PS4 {
