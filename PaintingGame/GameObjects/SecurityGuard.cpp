@@ -6,9 +6,10 @@
 #include <Window.h>
 
 namespace NCL::CSC8508 {
-	SecurityGuard::SecurityGuard(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, std::string objectName, Vector3 position, MeshGeometry* mesh,
-		MeshMaterial* material, ShaderBase* shader, const std::unordered_map<std::string, MeshAnimation*>& animations, int size, GameObject* playerOne, GameObject* playerTwo)
-		: PlayerBase(physicsCommon, physicsWorld, position, mesh, material, shader, size, objectName)
+	SecurityGuard::SecurityGuard(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position,
+		MeshGeometry* mesh, MeshMaterial* meshMaterial, ShaderBase* shader, const std::unordered_map<std::string, MeshAnimation*>& animations,
+		int size, GameObject* playerOne, GameObject* playerTwo, std::string objectName)
+		: AnimatedObject(physicsCommon, physicsWorld, position, mesh, meshMaterial, shader, animations, size, objectName)
 	
 	{
 
@@ -16,13 +17,11 @@ namespace NCL::CSC8508 {
 		this->playerTwo = playerTwo;
 		this->physicsWorld = physicsWorld;
 		chasedPlayer = nullptr;
+
 		transform.SetScale(size).SetPosition(position);
 		renderObject = new RenderObject(&transform, mesh, shader);
-		renderObject->LoadMaterialTextures(material);
-		
-		animationController = new AnimationController(this, animations);
-		renderObject->SetRigged(true);
-		renderObject->SetAnimationController(animationController);
+		renderObject->LoadMaterialTextures(meshMaterial);
+
 		boundingVolume = physicsCommon.createCapsuleShape(size * .35f, size);
 		reactphysics3d::Transform rp3d_transform(~position, rp3d::Quaternion::identity());
 
@@ -35,6 +34,8 @@ namespace NCL::CSC8508 {
 
 		Vector3 lockXZAxis(0, 1, 0);
 		rigidBody->setAngularLockAxisFactor(~lockXZAxis);
+
+		AnimatedObject::SetAnimControler(animations);
 
 		callbackPlayerOne = new SecurityCallbackClass(playerOne);
 		callbackPlayerTwo = new SecurityCallbackClass(playerTwo);
@@ -64,7 +65,7 @@ namespace NCL::CSC8508 {
 		delete navigationMesh;
 		delete navigationPath;
 
-		delete animationController;
+	//	delete animationController;
 	}
 
 	void SecurityGuard::Update(float dt)

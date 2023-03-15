@@ -7,9 +7,11 @@ using namespace CSC8508;
 
 void Player::Update(float dt) {
 	PlayerBase::Update(dt);
-	if (animationController) {
-		animationController->Update(dt);
-	}
+	AnimatedObject::Update(dt);
+
+	//if (animationController) {
+	//	animationController->Update(dt);
+	//}
 	if (gun) {
 		gun->GetTransform()
 			.SetPosition(transform.GetPosition() + (transform.GetOrientation() * gunOffset))
@@ -28,14 +30,14 @@ void Player::Shoot() {
 	Debug::DrawLine(startPos, endPos, Vector4(1, 1, 1, 1), 3);
 }
 
-void Player::SetMemberVariables(const std::unordered_map<std::string, MeshAnimation*>& animations, Gun* gun) {
+void Player::SetMemberVariables(Gun* gun) {
 	camera->SetBasicCameraParameters(this, 0.1f, 500.0f);
 	camera->SetPerspectiveCameraParameters(Window::GetWindow()->GetScreenAspect());
 	camera->SetThirdPersonCamera();
 
-	animationController = new AnimationController(this, animations);
-	renderObject->SetRigged(true);
-	renderObject->SetAnimationController(animationController);
+//	animationController = new AnimationController(this, animations);
+//	renderObject->SetRigged(true);
+//	renderObject->SetAnimationController(animationController);
 
 	this->gun = gun;
 }

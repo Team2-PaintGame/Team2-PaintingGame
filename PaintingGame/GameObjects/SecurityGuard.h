@@ -19,15 +19,27 @@
 
 namespace NCL::CSC8508 {
 
-	class SecurityGuard : public /*GameObject*/ PlayerBase
+	class SecurityGuard : public /*GameObject*/ AnimatedObject
 	{
 	public:
-		SecurityGuard(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, std::string objectName, Vector3 position, MeshGeometry* mesh, 
-			TextureBase* texture, ShaderBase* shader, Vector3 size, GameObject* playerOne, GameObject* playerTwo);
-		SecurityGuard(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, std::string objectName, Vector3 position, MeshGeometry* mesh,
-			MeshMaterial* material, ShaderBase* shader, const std::unordered_map<std::string, MeshAnimation*>& animations, int size, GameObject* playerOne, GameObject* playerTwo);
+/*
+		//TextureBase Constructor
+		SecurityGuard(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position,
+			MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, const std::unordered_map<std::string, MeshAnimation*>& animations,
+			int size, GameObject* playerOne, GameObject* playerTwo, std::string objectName);
+*/
+		//Mesh Material Constructor
+		SecurityGuard(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position,
+			MeshGeometry* mesh, MeshMaterial* meshMaterial, ShaderBase* shader, const std::unordered_map<std::string, MeshAnimation*>& animations,
+			int size, GameObject* playerOne, GameObject* playerTwo, std::string objectName);
+
+
+
+
+
+
 	virtual	~SecurityGuard();
-		void Update(float dt);
+		virtual void Update(float dt); // should this be virutal??
 
 		void InitChooseDestination();
 		void InitGoToDesination();
@@ -85,11 +97,11 @@ namespace NCL::CSC8508 {
 		BehaviourAction* attackThePlayer;
 
 		//rp3d::BoxShape* boundingVolume;
-		rp3d::CollisionShape* boundingVolume;
+//		rp3d::CollisionShape* boundingVolume;
 
-		reactphysics3d::PhysicsWorld* physicsWorld;
+//	reactphysics3d::PhysicsWorld* physicsWorld;
 
-		vector <Vector3> navigableNodes;
+//		vector <Vector3> navigableNodes;
 		
 //		NavigationGrid* navigationGrid;
 		NavigationPath* navigationPath;
@@ -101,7 +113,7 @@ namespace NCL::CSC8508 {
 		SecurityCallbackClass* callbackPlayerOne;
 		SecurityCallbackClass* callbackPlayerTwo;
 
-		AnimationController* animationController = NULL;
+//		AnimationController* animationController = NULL;
 	};
 
 }

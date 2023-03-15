@@ -71,11 +71,11 @@ Player* PaintingGame::CreatePlayer(Vector3 position,Team team) {
 	
 	Player* player; 
 	if (team == Team::Red) {
-		player =  new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("redMainCharMat"), assets->GetShader("skinningShader"), animations, 5, CreateGun(position, team));
+		player =  new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("redMainCharMat"), assets->GetShader("skinningShader"), animations, 5, CreateGun(position, team), "Red Player");
 	}
 
 	else { //blue
-		player =  new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("blueMainCharMat"), assets->GetShader("SecondskinningShader"), animations, 5, CreateGun(position, team));
+		player =  new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("blueMainCharMat"), assets->GetShader("SecondskinningShader"), animations, 5, CreateGun(position, team), "Blue Player");
 	}
 
 	world->AddGameObject(player);
@@ -111,7 +111,7 @@ void PaintingGame::AddSecurityAI(NCL::CSC8508::Vector3 position, PlayerBase* tar
 //	world->AddGameObject(new SecurityGuard(physicsCommon, physicsWorld, "Security Guard", position, assets->GetMesh("mainChar"), assets->GetTexture("basicTex"), assets->GetShader("basicShader"), Vector3(5, 5, 5), target1, target2));
 
 
-	world->AddGameObject(new SecurityGuard(physicsCommon, physicsWorld, "Security Guard", position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("blueMainCharMat"), assets->GetShader("skinningShader"), animations, 2, target1, target2));
+	world->AddGameObject(new SecurityGuard(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("blueMainCharMat"), assets->GetShader("skinningShader"), animations, 2, target1, target2, "Security Guard"));
 	//world->AddGameObject(new SecurityGuard(physicsCommon, physicsWorld, "Security Guard", position, assets->GetMesh("cubeMesh"), assets->GetTexture("basicTex"), assets->GetShader("basicShader"), Vector3(2, 2, 2), target1, target2));
 }
 
