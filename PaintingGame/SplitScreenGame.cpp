@@ -8,14 +8,10 @@ using namespace CSC8508;
 SplitScreenGame::SplitScreenGame(GameAssets* assets) : PaintingGame(assets) {
 	
 	players.reserve(maxPlayers);
-	if (!GameManager::sConfig.playerControllerFactory) {
+#ifdef _WIN32
 		GameManager::sConfig.playerControllerFactory = new Win32PlayerControllerFactory();
 		secondPlayerControllerFactory = new XBoxPlayerControllerFactory();
-	}
- 	else if (GameManager::sConfig.playerControllerFactory->GetType() != PlayerControllerFactory::Type::PS4) {
-		GameManager::sConfig.playerControllerFactory = new Win32PlayerControllerFactory();
-		secondPlayerControllerFactory = new XBoxPlayerControllerFactory();
-	}
+#endif
 	InitPlayers();
 }
 

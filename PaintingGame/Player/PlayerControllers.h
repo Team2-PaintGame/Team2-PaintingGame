@@ -3,6 +3,7 @@
 #include <XBoxGamepad.h>
 #include "PlayerController.h"
 #include <PS4Gamepad.h>
+#include "Vector2.h"
 
 namespace NCL {
 #ifdef _WIN32
@@ -151,6 +152,7 @@ namespace NCL {
 		}
 		bool Pause() override {
 			//return gamepad.GetButtonDown(VK_PAD_START);
+			return false;
 		}
 
 		float ViewDy() override {
@@ -179,7 +181,7 @@ namespace NCL {
 	// Concrete factory for creating PS4 Player Controller
 	class PS4ControllerFactory : public PlayerControllerFactory {
 	public:
-		PS4ControllerFactory() { Type::PS4; }
+		PS4ControllerFactory() { type = Type::PS4; }
 		PlayerController* createPlayerController(Player* player) override {
 			return new PS4Controller(player);
 		}
