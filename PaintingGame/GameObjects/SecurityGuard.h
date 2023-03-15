@@ -26,7 +26,7 @@ namespace NCL::CSC8508 {
 			TextureBase* texture, ShaderBase* shader, Vector3 size, GameObject* playerOne, GameObject* playerTwo);
 		SecurityGuard(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, std::string objectName, Vector3 position, MeshGeometry* mesh,
 			MeshMaterial* material, ShaderBase* shader, const std::unordered_map<std::string, MeshAnimation*>& animations, int size, GameObject* playerOne, GameObject* playerTwo);
-		~SecurityGuard();
+	virtual	~SecurityGuard();
 		void Update(float dt);
 
 		void InitChooseDestination();
@@ -53,6 +53,7 @@ namespace NCL::CSC8508 {
 		void DrawNavTris();
 		void DrawTriRoute();
 		Vector3 GetForwardVector();
+		bool IsPlayerInFront(Vector3& playerPosition, Vector3& securityPosition);
 
 	protected:
 
@@ -65,6 +66,10 @@ namespace NCL::CSC8508 {
 		const float slowForce = 100; // 100
 		const float walkForce = 100;  //150
 		const float runForce = 100;
+
+		//const float slowForce = 1; // 100
+		//const float walkForce = 1;  //150
+		//const float runForce = 1;
 
 		float timeAccumulator = 0.0f;
 

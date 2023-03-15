@@ -73,11 +73,11 @@ namespace NCL::CSC8508 {
 		{
 		//	Debug::DrawLine(this->GetTransform().GetPosition(), navigationPath->waypoints.back(), Debug::BLACK);
 		}
-		Vector3 forward = GetForwardVector();
-		Debug::DrawLine(this->GetTransform().GetPosition(), this->GetTransform().GetPosition() - forward * 10, Debug::RED, 0.25);
+//		Vector3 forward = GetForwardVector();
+//		Debug::DrawLine(this->GetTransform().GetPosition(), this->GetTransform().GetPosition() - forward * 10, Debug::RED, 0.25);
 		animationController->Update(dt);
 //		DrawNavTris();
-//		DisplayPathfinding();
+		DisplayPathfinding();
 //		DrawTriRoute();
 		if (state == Initialise) {
 			state = Ongoing;
@@ -316,7 +316,6 @@ namespace NCL::CSC8508 {
 	GameObject* SecurityGuard::LookForPlayers()
 	{
 		bool isPlayerOneVisible = LookForPlayer(playerOne);
-
 		if (playerTwo == nullptr) // only one player game
 		{
 			if (isPlayerOneVisible) 
@@ -328,7 +327,6 @@ namespace NCL::CSC8508 {
 				return nullptr;
 			}
 		}
-
 		else					// two player game
 		{
 			bool isPlayerTwoVisible = LookForPlayer(playerTwo);
@@ -346,15 +344,12 @@ namespace NCL::CSC8508 {
 			}
 			else
 				return nullptr;
-
 		}
-
 	}
 
 	Vector3 SecurityGuard::GetForwardVector()
 	{
 		return this->GetTransform().GetMatrix().GetColumn(2);
-		
 	}
 
 	GameObject* SecurityGuard::FindClosestPlayer()
@@ -364,7 +359,6 @@ namespace NCL::CSC8508 {
 		Vector3 playerTwoPosition = playerTwo->GetTransform().GetPosition();
 		playerOnePosition -= securityPosition;
 		playerTwoPosition -= securityPosition;
-
 		GameObject* gameObject = playerOnePosition.Length() < playerTwoPosition.Length() ? playerOne : playerTwo;
 		return gameObject;
 	}
@@ -373,14 +367,15 @@ namespace NCL::CSC8508 {
 	{
 		bool isPlayerVisible = false;
 
-		if (player == playerOne) 
+		if (player == playerOne)
 		{
 			RaycastAgainstPlayer(playerOne, callbackPlayerOne, isPlayerVisible);
 		}
-		else if (player == playerTwo) 
+		else if (player == playerTwo)
 		{
 			RaycastAgainstPlayer(playerTwo, callbackPlayerTwo, isPlayerVisible);
 		}
+//		std::cout << "Is Player Visible: " << isPlayerVisible << "\n";
 		return isPlayerVisible;
 	}
 
@@ -388,6 +383,14 @@ namespace NCL::CSC8508 {
 	{
 		Vector3 securityPosition = this->GetTransform().GetPosition();
 		Vector3 playerPosition = player->GetTransform().GetPosition();
+		bool isInFront = IsPlayerInFront(playerPosition, securityPosition);
+
+		if (isInFront == false)
+		{
+			isPlayerVisible = false;
+			return;
+		}
+
 		if (player == playerOne) {
 			Debug::DrawLine(securityPosition, playerPosition, Debug::BLUE, 0.1f);
 		}
@@ -402,15 +405,54 @@ namespace NCL::CSC8508 {
 		callbackClass->ResetObjectDistances();
 	}
 
-	Vector3 SecurityGuard::ChooseDestination() 
+	bool SecurityGuard::IsPlayerInFront(Vector3& playerPosition, Vector3& securityPosition)
 	{
-		
+		Vector3 toPlayer = playerPosition;
+		toPlayer -= securityPosition;
+		Vector3 right = this->GetTransform().GetMatrix().GetColumn(0);
+		float triArea = Maths::FloatAreaOfTri(securityPosition, securityPosition + right, securityPosition + toPlayer);
+		if (triArea < 0) {
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	void SecurityGuard::MoveSecurityGuard(Vector3 direction)
+	{
+		reactphysics3d::Vector3 forceDirection;
+		forceDirection = ~direction.Normalised();
+
+		Vector3 up(0, 1, 0);
+		Vector3 negdirection(-direction.x, -direction.y, -direction.z);
+		Quaternion rotation = Quaternion::LookRotation(negdirection, up);
+
+		reactphysics3d::Transform transform = reactphysics3d::Transform(this->GetRigidBody()->getTransform().getPosition(), ~rotation);
+		if (transform.isValid()) {
+			this->GetRigidBody()->setTransform(transform);
+		}
+
+
+
+		this->GetRigidBody()->applyWorldForceAtCenterOfMass(forceDirection * force);// '~' converts NCL Vector3 to reactphysics3d Vector3
+	}
+
+	float SecurityGuard::DistanceToTarget(Vector3 destination) 
+	{
+		return (destination - this->GetTransform().GetPosition()).Length();
+	}
+
+
+	Vector3 SecurityGuard::ChooseDestination()
+	{
 		int numNodes = navigationMesh->allTris.size();
 		int randomNum = rand() % numNodes;
 		Vector3 destination = navigationMesh->allTris[randomNum].centroid;
-		//std::cout << "ChooseDestination: " << destination << "\n";
 		return destination;
 	}
+
 	void SecurityGuard::DrawNavTris() {
 		int index1 = -1;
 		int index2 = -1;
@@ -421,102 +463,15 @@ namespace NCL::CSC8508 {
 			index3 = i.indices[2];
 			Debug::DrawTriangle(navigationMesh->allVerts[index1], navigationMesh->allVerts[index2], navigationMesh->allVerts[index3]);
 		}
-
 	}
 
 	void SecurityGuard::DisplayPathfinding() {
 		for (int i = 1; i < navigationPath->waypoints.size(); ++i) {
 			Vector3 a = navigationPath->waypoints[i - 1];
 			Vector3 b = navigationPath->waypoints[i];
-			Debug::DrawLine(a, b,Debug::BLACK);
+			Debug::DrawLine(a, b, Debug::BLACK);
 		}
 	}
-
-	void SecurityGuard::MoveSecurityGuard(Vector3 direction)
-	{
-		reactphysics3d::Vector3 forceDirection;
-		forceDirection = ~direction.Normalised();
-
-		//Vector3 up(0, 1, 0);
-		//Vector3 negDirection(-direction.x, -direction.y, -direction.z);
-		//Quaternion rotation = Quaternion::LookRotation(negDirection, up);
-
-		//reactphysics3d::Transform transform = reactphysics3d::Transform(this->GetRigidBody()->getTransform().getPosition(), ~rotation);
-		//if (transform.isValid()) {
-		//	this->GetRigidBody()->setTransform(transform);
-		//}
-
-		Vector3 forward = GetForwardVector();
-		float angle = Vector3::Dot(forward, direction);
-		angle = acos(angle / (forward.Length() * direction.Length()));
-		angle = angle * 180 / PI;
-	//	std::cout << "Angle: " << angle ;
-		Vector3 securityPos = this->GetTransform().GetPosition();
-		float triArea = Maths::FloatAreaOfTri(Vector3(0,0,0), forward, direction);
-	//	std::cout << " -- TriArea: " << triArea << "\n";
-
-		Quaternion rot = this->GetTransform().GetOrientation();
-		Vector3 euler = rot.ToEuler();
-	//	std::cout << "Euler Yaw: " << euler.y << "\n";
-		float newAngle;
-		float eulerAngle = euler.y;
-		if (triArea < 0)
-		{
-			newAngle = eulerAngle + angle - 180;
-		}
-		else
-		{
-			newAngle = eulerAngle - angle -180;
-		}
-
-
-		Quaternion rotation = Quaternion::AxisAngleToQuaterion(Vector3(0, 1, 0), newAngle);
-		reactphysics3d::Transform transform = reactphysics3d::Transform(this->GetRigidBody()->getTransform().getPosition(), ~rotation);
-		this->GetRigidBody()->setTransform(transform);
-
-//		Debug::DrawLine(Vector3(0, 0, 0), this->GetTransform().GetPosition(), Debug::YELLOW, 1);
-//		Debug::DrawLine(Vector3(10, 0, 0), this->GetTransform().GetPosition(), Debug::YELLOW, 1);
-
-
-		
-
-		if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::UP))
-		{
-			Quaternion rotation = Quaternion::AxisAngleToQuaterion(Vector3(0, 1, 0), 0);
-			reactphysics3d::Transform transform = reactphysics3d::Transform(this->GetRigidBody()->getTransform().getPosition(), ~rotation);
-			this->GetRigidBody()->setTransform(transform);
-		}
-		if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::DOWN))
-		{
-			Quaternion rotation = Quaternion::AxisAngleToQuaterion(Vector3(0, 1, 0), 180);
-			reactphysics3d::Transform transform = reactphysics3d::Transform(this->GetRigidBody()->getTransform().getPosition(), ~rotation);
-			this->GetRigidBody()->setTransform(transform);
-		}
-		if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::RIGHT))
-		{
-			Quaternion rotation = Quaternion::AxisAngleToQuaterion(Vector3(0, 1, 0), 90);
-			reactphysics3d::Transform transform = reactphysics3d::Transform(this->GetRigidBody()->getTransform().getPosition(), ~rotation);
-			this->GetRigidBody()->setTransform(transform);
-		}
-
-		if (Window::GetKeyboard()->KeyDown(NCL::KeyboardKeys::LEFT))
-		{
-			Quaternion rotation = Quaternion::AxisAngleToQuaterion(Vector3(0, 1, 0), 270);
-			reactphysics3d::Transform transform = reactphysics3d::Transform(this->GetRigidBody()->getTransform().getPosition(), ~rotation);
-			this->GetRigidBody()->setTransform(transform);
-		}
-
-
-
-		this->GetRigidBody()->applyWorldForceAtCenterOfMass(forceDirection * force);// '~' converts NCL Vector3 to reactphysics3d Vector3
-		
-	}
-
-	float SecurityGuard::DistanceToTarget(Vector3 destination) 
-	{
-		return (destination - this->GetTransform().GetPosition()).Length();
-	}
-
 	void SecurityGuard::DetermineSpeed()
 	{
 		int numWaypoints = navigationPath->waypoints.size();

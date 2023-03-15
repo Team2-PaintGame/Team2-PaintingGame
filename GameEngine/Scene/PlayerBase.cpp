@@ -23,7 +23,7 @@ PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysic
 
 PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, MeshMaterial* meshMaterial, ShaderBase* shader, int size, std::string objectName)
 	: GameObject(physicsCommon, physicsWorld, objectName) {
-
+	camera = nullptr;
 }
 
 PlayerBase::~PlayerBase() {
@@ -32,7 +32,11 @@ PlayerBase::~PlayerBase() {
 	}
 	physicsCommon.destroyCapsuleShape(dynamic_cast<rp3d::CapsuleShape*>(boundingVolume));
 
-	delete camera;
+
+	
+		delete camera;
+	
+
 }
 
 void PlayerBase::Update(float dt) {
