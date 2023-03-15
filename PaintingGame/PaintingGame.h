@@ -43,7 +43,7 @@ namespace NCL {
 
 			bool useGravity = true;
 			bool useFog = true;
-
+			
 			//Create a physics world 
 			reactphysics3d::PhysicsCommon physicsCommon;
 			reactphysics3d::PhysicsWorld* physicsWorld = NULL;

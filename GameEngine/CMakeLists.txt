@@ -58,6 +58,18 @@ set(Asset_Handling
 )
 source_group("Asset Handling" FILES ${Asset_Handling})
 
+set(Audio
+    "./Audio/Sound.cpp"
+    "./Audio/Sound.h"
+    "./Audio/SoundEmitter.cpp"
+    "./Audio/SoundEmitter.h"
+    "./Audio/SoundManager.cpp"
+    "./Audio/SoundManager.h"
+    "./Audio/SoundSystem.cpp"
+    "./Audio/SoundSystem.h"
+)
+source_group("Audio" FILES ${Audio})
+
 set(Debugging
     "./Debugging/Debug.cpp"
     "./Debugging/Debug.h"
@@ -226,6 +238,7 @@ set(ALL_FILES
     ${Windowing_and_Input__Win32}
     ${Windowing_and_Input__PS4}
     ${Utils}
+    ${Audio}
 )
 
 #set_source_files_properties(${ALL_FILES} PROPERTIES LANGUAGE CXX)
