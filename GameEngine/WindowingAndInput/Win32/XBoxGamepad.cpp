@@ -1,7 +1,6 @@
 #ifdef _WIN32
 #include "XBoxGamepad.h"
 
-using namespace std;
 using namespace NCL;
 
 bool XBoxGamepad::GetButtonDown(unsigned int i)

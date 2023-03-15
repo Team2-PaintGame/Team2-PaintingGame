@@ -6,9 +6,9 @@ using namespace NCL;
 using namespace CSC8508;
 
 SinglePlayerGame::SinglePlayerGame(GameAssets * assets) : PaintingGame(assets) {
-	if (!GameManager::sConfig.playerControllerFactory) {
+#ifdef _WIN32
 		GameManager::sConfig.playerControllerFactory = new Win32PlayerControllerFactory();
-	}
+#endif
 	AddPlayer(Vector3(20.0f, 10.0f, 50.0f), Team::Blue);
 }
 

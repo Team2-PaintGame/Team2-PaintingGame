@@ -4,7 +4,6 @@
 #include <fstream>
 using namespace NCL;
 using namespace CSC8508;
-using namespace std;
 
 NavigationMesh::NavigationMesh()
 {

@@ -299,6 +299,7 @@ else()
         >
         -frtti;
         -fexceptions;
+        -fno-implicit-templates;
         -std=c++17;
         #${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
         #${DEFAULT_CXX_EXCEPTION_HANDLING};
