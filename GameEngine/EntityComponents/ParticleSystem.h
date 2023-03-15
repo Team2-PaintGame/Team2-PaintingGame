@@ -49,6 +49,7 @@ namespace NCL {
 		virtual ~ParticleSystem();
 		void SetLooping(bool val) { looping = val; }
 		void StartEmission();					// If needed to run particle simulation again if looping is not enabled
+		size_t GetParticalsSize() { return particles.size(); };
 	protected:
 		void SetMemberVariables(Vector3 emitterPosition, MeshGeometry* mesh, ShaderBase* shader, bool enableGravity, float startSize, float startLifetime, float startSpeed, bool playOnAwake);
 		void GenerateParticles();

@@ -54,9 +54,11 @@ namespace NCL::CSC8508 {
 		void RenderMenu();
 	protected:
 		virtual void MenuFrame() = 0;
+		virtual void DebugWindow() {};
 		virtual PushdownResult onStateChange(PushdownState** newState) = 0;
 		SceneNode* sceneNode = NULL;
 		bool isMenuDisplayed = true;
+		bool isDebugDisplayed = true;
 		ScreenCommand command = ScreenCommand::None;
 		ScreenManager* screenManager;
 		ScreenType screenType = ScreenType::None;

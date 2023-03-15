@@ -16,7 +16,9 @@ namespace NCL {
 		protected:
 			void LoadGame();
 			virtual void MenuFrame();
+			void DebugWindow() override;
 			virtual PushdownResult onStateChange(PushdownState** newState);
+			
 
 		protected:
 			bool isDebugRenderingEnabled = false;
