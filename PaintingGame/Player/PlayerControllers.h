@@ -128,7 +128,7 @@ namespace NCL {
 		}
 	};
 #endif
-#ifdef _ORBIS
+#ifdef __ORBIS__
 	class PS4Controller : public PlayerController {
 	public:
 		PS4Controller(Player* player) : PlayerController(player) {}

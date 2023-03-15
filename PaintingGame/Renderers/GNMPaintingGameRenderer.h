@@ -4,11 +4,12 @@
 #include "ScreenManager.h"
 
 namespace NCL {
+	using namespace GNM;
 	namespace CSC8508 {
 
 		class GNMPaintingGameRenderer : public GNMRenderer {
 		public:
-			GNMPaintingGameRenderer(Window& w) {}
+			GNMPaintingGameRenderer(Window& w) : GNMRenderer(w) {}
 			virtual ~GNMPaintingGameRenderer() {}
 		protected:
 
