@@ -66,6 +66,7 @@ namespace NCL::CSC8508 {
 		void DrawTriRoute();
 		Vector3 GetForwardVector();
 		bool IsPlayerInFront(Vector3& playerPosition, Vector3& securityPosition);
+		bool IsInFieldOfView(Vector3 direction);
 
 	protected:
 

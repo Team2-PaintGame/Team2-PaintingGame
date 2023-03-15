@@ -412,13 +412,29 @@ namespace NCL::CSC8508 {
 		toPlayer -= securityPosition;
 		Vector3 right = this->GetTransform().GetMatrix().GetColumn(0);
 		float triArea = Maths::FloatAreaOfTri(securityPosition, securityPosition + right, securityPosition + toPlayer);
-		if (triArea < 0) {
-			return true;
+		if (triArea < 0) { //Player in front
+			bool isInFOV = IsInFieldOfView(playerPosition - securityPosition);
+			return isInFOV;
 		}
-		else
+		else // Player Behind 
 		{
 			return false;
 		}
+	}
+	bool SecurityGuard::IsInFieldOfView(Vector3 direction)
+	{
+		Vector3 forward = GetForwardVector();
+		float angle = Vector3::Dot(forward, direction);
+		angle = acos(angle / (forward.Length() * direction.Length()));
+		angle = angle * 180 / PI;
+//		std::cout << "Angle: " << angle;
+		if (angle <= 180 && angle >= 100) { 
+			return true;
+		}
+		else {
+			return false;
+		}
+		
 	}
 
 	void SecurityGuard::MoveSecurityGuard(Vector3 direction)
@@ -434,9 +450,6 @@ namespace NCL::CSC8508 {
 		if (transform.isValid()) {
 			this->GetRigidBody()->setTransform(transform);
 		}
-
-
-
 		this->GetRigidBody()->applyWorldForceAtCenterOfMass(forceDirection * force);// '~' converts NCL Vector3 to reactphysics3d Vector3
 	}
 
