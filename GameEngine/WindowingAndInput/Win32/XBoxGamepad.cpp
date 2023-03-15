@@ -1,3 +1,4 @@
+#ifdef _WIN32
 #include "XBoxGamepad.h"
 
 using namespace std;
@@ -81,3 +82,4 @@ bool XBoxGamepad::IsPressed(WORD button)
 {
 	return (state.Gamepad.wButtons & button) != 0;
 }
+#endif
