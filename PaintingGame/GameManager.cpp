@@ -1,4 +1,3 @@
-#pragma once
 #include "GameManager.h"
 #include "SplashScreen.h"
 #include "MainMenuScreen.h"
