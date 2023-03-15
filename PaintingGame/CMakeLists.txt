@@ -326,9 +326,12 @@ include_directories("../GameEngine/AI/StateMachine/")
 include_directories("../Middleware/ImGui/")
 
 target_link_libraries(${PROJECT_NAME} LINK_PUBLIC GameEngine)
+if(WIN32)
 target_link_libraries(${PROJECT_NAME} LINK_PUBLIC OpenGLRendering)
 target_link_libraries(${PROJECT_NAME} LINK_PUBLIC Networking)
+else()
 target_link_libraries(${PROJECT_NAME} LINK_PUBLIC GNMRendering)
+endif()
 
 
 if(USE_VULKAN)

@@ -11,7 +11,7 @@ NavigationMesh::NavigationMesh()
 
 NavigationMesh::NavigationMesh(const std::string&filename)
 {
-	ifstream file(Assets::DATADIR + filename);
+	std::ifstream file(Assets::DATADIR + filename);
 
 	int numVertices = 0;
 	int numIndices	= 0;
