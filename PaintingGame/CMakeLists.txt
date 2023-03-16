@@ -283,6 +283,7 @@ else()
         #${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
         #${DEFAULT_CXX_EXCEPTION_HANDLING};
     )
+    include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../Middleware/ReactPhysics3D/ORBIS/include")
 endif()
 
 
