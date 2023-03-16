@@ -19,9 +19,7 @@ AnimatedObject::AnimatedObject(reactphysics3d::PhysicsCommon& physicsCommon, rea
 	int size, std::string objectName)
 	: GameObject(physicsCommon, physicsWorld, objectName)
 {
-	//animationController = new AnimationController(this, animations);
-	//renderObject->SetRigged(true);
-	//renderObject->SetAnimationController(animationController);
+
 }
 
 AnimatedObject::~AnimatedObject()
