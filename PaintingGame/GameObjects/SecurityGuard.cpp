@@ -276,9 +276,7 @@ namespace NCL::CSC8508 {
 						rootSelector->Reset();
 						return Initialise;
 					}
-
 				}
-
 				if (direction.Length() <= 4 && navigationPath->waypoints.size() >= 2) {
 					navigationPath->waypoints.pop_back();
 						std::cout << " Chase the Player - Chasing player\n";
