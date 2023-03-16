@@ -55,6 +55,7 @@ namespace NCL {
 
 			//container for cameras
 			std::vector<Camera*> activeCameras;
+			LoadingHud* loadingHud;
 			
 		};
 	}

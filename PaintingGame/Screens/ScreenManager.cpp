@@ -1,6 +1,7 @@
 #pragma once
 #include "ScreenManager.h"
 #include "SplashScreen.h"
+#include "LoadingScreen.h"
 #include "MainMenuScreen.h"
 #include "GameScreen.h"
 
@@ -17,8 +18,10 @@ ScreenManager::ScreenManager(GameAssets* assets) {
 void ScreenManager::LoadScreens() {
 	screenSceneNodes.emplace(std::make_pair(ScreenType::SplashScreen, std::make_unique<SceneNode>(assets->GetMesh("quadMesh"), assets->GetShader("screenShader"), assets->GetTexture("splashScreenTex"))));
 	screenSceneNodes.emplace(std::make_pair(ScreenType::MainMenuScreen, std::make_unique<SceneNode>(assets->GetMesh("quadMesh"), assets->GetShader("screenShader"), assets->GetTexture("mainMenuScreenTex"))));
+	screenSceneNodes.emplace(std::make_pair(ScreenType::LoadingScreen, std::make_unique<SceneNode>(assets->GetMesh("quadMesh"), assets->GetShader("screenShader"), assets->GetTexture("loadingTex"))));
 
 	screens.insert(std::make_pair(ScreenType::SplashScreen, std::make_unique<SplashScreen>(this, screenSceneNodes.at(ScreenType::SplashScreen).get())));
+	screens.insert(std::make_pair(ScreenType::LoadingScreen, std::make_unique<LoadingScreen>(this, screenSceneNodes.at(ScreenType::LoadingScreen).get())));
 	screens.insert(std::make_pair(ScreenType::MainMenuScreen, std::make_unique<MainMenuScreen>(this, screenSceneNodes.at(ScreenType::MainMenuScreen).get())));
 	screens.insert(std::make_pair(ScreenType::GameScreen, std::make_unique<GameScreen>(this)));
 }

@@ -9,35 +9,40 @@ using namespace CSC8508;
 
 bool GameScreen::sPauseCallback = false;
 
-void GameScreen::OnAwake() {
+void NCL::CSC8508::GameScreen::OnAwake()
+{}
+
+void GameScreen::OnAwake1(GameAssets* assets) {
+	//thread start 
 	isMenuDisplayed = false;
 	isDebugDisplayed = false;
-	LoadGame();
+	LoadGame(assets);
 	sceneNode->GetPhysicsWorld()->setIsDebugRenderingEnabled(isDebugRenderingEnabled);
 	sceneNode->GetPhysicsWorld()->getDebugRenderer().setIsDebugItemDisplayed(reactphysics3d::DebugRenderer::DebugItem::COLLISION_SHAPE, true);
 	sceneNode->GetPhysicsWorld()->getDebugRenderer().setIsDebugItemDisplayed(reactphysics3d::DebugRenderer::DebugItem::COLLIDER_BROADPHASE_AABB, true);
 
 	Window::GetWindow()->LockMouseToWindow(true);
+
 }
 
-void GameScreen::LoadGame() {
+void GameScreen::LoadGame(GameAssets* assets) {
 
 	delete sceneNode;
 
 	switch (command)
 	{
 	case ScreenCommand::CreateSinglePlayerGame: 
-		sceneNode = new SinglePlayerGame(screenManager->GetGameAssets());
+		sceneNode = new SinglePlayerGame(assets);
 	break;
 	case ScreenCommand::CreateSplitScreenGame:
-		sceneNode = new SplitScreenGame(screenManager->GetGameAssets());
+		sceneNode = new SplitScreenGame(assets);
 		break;
 	case ScreenCommand::CreateNetworkedGameAsServer:
-		sceneNode = new NetworkedGame(screenManager->GetGameAssets());
+		sceneNode = new NetworkedGame(assets);
 		((NetworkedGame*)(sceneNode))->StartAsServer();
 		break;
 	case ScreenCommand::CreateNetworkedGameAsClient:
-		sceneNode = new NetworkedGame(screenManager->GetGameAssets());
+		sceneNode = new NetworkedGame(assets);
 		((NetworkedGame*)(sceneNode))->StartAsClient(127, 0, 0, 1);
 		break;
 	default:
@@ -114,6 +119,11 @@ void NCL::CSC8508::GameScreen::DebugWindow()
 		ImGui::EndPopup();
 	}
 	ImGui::End();
+}
+
+void NCL::CSC8508::GameScreen::OnLoad(GameScreen* gs, GameAssets* assets)
+{
+	gs->OnAwake1(assets);
 }
 
 void GameScreen::GamePauseCallback() {

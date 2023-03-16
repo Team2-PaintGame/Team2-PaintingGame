@@ -5,10 +5,10 @@ using namespace Assets;
 
 GameAssets::GameAssets(Assets::AssetLoader* loader) {
 	this->loader = loader;
+	LoadTextures();
 	LoadMeshes();
 	LoadMeshMaterials();
 	LoadMeshAnimations();
-	LoadTextures();
 	LoadShaders();
 }
 
@@ -64,6 +64,7 @@ void GameAssets::LoadMeshAnimations() {
 
 void GameAssets::LoadTextures() {
 	textures.insert(std::make_pair("basicTex", loader->LoadTexture("checkerboard.png")));
+	textures.insert(std::make_pair("loadingTex", loader->LoadTexture("loadingSprites.png")));
 	textures.insert(std::make_pair("grassTex", loader->LoadTexture("grass.jpg")));
 	textures.insert(std::make_pair("coinTex", loader->LoadTexture("coin.png")));
 	textures.insert(std::make_pair("floorTex", loader->LoadTexture("ground.png")));

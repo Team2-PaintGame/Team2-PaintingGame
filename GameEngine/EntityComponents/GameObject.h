@@ -15,6 +15,7 @@ namespace NCL::CSC8508 {
 	class GameObject :public SceneNode	{
 	public:
 		GameObject(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, std::string name = "");
+		GameObject(std::string name = "");
 		virtual ~GameObject();
 
 		bool IsActive() const {

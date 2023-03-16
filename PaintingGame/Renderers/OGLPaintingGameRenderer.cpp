@@ -26,6 +26,7 @@ OGLPaintingGameRenderer::~OGLPaintingGameRenderer() {
 }
 
 void OGLPaintingGameRenderer::RenderFrame() {	
+	
 	if (boundScreen) {
 		if (boundScreen->GetScreenType() == ScreenType::GameScreen) {
 			BuildObjectList();

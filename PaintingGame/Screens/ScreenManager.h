@@ -10,6 +10,7 @@ namespace NCL::CSC8508 {
 	enum class ScreenType {
 		None,
 		SplashScreen,
+		LoadingScreen,
 		MainMenuScreen,
 		GameScreen,
 		GameWinScreen,
