@@ -41,7 +41,7 @@ CapsuleParticle::~CapsuleParticle() {
 	if (rigidBody) {
 		physicsWorld->destroyRigidBody(rigidBody);
 	}
-	physicsCommon.destroyCapsuleShape(dynamic_cast<rp3d::CapsuleShape*>(boundingVolume));
+	physicsCommon.destroyCapsuleShape((rp3d::CapsuleShape*)(boundingVolume));
 }
 
 SphereParticle::SphereParticle(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Transform* emitterTransform, Vector3 particlePosition, float lifeSpan, float speed, Vector3 direction, bool enableGravity) : Particle(physicsCommon, physicsWorld, emitterTransform, particlePosition, lifeSpan, speed, direction, enableGravity) {
@@ -58,5 +58,5 @@ SphereParticle::~SphereParticle() {
 	if (rigidBody) {
 		physicsWorld->destroyRigidBody(rigidBody);
 	}
-	physicsCommon.destroySphereShape(dynamic_cast<rp3d::SphereShape*>(boundingVolume));
+	physicsCommon.destroySphereShape((rp3d::SphereShape*)(boundingVolume));
 }

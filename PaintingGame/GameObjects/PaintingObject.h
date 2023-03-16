@@ -38,10 +38,9 @@ namespace NCL {
 			if (rigidBody) {
 				physicsWorld->destroyRigidBody(rigidBody);
 			}
-			physicsCommon.destroyBoxShape(dynamic_cast<rp3d::BoxShape*>(boundingVolume));
+			physicsCommon.destroyBoxShape((rp3d::BoxShape*)(boundingVolume));
 		}
 	protected:
-		rp3d::BoxShape* boundingVolume;
 	};
 }
  
