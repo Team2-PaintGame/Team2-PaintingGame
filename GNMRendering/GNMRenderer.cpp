@@ -200,6 +200,9 @@ void	GNMRenderer::BeginFrame()   {
 
 }
 
+void GNMRenderer::RenderFrame() {
+}
+
 void GNMRenderer::EndFrame()			{
 	framesSubmitted++;
 }
