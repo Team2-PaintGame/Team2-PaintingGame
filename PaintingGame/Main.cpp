@@ -1,10 +1,6 @@
 #include <Window.h>
 #include "Debug.h"
-
 #include "PaintingGame.h"
-#include <imgui_impl_win32.h>
-#include <imgui_impl_opengl3.h>
-//#include <Win32Window.h>
 #include "GameManager.h"
 
 using namespace NCL;
