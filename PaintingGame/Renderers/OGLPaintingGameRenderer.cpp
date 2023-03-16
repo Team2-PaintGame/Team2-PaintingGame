@@ -164,12 +164,103 @@ void OGLPaintingGameRenderer::RenderGameScreen() { //change this to RenderScreen
 	/*Render ScoreBar*/
 	DrawScoreBar();
 
-
 	RenderDebugInformation();
 	boundScreen->RenderMenu();
 }
 
-void DrawScoreBar() {
+void OGLPaintingGameRenderer::DrawScoreBar() {
+	for (const auto& i : activeObjects) {
+		OGLShader* shader = (OGLShader*)(i)->GetShader();
+	
+	BindShader(shader);
+
+	if (true/*gameWorld->DoesMapNeedChecking()*/) {
+		RetrieveAtomicValues();
+
+		glUniform1f(glGetUniformLocation(shader->GetProgramID(), "team1PercentageOwned"), team1Percentage);
+		glUniform1f(glGetUniformLocation(shader->GetProgramID(), "team2PercentageOwned"), team2Percentage);
+
+		glUniform3fv(glGetUniformLocation(shader->GetProgramID(), "defaultGray"), 1, defaultColour.array);
+		glUniform3fv(glGetUniformLocation(shader->GetProgramID(), "team1Colour"), 1, teamColours[0].array);
+		glUniform3fv(glGetUniformLocation(shader->GetProgramID(), "team2Colour"), 1, teamColours[1].array);
+
+		gameWorld->MapNeedsChecking(false);
+	}
+
+	Matrix4 identityMatrix = Matrix4();
+
+	int projLocation = glGetUniformLocation(shader->GetProgramID(), "projMatrix");
+	int viewLocation = glGetUniformLocation(shader->GetProgramID(), "viewMatrix");
+	int modelLocation = glGetUniformLocation(shader->GetProgramID(), "modelMatrix");
+
+	glUniformMatrix4fv(modelLocation, 1, false, (float*)&identityMatrix);
+	glUniformMatrix4fv(viewLocation, 1, false, (float*)&identityMatrix);
+	glUniformMatrix4fv(projLocation, 1, false, (float*)&identityMatrix);
+	glDisable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	Matrix4 scoreBarModelMatrix = Matrix4::Translation(Vector3(0, 0.85f, 0)) * Matrix4::Scale(Vector3(0.4f, 0.035f, 1));
+	glUniformMatrix4fv(modelLocation, 1, false, (float*)&scoreBarModelMatrix);
+
+	BindMesh(scoreQuad);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	glEnable(GL_DEPTH_TEST);
+	glDisable(GL_BLEND);
+	}
+}
+void OGLPaintingGameRenderer::GenerateAtomicBuffer() {
+	glGenBuffers(1, &atomicsBuffer[0]);
+	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, atomicsBuffer[0]);
+	glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, atomicsBuffer[0]);
+	glBufferStorage(GL_ATOMIC_COUNTER_BUFFER, sizeof(GLuint) * ATOMIC_COUNT, NULL, GL_DYNAMIC_STORAGE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_READ_BIT | GL_MAP_COHERENT_BIT);
+
+	glGenBuffers(1, &atomicsBuffer[1]);
+	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, atomicsBuffer[1]);
+	glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 1, atomicsBuffer[1]);
+	glBufferStorage(GL_ATOMIC_COUNTER_BUFFER, sizeof(GLuint) * ATOMIC_COUNT, NULL, GL_DYNAMIC_STORAGE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_READ_BIT | GL_MAP_COHERENT_BIT);
+
+	glGenBuffers(1, &atomicsBuffer[2]);
+	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, atomicsBuffer[2]);
+	glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 2, atomicsBuffer[2]);
+	glBufferStorage(GL_ATOMIC_COUNTER_BUFFER, sizeof(GLuint) * ATOMIC_COUNT, NULL, GL_DYNAMIC_STORAGE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_READ_BIT | GL_MAP_COHERENT_BIT);
+
+	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
+	glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, 0);
+
+	currentAtomicCPU = 2;
+	curretAtomicReset = 1;
+	currentAtomicGPU = 0;
+}
+
+
+void OGLPaintingGameRenderer::RetrieveAtomicValues() {
+	GLuint pixelCount[ATOMIC_COUNT];
+	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, atomicsBuffer[currentAtomicCPU]);
+	glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, currentAtomicCPU, atomicsBuffer[currentAtomicCPU]);
+
+	glGetBufferSubData(GL_ATOMIC_COUNTER_BUFFER, 0, sizeof(GLuint) * ATOMIC_COUNT, pixelCount);
+
+	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
+	totalPixelCount = pixelCount[0];
+
+	for (GLuint i = 1; i < ATOMIC_COUNT; i++)
+	{
+		teamPixelCount[i - 1] = pixelCount[i];
+	}
+
+	CalculatePercentages(totalPixelCount, teamPixelCount[0], teamPixelCount[1], teamPixelCount[2], teamPixelCount[3]);
+
+	ResetAtomicBuffer();
+}
+
+void OGLPaintingGameRenderer::ResetAtomicBuffer() {
+	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, atomicsBuffer[currentAtomicCPU]);
+	glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, currentAtomicCPU, atomicsBuffer[currentAtomicCPU]);
+	GLuint a[ATOMIC_COUNT];
+	for (GLuint i = 0; i < ATOMIC_COUNT; i++)
+	{
+		a[i] = 0;
+	}
+	glBufferSubData(GL_ATOMIC_COUNTER_BUFFER, 0, sizeof(GLuint) * ATOMIC_COUNT, a);
 
 }
 
@@ -184,6 +275,19 @@ void OGLPaintingGameRenderer::RenderPaintSplat(OGLShader* shader) {
 		);
 		int splatVectorSize = glGetUniformLocation(shader->GetProgramID(), "numOfSplats");
 		glUniform1i(splatVectorSize, world->GetNumPaintedPositions());
+	}
+}
+
+void OGLPaintingGameRenderer::CalculatePercentages(const int& totalPixels, const int& team1Pixels, const int& team2Pixels, const int& team3Pixels, const int& team4Pixels) {
+	float totalPaintedPixels = (float)team1Pixels + (float)team2Pixels + (float)team3Pixels + (float)team4Pixels;
+	if (totalPaintedPixels != 0) {
+		team1Percentage = (float)team1Pixels / totalPaintedPixels;
+		team2Percentage = (float)team2Pixels / totalPaintedPixels;
+
+	}
+	else {
+		team1Percentage = 0;
+		team2Percentage = 0;
 	}
 }
 
