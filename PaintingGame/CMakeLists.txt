@@ -124,6 +124,8 @@ set(ALL_FILES
     ${ImGui}
 )
 else()
+file(GLOB GNM_SHADER_FILES ${ASSET_ROOT}/Shaders/GNM/*.pssl)
+source_group("GNM Shader Files" FILES ${GNM_SHADER_FILES})
 set(ALL_FILES
     ${Header_Files}
     ${Source_Files}
@@ -131,7 +133,24 @@ set(ALL_FILES
     ${Player}
     ${Renderers}
     ${Screens}
+	${GNM_SHADER_FILES}
 )
+
+foreach (file ${GNM_SHADER_FILES})
+    get_filename_component(file_name ${file} NAME)
+	get_filename_component(file_ext ${file} EXT)
+	
+	if(file_ext STREQUAL ".h" OR file_ext STREQUAL ".cpp")
+		continue()
+	endif()
+		
+	if( file_ext STREQUAL  ".pssl")
+		message("Compiling PSSL file: ${file}")
+		get_filename_component(file_dir ${file} DIRECTORY)
+		set_property(SOURCE ${file} PROPERTY VS_TOOL_OVERRIDE WavePsslc) 
+		set_property(SOURCE ${file} PROPERTY VS_SETTINGS "Profile=PS" "FileType=Document" "OutputFileName=${file_dir}/${file_name}.sb")  
+	endif()
+endforeach()
 endif()
 
 if(USE_VULKAN)
@@ -328,6 +347,12 @@ target_link_libraries(${PROJECT_NAME} LINK_PUBLIC OpenGLRendering)
 target_link_libraries(${PROJECT_NAME} LINK_PUBLIC Networking)
 else()
 target_link_libraries(${PROJECT_NAME} LINK_PUBLIC GNMRendering)
+add_custom_target(
+    GNM_SHADER_FILES
+    DEPENDS ON ${GNF_FILES}
+)
+
+add_dependencies(${PROJECT_NAME} GNM_SHADER_FILES)
 endif()
 
 
@@ -340,7 +365,6 @@ add_custom_target(
     SHADER_FILES
     DEPENDS ON ${SPIRV_BINARY_FILES}
 )
-
 add_dependencies(${PROJECT_NAME} SHADER_FILES)
 
 endif()
