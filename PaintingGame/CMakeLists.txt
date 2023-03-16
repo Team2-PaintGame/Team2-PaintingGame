@@ -273,12 +273,8 @@ if(MSVC)
     )
 else()
 	target_compile_options(${PROJECT_NAME} PRIVATE
-        $<$<CONFIG:Debug>:
-            -O0
-        >
         -frtti;
         -fexceptions;
-        -fno-implicit-templates;
         -std=c++17;
         #${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
         #${DEFAULT_CXX_EXCEPTION_HANDLING};
