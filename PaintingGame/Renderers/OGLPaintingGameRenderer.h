@@ -3,6 +3,7 @@
 #include <OGLRenderer.h>
 #include <glad/gl.h>
 #include "ScreenManager.h"
+#include "OGLMesh.h"
 
 namespace NCL {
 	namespace CSC8508 {
@@ -132,6 +133,8 @@ namespace NCL {
 			void SetDebugStringBufferSizes(size_t newVertCount);
 			void SetDebugLineBufferSizes(size_t newVertCount);
 
+			//ScoreBar methods
+			void DrawScoreBar();
 
 			vector<const RenderObject*> activeObjects;
 			BaseScreen* boundScreen;
@@ -148,6 +151,11 @@ namespace NCL {
 
 			DebugTextRenderer debugTextRenderer;
 			DebugLinesRenderer debugLineRenderer;
+
+			OGLMesh* scoreQuad;
+
+			float team1Percentage;
+			float team2Percentage;
 		};
 		
 		// Concrete factory for creating Painting Game OpenGL renderer

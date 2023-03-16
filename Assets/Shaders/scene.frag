@@ -81,7 +81,7 @@ void main(void)
 
 	for(int i = 0; i < numOfSplats;i++){
 		float distanceBetween = distance(paintedPos[i], IN.worldPos.xyz);
-		if (distanceBetween <= 5 - SplatNoise(IN.localPos.xyz)){
+		if (distanceBetween <= 5 - SplatNoise(IN.localPos.xyz)*(3+(0.1*(mod(i, 10))))){
 			albedo = vec4(vec3(0.51,1,0.1),1);
 		}
 	}

@@ -19,6 +19,15 @@ OGLPaintingGameRenderer::OGLPaintingGameRenderer(Window& w) : OGLRenderer(w) {
 
 	SetDebugStringBufferSizes(10000);
 	SetDebugLineBufferSizes(1000);
+
+	scoreQuad = new OGLMesh();
+	scoreQuad->SetVertexPositions({ Vector3(-1, 1, 1), Vector3(-1, -1, 1), Vector3(1, -1, 1), Vector3(1, 1, 1) });
+	scoreQuad->SetVertexTextureCoords({ Vector2(0.0f,1.0f), Vector2(0.0f,0.0f), Vector2(1.0f,0.0f), Vector2(1.0f,1.0f) });
+	scoreQuad->SetVertexIndices({ 0,1,2,2,3,0 });
+	scoreQuad->UploadToGPU();
+
+	team1Percentage = 0;
+	team2Percentage = 0;
 }
 
 OGLPaintingGameRenderer::~OGLPaintingGameRenderer() {
@@ -151,8 +160,17 @@ void OGLPaintingGameRenderer::RenderGameScreen() { //change this to RenderScreen
 			}
 		}
 	);
+
+	/*Render ScoreBar*/
+	DrawScoreBar();
+
+
 	RenderDebugInformation();
 	boundScreen->RenderMenu();
+}
+
+void DrawScoreBar() {
+
 }
 
 void OGLPaintingGameRenderer::RenderPaintSplat(OGLShader* shader) {
