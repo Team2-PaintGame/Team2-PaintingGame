@@ -2,7 +2,7 @@
 
 using namespace NCL;
 
-Particle::Particle(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Transform* emitterTransform, Vector3 particlePosition, float lifeSpan, float speed, Vector3 direction, bool enableGravity) : GameObject(physicsCommon, physicsWorld) {
+Particle::Particle(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Transform* emitterTransform, Vector3 particlePosition, float lifeSpan, float speed, Vector3 direction, bool enableGravity) : GameObject(physicsCommon, physicsWorld, "Particle") {
 	transform
 		.SetPosition(emitterTransform->GetPosition() + particlePosition)
 		.SetScale(emitterTransform->GetScale())
@@ -11,15 +11,19 @@ Particle::Particle(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d:
 	this->lifeSpan = lifeSpan;
 	this->speed = speed;
 	this->direction = direction;
+
+	layer = Layer::Paint;
 }
 
 void Particle::Update(float dt) {
 	elapsedTime += dt;
 
-	rigidBody->applyWorldForceAtCenterOfMass(~(transform.GetOrientation() * direction * speed));
+	rigidBody->applyWorldForceAtCenterOfMass(~( direction * speed));
 	
 	//need to call this here because particles itself are not part of game world
 	GameObject::UpdateTransform();
+
+	//Debug::DrawLine(transform.GetPosition(), transform.GetPosition() - transform.GetMatrix().GetColumn(2), transform.GetMatrix().GetColumn(2), 0.5f);
 
 	if (elapsedTime >= lifeSpan) {
 		this->SetActive(false);
@@ -52,6 +56,8 @@ SphereParticle::SphereParticle(reactphysics3d::PhysicsCommon& physicsCommon, rea
 	rp3d::Collider* collider = rigidBody->addCollider(boundingVolume, rp3d::Transform::identity());
 	collider->setIsTrigger(true);
 	rigidBody->enableGravity(enableGravity);
+	rigidBody->setMass(1.f); 
+	rigidBody->setUserData(this);
 }
 
 SphereParticle::~SphereParticle() {

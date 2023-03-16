@@ -69,11 +69,6 @@ Player* SplitScreenGame::AddPlayer(Vector3 position,Team team) {
 	Player* player = CreatePlayer(position, team);
 	activeCameras.push_back(player->GetCamera());
 	players.push_back(player);
-
-	/*FocusPoint* focusPoint = CreateFocusPoint();
-	focusPoint->SetPlayer(player);
-	world->AddGameObject(focusPoint);*/
-
 	return player;
 }
 

@@ -30,11 +30,6 @@ Player* SinglePlayerGame::AddPlayer(Vector3 position, Team team) {
 	player = CreatePlayer(position, team);
 	activeCameras.push_back(player->GetCamera());
 	playerController = GameManager::sConfig.playerControllerFactory->createPlayerController(player);
-	
-	FocusPoint* focusPoint = CreateFocusPoint();
-	focusPoint->SetPlayer(player);
-	world->AddGameObject(focusPoint);
-
 	return player;
 }
 

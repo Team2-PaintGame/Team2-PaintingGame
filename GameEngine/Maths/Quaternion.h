@@ -52,7 +52,7 @@ namespace NCL::Maths {
 		Quaternion	Conjugate() const;
 		void		CalculateW();	//builds 4th component when loading in shortened, 3 component quaternions
 
-		static Quaternion EulerAnglesToQuaternion(float pitch, float yaw, float roll);
+		static Quaternion EulerAnglesToQuaternion(float roll, float yaw, float pitch);
 		static Quaternion AxisAngleToQuaterion(const Vector3& vector, float degrees);
 		static Quaternion LookRotation(Vector3& lookAt, Vector3& upDirection);
 

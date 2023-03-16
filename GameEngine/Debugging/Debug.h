@@ -3,6 +3,9 @@
 #include "Vector4.h"
 #include "Matrix4.h"
 #include "SimpleFont.h"
+#include <windows.h>
+#include <stdio.h>
+#include <Psapi.h>
 
 namespace NCL {
 	using namespace NCL::Maths;
@@ -39,11 +42,29 @@ namespace NCL {
 		static const std::vector<DebugLineEntry>& GetDebugLines();
 
 		static void DrawFPS();
+		static void ShowMemoryUsage(/*DWORD processID*/);
+		static void ShowNumberOfParticals(size_t nbParticals);
+		static void ShowNumberOfGameObjects(size_t nbObjects);
+		static void ShowNumberOfPaintedPositions(size_t nbPaints);
 		static int frames;
 		static double startTime;
 		static double currentTime;
 		static bool first;
 		static float fps;
+
+		static int numberOfParticals;
+		static int numberOfGameObjects;
+		static int numberOfPaints;
+
+		static int PageFaultCount;
+		static int PeakWorkingSetSize;
+		static int WorkingSetSize;
+		static int QuotaPeakPagedPoolUsage;
+		static int QuotaPagedPoolUsage;
+		static int QuotaPeakNonPagedPoolUsage;
+		static int QuotaNonPagedPoolUsage;
+		static int PagefileUsage;
+		static int PeakPagefileUsage;
 
 
 		static const Vector4 RED;

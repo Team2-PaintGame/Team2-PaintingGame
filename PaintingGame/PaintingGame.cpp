@@ -11,6 +11,8 @@
 #include "AnimationController.h"
 #include "PaintingObject.h"
 #include "Ink.h"
+#include "EventListener.h"
+
 
 
 using namespace NCL;
@@ -26,6 +28,7 @@ PaintingGame::PaintingGame(GameAssets* assets) {
 	//renderer->settings.SetIsDebugRenderingModeEnabled(true);
 	//renderer->settings.debugRendererSettings.SetIsCollisionShapeDisplayed(true);
 	//renderer->settings.debugRendererSettings.SetIsBroadPhaseAABBDisplayed(true);
+	world->AddEventListener(new GameEventListener(&world->GetPhysicsWorld(), world));
 }
 
 PaintingGame::~PaintingGame() {
@@ -42,6 +45,7 @@ void PaintingGame::OperateOnCameras(CameraFunc f) {
 void PaintingGame::InitWorld() {
 	world->ClearAndErase();
 
+
 	world->AddGameObject(new Floor(physicsCommon, physicsWorld, Vector3(0, 0, 0), assets->GetMesh("floorMesh"), assets->GetTexture("basicTex"), assets->GetShader("basicShader"), 1));
 
 	for (int x = 0; x < 15; ++x) {
@@ -57,10 +61,12 @@ void PaintingGame::InitWorld() {
 
 void PaintingGame::Update(float dt) {
 	Debug::DrawFPS();
+	Debug::ShowMemoryUsage();
+	Debug::ShowNumberOfGameObjects(world->GetNumberOfGameObjects());
+	Debug::ShowNumberOfPaintedPositions(world->GetNumPaintedPositions());
 
 	world->UpdateWorld(dt);
 	physicsWorld->update(dt);
-	CreateSplatOnShoot();
 	Debug::UpdateRenderables(dt);
 }
 
@@ -82,23 +88,21 @@ Player* PaintingGame::CreatePlayer(Vector3 position,Team team) {
 	return player;
 }
 
-FocusPoint* PaintingGame::CreateFocusPoint() {
-	return new FocusPoint(physicsCommon, physicsWorld, assets->GetMesh("quadMesh"), assets->GetTexture("gunFocusTex"), assets->GetShader("hudShader"), Vector2(0.05));
-}
-
 Gun* PaintingGame::CreateGun(Vector3 position, Team team) {
 	Gun* gun;
 	Ink* ink = CreateInkStream(physicsCommon, physicsWorld, Vector3(0, 10, 0), assets->GetMesh("sphereMesh"), Vector4(0, 1, 0, 1), assets->GetShader("inkShader"));
-
+	FocusPoint* reticle = new FocusPoint(physicsCommon, physicsWorld, assets->GetMesh("quadMesh"), assets->GetTexture("gunFocusTex"), assets->GetShader("hudShader"), Vector2(0.05));
+	
 	if (team == Team::Red) {
-		gun = new Gun(physicsCommon, physicsWorld, position, assets->GetMesh("gunMesh"), assets->GetMeshMaterial("gunMat"), assets->GetShader("basicShader"), 3, Debug::RED, ink);
+		gun = new Gun(physicsCommon, physicsWorld, position, assets->GetMesh("gunMesh"), assets->GetMeshMaterial("gunMat"), assets->GetShader("basicShader"), 3, Debug::RED, ink, reticle);
 	}
 	else { //blue
-		gun = new Gun(physicsCommon, physicsWorld, position, assets->GetMesh("gunMesh"), assets->GetMeshMaterial("gunMat"), assets->GetShader("basicShader"), 3, Debug::BLUE, ink);
+		gun = new Gun(physicsCommon, physicsWorld, position, assets->GetMesh("gunMesh"), assets->GetMeshMaterial("gunMat"), assets->GetShader("basicShader"), 3, Debug::BLUE, ink, reticle);
 	}
 
 	world->AddGameObject(gun);
 	world->AddGameObject(ink);
+	world->AddGameObject(reticle);
 	return gun;
 }
 

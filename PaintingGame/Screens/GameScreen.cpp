@@ -11,6 +11,7 @@ bool GameScreen::sPauseCallback = false;
 
 void GameScreen::OnAwake() {
 	isMenuDisplayed = false;
+	isDebugDisplayed = false;
 	LoadGame();
 	sceneNode->GetPhysicsWorld()->setIsDebugRenderingEnabled(isDebugRenderingEnabled);
 	sceneNode->GetPhysicsWorld()->getDebugRenderer().setIsDebugItemDisplayed(reactphysics3d::DebugRenderer::DebugItem::COLLISION_SHAPE, true);
@@ -61,6 +62,10 @@ void GameScreen::MenuFrame() {
 		isDebugRenderingEnabled = !isDebugRenderingEnabled;
 		sceneNode->GetPhysicsWorld()->setIsDebugRenderingEnabled(isDebugRenderingEnabled);
 	}
+	if (ImGui::Button("Debug Window")) {
+		isDebugDisplayed = true;
+		isMenuDisplayed = false;
+	}
 	if (ImGui::Button("Quit Game")) {
 		command = ScreenCommand::TransitionToPreviousScreen;
 	}
@@ -75,6 +80,40 @@ PushdownState::PushdownResult GameScreen::onStateChange(PushdownState** newState
 		default:
 			return PushdownResult::NoChange;
 	}
+}
+
+void NCL::CSC8508::GameScreen::DebugWindow()
+{
+	ImGui::Begin("Debug Window");
+	ImGui::Text(std::to_string(Debug::fps).c_str());
+	ImGui::Text("Number of GameObjects");
+	ImGui::Text(std::to_string(Debug::numberOfGameObjects).c_str());
+	ImGui::Text("Number of Paints");
+	ImGui::Text(std::to_string(Debug::numberOfPaints).c_str());
+	ImGui::Text("Number of Particals");
+	ImGui::Text(std::to_string(Debug::numberOfParticals).c_str());
+	if (ImGui::Button("Memory Footprint")) {
+		ImGui::OpenPopup("MemoryFootprint");
+	}
+	if(ImGui::Button("Exit")) {
+		isDebugDisplayed = false;
+	}
+	if (ImGui::BeginPopupModal("MemoryFootprint")) {
+
+		ImGui::Text(std::to_string(Debug::PageFaultCount).c_str());
+		ImGui::Text(std::to_string(Debug::PeakWorkingSetSize).c_str());
+		ImGui::Text(std::to_string(Debug::WorkingSetSize).c_str());
+		ImGui::Text(std::to_string(Debug::QuotaNonPagedPoolUsage).c_str());
+		ImGui::Text(std::to_string(Debug::QuotaPagedPoolUsage).c_str());
+		ImGui::Text(std::to_string(Debug::QuotaPeakNonPagedPoolUsage).c_str());
+		ImGui::Text(std::to_string(Debug::QuotaPeakPagedPoolUsage).c_str());
+
+		if (ImGui::Button("Exit")) {
+			isDebugDisplayed = false;
+		}
+		ImGui::EndPopup();
+	}
+	ImGui::End();
 }
 
 void GameScreen::GamePauseCallback() {
