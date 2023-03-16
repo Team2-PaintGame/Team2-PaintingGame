@@ -2,7 +2,9 @@
 
 #include "Sound.h"
 #include "SoundSystem.h"
+#include "GameObject.h"
 
+using namespace NCL::CSC8508;
 enum SoundPriority {
 	SOUNDPRIORTY_LOW,
 	SOUNDPRIORITY_MEDIUM,
@@ -46,7 +48,8 @@ public:
 	
 	inline OALSource * GetSource() { return currentSource; }
 	
-	void SetTarget(SceneNode * s) { target = s; }
+	void SetTarget(GameObject * s) { target = s; }
+	GameObject* GetTarget() { return target; }
 
 	void AttachSource(OALSource* s);
 	void DetachSource();
@@ -54,12 +57,16 @@ public:
 	static bool CompareNodesByPriority(SoundEmitter * a, SoundEmitter * b);
 	
 	virtual void Update(float msec);
+	void SetPosition(Vector3 pos) { position = pos; }
+	Vector3 GetPosition() { return position; }
 	
 protected:
 	Sound * sound;
 	OALSource * currentSource;
 	SoundPriority priority;
 	Vector3 position;
+
+	GameObject* target;
 
 	float volume;
 	float radius;

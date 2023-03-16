@@ -15,12 +15,17 @@ SoundSystem::SoundSystem(unsigned int channels) {
 	if (!device) {
 		cout << " SoundSystem creation failed ! No valid device !" << endl;
 		return;
-			}	cout << " SoundSystem created with device : " << alcGetString(device, ALC_DEVICE_SPECIFIER) << endl;
+		
+	}
+
+	cout << " SoundSystem created with device : " << alcGetString(device, ALC_DEVICE_SPECIFIER) << endl;
 	
 	context = alcCreateContext(device, NULL);
 	alcMakeContextCurrent(context);
 	
-	alDistanceModel(AL_LINEAR_DISTANCE_CLAMPED);	for (unsigned int i = 0; i < channels; ++i) {
+	alDistanceModel(AL_LINEAR_DISTANCE_CLAMPED);
+
+	for (unsigned int i = 0; i < channels; ++i) {
 		ALuint source;
 		
 		alGenSources(1, &source);
@@ -37,40 +42,66 @@ SoundSystem::SoundSystem(unsigned int channels) {
 		
 	}
 	cout << " SoundSystem has " << sources.size() << " channels available !" << endl;
-	}SoundSystem ::~SoundSystem(void) {
-	alcMakeContextCurrent(NULL);
+	
+}
+
+SoundSystem ::~SoundSystem(void) {
+	
+	for (vector < SoundEmitter* >::iterator i = emitters.begin();
+		i != emitters.end(); ++i) {
+		delete (*i);
+	}
+
 	for (vector < OALSource* >::iterator i = sources.begin();
 		i != sources.end(); ++i) {
 		alDeleteSources(1, &(*i) -> source);
 		delete (*i);
 		
 	}
+	emitters.clear();
+	sources.clear();
+	Sound::DeleteSounds();
+	alcMakeContextCurrent(NULL);
 	alcDestroyContext(context);
 	alcCloseDevice(device);
-	}void SoundSystem::SetMasterVolume(float value) {
+	
+}
+
+void SoundSystem::SetMasterVolume(float value) {
 	value = max(0.0f, value);
 	value = min(1.0f, value);
 	masterVolume = value;
 	alListenerf(AL_GAIN, masterVolume);
-	}void SoundSystem::UpdateListener() {
+	
+}
+
+void SoundSystem::UpdateListener() {
 	if (listener) {
-		Vector3 worldPos = listenerTransform.GetPositionVector();
+		Vector3 worldPos = listener->GetTransform().GetPosition();
 		
 		Vector3 dirup[2];
 		// forward
-		dirup[0].x = -listenerTransform.values[2];
-		dirup[0].y = -listenerTransform.values[6];
-		dirup[0].z = -listenerTransform.values[10];
+		dirup[0].x = -listener->GetTransform().GetMatrix().array[0][2];
+		dirup[0].y = -listener->GetTransform().GetMatrix().array[1][2];
+		dirup[0].z = -listener->GetTransform().GetMatrix().array[2][2];
 		// Up
-		dirup[1].x = listenerTransform.values[1];
-		dirup[1].y = listenerTransform.values[5];
-		dirup[1].z = listenerTransform.values[9];
+		dirup[1].x = listener->GetTransform().GetMatrix().array[0][1];
+		dirup[1].y = listener->GetTransform().GetMatrix().array[1][1];
+		dirup[1].z = listener->GetTransform().GetMatrix().array[2][1];
 		
 		alListenerfv(AL_POSITION, (float*)&worldPos);
 		alListenerfv(AL_ORIENTATION, (float*)&dirup);
 		
 	}
-	}void SoundSystem::Update(float msec) {
+	else {
+		Vector3 worldPos = Vector3(0, 0, 0);
+		alListenerfv(AL_POSITION, (float*)&worldPos);
+		
+	}
+	
+}
+
+void SoundSystem::Update(float msec) {
 	UpdateListener();
 	
 	for (vector < SoundEmitter* >::iterator i = emitters.begin(); i != emitters.end(); ++i) {
@@ -79,7 +110,9 @@ SoundSystem::SoundSystem(unsigned int channels) {
 		
 	}
 	
-	CullNodes();	if (frameEmitters.size() > sources.size()) {
+	CullNodes();
+
+	if (frameEmitters.size() > sources.size()) {
 		std::sort(frameEmitters.begin(), frameEmitters.end(), SoundEmitter::CompareNodesByPriority);
 
 		DetachSources(frameEmitters.begin() + (sources.size() + 1), frameEmitters.end());
@@ -93,18 +126,28 @@ SoundSystem::SoundSystem(unsigned int channels) {
 	}
 	
 	frameEmitters.clear();
-	}void SoundSystem::CullNodes() {
+	
+}
+
+void SoundSystem::CullNodes() {
 	for (vector < SoundEmitter* >::iterator i = frameEmitters.begin(); i != frameEmitters.end(); ) {
 		SoundEmitter * e = (*i);
 		
 		float length;
 		
-		if (e -> target) {
-			length = (listenerTransform.GetPositionVector() - e -> target -> GetWorldTransform().GetPositionVector()).Length();
+		if (e -> GetTarget()) {
+			if (listener)
+				length = (listener->GetTransform().GetMatrix().GetPositionVector() - e->GetTarget()->GetTransform().GetPosition()).Length();
+
+			else
+				length = (Vector3(0, 0, 0) - e->GetPosition()).Length();
 			
 		}
 		else {
-			length = (listenerTransform.GetPositionVector() - e -> position).Length();
+			if (listener)
+				length = (listener->GetTransform().GetMatrix().GetPositionVector() - e -> GetPosition()).Length();
+			else
+				length = (Vector3(0, 0, 0) - e->GetPosition()).Length();
 			
 		}
 		
@@ -119,7 +162,10 @@ SoundSystem::SoundSystem(unsigned int channels) {
 		}
 		
 	}
-	}void SoundSystem::DetachSources(vector < SoundEmitter* >::iterator from, vector < SoundEmitter* >::iterator to) {
+	
+}
+
+void SoundSystem::DetachSources(vector < SoundEmitter* >::iterator from, vector < SoundEmitter* >::iterator to) {
 	for (vector < SoundEmitter* >::iterator i = from; i != to; ++i) {
 		(*i) -> DetachSource();
 	
@@ -135,7 +181,10 @@ void SoundSystem::AttachSources(vector < SoundEmitter* >::iterator from, vector 
 		}
 		
 	}
-	}OALSource* SoundSystem::GetSource() {
+	
+}
+
+OALSource* SoundSystem::GetSource() {
 	for (vector < OALSource* >::iterator i = sources.begin(); i != sources.end(); ++i) {
 		OALSource * s = *i;
 		if (!s -> inUse) {
@@ -145,4 +194,8 @@ void SoundSystem::AttachSources(vector < SoundEmitter* >::iterator from, vector 
 		
 	}
 	return NULL;
-	}
+	
+}
+
+
+

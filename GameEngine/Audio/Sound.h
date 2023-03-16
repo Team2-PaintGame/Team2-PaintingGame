@@ -31,6 +31,11 @@ public:
 	ALenum GetOALFormat();
 	double GetLength();
 
+	static void AddSound(string n);
+	static Sound* GetSound(string name);
+
+	static void DeleteSounds();
+
 protected:
 	Sound();
 	virtual ~Sound(void);

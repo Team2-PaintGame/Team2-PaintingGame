@@ -76,7 +76,7 @@ void SoundEmitter::Update(float msec) {
 		Vector3 pos;
 		
 		if (target) {
-			pos = target -> 
+			pos = target->GetTransform().GetPosition();
 			
 		}
 		else {

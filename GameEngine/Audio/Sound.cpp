@@ -12,8 +12,9 @@ Sound::Sound() {
 }
 
 Sound::~Sound(void) {
-	delete data;
 	//alDeleteBuffers(1, &buffer);
+	delete data;
+	
 }
 
 ALenum Sound::GetOALFormat() {
@@ -87,4 +88,42 @@ void Sound::LoadWAVChunkInfo(ifstream& file, string& name, unsigned int& size) {
 	file.read((char*)&size, 4);
 
 	name = string(chunk, 4);
+}
+
+void Sound::AddSound(string name) {
+	if (!GetSound(name)) {
+		Sound* s = new Sound();
+
+		string extension = name.substr(name.length() - 3, 3);
+
+		if (extension == "wav") {
+			s->LoadFromWAV(name);
+
+			alGenBuffers(1, &s->buffer);
+
+			alBufferData(s->buffer, s->GetOALFormat(), s->GetData(), s->GetSize(), (ALsizei)s->GetFrequency());
+
+		}
+		else {
+			cout << " Invalid extension ’" << extension << " ’!" << endl;
+
+		}
+		sounds.insert(make_pair(name, s));
+
+	}
+
+}
+
+Sound* Sound::GetSound(string name) {
+	map < string, Sound* >::iterator s = sounds.find(name);
+	return (s != sounds.end() ? s->second : NULL);
+}
+
+void Sound::DeleteSounds() {
+	for (map < string, Sound* >::iterator i = sounds.begin();
+		i != sounds.end(); ++i) {
+		alDeleteBuffers(1, &((*i).second->buffer));
+		delete i->second;
+	}
+	sounds.clear();
 }

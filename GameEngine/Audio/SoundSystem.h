@@ -3,7 +3,7 @@
 #include <algorithm>
 
 #include"Matrix4.h"
-#include"SceneNode.h"
+#include"GameObject.h"
 
 #include "Sound.h"
 #include "SoundEmitter.h"
@@ -16,7 +16,6 @@ class SoundEmitter;
 
 using namespace NCL::Maths;
 using namespace NCL::CSC8508;
-
 struct OALSource {
 	ALuint source;
 	bool inUse;
@@ -43,14 +42,14 @@ public:
 	
 	inline static SoundSystem * GetSoundSystem() { return instance; }
 
-	void SetListenerTransform(const Matrix4& transform) {
-		listenerTransform = transform;
-		
+	void SetListener(GameObject* listener) {
+		this->listener = listener;
 	}
-	Matrix4 GetListenerTransform() {
-		return listenerTransform;
-		
-	}
+	//Matrix4 GetListenerTransform() {
+	//	return listenerTransform;
+	//	
+	//}
+
 	void AddSoundEmitter(SoundEmitter * s) { emitters.push_back(s); }
 	void RemoveSoundEmitter(SoundEmitter * s);
 	
@@ -71,11 +70,11 @@ protected:
 	void CullNodes();
 	OALSource * GetSource();
 
-	Matrix4 listenerTransform;
+	//Matrix4 listenerTransform;
 	float masterVolume;
 	ALCcontext * context;
 	ALCdevice * device;
-	SceneNode * listener;
+	GameObject* listener;
 	
 	vector < OALSource* > sources;
 	vector < SoundEmitter* > emitters;

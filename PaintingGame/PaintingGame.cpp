@@ -25,6 +25,7 @@ PaintingGame::PaintingGame(GameAssets* assets) {
 PaintingGame::~PaintingGame() {
 	delete world;
 	physicsCommon.destroyPhysicsWorld(physicsWorld);
+	delete s;
 }
 
 void PaintingGame::OperateOnCameras(CameraFunc f) {
@@ -69,6 +70,15 @@ Player* PaintingGame::CreatePlayer(Vector3 position,Team team) {
 	else { //blue
 		player =  new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("blueMainCharMat"), assets->GetShader("SecondskinningShader"), animations, 5, CreateGun(position, team));
 	}
+
+	Sound::AddSound("H:/2022/csc8508/project/Assets/Sounds/41579__erdie__steps-on-stone01.wav");
+	
+	s->SetSound(Sound::GetSound("H:/2022/csc8508/project/Assets/Sounds/41579__erdie__steps-on-stone01.wav"));
+	s->SetLooping(true);
+	s->SetTarget(player);
+	SoundSystem::GetSoundSystem()->SetListener(player);
+	SoundSystem::GetSoundSystem()->AddSoundEmitter(s);
+	SoundSystem::GetSoundSystem()->SetMasterVolume(1.0);
 
 	world->AddGameObject(player);
 	return player;

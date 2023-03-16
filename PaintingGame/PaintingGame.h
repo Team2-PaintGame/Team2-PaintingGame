@@ -10,6 +10,9 @@
 #include "SceneNode.h"
 #include "HudElement.h"
 
+#include "../Audio/SoundSystem.h"
+
+
 class Gamepad;
 class AnimationController;
 
@@ -31,6 +34,9 @@ namespace NCL {
 			virtual GameWorld* GetWorld() const { return world; }
 			virtual reactphysics3d::PhysicsWorld* GetPhysicsWorld() const override { return physicsWorld; }
 			virtual void OperateOnCameras(CameraFunc f);
+
+			SoundEmitter* s = new SoundEmitter();
+
 		protected:
 			virtual void InitWorld();
 			virtual void CreateSplatOnShoot() = 0;
