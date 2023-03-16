@@ -43,6 +43,8 @@ namespace NCL::CSC8508 {
 		navigationMesh = new NavigationMesh("BasicLVL.navmesh");
 		navigationPath = new NavigationPath();
 
+		rigidBody->setUserData(this);
+		layer = Layer::Enemy;
 		InitBehaviorTree();
 	}
 
@@ -64,12 +66,19 @@ namespace NCL::CSC8508 {
 
 		delete navigationMesh;
 		delete navigationPath;
-
-	//	delete animationController;
 	}
 
 	void SecurityGuard::Update(float dt)
 	{
+		if (isBlinded)
+		{
+			blindTimer += dt;
+			if (blindTimer > 5.0f)
+			{
+				blindTimer = 0.0f;
+				SetIsBlindedFalse();
+			}
+		}
 		if (navigationPath->waypoints.size() > 0)
 		{
 		//	Debug::DrawLine(this->GetTransform().GetPosition(), navigationPath->waypoints.back(), Debug::BLACK);
@@ -78,8 +87,8 @@ namespace NCL::CSC8508 {
 //		Debug::DrawLine(this->GetTransform().GetPosition(), this->GetTransform().GetPosition() - forward * 10, Debug::RED, 0.25);
 		animationController->Update(dt);
 //		DrawNavTris();
-		DisplayPathfinding();
-//		DrawTriRoute();
+//		DisplayPathfinding();
+		DrawTriRoute();
 		if (state == Initialise) {
 			state = Ongoing;
 		}
@@ -279,7 +288,7 @@ namespace NCL::CSC8508 {
 						return Success;
 					}
 				}
-				DetermineSpeed();
+				DetermineChaseSpeed();
 				MoveSecurityGuard(direction);
 			}
 			return state;
@@ -467,27 +476,69 @@ namespace NCL::CSC8508 {
 		return destination;
 	}
 
-	void SecurityGuard::DrawNavTris() {
-		int index1 = -1;
-		int index2 = -1;
-		int index3 = -1;
-		for (auto i : navigationMesh->allTris) {
-			index1 = i.indices[0];
-			index2 = i.indices[1];
-			index3 = i.indices[2];
-			Debug::DrawTriangle(navigationMesh->allVerts[index1], navigationMesh->allVerts[index2], navigationMesh->allVerts[index3]);
+	void SecurityGuard::DetermineChaseSpeed()
+	{
+		if (isBlinded)
+		{
+			force = 0;
+			return;
 		}
-	}
+		
+		int numWaypoints = navigationPath->waypoints.size();
 
-	void SecurityGuard::DisplayPathfinding() {
-		for (int i = 1; i < navigationPath->waypoints.size(); ++i) {
-			Vector3 a = navigationPath->waypoints[i - 1];
-			Vector3 b = navigationPath->waypoints[i];
-			Debug::DrawLine(a, b, Debug::BLACK);
+		
+		float distanceToNextWaypoint = INT_MIN;
+		Vector3 nextWaypoint;
+		if (numWaypoints < 1)
+		{
+			return;
+		}
+		else
+		{
+			nextWaypoint = navigationPath->waypoints.back();
+			distanceToNextWaypoint = DistanceToTarget(nextWaypoint);
+		}
+
+		if (numWaypoints == 1) // going strait to the player
+		{
+			if (distanceToNextWaypoint <= 40)
+			{
+				force = sprintForce;
+				std::cout << "1 Waypoint, less than 40, speed: " << force << "\n";
+			}
+			else
+			{
+				force = runForce;
+				std::cout << "1 Waypoint, more than 40, speed: " << force << "\n";
+			}
+		}
+		else if (numWaypoints > 1)
+		{
+			Vector3 waypointAfterNext = navigationPath->waypoints.back()[-1];
+			Vector3 firstWaypointDirection = nextWaypoint - this->GetTransform().GetPosition();
+			Vector3 secondWaypointDirection = waypointAfterNext - nextWaypoint;
+						
+			if (distanceToNextWaypoint <= 40)
+			{
+				float dot = Vector3::Dot(firstWaypointDirection, secondWaypointDirection);
+				float cosTheta = dot / (firstWaypointDirection.Length() * secondWaypointDirection.Length());
+				cosTheta = (cosTheta + 3) * 0.25f;
+				force = runForce * cosTheta;
+				std::cout << "2 Waypoints, less than 40, speed: " << force << "\n";
+			}
+			else
+			{
+				std::cout << "2 Waypoints, more than 40, speed: " << force << "\n";
+				force = runForce;
+			}
 		}
 	}
 	void SecurityGuard::DetermineSpeed()
 	{
+		if (isBlinded)
+		{
+			force = 0;
+		}
 		int numWaypoints = navigationPath->waypoints.size();
 		if(numWaypoints<1)
 		{
@@ -546,13 +597,35 @@ namespace NCL::CSC8508 {
 		for (int i = 0; i < navigationMesh->routeVertices.size(); i += 3)
 		{
 			Vector3 up(0, 5, 0);
-			Debug::DrawLine(navigationMesh->routeVertices[i], navigationMesh->routeVertices[i] + up, Debug::CYAN, 10);
+			/*Debug::DrawLine(navigationMesh->routeVertices[i], navigationMesh->routeVertices[i] + up, Debug::CYAN, 10);
 			Debug::DrawLine(navigationMesh->routeVertices[i + 1], navigationMesh->routeVertices[i + 1] + up, Debug::CYAN, 10);
-			Debug::DrawLine(navigationMesh->routeVertices[i + 2], navigationMesh->routeVertices[i + 2] + up, Debug::CYAN, 10);
+			Debug::DrawLine(navigationMesh->routeVertices[i + 2], navigationMesh->routeVertices[i + 2] + up, Debug::CYAN, 10);*/
+
+			Debug::DrawLine(navigationMesh->routeVertices[i], navigationMesh->routeVertices[i + 1], Debug::CYAN, 1);
+			Debug::DrawLine(navigationMesh->routeVertices[i + 1], navigationMesh->routeVertices[i + 2] , Debug::CYAN, 1);
+			Debug::DrawLine(navigationMesh->routeVertices[i + 2], navigationMesh->routeVertices[i ] , Debug::CYAN, 1);
 		}
 	}
 
+	void SecurityGuard::DrawNavTris() {
+		int index1 = -1;
+		int index2 = -1;
+		int index3 = -1;
+		for (auto i : navigationMesh->allTris) {
+			index1 = i.indices[0];
+			index2 = i.indices[1];
+			index3 = i.indices[2];
+			Debug::DrawTriangle(navigationMesh->allVerts[index1], navigationMesh->allVerts[index2], navigationMesh->allVerts[index3]);
+		}
+	}
 
+	void SecurityGuard::DisplayPathfinding() {
+		for (int i = 1; i < navigationPath->waypoints.size(); ++i) {
+			Vector3 a = navigationPath->waypoints[i - 1];
+			Vector3 b = navigationPath->waypoints[i];
+			Debug::DrawLine(a, b, Debug::BLACK);
+		}
+	}
 
 
 

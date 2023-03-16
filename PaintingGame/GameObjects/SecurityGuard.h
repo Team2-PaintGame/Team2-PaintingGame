@@ -19,7 +19,7 @@
 
 namespace NCL::CSC8508 {
 
-	class SecurityGuard : public /*GameObject*/ AnimatedObject
+	class SecurityGuard : public AnimatedObject
 	{
 	public:
 /*
@@ -33,12 +33,7 @@ namespace NCL::CSC8508 {
 			MeshGeometry* mesh, MeshMaterial* meshMaterial, ShaderBase* shader, const std::unordered_map<std::string, MeshAnimation*>& animations,
 			int size, GameObject* playerOne, GameObject* playerTwo, std::string objectName);
 
-
-
-
-
-
-	virtual	~SecurityGuard();
+		virtual	~SecurityGuard();
 		virtual void Update(float dt); // should this be virutal??
 
 		void InitChooseDestination();
@@ -61,13 +56,15 @@ namespace NCL::CSC8508 {
 		float DistanceToTarget(Vector3 destination);
 		GameObject* FindClosestPlayer();
 		void DetermineSpeed();
+		void DetermineChaseSpeed();
 		void RaycastAgainstPlayer(GameObject* player, SecurityCallbackClass* callbackClass, bool& isPlayerVisible);
 		void DrawNavTris();
 		void DrawTriRoute();
 		Vector3 GetForwardVector();
 		bool IsPlayerInFront(Vector3& playerPosition, Vector3& securityPosition);
 		bool IsInFieldOfView(Vector3 direction);
-
+		void SetIsBlindedTrue() { isBlinded = true; std::cout << "isBlinded = true\n"; }
+		void SetIsBlindedFalse() { isBlinded = false; std::cout << "isBlinded = false\n";}
 	protected:
 
 		int state;
@@ -76,15 +73,18 @@ namespace NCL::CSC8508 {
 		int gridHeight;
 
 		float force = 100;
-		const float slowForce = 100; // 100
+		const float slowForce = 50; // 100
 		const float walkForce = 100;  //150
-		const float runForce = 100;
+		const float runForce = 250;
+		const float sprintForce = 350;
+		bool isBlinded = false;
 
 		//const float slowForce = 1; // 100
 		//const float walkForce = 1;  //150
 		//const float runForce = 1;
 
 		float timeAccumulator = 0.0f;
+		float blindTimer = 0.0f;
 
 		BehaviourSelector* rootSelector;
 		BehaviourSequence* patrolSequence;
@@ -97,14 +97,6 @@ namespace NCL::CSC8508 {
 		BehaviourAction* chaseThePlayer;
 		BehaviourAction* attackThePlayer;
 
-		//rp3d::BoxShape* boundingVolume;
-//		rp3d::CollisionShape* boundingVolume;
-
-//	reactphysics3d::PhysicsWorld* physicsWorld;
-
-//		vector <Vector3> navigableNodes;
-		
-//		NavigationGrid* navigationGrid;
 		NavigationPath* navigationPath;
 		NavigationMesh* navigationMesh;
 
@@ -114,7 +106,6 @@ namespace NCL::CSC8508 {
 		SecurityCallbackClass* callbackPlayerOne;
 		SecurityCallbackClass* callbackPlayerTwo;
 
-//		AnimationController* animationController = NULL;
 	};
 
 }

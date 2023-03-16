@@ -1,6 +1,6 @@
 #include "EventListener.h"
 #include "GameWorld.h"
-
+#include "SecurityGuard.h"
 
 using namespace NCL::CSC8508;
 
@@ -39,7 +39,20 @@ void GameEventListener::onTrigger(const reactphysics3d::OverlapCallback::Callbac
 			{
 				GameObject* obj2 = (GameObject*)userData2;
 				valid &= !(obj2->GetLayer() == Layer::Paint || obj2->GetLayer() == Layer::Player);
+
+				if ((obj->GetLayer() == Layer::Paint && obj2->GetLayer() == Layer::Enemy)  )
+				{
+					SecurityGuard* security = (SecurityGuard*)userData2;
+					security->SetIsBlindedTrue();
+				}
+				else if ((obj->GetLayer() == Layer::Enemy && obj2->GetLayer() == Layer::Paint))
+				{
+					SecurityGuard* security = (SecurityGuard*)userData;
+					security->SetIsBlindedTrue();
+				}
 			}
+
+
 		}
 		else if (userData = overlapPair.getBody2()->getUserData())
 		{
@@ -54,6 +67,9 @@ void GameEventListener::onTrigger(const reactphysics3d::OverlapCallback::Callbac
 			obj->SetActive(false);
 			cb->setIsActive(false);
 		}
+
+
+		
 
        /* GameObjectIterator first;
         GameObjectIterator last;
