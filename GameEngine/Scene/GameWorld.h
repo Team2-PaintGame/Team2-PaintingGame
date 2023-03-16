@@ -112,6 +112,8 @@ namespace NCL {
 			void AddPaintedPosition(const Vector3& position);
 			size_t GetNumPaintedPositions() const { return paintedPositions.size();}
 			size_t GetNumberOfGameObjects() const { return gameObjects.size();}
+
+			void CheckIfNearPaint(Vector3 SecurityPos);
 		protected:
 			RaycastManager* raycastManager;
 			reactphysics3d::PhysicsWorld* physicsWorld = NULL;

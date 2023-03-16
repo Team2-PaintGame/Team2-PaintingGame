@@ -153,3 +153,21 @@ SceneContactPoint* GameWorld::Raycast(const reactphysics3d::Ray& r, GameObject* 
 void GameWorld::AddPaintedPosition(const Vector3& position) {
 	paintedPositions.push_back(position);
 }
+
+void GameWorld::CheckIfNearPaint(Vector3 SecurityPos)
+{
+
+	for (auto paintPos = paintedPositions.begin(); paintPos != paintedPositions.end();)
+	{
+		float distance = (SecurityPos - *paintPos).Length();
+		if (distance < 15)
+		{
+			paintPos = paintedPositions.erase(paintPos);
+		}
+		else
+		{
+			paintPos++;
+		}
+
+	}
+}

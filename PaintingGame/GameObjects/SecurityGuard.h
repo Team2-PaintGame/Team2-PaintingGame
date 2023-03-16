@@ -31,7 +31,7 @@ namespace NCL::CSC8508 {
 		//Mesh Material Constructor
 		SecurityGuard(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position,
 			MeshGeometry* mesh, MeshMaterial* meshMaterial, ShaderBase* shader, const std::unordered_map<std::string, MeshAnimation*>& animations,
-			int size, GameObject* playerOne, GameObject* playerTwo, std::string objectName);
+			int size, GameObject* playerOne, GameObject* playerTwo, GameWorld* gameWorld, std::string objectName);
 
 		virtual	~SecurityGuard();
 		virtual void Update(float dt); // should this be virutal??
@@ -105,6 +105,7 @@ namespace NCL::CSC8508 {
 		GameObject* chasedPlayer;
 		SecurityCallbackClass* callbackPlayerOne;
 		SecurityCallbackClass* callbackPlayerTwo;
+		GameWorld* gameWorld;
 
 	};
 

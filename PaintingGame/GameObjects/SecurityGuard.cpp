@@ -8,7 +8,7 @@
 namespace NCL::CSC8508 {
 	SecurityGuard::SecurityGuard(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position,
 		MeshGeometry* mesh, MeshMaterial* meshMaterial, ShaderBase* shader, const std::unordered_map<std::string, MeshAnimation*>& animations,
-		int size, GameObject* playerOne, GameObject* playerTwo, std::string objectName)
+		int size, GameObject* playerOne, GameObject* playerTwo, GameWorld* gameWorld, std::string objectName)
 		: AnimatedObject(physicsCommon, physicsWorld, position, mesh, meshMaterial, shader, animations, size, objectName)
 	
 	{
@@ -16,6 +16,7 @@ namespace NCL::CSC8508 {
 		this->playerOne = playerOne;
 		this->playerTwo = playerTwo;
 		this->physicsWorld = physicsWorld;
+		this->gameWorld = gameWorld;
 		chasedPlayer = nullptr;
 
 		transform.SetScale(size).SetPosition(position);
@@ -83,6 +84,7 @@ namespace NCL::CSC8508 {
 		{
 		//	Debug::DrawLine(this->GetTransform().GetPosition(), navigationPath->waypoints.back(), Debug::BLACK);
 		}
+		gameWorld->CheckIfNearPaint(this->GetTransform().GetPosition());
 //		Vector3 forward = GetForwardVector();
 //		Debug::DrawLine(this->GetTransform().GetPosition(), this->GetTransform().GetPosition() - forward * 10, Debug::RED, 0.25);
 		animationController->Update(dt);
@@ -104,6 +106,8 @@ namespace NCL::CSC8508 {
 		}
 		
 	}
+
+
 	void SecurityGuard::InitBehaviorTree()
 	{
 		state = Ongoing;
