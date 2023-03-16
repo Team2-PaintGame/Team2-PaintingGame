@@ -215,18 +215,18 @@ if(MSVC)
     )
 endif()
 
-target_precompile_headers(${PROJECT_NAME} PRIVATE
-    <vector>
-    <map>
-    <stack>
-    <string>
-    <list>
-    <thread>
-    <atomic>
-    <functional>
-    <iostream>
-    <set>
-)
+#target_precompile_headers(${PROJECT_NAME} PRIVATE
+#    <vector>
+#    <map>
+#    <stack>
+#    <string>
+#    <list>
+#    <thread>
+#     <atomic>
+#    <functional>
+#    <iostream>
+#    <set>
+#)
  
 if(USE_VULKAN)
 target_precompile_headers(${PROJECT_NAME} PRIVATE
