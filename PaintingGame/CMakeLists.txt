@@ -132,7 +132,7 @@ else()
 file(GLOB GNM_SHADER_FILES ${ASSET_ROOT}Shaders/GNM/*.pssl)
 source_group("GNM Shader Files" FILES ${GNM_SHADER_FILES})
 # Textures
-file(GLOB_RECURSE Textures 
+file(GLOB_RECURSE Textures
     ${ASSET_ROOT}Textures/*.jpg
     ${ASSET_ROOT}Textures/*.jpeg
     ${ASSET_ROOT}Textures/*.png
@@ -142,8 +142,8 @@ file(GLOB_RECURSE Textures
     ${ASSET_ROOT}Textures/*.PNG
     ${ASSET_ROOT}Textures/*.TGA
 )
+#message(${Textures})
 source_group("Textures" FILES ${Textures})
-
 set(ALL_FILES
     ${Header_Files}
     ${Source_Files}
@@ -157,18 +157,19 @@ set(ALL_FILES
 
 # Shaders
 foreach (file ${GNM_SHADER_FILES})
-    get_filename_component(file_name ${file} NAME)
+    get_filename_component(file_name ${file} NAME_WE)
 	get_filename_component(file_ext ${file} EXT)
 		
 	if( file_ext STREQUAL  ".pssl")
 		message("Compiling PSSL file: ${file}")
 		get_filename_component(file_dir ${file} DIRECTORY)
 		set_property(SOURCE ${file} PROPERTY VS_TOOL_OVERRIDE WavePsslc) 
-        if(file_name MATCHES "(P|p?)ixel")
-		    set_property(SOURCE ${file} PROPERTY VS_SETTINGS "Profile=sce_ps_orbis" "FileType=Document" "OutputFileName=${file_dir}/${file_name}.sb")
-        else()
-            set_property(SOURCE ${file} PROPERTY VS_SETTINGS "Profile=sce_vs_vs_orbis" "FileType=Document" "OutputFileName=${file_dir}/${file_name}.sb")
-        endif()
+        #if(file_name MATCHES "(P|p?)ixel")
+		#    set_property(SOURCE ${file} PROPERTY VS_SETTINGS "Profile=sce_ps_orbis" "FileType=Document" "OutputFileName=${file_dir}/${file_name}.sb")
+        #else()
+        #    set_property(SOURCE ${file} PROPERTY VS_SETTINGS "Profile=sce_vs_vs_orbis" "FileType=Document" "OutputFileName=${file_dir}/${file_name}.sb")
+        #endif()
+        set_property(SOURCE ${file} PROPERTY VS_SETTINGS "FileType=Document" "OutputFileName=${file_dir}/${file_name}.sb")
 	endif()
 endforeach()
 
