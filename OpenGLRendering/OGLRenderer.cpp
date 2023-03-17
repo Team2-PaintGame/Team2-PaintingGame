@@ -335,6 +335,44 @@ void OGLRenderer::InitWithWin32(Window& w) {
 	w.SetRenderer(this);
 }
 
+HGLRC  OGLRenderer::CreateAnotherContext()
+{
+	HGLRC currContext;
+	if (!initState) return currContext; //did this before initialisation, which is bad
+
+	//Now we have a temporary context, we can find out if we support OGL 4.x
+	char* ver = (char*)glGetString(GL_VERSION); // ver must equal "4.1.0" (or greater!)
+	int major = ver[0] - '0';		//casts the 'correct' major version integer from our version string
+	int minor = ver[2] - '0';		//casts the 'correct' minor version integer from our version string
+
+	int attribs[] = {
+		WGL_CONTEXT_MAJOR_VERSION_ARB, major,
+		WGL_CONTEXT_MINOR_VERSION_ARB, minor,
+		WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB
+#ifdef OPENGL_DEBUGGING 
+		| WGL_CONTEXT_DEBUG_BIT_ARB
+#endif		//No deprecated stuff!! DIE DIE DIE glBegin!!!!
+		,WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
+		0					//That's enough attributes...
+	};
+
+	PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribsARB = (PFNWGLCREATECONTEXTATTRIBSARBPROC)wglGetProcAddress("wglCreateContextAttribsARB");
+	currContext = wglCreateContextAttribsARB(deviceContext, 0, attribs);
+
+	if (!wglShareLists(renderContext, currContext))
+	{
+		wglDeleteContext(currContext);
+		std::cout << "Error sharing lists! ";
+	}
+
+	return currContext;
+}
+
+bool OGLRenderer::MakeCurrent(HGLRC context)
+{
+	return wglMakeCurrent(deviceContext, context);
+}
+
 void OGLRenderer::DestroyWithWin32() {
 	wglDeleteContext(renderContext);
 }

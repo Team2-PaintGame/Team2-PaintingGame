@@ -8,7 +8,8 @@ namespace NCL::Assets {
 		OGLAssetLoader();
 		virtual MeshGeometry* LoadMesh(const string& name);
 		virtual MeshGeometry* LoadMesh(const MeshType& meshType);
-		virtual ShaderBase* LoadShader(const string& vertex, const string& fragment);
+		virtual MeshMaterial* LoadMeshMaterial(const string& name);
+		virtual ShaderBase*	LoadShader(const string& vertex, const string& fragment);
 		virtual MeshGeometry* LoadFlatMesh(int hVertexCount = 128, int wVertexCount = 128);
 		virtual MeshGeometry* LoadHeightMap(const std::string& filename, int heightMultiplier = 10);
 	};

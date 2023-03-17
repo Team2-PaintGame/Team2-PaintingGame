@@ -11,6 +11,7 @@ https://research.ncl.ac.uk/game/
 #include "TextureBase.h"
 #include "ShaderBase.h"
 #include "MeshGeometry.h"
+#include "MeshMaterial.h"
 #include "TextureLoader.h"
 
 namespace NCL::Assets {
@@ -24,6 +25,7 @@ namespace NCL::Assets {
 		virtual TextureBase* LoadTexture(const string& name) { return TextureLoader::LoadAPITexture(name); }
 		virtual MeshGeometry* LoadMesh(const string& name)												= 0;
 		virtual MeshGeometry* LoadMesh(const MeshType& meshType)										= 0;
+		virtual MeshMaterial* LoadMeshMaterial(const string& name)										= 0;
 		virtual ShaderBase* LoadShader(const string& vertex, const string& fragment)					= 0;
 		virtual MeshGeometry* LoadFlatMesh(int hVertexCount = 128, int wVertexCount = 128)				= 0;
 		virtual MeshGeometry* LoadHeightMap(const std::string& filename, int heightMultiplier = 10)		= 0;
