@@ -66,7 +66,11 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 find_package(Vulkan)
 
 set(ASSET_ROOT "${CMAKE_SOURCE_DIR}/Assets/" CACHE STRING "" FORCE)
+if(WIN32)
 add_compile_definitions(ASSETROOTLOCATION="${ASSET_ROOT}") 
+else()
+add_compile_definitions(ASSETROOTLOCATION="/app0/Assets/") 
+endif()
 
 set(USE_VULKAN CACHE BOOL FORCE)
 if(USE_VULKAN)
