@@ -83,5 +83,5 @@ void GameAssets::LoadShaders() {
 	shaders.insert(std::make_pair("inkShader", loader->LoadShader("ink.vert", "ink.frag")));
 	shaders.insert(std::make_pair("debugShader", loader->LoadShader("Debug.vert", "Debug.frag")));
 	shaders.insert(std::make_pair("hudShader", loader->LoadShader("hud.vert", "hud.frag")));
-	shaders.insert(std::make_pair("scoreShader", loader->LoadShader("score.vert", "score.frag")));
+	shaders.insert(std::make_pair("scoreShader", loader->LoadShader("ScoreBar.vert", "ScoreBar.frag")));
 }

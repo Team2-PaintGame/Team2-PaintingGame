@@ -116,9 +116,7 @@ namespace NCL {
 			void DeleteImGuiContext();
 
 			void RenderBasicScreen();
-			void RenderGameScreen();
-
-			
+			void RenderGameScreen();	
 
 			void RenderPaintSplat(OGLShader* shader);
 
@@ -137,6 +135,12 @@ namespace NCL {
 			void SetDebugLineBufferSizes(size_t newVertCount);
 
 			//ScoreBar methods
+			GLuint mapFBO;
+			GLuint mapColourTexture;
+			GLuint mapScoreTexture;
+			GLuint mapDepthTexture;
+			void GenerateMapFBO(int width, int height);
+			void DrawMap();
 			void DrawScoreBar();
 			void RetrieveAtomicValues();
 			void CalculatePercentages(const int& totalPixels, const int& team1Pixels, const int& team2Pixels, const int& team3Pixels, const int& team4Pixels);

@@ -20,11 +20,7 @@ OGLPaintingGameRenderer::OGLPaintingGameRenderer(Window& w) : OGLRenderer(w) {
 	SetDebugStringBufferSizes(10000);
 	SetDebugLineBufferSizes(1000);
 
-	scoreQuad = new OGLMesh();
-	scoreQuad->SetVertexPositions({ Vector3(-1, 1, 1), Vector3(-1, -1, 1), Vector3(1, -1, 1), Vector3(1, 1, 1) });
-	scoreQuad->SetVertexTextureCoords({ Vector2(0.0f,1.0f), Vector2(0.0f,0.0f), Vector2(1.0f,0.0f), Vector2(1.0f,1.0f) });
-	scoreQuad->SetVertexIndices({ 0,1,2,2,3,0 });
-	scoreQuad->UploadToGPU();
+	GenerateAtomicBuffer();
 
 	team1Percentage = 0;
 	team2Percentage = 0;
@@ -168,6 +164,30 @@ void OGLPaintingGameRenderer::RenderGameScreen() { //change this to RenderScreen
 	boundScreen->RenderMenu();
 }
 
+void OGLPaintingGameRenderer::DrawMap() {
+	if (!gameWorld->GetMapCamera() || !gameWorld->DoesMapNeedChecking()) return;
+	glBindFramebuffer(GL_FRAMEBUFFER, mapFBO);
+
+	glEnable(GL_CULL_FACE);
+	glClearColor(1, 1, 1, 1);
+	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+
+	float screenAspect = (float)windowWidth / (float)windowHeight;
+	Matrix4 viewMatrix = gameWorld->GetMapCamera()->BuildViewMatrix();
+	Matrix4 projMatrix = gameWorld->GetMapCamera()->BuildProjectionMatrix(screenAspect);
+
+	RenderMaps(mapShader, viewMatrix, projMatrix);
+
+	currentAtomicCPU = ((currentAtomicCPU + 1) % 3);
+	currentAtomicGPU = ((currentAtomicGPU + 1) % 3);
+	curretAtomicReset = ((curretAtomicReset + 1) % 3);
+
+	glDisable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
 void OGLPaintingGameRenderer::DrawScoreBar() {
 	for (const auto& i : activeObjects) {
 		OGLShader* shader = (OGLShader*)(i)->GetShader();
@@ -184,7 +204,7 @@ void OGLPaintingGameRenderer::DrawScoreBar() {
 		glUniform3fv(glGetUniformLocation(shader->GetProgramID(), "team1Colour"), 1, teamColours[0].array);
 		glUniform3fv(glGetUniformLocation(shader->GetProgramID(), "team2Colour"), 1, teamColours[1].array);
 
-		gameWorld->MapNeedsChecking(false);
+		//gameWorld->MapNeedsChecking(false);
 	}
 
 	Matrix4 identityMatrix = Matrix4();
