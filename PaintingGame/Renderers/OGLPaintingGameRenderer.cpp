@@ -6,6 +6,8 @@
 #include "OGLShader.h"
 #include "Camera.h"
 #include "Debug.h"
+#include "LoadingScreen.h"
+#include "HUDOnLoad.h"
 
 using namespace NCL;
 using namespace CSC8508;
@@ -67,6 +69,11 @@ void OGLPaintingGameRenderer::RenderBasicScreen() { //change this to render stat
 	BindMesh(r->GetMesh());
 	BindTextureToShader(r->GetDefaultTexture(), "mainTex", 0);
 	DrawBoundMesh();
+
+	if (boundScreen->GetScreenType() == ScreenType::LoadingScreen)
+	{
+		//((LoadingScreen*)boundScreen)->;
+	}
 	boundScreen->RenderMenu();
 }
 void OGLPaintingGameRenderer::RenderGameScreen() { //change this to RenderScreen

@@ -1,11 +1,9 @@
 #include "LoadingSceneNode.h"
 
-NCL::CSC8508::LoadingSceneNode::LoadingSceneNode(MeshGeometry* mesh, ShaderBase* shader, TextureBase* texture)
-{
-
-}
 
 void NCL::CSC8508::LoadingSceneNode::Update(float dt)
 {
-
+	 timer += dt;
+	 quat = Quaternion::AxisAngleToQuaterion(Vector3(0, 0, 1), 45 * timer);
+	 transform->SetOrientation(quat);
 }
