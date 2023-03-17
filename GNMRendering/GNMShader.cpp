@@ -1,6 +1,6 @@
 #ifdef __ORBIS__
 #include "GNMShader.h"
-
+#include "Assets.h"
 #include <iostream>
 #include <fstream>
 #include <gnmx\shader_parser.h>
@@ -23,8 +23,8 @@ GNMShader::GNMShader()
 GNMShader* GNMShader::GenerateShader(const string& vertex,const string& pixel) {
 	GNMShader* shader = new GNMShader();
 
-	shader->GenerateVertexShader(vertex, true);
-	shader->GeneratePixelShader(pixel);
+	shader->GenerateVertexShader(Assets::SHADERDIR + vertex, true);
+	shader->GeneratePixelShader(Assets::SHADERDIR + pixel);
 
 	return shader;
 }
