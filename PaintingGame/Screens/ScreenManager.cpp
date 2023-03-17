@@ -1,4 +1,3 @@
-#pragma once
 #include "ScreenManager.h"
 #include "SplashScreen.h"
 #include "MainMenuScreen.h"
@@ -48,17 +47,17 @@ void BaseScreen::OnSleep() {
 
 void BaseScreen::RenderMenu() {
 	// Start the Dear ImGui frame
-	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
+	//ImGui_ImplOpenGL3_NewFrame();
+	//ImGui_ImplWin32_NewFrame();
+	//ImGui::NewFrame();
 
-	if (isMenuDisplayed) {
-		MenuFrame();
-	}
+	//if (isMenuDisplayed) {
+	//	MenuFrame();
+	//}
 
-	ImGui::EndFrame();
+	//ImGui::EndFrame();
 
-	// Rendering
-	ImGui::Render();
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+	//// Rendering
+	//ImGui::Render();
+	//ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }

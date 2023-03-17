@@ -1,7 +1,7 @@
 #include "GameScreen.h"
 #include "SinglePlayerGame.h"
 #include "SplitScreenGame.h"
-#include "NetworkedGame.h"
+//#include "NetworkedGame.h"
 #include "Window.h"
 
 using namespace NCL;
@@ -31,14 +31,14 @@ void GameScreen::LoadGame() {
 	case ScreenCommand::CreateSplitScreenGame:
 		sceneNode = new SplitScreenGame(screenManager->GetGameAssets());
 		break;
-	case ScreenCommand::CreateNetworkedGameAsServer:
+	/*case ScreenCommand::CreateNetworkedGameAsServer:
 		sceneNode = new NetworkedGame(screenManager->GetGameAssets());
 		((NetworkedGame*)(sceneNode))->StartAsServer();
 		break;
 	case ScreenCommand::CreateNetworkedGameAsClient:
 		sceneNode = new NetworkedGame(screenManager->GetGameAssets());
 		((NetworkedGame*)(sceneNode))->StartAsClient(127, 0, 0, 1);
-		break;
+		break;*/
 	default:
 		std::cout << "No instance of game could be created: No appropriate Command Selected." << std::endl;
 	}
@@ -53,7 +53,7 @@ PushdownState::PushdownResult GameScreen::OnUpdate(float dt, PushdownState** new
 }
 
 void GameScreen::MenuFrame() {
-	ImGui::Begin("Painting Game");
+	/*ImGui::Begin("Painting Game");
 	if (ImGui::Button("Resume")) {
 		isMenuDisplayed = false;
 	}
@@ -64,7 +64,7 @@ void GameScreen::MenuFrame() {
 	if (ImGui::Button("Quit Game")) {
 		command = ScreenCommand::TransitionToPreviousScreen;
 	}
-	ImGui::End();
+	ImGui::End();*/
 }
 
 PushdownState::PushdownResult GameScreen::onStateChange(PushdownState** newState) {

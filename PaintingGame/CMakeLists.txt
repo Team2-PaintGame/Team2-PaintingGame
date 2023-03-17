@@ -124,8 +124,26 @@ set(ALL_FILES
     ${ImGui}
 )
 else()
-file(GLOB GNM_SHADER_FILES ${ASSET_ROOT}/Shaders/GNM/*.pssl)
+################################################################################
+# PS4 Setup
+################################################################################
+
+# Shaders
+file(GLOB GNM_SHADER_FILES ${ASSET_ROOT}Shaders/GNM/*.pssl)
 source_group("GNM Shader Files" FILES ${GNM_SHADER_FILES})
+# Textures
+file(GLOB_RECURSE Textures 
+    ${ASSET_ROOT}Textures/*.jpg
+    ${ASSET_ROOT}Textures/*.jpeg
+    ${ASSET_ROOT}Textures/*.png
+    ${ASSET_ROOT}Textures/*.tga
+    ${ASSET_ROOT}Textures/*.JPG
+    ${ASSET_ROOT}Textures/*.JPEG
+    ${ASSET_ROOT}Textures/*.PNG
+    ${ASSET_ROOT}Textures/*.TGA
+)
+source_group("Textures" FILES ${Textures})
+
 set(ALL_FILES
     ${Header_Files}
     ${Source_Files}
@@ -134,15 +152,13 @@ set(ALL_FILES
     ${Renderers}
     ${Screens}
 	${GNM_SHADER_FILES}
+    ${Textures}
 )
 
+# Shaders
 foreach (file ${GNM_SHADER_FILES})
     get_filename_component(file_name ${file} NAME)
 	get_filename_component(file_ext ${file} EXT)
-	
-	if(file_ext STREQUAL ".h" OR file_ext STREQUAL ".cpp")
-		continue()
-	endif()
 		
 	if( file_ext STREQUAL  ".pssl")
 		message("Compiling PSSL file: ${file}")
@@ -155,6 +171,40 @@ foreach (file ${GNM_SHADER_FILES})
         endif()
 	endif()
 endforeach()
+
+# Textures
+set(IMG2GNF_TOOL_EXECUTEABLE "${SCE_ORBIS_SDK_DIR}/host_tools/bin/orbis-image2gnf")
+foreach (file ${Textures})
+	get_filename_component(file_name ${file} NAME_WE)
+	get_filename_component(file_ext ${file} EXT)
+	
+	if(file_ext STREQUAL ".jpg" OR 
+       file_ext STREQUAL ".jpeg" OR 
+	   file_ext STREQUAL ".png" OR 
+       file_ext STREQUAL ".tga" OR
+	   file_ext STREQUAL ".JPG" OR 
+       file_ext STREQUAL ".JPEG" OR 
+	   file_ext STREQUAL ".PNG" OR
+	   file_ext STREQUAL ".TGA")
+		
+       message("Reading Texture File:  ${file}")
+	   get_filename_component(file_dir ${file} DIRECTORY)
+	   get_filename_component(file_abs ${file} ABSOLUTE)
+       set(GNF_OUTPUT ${file_name}.gnf)
+	   set(GNF_ABS_INPUT ${file_abs})
+	   set(GNF_ABS_OUTPUT ${file_dir}/${GNF_OUTPUT})
+	   add_custom_command(
+	        OUTPUT ${GNF_ABS_OUTPUT}
+			
+			COMMENT "Converting ${file} to .gnf"
+			COMMAND ${IMG2GNF_TOOL_EXECUTEABLE} -i  ${GNF_ABS_INPUT} -o ${GNF_ABS_OUTPUT} -f Auto
+            MAIN_DEPENDENCY ${file}
+			VERBATIM
+	   )
+       list(APPEND GNF_FILES ${GNF_OUTPUT})   
+	endif()
+endforeach()
+
 endif()
 
 if(USE_VULKAN)
