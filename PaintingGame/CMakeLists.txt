@@ -402,12 +402,12 @@ target_link_libraries(${PROJECT_NAME} LINK_PUBLIC OpenGLRendering)
 target_link_libraries(${PROJECT_NAME} LINK_PUBLIC Networking)
 else()
 target_link_libraries(${PROJECT_NAME} LINK_PUBLIC GNMRendering)
-add_custom_target(
-    GNM_SHADER_FILES
-    DEPENDS ON ${GNF_FILES}
-)
+#add_custom_target(
+#    GNM_SHADER_FILES
+#    DEPENDS ON ${GNF_FILES}
+#)
 
-add_dependencies(${PROJECT_NAME} GNM_SHADER_FILES)
+#add_dependencies(${PROJECT_NAME} GNM_SHADER_FILES)
 endif()
 
 
