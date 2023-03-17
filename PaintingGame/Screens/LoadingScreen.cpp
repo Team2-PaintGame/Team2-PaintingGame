@@ -20,7 +20,7 @@ void NCL::CSC8508::LoadingScreen::OnAwake()
 	//create thread 
 	gs->SetCommand(command);
 //	GameScreen::OnLoad(gs, screenManager->GetGameAssets());
-	gameScreenThread = new std::thread(GameScreen::OnLoad, gs, screenManager->GetGameAssets());
+	threadToWait = new std::thread(GameScreen::OnLoad, gs, screenManager->GetGameAssets());
 }
 
 PushdownState::PushdownResult LoadingScreen::OnUpdate(float dt, PushdownState** newState)
@@ -32,12 +32,12 @@ PushdownState::PushdownResult LoadingScreen::OnUpdate(float dt, PushdownState** 
 
 PushdownState::PushdownResult LoadingScreen::onStateChange(PushdownState** newState)
 {
-	if (gameScreenThread->joinable()) // if thread joinable
+	if (threadToWait->joinable()) // if thread joinable
 	{
-		*newState = screenManager->GetScreen(ScreenType::GameScreen);
-		gameScreenThread->join();
-		delete gameScreenThread;
-		gameScreenThread = nullptr;
+		*newState = screenManager->GetScreen(ScreenType::SplashScreen);
+		threadToWait->join();
+		delete threadToWait;
+		threadToWait = nullptr;
 		return PushdownResult::Push;
 	}
 	else

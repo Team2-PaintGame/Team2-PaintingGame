@@ -19,13 +19,13 @@ namespace NCL {
 			}
 			void OnAwake() override;
 			PushdownResult OnUpdate(float dt, PushdownState** newState) override;
-
+			void SetThread(std::thread* t) { threadToWait = t; }
 			HUDOnLoad* hUDOnLoad;
 
 		protected:
 			virtual PushdownResult onStateChange(PushdownState** newState);
 			void MenuFrame() override {}
-			std::thread* gameScreenThread = nullptr;
+			std::thread* threadToWait = nullptr;
 
 			RenderObject* renderObj;
 			Quaternion quat;
