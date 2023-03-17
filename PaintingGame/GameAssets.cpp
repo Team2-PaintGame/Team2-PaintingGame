@@ -5,6 +5,18 @@ using namespace Assets;
 
 GameAssets::GameAssets(Assets::AssetLoader* loader) {
 	this->loader = loader;
+	Load();
+}
+
+void GameAssets::Load()
+{
+	// Clear just in case
+	meshes.clear();
+	meshAnimations.clear();
+	meshMaterials.clear();
+	shaders.clear();
+	textures.clear();
+
 	LoadTextures();
 	LoadMeshes();
 	LoadMeshMaterials();

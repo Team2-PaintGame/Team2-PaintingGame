@@ -17,6 +17,8 @@ namespace NCL {
 		MeshAnimation* GetMeshAnimation(const std::string& identifier) const;
 		TextureBase* GetTexture(const std::string& identifier) const;
 		ShaderBase* GetShader(const std::string& identifier) const;
+
+		void Load();
 		//SoundBase* GetSound(const std::string& identifier);
 	protected:
 		Assets::AssetLoader* loader;

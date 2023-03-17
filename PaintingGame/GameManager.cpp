@@ -2,6 +2,7 @@
 #include "GameManager.h"
 #include "SplashScreen.h"
 #include "MainMenuScreen.h"
+#include "LoadingScreen.h"
 
 using namespace NCL;
 using namespace CSC8508;
@@ -15,6 +16,9 @@ GameManager::GameManager(Window* window) {
 	screenManager = new ScreenManager(gameAssets);
 
 	renderer->BindDebugShader(gameAssets->GetShader("debugShader"));
+	//renderer->BindScreen(screenManager->GetScreen(ScreenType::LoadingScreen));
+
+	//assetThread = std::thread(LoadAssets, gameAssets);
 }
 
 GameManager::~GameManager() {
@@ -29,4 +33,10 @@ bool GameManager::RunGame(float dt) {
 	renderer->BindScreen(screenManager->GetActiveScreen());
 	renderer->Render();
 	return isRunning;
+}
+
+//Static function to start the thread
+void GameManager::LoadAssets(GameAssets* assets)
+{
+	assets->Load();
 }
