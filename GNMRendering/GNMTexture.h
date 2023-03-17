@@ -15,7 +15,8 @@ namespace NCL {
 
 			static GNMTexture* LoadTextureFromFile(const std::string& filename);
 			const sce::Gnm::Texture& GetAPITexture() const { return apiTexture; }
-			
+
+			static TextureBase* RGBATextureFromFilename(const std::string& name);
 		protected:						
 			sce::Gnm::Texture apiTexture;
 		};
