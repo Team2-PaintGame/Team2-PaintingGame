@@ -40,7 +40,7 @@ PushdownState::PushdownResult MainMenuScreen::onStateChange(PushdownState** newS
 	case ScreenCommand::CreateNetworkedGameAsServer:
 	case ScreenCommand::CreateNetworkedGameAsClient:
 	{
-		*newState = screenManager->GetScreen(ScreenType::LoadingScreen);
+		*newState = screenManager->GetScreen(ScreenType::GameScreen);
 		((BaseScreen*)(*newState))->SetCommand(command);
 		return PushdownResult::Push;
 	}

@@ -5,7 +5,10 @@ using namespace Assets;
 
 GameAssets::GameAssets(Assets::AssetLoader* loader) {
 	this->loader = loader;
+
+#if 1 //#ifdef _ORBIS // Load without loading screen on ps4
 	Load();
+#endif
 }
 
 void GameAssets::Load()
@@ -96,4 +99,23 @@ void GameAssets::LoadShaders() {
 	shaders.insert(std::make_pair("inkShader", loader->LoadShader("ink.vert", "ink.frag")));
 	shaders.insert(std::make_pair("debugShader", loader->LoadShader("Debug.vert", "Debug.frag")));
 	shaders.insert(std::make_pair("hudShader", loader->LoadShader("hud.vert", "hud.frag")));
+}
+
+void GameAssets::ReloadMeshes()
+{
+	meshes.clear();
+	LoadMeshes();
+}
+void GameAssets::ReloadShaders()
+{
+
+	for (auto& pair : shaders)
+	{
+		if (pair.second)
+		{
+			pair.second->ReloadShader();
+		}
+	}
+	//shaders.clear();
+	//LoadShaders();
 }

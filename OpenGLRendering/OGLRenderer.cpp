@@ -373,6 +373,14 @@ bool OGLRenderer::MakeCurrent(HGLRC context)
 	return wglMakeCurrent(deviceContext, context);
 }
 
+void OGLRenderer::ResetDefaultContext() {
+	MakeCurrent(renderContext);
+}
+
+void OGLRenderer::ResetContext() {
+	wglMakeCurrent(NULL, NULL);
+}
+
 void OGLRenderer::DestroyWithWin32() {
 	wglDeleteContext(renderContext);
 }

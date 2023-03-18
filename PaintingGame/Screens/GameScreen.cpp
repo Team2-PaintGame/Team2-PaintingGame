@@ -10,7 +10,16 @@ using namespace CSC8508;
 bool GameScreen::sPauseCallback = false;
 
 void NCL::CSC8508::GameScreen::OnAwake()
-{}
+{
+	isMenuDisplayed = false;
+	isDebugDisplayed = false;
+	LoadGame(screenManager->GetGameAssets());
+	sceneNode->GetPhysicsWorld()->setIsDebugRenderingEnabled(isDebugRenderingEnabled);
+	sceneNode->GetPhysicsWorld()->getDebugRenderer().setIsDebugItemDisplayed(reactphysics3d::DebugRenderer::DebugItem::COLLISION_SHAPE, true);
+	sceneNode->GetPhysicsWorld()->getDebugRenderer().setIsDebugItemDisplayed(reactphysics3d::DebugRenderer::DebugItem::COLLIDER_BROADPHASE_AABB, true);
+
+	Window::GetWindow()->LockMouseToWindow(true);
+}
 
 void GameScreen::OnAwake1(GameAssets* assets) {
 	//thread start 

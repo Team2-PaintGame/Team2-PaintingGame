@@ -4,6 +4,7 @@
 #include "OGLTexture.h"
 #include "OGLAssetLoader.h"
 #include <thread>
+#include "GameManager.h"
 
 using namespace NCL;
 using namespace CSC8508;
@@ -15,12 +16,12 @@ void NCL::CSC8508::LoadingScreen::OnAwake()
 	hUDOnLoad->SetDefaultTexture(TextureLoader::LoadAPITexture("loadingSprites.png"));
 
 	//TextureBase* t = TextureLoader::LoadAPITexture("loadingSprites.png");
-	GameScreen* gs;
-	gs = (GameScreen*)screenManager->GetScreen(ScreenType::GameScreen);
+	//GameScreen* gs;
+	//gs = (GameScreen*)screenManager->GetScreen(ScreenType::GameScreen);
 	//create thread 
-	gs->SetCommand(command);
+	//gs->SetCommand(command);
 //	GameScreen::OnLoad(gs, screenManager->GetGameAssets());
-	threadToWait = new std::thread(GameScreen::OnLoad, gs, screenManager->GetGameAssets());
+	//threadToWait = new std::thread(GameScreen::OnLoad, gs, screenManager->GetGameAssets());
 }
 
 PushdownState::PushdownResult LoadingScreen::OnUpdate(float dt, PushdownState** newState)
@@ -32,12 +33,18 @@ PushdownState::PushdownResult LoadingScreen::OnUpdate(float dt, PushdownState** 
 
 PushdownState::PushdownResult LoadingScreen::onStateChange(PushdownState** newState)
 {
-	if (threadToWait->joinable()) // if thread joinable
+	if (!threadToWait || threadToWait->joinable()) // if thread joinable
 	{
 		*newState = screenManager->GetScreen(ScreenType::SplashScreen);
-		threadToWait->join();
-		delete threadToWait;
-		threadToWait = nullptr;
+
+		if (threadToWait)
+		{
+			threadToWait->join();
+			delete threadToWait;
+			threadToWait = nullptr;
+			GameManager::FinishLoadingCallback();
+		}
+
 		return PushdownResult::Push;
 	}
 	else
