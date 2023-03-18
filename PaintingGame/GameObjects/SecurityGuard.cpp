@@ -80,13 +80,7 @@ namespace NCL::CSC8508 {
 				SetIsBlindedFalse();
 			}
 		}
-		if (navigationPath->waypoints.size() > 0)
-		{
-		//	Debug::DrawLine(this->GetTransform().GetPosition(), navigationPath->waypoints.back(), Debug::BLACK);
-		}
-		gameWorld->CleanNearbyPaint(this->GetTransform().GetPosition());
-//		Vector3 forward = GetForwardVector();
-//		Debug::DrawLine(this->GetTransform().GetPosition(), this->GetTransform().GetPosition() - forward * 10, Debug::RED, 0.25);
+//		gameWorld->CleanNearbyPaint(this->GetTransform().GetPosition());
 		animationController->Update(dt);
 //		DrawNavTris();
 //		DisplayPathfinding();
@@ -104,7 +98,6 @@ namespace NCL::CSC8508 {
 		if (state == Failure) {
 			state = Initialise;
 		}
-		
 	}
 
 
@@ -119,8 +112,13 @@ namespace NCL::CSC8508 {
 		InitChaseThePlayer();
 		InitAttackThePlayer();
 
+		InitGoToPaint();
+		InitCleanPaint();
+
 		InitPatrolSequence();
 		InitChaseSequence();
+		InitSuperCleanSequence();
+		InitChasePatrolSelector();
 		InitRootSelector();
 
 		rootSelector->Reset();
@@ -141,10 +139,95 @@ namespace NCL::CSC8508 {
 	void SecurityGuard::InitRootSelector()
 	{
 		rootSelector = new BehaviourSelector("Root Selector ");
-		rootSelector->AddChild(chaseSequence);
-		rootSelector->AddChild(patrolSequence);
+		rootSelector->AddChild(superCleanSequence);
+		rootSelector->AddChild(chasePatrolSelector);
 	}
+	void SecurityGuard::InitSuperCleanSequence()
+	{
+		superCleanSequence = new BehaviourSequence("Super Clean ");
+		superCleanSequence->AddChild(goToPaint);
+		superCleanSequence->AddChild(cleanPaint);
+	}
+	void SecurityGuard::InitChasePatrolSelector()
+	{
+		chasePatrolSelector = new BehaviourSelector("Chase/Patrol ");
+		chasePatrolSelector->AddChild(chaseSequence);
+		chasePatrolSelector->AddChild(patrolSequence);
+	}
+	void SecurityGuard::InitGoToPaint()
+	{
+		goToPaint = new BehaviourAction("Go To Paint ", [&](float dt, BehaviourState state)->BehaviourState {
+			if (state == Initialise) {
+				std::cout << "Go To Paint - Initialise\n";
+				if (gameWorld->GetNumPaintedPositions() >= 30)
+				{
+					std::cout << "Theres too much paint!\n";
+					Vector3 paintPos = gameWorld->FindClosestPaintSplat(this->GetTransform().GetPosition());
+					Vector3 securityPos = this->GetTransform().GetPosition();
+					bool foundPath = navigationMesh->FindPath(securityPos, paintPos, *navigationPath);
+					if (foundPath)
+					{
+						state = Ongoing;
+					}	
+				}
+				else
+				{
+					std::cout << "Its too clean to clean\n";
+					state = Failure;
+				}	
+			}
+			else if (state == Ongoing) 
+			{
+				Vector3 direction = navigationPath->waypoints.back() - this->GetTransform().GetPosition();
+				Vector3 velocity = rigidBody->getLinearVelocity();
+				if (velocity.Length() < 0.1) {
+					std::cout << "Velocity = " << velocity.Length() << "\n";
+					stuckAccumulator += dt;
+					if (stuckAccumulator > 5.0) {
+						stuckAccumulator = 0.0f;
+						navigationPath->Clear();
+						return Success;
+					}
+				}
+				if (direction.Length() <= 4 && navigationPath->waypoints.size() >= 2) {
+					std::cout << "Go To Paint - Going Destination\n";
+					navigationPath->waypoints.pop_back();
+				}
+				if (navigationPath->waypoints.size() == 1) {
+					if (DistanceToTarget(navigationPath->waypoints.front()) <= 3.0f) {
+						std::cout << "Go To Paint - Reached Destination\n";
+						navigationPath->Clear();
+						return Success;
+					}
+				}
+				gameWorld->CleanNearbyPaint(this->GetTransform().GetPosition(), 15);
+				DetermineSpeed();
+				MoveSecurityGuard(direction);
+			}
+			return state;
 
+			}
+		);
+	}
+	void SecurityGuard::InitCleanPaint()
+	{
+		cleanPaint = new BehaviourAction("Clean Paint ", [&](float dt, BehaviourState state)->BehaviourState {
+			if (state == Initialise)
+			{
+				state = Ongoing;
+			}
+			else if (state == Ongoing)
+			{
+				Vector3 securityPos = this->GetTransform().GetPosition();
+				gameWorld->CleanNearbyPaint(securityPos, 50);
+				return Success;
+			}
+			return state;
+			}
+
+		);
+
+	}
 	void SecurityGuard::InitChooseDestination()
 	{
 		chooseDestination = new BehaviourAction("Choose Destination ", [&](float dt, BehaviourState state)->BehaviourState {

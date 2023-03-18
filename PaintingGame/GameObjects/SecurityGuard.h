@@ -43,10 +43,15 @@ namespace NCL::CSC8508 {
 		void InitChaseThePlayer();
 		void InitAttackThePlayer();
 
+		void InitGoToPaint();
+		void InitCleanPaint();
+
 		void InitPatrolSequence();
 		void InitChaseSequence();
 		void InitRootSelector();
 		void InitBehaviorTree();
+		void InitSuperCleanSequence();
+		void InitChasePatrolSelector();
 
 		bool LookForPlayer(GameObject* player);
 		GameObject* LookForPlayers();
@@ -86,6 +91,12 @@ namespace NCL::CSC8508 {
 		BehaviourSelector* rootSelector;
 		BehaviourSequence* patrolSequence;
 		BehaviourSequence* chaseSequence;
+	
+		BehaviourSequence* superCleanSequence;   ////
+		BehaviourSelector* chasePatrolSelector;	 ////
+
+		BehaviourAction* goToPaint;			     ////
+		BehaviourAction* cleanPaint;			 ////
 
 		BehaviourAction* chooseDestination;
 		BehaviourAction* goToDestination;

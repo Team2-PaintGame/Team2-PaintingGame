@@ -155,13 +155,13 @@ void GameWorld::AddPaintedPosition(const Vector3& position) {
 	paintedPositions.push_back(position);
 }
 
-void GameWorld::CleanNearbyPaint(Vector3 SecurityPos)
+void GameWorld::CleanNearbyPaint(Vector3 SecurityPos, float range)
 {
 
 	for (auto paintPos = paintedPositions.begin(); paintPos != paintedPositions.end();)
 	{
 		float distance = (SecurityPos - *paintPos).Length();
-		if (distance < 15)
+		if (distance < range)
 		{
 			paintPos = paintedPositions.erase(paintPos);
 		}
