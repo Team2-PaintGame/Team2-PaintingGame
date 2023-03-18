@@ -50,7 +50,7 @@ namespace NCL::CSC8508 {
 
 		bool LookForPlayer(GameObject* player);
 		GameObject* LookForPlayers();
-		Vector3 ChooseDestination();
+	
 		void DisplayPathfinding();
 		void MoveSecurityGuard(Vector3 direction);
 		float DistanceToTarget(Vector3 destination);
@@ -65,12 +65,12 @@ namespace NCL::CSC8508 {
 		bool IsInFieldOfView(Vector3 direction);
 		void SetIsBlindedTrue() { isBlinded = true; std::cout << "isBlinded = true\n"; }
 		void SetIsBlindedFalse() { isBlinded = false; std::cout << "isBlinded = false\n";}
+
+		Vector3 ChooseRandomDestination();
+		Vector3 ChooseDestination();
 	protected:
 
 		int state;
-		int nodeSize;
-		int gridWidth;
-		int gridHeight;
 
 		float force = 100;
 		const float slowForce = 50; // 100
@@ -79,11 +79,8 @@ namespace NCL::CSC8508 {
 		const float sprintForce = 350;
 		bool isBlinded = false;
 
-		//const float slowForce = 1; // 100
-		//const float walkForce = 1;  //150
-		//const float runForce = 1;
-
-		float timeAccumulator = 0.0f;
+		float chaseAccumulator = 0.0f;
+		float stuckAccumulator = 0.0f;
 		float blindTimer = 0.0f;
 
 		BehaviourSelector* rootSelector;

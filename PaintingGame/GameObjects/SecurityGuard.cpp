@@ -84,7 +84,7 @@ namespace NCL::CSC8508 {
 		{
 		//	Debug::DrawLine(this->GetTransform().GetPosition(), navigationPath->waypoints.back(), Debug::BLACK);
 		}
-		gameWorld->CheckIfNearPaint(this->GetTransform().GetPosition());
+		gameWorld->CleanNearbyPaint(this->GetTransform().GetPosition());
 //		Vector3 forward = GetForwardVector();
 //		Debug::DrawLine(this->GetTransform().GetPosition(), this->GetTransform().GetPosition() - forward * 10, Debug::RED, 0.25);
 		animationController->Update(dt);
@@ -190,11 +190,12 @@ namespace NCL::CSC8508 {
 					std::cout << " Going to the destination - Can see Player\n";
 					return Success;
 				}
+				//std::cout << "Velocity = " << velocity.Length() << "\n";
 				if (velocity.Length() < 0.1) {
-					//std::cout << "Velocity = " << velocity.Length() << "\n";
-					timeAccumulator += dt;
-					if (timeAccumulator > 5.0) {
-						timeAccumulator = 0.0f;
+					std::cout << "Velocity = " << velocity.Length() << "\n";
+					stuckAccumulator += dt;
+					if (stuckAccumulator > 5.0) {
+						stuckAccumulator = 0.0f;
 						navigationPath->Clear();
 						return Success;
 					}
@@ -266,11 +267,25 @@ namespace NCL::CSC8508 {
 			}
 			else if (state == Ongoing) {
 				Vector3 direction = navigationPath->waypoints.back() - this->GetTransform().GetPosition();
-				timeAccumulator += dt;
-				if (timeAccumulator >= 1.5) {
+				chaseAccumulator += dt;
+				Vector3 velocity = rigidBody->getLinearVelocity();
+			//	std::cout << "Velocity = " << velocity.Length() << "\n";
+				if (velocity.Length() < 1)
+				{
+					stuckAccumulator += dt;
+					if (stuckAccumulator > 5)
+					{
+						stuckAccumulator = 0;
+						navigationPath->Clear();
+						rootSelector->Reset();
+						return Initialise;
+					}
+
+				}
+				if (chaseAccumulator >= 1.5) {
 					bool isPlayerVisible = LookForPlayer(chasedPlayer);
-					std::cout << "1.5 seconds accumulated\n";
-					timeAccumulator = 0.0f;
+					//std::cout << "1.5 seconds accumulated\n";
+					chaseAccumulator = 0.0f;
 					if (isPlayerVisible) {
 						navigationPath->Clear();
 						rootSelector->Reset();
@@ -286,7 +301,7 @@ namespace NCL::CSC8508 {
 					if (DistanceToTarget(navigationPath->waypoints.back()) <= 4.0f) {
 								std::cout << " Chase the Player - Reached the player\n";
 						navigationPath->Clear();
-						timeAccumulator = 0.0f;
+						chaseAccumulator = 0.0f;
 						return Success;
 					}
 				}
@@ -470,12 +485,27 @@ namespace NCL::CSC8508 {
 	}
 
 
-	Vector3 SecurityGuard::ChooseDestination()
+
+	Vector3 SecurityGuard::ChooseRandomDestination()
 	{
 		int numNodes = navigationMesh->allTris.size();
 		int randomNum = rand() % numNodes;
 		Vector3 destination = navigationMesh->allTris[randomNum].centroid;
 		return destination;
+	}
+	Vector3 SecurityGuard::ChooseDestination()
+	{
+		if (gameWorld->GetSizePaintedPositions() < 1)
+		{
+			std::cout << "No Paint\n";
+			return ChooseRandomDestination();
+		}
+		else
+		{
+			std::cout << "Going to Paint Splat\n";
+			Vector3 paintPos = gameWorld->FindClosestPaintSplat(this->GetTransform().GetPosition());
+			return paintPos;
+		}
 	}
 
 	void SecurityGuard::DetermineChaseSpeed()
@@ -506,12 +536,12 @@ namespace NCL::CSC8508 {
 			if (distanceToNextWaypoint <= 40)
 			{
 				force = sprintForce;
-				std::cout << "1 Waypoint, less than 40, speed: " << force << "\n";
+				//std::cout << "1 Waypoint, less than 40, speed: " << force << "\n";
 			}
 			else
 			{
 				force = runForce;
-				std::cout << "1 Waypoint, more than 40, speed: " << force << "\n";
+				//std::cout << "1 Waypoint, more than 40, speed: " << force << "\n";
 			}
 		}
 		else if (numWaypoints > 1)
@@ -526,11 +556,11 @@ namespace NCL::CSC8508 {
 				float cosTheta = dot / (firstWaypointDirection.Length() * secondWaypointDirection.Length());
 				cosTheta = (cosTheta + 3) * 0.25f;
 				force = runForce * cosTheta;
-				std::cout << "2 Waypoints, less than 40, speed: " << force << "\n";
+			//	std::cout << "2 Waypoints, less than 40, speed: " << force << "\n";
 			}
 			else
 			{
-				std::cout << "2 Waypoints, more than 40, speed: " << force << "\n";
+			//	std::cout << "2 Waypoints, more than 40, speed: " << force << "\n";
 				force = runForce;
 			}
 		}
