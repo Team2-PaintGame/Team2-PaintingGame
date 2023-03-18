@@ -159,7 +159,7 @@ namespace NCL::CSC8508 {
 		goToPaint = new BehaviourAction("Go To Paint ", [&](float dt, BehaviourState state)->BehaviourState {
 			if (state == Initialise) {
 				std::cout << "Go To Paint - Initialise\n";
-				if (gameWorld->GetNumPaintedPositions() >= 30)
+				if (gameWorld->GetNumPaintedPositions() >= 100)
 				{
 					std::cout << "Theres too much paint!\n";
 					Vector3 paintPos = gameWorld->FindClosestPaintSplat(this->GetTransform().GetPosition());
@@ -181,7 +181,7 @@ namespace NCL::CSC8508 {
 				Vector3 direction = navigationPath->waypoints.back() - this->GetTransform().GetPosition();
 				Vector3 velocity = rigidBody->getLinearVelocity();
 				if (velocity.Length() < 0.1) {
-					std::cout << "Velocity = " << velocity.Length() << "\n";
+					//std::cout << "Velocity = " << velocity.Length() << "\n";
 					stuckAccumulator += dt;
 					if (stuckAccumulator > 5.0) {
 						stuckAccumulator = 0.0f;
@@ -201,7 +201,7 @@ namespace NCL::CSC8508 {
 					}
 				}
 				gameWorld->CleanNearbyPaint(this->GetTransform().GetPosition(), 15);
-				DetermineSpeed();
+				DetermineChaseSpeed();
 				MoveSecurityGuard(direction);
 			}
 			return state;
@@ -275,7 +275,7 @@ namespace NCL::CSC8508 {
 				}
 				//std::cout << "Velocity = " << velocity.Length() << "\n";
 				if (velocity.Length() < 0.1) {
-					std::cout << "Velocity = " << velocity.Length() << "\n";
+					//std::cout << "Velocity = " << velocity.Length() << "\n";
 					stuckAccumulator += dt;
 					if (stuckAccumulator > 5.0) {
 						stuckAccumulator = 0.0f;
@@ -297,6 +297,7 @@ namespace NCL::CSC8508 {
 				}
 				DetermineSpeed();
 				MoveSecurityGuard(direction);
+				gameWorld->CleanNearbyPaint(this->GetTransform().GetPosition(), 15);
 			}
 			return state;
 			}
