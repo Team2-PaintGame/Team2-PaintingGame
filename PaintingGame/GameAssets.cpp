@@ -37,7 +37,6 @@ void GameAssets::LoadMeshes() {
 	meshes.insert(std::make_pair("cubeMesh", loader->LoadMesh("cube.msh")));
 	meshes.insert(std::make_pair("mainChar", loader->LoadMesh("Aj_TPose.msh")));
 	meshes.insert(std::make_pair("sphereMesh", loader->LoadMesh("sphere.msh")));
-	meshes.insert(std::make_pair("coinMesh", loader->LoadMesh("coin.msh")));
 	meshes.insert(std::make_pair("capsuleMesh", loader->LoadMesh("capsule.msh")));
 	meshes.insert(std::make_pair("gunMesh", loader->LoadMesh("PaintingGun.msh")));
 	meshes.insert(std::make_pair("quadMesh", loader->LoadMesh(MeshType::Quad)));
@@ -64,11 +63,6 @@ void GameAssets::LoadMeshAnimations() {
 
 void GameAssets::LoadTextures() {
 	textures.insert(std::make_pair("basicTex", loader->LoadTexture("checkerboard.png")));
-	textures.insert(std::make_pair("grassTex", loader->LoadTexture("grass.jpg")));
-	textures.insert(std::make_pair("coinTex", loader->LoadTexture("coin.png")));
-	textures.insert(std::make_pair("floorTex", loader->LoadTexture("ground.png")));
-	textures.insert(std::make_pair("goatTex", loader->LoadTexture("goat1.jpg")));
-	textures.insert(std::make_pair("doorTex", loader->LoadTexture("door.jpg")));
 	textures.insert(std::make_pair("gunFocusTex", loader->LoadTexture("gunFocusPoint.png")));
 	textures.insert(std::make_pair("splashScreenTex", loader->LoadTexture("Screens/bg.jpg"))); 
 	textures.insert(std::make_pair("mainMenuScreenTex", loader->LoadTexture("Screens/bg2.jpg")));
