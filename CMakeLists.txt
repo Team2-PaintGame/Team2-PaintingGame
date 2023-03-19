@@ -69,7 +69,7 @@ set(ASSET_ROOT "${CMAKE_SOURCE_DIR}/Assets/" CACHE STRING "" FORCE)
 if(WIN32)
 add_compile_definitions(ASSETROOTLOCATION="${ASSET_ROOT}") 
 else()
-add_compile_definitions(ASSETROOTLOCATION="/app0/Assets/") 
+add_compile_definitions(ASSETROOTLOCATION="/host/${ASSET_ROOT}") 
 endif()
 
 set(USE_VULKAN CACHE BOOL FORCE)
