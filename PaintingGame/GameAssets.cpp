@@ -75,6 +75,7 @@ void GameAssets::LoadTextures() {
 }
 
 void GameAssets::LoadShaders() {
+#ifdef _WIN32
 	shaders.insert(std::make_pair("basicShader", loader->LoadShader("scene.vert", "scene.frag")));
 	shaders.insert(std::make_pair("terrainShader", loader->LoadShader("terrain.vert", "terrain.frag")));
 	shaders.insert(std::make_pair("skinningShader", loader->LoadShader("skinning.vert", "scene.frag")));
@@ -83,4 +84,15 @@ void GameAssets::LoadShaders() {
 	shaders.insert(std::make_pair("inkShader", loader->LoadShader("ink.vert", "ink.frag")));
 	shaders.insert(std::make_pair("debugShader", loader->LoadShader("Debug.vert", "Debug.frag")));
 	shaders.insert(std::make_pair("hudShader", loader->LoadShader("hud.vert", "hud.frag")));
+#endif // _WIN32
+#ifdef __ORBIS__
+	ShaderBase* shader = loader->LoadShader("VertexShader_vv.sb", "PixelShader_p.sb");
+	shaders.insert(std::make_pair("basicShader", shader));
+	shaders.insert(std::make_pair("skinningShader", shader));
+	shaders.insert(std::make_pair("SecondskinningShader", shader));
+	shaders.insert(std::make_pair("screenShader", shader));
+	shaders.insert(std::make_pair("inkShader", shader));
+	shaders.insert(std::make_pair("debugShader", shader));
+	shaders.insert(std::make_pair("hudShader", shader));
+#endif // __ORBIS__
 }
