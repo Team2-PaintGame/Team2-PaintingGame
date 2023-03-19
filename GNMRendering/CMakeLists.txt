@@ -84,7 +84,7 @@ else()
         #$<$<CONFIG:Debug>:
         #    -O0
         #>
-        -frtti;
+        #-frtti;
         #-fexceptions;
         -std=c++17;
         #${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
