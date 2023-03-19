@@ -5,6 +5,7 @@
 #include <..\samples\sample_code\graphics\api_gnm\toolkit\allocators.h>
 #include <..\samples\sample_code\graphics\api_gnm\toolkit\stack_allocator.h>
 #include <TextureLoader.h>
+#include "Assets.h"
 
 using namespace sce;
 using namespace NCL;
@@ -62,7 +63,12 @@ GNMTexture* GNMTexture::LoadTextureFromFile(const std::string& filename) {
 }
 
 TextureBase* GNMTexture::RGBATextureFromFilename(const std::string& name) {
-	std::ifstream file(name, std::ios::binary);
+
+	std::string binaryFilename = name.substr(0, name.find_last_of('.')) + ".gnf";
+	std::string realPath = Assets::TEXTUREDIR + binaryFilename;
+	return LoadTextureFromFile(realPath);
+
+	/*std::ifstream file(name, std::ios::binary);
 
 	if (!file) {
 		return NULL;
@@ -79,6 +85,6 @@ TextureBase* GNMTexture::RGBATextureFromFilename(const std::string& name) {
 
 	free(texData);
 
-	return gnmTex;
+	return gnmTex;*/
 }
 #endif

@@ -11,7 +11,7 @@ using namespace GNM;
 using namespace Assets;
 	
 GNMAssetLoader::GNMAssetLoader() {
-	TextureLoader::RegisterAPILoadFunction(GNMTexture::LoadTextureFromFile);
+	TextureLoader::RegisterAPILoadFunction(GNMTexture::RGBATextureFromFilename);
 }
 
 MeshGeometry* GNMAssetLoader::LoadMesh(const string& name) {
