@@ -6,8 +6,14 @@
 namespace NCL {
 	using namespace GNM;
 	namespace CSC8508 {
-		struct DebugLinesRenderer;
-		struct DebugTextRenderer;
+		struct DebugLinesRenderer {
+			DebugLinesRenderer() {}
+			~DebugLinesRenderer() {}
+		};
+		struct DebugTextRenderer {
+			DebugTextRenderer() {}
+			~DebugTextRenderer() {}
+		};
 
 		class GNMPaintingGameRenderer : public GNMRenderer {
 		public:
@@ -58,16 +64,6 @@ namespace NCL {
 			RendererBase* createRenderer(Window& w) override {
 				return new GNMPaintingGameRenderer(w);
 			}
-		};
-
-
-		struct DebugLinesRenderer {
-			DebugLinesRenderer() {}
-			~DebugLinesRenderer() {}
-		};
-		struct DebugTextRenderer {
-			DebugTextRenderer() {}
-			~DebugTextRenderer() {}
 		};
 	}
 }
