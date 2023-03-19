@@ -28,6 +28,7 @@ void GameEventListener::onTrigger(const reactphysics3d::OverlapCallback::Callbac
 		reactphysics3d::CollisionBody* cb = nullptr;
 		GameObject* obj = nullptr;
 		bool valid = true;
+		
 		if (void* userData = overlapPair.getBody1()->getUserData())
 		{
 			obj = (GameObject*) userData;

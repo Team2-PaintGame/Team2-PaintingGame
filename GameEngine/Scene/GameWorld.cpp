@@ -155,15 +155,17 @@ void GameWorld::AddPaintedPosition(const Vector3& position) {
 	paintedPositions.push_back(position);
 }
 
-void GameWorld::CleanNearbyPaint(Vector3 SecurityPos, float range)
+bool GameWorld::CleanNearbyPaint(Vector3 SecurityPos, float range)
 {
-
+	bool hasCleaned = false;
 	for (auto paintPos = paintedPositions.begin(); paintPos != paintedPositions.end();)
 	{
 		float distance = (SecurityPos - *paintPos).Length();
 		if (distance < range)
 		{
+			
 			paintPos = paintedPositions.erase(paintPos);
+			hasCleaned = true;
 		}
 		else
 		{
@@ -171,6 +173,7 @@ void GameWorld::CleanNearbyPaint(Vector3 SecurityPos, float range)
 		}
 
 	}
+	return hasCleaned;
 }
 
 Vector3 GameWorld::FindClosestPaintSplat(Vector3 position)

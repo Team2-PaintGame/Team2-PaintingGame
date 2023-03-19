@@ -79,13 +79,13 @@ namespace NCL {
 	}
 
 	template<class T>
-	inline NCL::ParticleSystem<T>::ParticleSystem(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 emitterPosition, MeshGeometry* emitterMesh, MeshGeometry* mesh, Vector4 color, ShaderBase* shader, bool enableGravity, float startSize, float startLifetime, float startSpeed, bool playOnAwake, std::string name) : GameObject(physicsCommon, physicsWorld, name), emitter(emitterMesh) {
+	inline NCL::ParticleSystem<T>::ParticleSystem(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Maths::Vector3 emitterPosition, MeshGeometry* emitterMesh, MeshGeometry* mesh, Vector4 color, ShaderBase* shader, bool enableGravity, float startSize, float startLifetime, float startSpeed, bool playOnAwake, std::string name) : GameObject(physicsCommon, physicsWorld, name), emitter(emitterMesh) {
 		SetMemberVariables(emitterPosition, mesh, shader, enableGravity, startSize, startLifetime, startSpeed, playOnAwake);
 		renderObject->SetColour(color);
 	}
 
 	template<class T>
-	inline NCL::ParticleSystem<T>::ParticleSystem(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 emitterPosition, float emissionAngle, MeshGeometry* mesh, Vector4 color, ShaderBase* shader, bool enableGravity, float startSize, float startLifetime, float startSpeed, bool playOnAwake, std::string name) : GameObject(physicsCommon, physicsWorld, name), emitter(emissionAngle) {
+	inline NCL::ParticleSystem<T>::ParticleSystem(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Maths::Vector3 emitterPosition, float emissionAngle, MeshGeometry* mesh, Vector4 color, ShaderBase* shader, bool enableGravity, float startSize, float startLifetime, float startSpeed, bool playOnAwake, std::string name) : GameObject(physicsCommon, physicsWorld, name), emitter(emissionAngle) {
 		SetMemberVariables(emitterPosition, mesh, shader, enableGravity, startSize, startLifetime, startSpeed, playOnAwake);
 		renderObject->SetColour(color);
 	}
@@ -130,7 +130,7 @@ namespace NCL {
 	inline void ParticleSystem<T>::GenerateParticles() {
 		if (elapsedTime < duration || looping) {
 			while (accumulator > 1.0 / emitter.GetParticleEmissionRate() && particles.size() < maxParticles) {
-				particles.emplace_back(std::make_unique<T>(physicsCommon, physicsWorld, &transform, Vector3(), startLifetime, startSpeed, emitter.GetEmissionDirection(), enableGravity));
+				particles.emplace_back(std::make_unique<T>(physicsCommon, physicsWorld, &transform, Vector3(), startLifetime, startSpeed, emitter.GetEmissionDirection(), enableGravity,this->layer));
 				transforms.emplace_back(&particles.back()->GetTransform());
 				accumulator -= 1.0 / emitter.GetParticleEmissionRate();
 			}

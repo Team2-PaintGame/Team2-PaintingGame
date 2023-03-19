@@ -113,7 +113,7 @@ namespace NCL {
 			size_t GetNumPaintedPositions() const { return paintedPositions.size();}
 			size_t GetNumberOfGameObjects() const { return gameObjects.size();}
 
-			void CleanNearbyPaint(Vector3 SecurityPos, float range);
+			bool CleanNearbyPaint(Vector3 SecurityPos, float range);
 			Vector3 FindClosestPaintSplat(Vector3 position);
 			int GetSizePaintedPositions();
 		protected:

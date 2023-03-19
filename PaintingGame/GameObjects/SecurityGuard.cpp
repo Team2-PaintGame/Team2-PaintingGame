@@ -8,7 +8,7 @@
 namespace NCL::CSC8508 {
 	SecurityGuard::SecurityGuard(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position,
 		MeshGeometry* mesh, MeshMaterial* meshMaterial, ShaderBase* shader, const std::unordered_map<std::string, MeshAnimation*>& animations,
-		int size, GameObject* playerOne, GameObject* playerTwo, GameWorld* gameWorld, std::string objectName)
+		int size, GameObject* playerOne, GameObject* playerTwo, GameWorld* gameWorld, GameAssets* assets, std::string objectName)
 		: AnimatedObject(physicsCommon, physicsWorld, position, mesh, meshMaterial, shader, animations, size, objectName)
 	
 	{
@@ -43,6 +43,13 @@ namespace NCL::CSC8508 {
 
 		navigationMesh = new NavigationMesh("BasicLVL.navmesh");
 		navigationPath = new NavigationPath();
+
+		ink = CreateInkStream(physicsCommon, physicsWorld, position, assets->GetMesh("sphereMesh"), Vector4(1, 1, 1, 0.25), assets->GetShader("inkShader"));
+		ink->SetLayer(Layer::Bubbles);
+//		Layer layer = ink->GetLayer();
+//		int numLayer = (int)layer;
+//		std::cout << "Layer: " << numLayer << "\n";
+		gameWorld->AddGameObject(ink);
 
 		rigidBody->setUserData(this);
 		layer = Layer::Enemy;
@@ -97,6 +104,11 @@ namespace NCL::CSC8508 {
 		}
 		if (state == Failure) {
 			state = Initialise;
+		}
+		if (ink) {
+			ink->SetLayer(Layer::Bubbles);
+			ink->GetTransform()
+				.SetPosition(transform.GetPosition()).SetOrientation(transform.GetOrientation());
 		}
 	}
 
@@ -200,7 +212,11 @@ namespace NCL::CSC8508 {
 						return Success;
 					}
 				}
-				gameWorld->CleanNearbyPaint(this->GetTransform().GetPosition(), 15);
+				if (gameWorld->CleanNearbyPaint(this->GetTransform().GetPosition(), 15))
+				{
+					ink->SetLayer(Layer::Bubbles);
+					BubbleEmission();
+				}
 				DetermineChaseSpeed();
 				MoveSecurityGuard(direction);
 			}
@@ -219,7 +235,11 @@ namespace NCL::CSC8508 {
 			else if (state == Ongoing)
 			{
 				Vector3 securityPos = this->GetTransform().GetPosition();
-				gameWorld->CleanNearbyPaint(securityPos, 50);
+				if (gameWorld->CleanNearbyPaint(securityPos, 50))
+				{
+					ink->SetLayer(Layer::Bubbles);
+					BubbleEmission();
+				}
 				return Success;
 			}
 			return state;
@@ -297,7 +317,11 @@ namespace NCL::CSC8508 {
 				}
 				DetermineSpeed();
 				MoveSecurityGuard(direction);
-				gameWorld->CleanNearbyPaint(this->GetTransform().GetPosition(), 15);
+				if (gameWorld->CleanNearbyPaint(this->GetTransform().GetPosition(), 15))
+				{
+					ink->SetLayer(Layer::Bubbles);
+					BubbleEmission();
+				}
 			}
 			return state;
 			}
