@@ -16,7 +16,7 @@ namespace NCL::GNM {
 		//friend class GNMRenderer;
 	public:
 		GNMMesh();
-		GNMMesh(const std::string& filename) {}
+		GNMMesh(const std::string& filename);
 		~GNMMesh();
 		
 		static GNMMesh* GenerateTriangle();

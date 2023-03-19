@@ -13,6 +13,11 @@ GNMMesh::GNMMesh()	{
 	attributeCount	= 0;
 }
 
+GNMMesh::GNMMesh(const std::string& filename) : MeshGeometry(filename) {
+	indexType = sce::Gnm::IndexSize::kIndexSize32;
+	primitiveType = sce::Gnm::PrimitiveType::kPrimitiveTypeTriStrip;
+}
+
 GNMMesh::~GNMMesh()	{
 	delete[] attributeBuffers;
 }
