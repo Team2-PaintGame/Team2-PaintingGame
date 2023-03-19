@@ -70,6 +70,7 @@ void* ReadVertexData(GeometryChunkData dataType, GeometryChunkTypes chunkType, i
 }
 
 void ReadTextInts(std::ifstream& file, vector<Vector2i>& element, int numVertices) {
+	element.reserve(numVertices);
 	for (int i = 0; i < numVertices; ++i) {
 		Vector2i temp;
 		file >> temp.array[0];
@@ -79,6 +80,7 @@ void ReadTextInts(std::ifstream& file, vector<Vector2i>& element, int numVertice
 }
 
 void ReadTeReadTextIntsxtFloats(std::ifstream& file, vector<Vector3i>& element, int numVertices) {
+	element.reserve(numVertices);
 	for (int i = 0; i < numVertices; ++i) {
 		Vector3i temp;
 		file >> temp.array[0];
@@ -89,6 +91,7 @@ void ReadTeReadTextIntsxtFloats(std::ifstream& file, vector<Vector3i>& element, 
 }
 
 void ReadTextInts(std::ifstream& file, vector<Vector4i>& element, int numVertices) {
+	element.reserve(numVertices);
 	for (int i = 0; i < numVertices; ++i) {
 		Vector4i temp;
 		file >> temp.array[0];
@@ -100,6 +103,7 @@ void ReadTextInts(std::ifstream& file, vector<Vector4i>& element, int numVertice
 }
 
 void ReadTextFloats(std::ifstream& file, vector<Vector2>& element, int numVertices) {
+	element.reserve(numVertices);
 	for (int i = 0; i < numVertices; ++i) {
 		Vector2 temp;
 		file >> temp.x;
@@ -109,6 +113,7 @@ void ReadTextFloats(std::ifstream& file, vector<Vector2>& element, int numVertic
 }
 
 void ReadTextFloats(std::ifstream& file, vector<Vector3>& element, int numVertices) {
+	element.reserve(numVertices);
 	for (int i = 0; i < numVertices; ++i) {
 		Vector3 temp;
 		file >> temp.x;
@@ -119,6 +124,7 @@ void ReadTextFloats(std::ifstream& file, vector<Vector3>& element, int numVertic
 }
 
 void ReadTextFloats(std::ifstream& file, vector<Vector4>& element, int numVertices) {
+	element.reserve(numVertices);
 	for (int i = 0; i < numVertices; ++i) {
 		Vector4 temp;
 		file >> temp.x;
@@ -130,6 +136,7 @@ void ReadTextFloats(std::ifstream& file, vector<Vector4>& element, int numVertic
 }
 
 void ReadIndices(std::ifstream& file, vector<unsigned int>& elements, int numIndices) {
+	elements.reserve(numIndices);
 	for (int i = 0; i < numIndices; ++i) {
 		unsigned int temp;
 		file >> temp;
@@ -140,6 +147,7 @@ void ReadIndices(std::ifstream& file, vector<unsigned int>& elements, int numInd
 void ReadIntegerArray(std::ifstream& file, vector<int>& into) {//New!
 	int count = 0;
 	file >> count;
+	into.reserve(count);
 	for (int i = 0; i < count; ++i) {
 		int r = 0;
 		file >> r;
@@ -150,7 +158,7 @@ void ReadIntegerArray(std::ifstream& file, vector<int>& into) {//New!
 void ReadBindposes(std::ifstream& file, vector<SubMeshPoses>& bindPoses) {//New!
 	int poseCount = 0;
 	file >> poseCount;
-
+	bindPoses.reserve(poseCount);
 	for (int i = 0; i < poseCount; ++i) {
 		SubMeshPoses m;
 		file >> m.start;
