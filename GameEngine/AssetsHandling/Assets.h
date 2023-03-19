@@ -11,7 +11,12 @@ https://research.ncl.ac.uk/game/
 
 namespace NCL::Assets {
 	//const std::string ASSETROOT("../../Assets/");
-	const std::string SHADERDIR(ASSETROOTLOCATION"Shaders/");
+#ifdef _WIN32
+	const std::string SHADERDIR(ASSETROOTLOCATION"Shaders/GL/");
+#endif // _WIN32
+#ifdef __ORBIS__
+	const std::string SHADERDIR(ASSETROOTLOCATION"Shaders/GNM/");
+#endif // __ORBIS__
 	const std::string MESHDIR(ASSETROOTLOCATION"Meshes/");
 	const std::string TEXTUREDIR(ASSETROOTLOCATION"Textures/");
 	const std::string SOUNDSDIR(ASSETROOTLOCATION"Sounds/");
