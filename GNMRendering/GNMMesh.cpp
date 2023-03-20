@@ -28,7 +28,7 @@ GNMMesh* GNMMesh::GenerateQuad() {
 	mesh->indexType		= sce::Gnm::IndexSize::kIndexSize32;
 	mesh->primitiveType = sce::Gnm::PrimitiveType::kPrimitiveTypeTriStrip;
 
-	mesh->SetVertexPositions({ Vector3(-1.0f, -1.0f, 0.0f), Vector3(-1.0f,  1.0f, 0.0f),Vector3(1.0f, -1.0f, 0.0f), Vector3(1.0f,  1.0f, 0.0f) });
+	mesh->SetVertexPositions({ Vector3(-1.0f, 1.0f, 0.0f), Vector3(-1.0f, -1.0f, 0.0f),Vector3(1.0f, 1.0f, 0.0f), Vector3(1.0f, -1.0f, 0.0f) });
 
 	std::vector<Vector3> normals;
 	std::vector<Vector4> tangents;
@@ -40,10 +40,12 @@ GNMMesh* GNMMesh::GenerateQuad() {
 
 		indices.emplace_back(i);
 	}
-
+	mesh->SetVertexTextureCoords({ Vector2(0.0f, 0.0f) , Vector2(0.0f, 1.0f), Vector2(1.0f, 0.0f), Vector2(1.0f, 1.0f)});
 	mesh->SetVertexNormals(normals);
 	mesh->SetVertexTangents(tangents);
 	mesh->SetVertexIndices(indices);
+
+	mesh->UploadToGPU();
 
 	return mesh;
 }
@@ -59,6 +61,8 @@ GNMMesh* GNMMesh::GenerateSinglePoint() {
 	mesh->SetVertexTangents({ Vector3(1, 0, 0) });
 	mesh->SetVertexIndices({ 0 });
 
+	mesh->UploadToGPU();
+
 	return mesh;
 }
 
@@ -73,6 +77,8 @@ GNMMesh* GNMMesh::GenerateTriangle() {
 	mesh->SetVertexNormals({ Vector3(0, 0, 1),Vector3(0, 0, 1), Vector3(0, 0, 1) });
 	mesh->SetVertexTangents({ Vector4(1, 0, 0, 0), Vector4(1, 0, 0,0), Vector4(1, 0, 0,0) });
 	mesh->SetVertexIndices({ 0, 1, 2 });
+
+	mesh->UploadToGPU();
 
 	return mesh;
 }
