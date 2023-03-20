@@ -21,7 +21,6 @@ NCL::CSC8508::LoadingScreen::LoadingScreen(ScreenManager* screenManager, SceneNo
 
 	hUDOnLoad = new HUDOnLoad(new Transform(), loader.LoadMesh(NCL::Assets::MeshType::Quad), loadScreenShader);
 	hUDOnLoad->SetDefaultTexture(TextureLoader::LoadAPITexture("loadingSprites.png"));
-	//loadThread = new std::thread(SpiningLoadScreen);
 }
 
 void NCL::CSC8508::LoadingScreen::OnAwake()
@@ -37,7 +36,8 @@ PushdownState::PushdownResult LoadingScreen::OnUpdate(float dt, PushdownState** 
 
 PushdownState::PushdownResult LoadingScreen::onStateChange(PushdownState** newState)
 {
-	if (!threadToWait || GameManager::GetLoadingFlag()) // if thread joinable
+	if (bLoaded) return PushdownResult::Pop;
+	if (!threadToWait || GameManager::GetLoadingFlag())
 	{
 		if (threadToWait)
 		{
@@ -46,7 +46,7 @@ PushdownState::PushdownResult LoadingScreen::onStateChange(PushdownState** newSt
 			threadToWait = nullptr;
 			GameManager::FinishLoadingCallback();
 		}
-
+		bLoaded = true;
 		*newState = screenManager->GetScreen(ScreenType::SplashScreen);
 
 		return PushdownResult::Push;

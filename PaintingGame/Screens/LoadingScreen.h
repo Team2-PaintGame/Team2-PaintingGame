@@ -27,6 +27,7 @@ namespace NCL {
 			float timer = 0;
 			Transform* transform;
 			HUDOnLoad* hUDOnLoad;
+			bool bLoaded = false;
 			
 		};
 
