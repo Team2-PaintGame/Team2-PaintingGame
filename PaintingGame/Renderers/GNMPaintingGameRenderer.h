@@ -19,6 +19,8 @@ namespace NCL {
 		public:
 			GNMPaintingGameRenderer(Window& w);
 			virtual ~GNMPaintingGameRenderer();
+			virtual void BindScreen(void* screen) { boundScreen = (BaseScreen*)screen; };
+			void BindDebugShader(ShaderBase* dShader) { debugShader = dShader; }
 		protected:
 			void RenderFrame()	override;
 

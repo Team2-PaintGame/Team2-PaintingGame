@@ -48,15 +48,17 @@ void GNMPaintingGameRenderer::RenderFrame() {
 }
 
 void GNMPaintingGameRenderer::RenderBasicScreen() { //change this to render static obj
-	currentGFXContext->setupScreenViewport(0, 0, windowWidth, windowHeight, 0.5f, 0.5f);
+	currentGFXContext->setupScreenViewport(0, 0, currentGNMBuffer->colourTarget.getWidth(), currentGNMBuffer->colourTarget.getHeight(), 0.5f, 0.5f);
 	RenderObject* r = boundScreen->GetSceneNode()->GetRenderObject();
-	((GNMShader*)(r->GetShader()))->SubmitShaderSwitch(*currentGFXContext);
+	
 	Gnm::Sampler trilinearSampler;
 	trilinearSampler.init();
 	trilinearSampler.setMipFilterMode(Gnm::kMipFilterModeLinear);
 
 	currentGFXContext->setTextures(Gnm::kShaderStagePs, 0, 1, &((GNMTexture*)(r->GetDefaultTexture()))->GetAPITexture());
 	currentGFXContext->setSamplers(Gnm::kShaderStagePs, 0, 1, &trilinearSampler);
+	
+	((GNMShader*)(r->GetShader()))->SubmitShaderSwitch(*currentGFXContext);
 	((GNMMesh*)(r->GetMesh()))->SubmitDraw(*currentGFXContext, Gnm::ShaderStage::kShaderStageVs);
 	
 	boundScreen->RenderMenu();
