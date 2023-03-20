@@ -1,8 +1,3 @@
-ConstantBuffer RenderObjectData
-{
-	column_major matrix modelMatrix;
-};
-
 struct VS_INPUT
 {
 	float3 Position		: POSITION0;
@@ -21,7 +16,7 @@ VS_OUTPUT main(VS_INPUT Input)
 {
 	VS_OUTPUT Output; 
 
-	Output.Position = mul(modelMatrix, float4(Input.Position.xyz, 1));
+	Output.Position = float4(Input.Position.xyz, 1);
 	Output.UV = Input.UV;
 
 	return Output;
