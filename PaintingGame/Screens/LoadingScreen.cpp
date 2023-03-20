@@ -13,7 +13,7 @@ NCL::CSC8508::LoadingScreen::LoadingScreen(ScreenManager* screenManager, SceneNo
 	NCL::Assets::OGLAssetLoader loader;
 	ShaderBase* loadScreenShader = loader.LoadShader("hud.vert", "hud.frag");
 
-	BaseScreen::sceneNode = new SceneNode(loader.LoadMesh(NCL::Assets::MeshType::Quad), loadScreenShader, TextureLoader::LoadAPITexture("Screens/bg3.jpg"));
+	BaseScreen::sceneNode = new SceneNode(loader.LoadMesh(NCL::Assets::MeshType::Quad), loadScreenShader, TextureLoader::LoadAPITexture("Screens/bg1.jpg"));
 
 	screenType = ScreenType::LoadingScreen;
 	renderObj = this->sceneNode->GetRenderObject();

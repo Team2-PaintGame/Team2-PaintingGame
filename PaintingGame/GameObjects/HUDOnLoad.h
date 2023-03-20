@@ -11,8 +11,7 @@ namespace NCL {
 				this->transform = transform;
 			}
 			void Update(float dt){
-				
-				timer ++;
+				timer += dt;
 				transform->SetOrientation(Quaternion::AxisAngleToQuaterion(Vector3(0, 0, 1), 45 * timer));
 			};
 			float timer = 0;
