@@ -113,14 +113,13 @@ void NCL::CSC8508::GameScreen::DebugWindow()
 		isDebugDisplayed = false;
 	}
 	if (ImGui::BeginPopupModal("MemoryFootprint")) {
-
-		ImGui::Text(std::to_string(Debug::PageFaultCount).c_str());
-		ImGui::Text(std::to_string(Debug::PeakWorkingSetSize).c_str());
-		ImGui::Text(std::to_string(Debug::WorkingSetSize).c_str());
-		ImGui::Text(std::to_string(Debug::QuotaNonPagedPoolUsage).c_str());
-		ImGui::Text(std::to_string(Debug::QuotaPagedPoolUsage).c_str());
-		ImGui::Text(std::to_string(Debug::QuotaPeakNonPagedPoolUsage).c_str());
-		ImGui::Text(std::to_string(Debug::QuotaPeakPagedPoolUsage).c_str());
+		ImGui::Text(("PageFaultCount: " + std::to_string(Debug::PageFaultCount)).c_str());
+		ImGui::Text(("PeakWorkingSetSize: " + std::to_string(Debug::PeakWorkingSetSize)).c_str());
+		ImGui::Text(("WorkingSetSize: " + std::to_string(Debug::WorkingSetSize)).c_str());
+		ImGui::Text(("QuotaNonPagedPoolUsage: " + std::to_string(Debug::QuotaNonPagedPoolUsage)).c_str());
+		ImGui::Text(("QuotaPagedPoolUsage: " + std::to_string(Debug::QuotaPagedPoolUsage)).c_str());
+		ImGui::Text(("QuotaPeakNonPagedPoolUsage: " + std::to_string(Debug::QuotaPeakNonPagedPoolUsage)).c_str());
+		ImGui::Text(("QuotaPeakPagedPoolUsage: " + std::to_string(Debug::QuotaPeakPagedPoolUsage)).c_str());
 
 		if (ImGui::Button("Exit")) {
 			isDebugDisplayed = false;
