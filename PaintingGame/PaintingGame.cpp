@@ -52,7 +52,6 @@ void PaintingGame::InitWorld() {
 
 	//TODO null world and common
 	world->AddGameObject(new ScoreBar(physicsCommon, physicsWorld, assets->GetShader("scoreShader"),"ScoreBar"));
-	scoreCamera = new ScoreCamera();
 }
 
 void PaintingGame::Update(float dt) {

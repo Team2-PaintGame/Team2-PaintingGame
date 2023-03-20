@@ -56,7 +56,7 @@ namespace NCL {
 
 			//container for cameras
 			std::vector<Camera*> activeCameras;
-			Camera* scoreCamera;
+			
 		};
 	}
 }

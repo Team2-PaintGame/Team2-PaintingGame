@@ -9,7 +9,8 @@ namespace NCL {
 		class Constraint;
 
 		typedef std::function<void(GameObject*)> GameObjectFunc;
-		typedef std::function<void(int, Vector3&)> Vector3Func;
+		typedef std::function<void(int, Vector3&, Vector4&)> Vector3and4Func;
+		typedef std::function<void(int, PaintSplat&)> PaintSplatFunc;
 
 		typedef std::vector<GameObject*>::const_iterator GameObjectIterator;
 
@@ -21,6 +22,11 @@ namespace NCL {
 			reactphysics3d::Vector3 normal;
 			reactphysics3d::CollisionBody* body;
 			GameObject* object;
+		};
+
+		struct PaintSplat {
+			Vector3 position;
+			Vector4 colour;
 		};
 
 		class RaycastManager : public reactphysics3d::RaycastCallback {
@@ -86,7 +92,7 @@ namespace NCL {
 			virtual void UpdateWorld(float dt);
 
 			void OperateOnContents(GameObjectFunc f);
-			void OperateOnPaintedPositions(Vector3Func f);
+			void OperateOnPaintedPositions(Vector3and4Func f);
 
 
 			void GetObjectIterators(
@@ -110,18 +116,48 @@ namespace NCL {
 
 			void AddPaintedPosition(const Vector3& position);
 			size_t GetNumPaintedPositions() const { return paintedPositions.size(); }
+
+			void CalculateNewScores() 
+			{
+				int team1Score = 0;
+				int team2Score = 0;
+				for (auto& element : paintedPositions) 
+				{
+					if (element.colour == Vector4(1, 0, 0, 1)) {
+						team2Score += 10;
+					}
+					else if (element.colour == Vector4(0, 1, 0, 1)) {
+						team1Score += 10;
+					}
+				}
+				SetTeamOneScore(team1Score);
+				SetTeamTwoScore(team2Score);
+			}
+
+			void SetTeamOneScore(int score) { teamOneScore = score; }
+
+			int GetTeamOneScore() { return teamOneScore; }
+
+			void SetTeamTwoScore(int score) { teamTwoScore = score; }
+
+			int GetTeamTwoScore() { return teamTwoScore; }
+
+
+
 		protected:
 			RaycastManager* raycastManager;
 			GameObjectListener* collisionManager;
 			reactphysics3d::PhysicsWorld* physicsWorld = NULL;
-
-			std::vector<Vector3> paintedPositions;
+			std::vector<PaintSplat> paintedPositions;
 			std::vector<GameObject*> gameObjects;
 			std::vector<Constraint*> constraints;
 			bool shuffleConstraints;
 			bool shuffleObjects;
-			int		worldIDCounter;
-			int		worldStateCounter;
+			int	worldIDCounter;
+			int	worldStateCounter;
+			int teamOneScore;
+			int teamTwoScore;
+			
 		};
 	}
 }

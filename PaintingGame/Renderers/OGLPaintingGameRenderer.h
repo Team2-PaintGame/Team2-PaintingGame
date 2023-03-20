@@ -135,29 +135,7 @@ namespace NCL {
 			void SetDebugLineBufferSizes(size_t newVertCount);
 
 			//ScoreBar methods
-			GLuint mapFBO;
-			GLuint mapColourTexture;
-			GLuint mapScoreTexture;
-			GLuint mapDepthTexture;
-			void GenerateMapFBO(int width, int height);
-			void DrawMap();
-			void DrawScoreBar();
-			void RetrieveAtomicValues();
-			void CalculatePercentages(const int& totalPixels, const int& team1Pixels, const int& team2Pixels, const int& team3Pixels, const int& team4Pixels);
-			void GenerateAtomicBuffer();
-			void ResetAtomicBuffer();
-			GLuint atomicsBuffer[3];
-			OGLMesh* scoreQuad;
-			float team1Percentage;
-			float team2Percentage;
-			GLuint currentAtomicCPU;
-			GLuint currentAtomicGPU;
-			GLuint curretAtomicReset;
-			GLuint teamPixelCount[ATOMIC_COUNT - 1];
-			GLuint totalPixelCount;
-			GLuint maxPixelCount;
-			Vector3 defaultColour = Vector3(0.5, 0.5, 0.5);
-			Vector3 teamColours[ATOMIC_COUNT - 1];
+
 
 
 			vector<const RenderObject*> activeObjects;

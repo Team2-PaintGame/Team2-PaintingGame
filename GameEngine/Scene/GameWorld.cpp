@@ -83,10 +83,10 @@ void GameWorld::OperateOnContents(GameObjectFunc f) {
 	}
 }
 
-void GameWorld::OperateOnPaintedPositions(Vector3Func f) {
+void GameWorld::OperateOnPaintedPositions(Vector3and4Func f) {
 	int index = 0;
-	for (Vector3& pos : paintedPositions) {
-		f(index++, pos);
+	for (auto& splat : paintedPositions) {
+		f(index++, splat.position, splat.colour);
 	}
 }
 
@@ -151,5 +151,5 @@ SceneContactPoint* GameWorld::Raycast(const reactphysics3d::Ray& r, GameObject* 
 }
 
 void GameWorld::AddPaintedPosition(const Vector3& position) {
-	paintedPositions.push_back(position);
+	paintedPositions.push_back(PaintSplat(position, {0,1,0,1}));
 }
