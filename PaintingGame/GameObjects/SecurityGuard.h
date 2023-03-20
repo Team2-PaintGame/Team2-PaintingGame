@@ -77,16 +77,33 @@ namespace NCL::CSC8508 {
 		Vector3 ChooseDestination();
 
 		void BubbleEmission() { ink->StartEmission(); }
+
+		void SetHasCaughtPlayerTrue() { hasCaughtPlayer = true; }
+		void CaughtPlayer();
+		void OutsideNavmeshRespawn(Vector3 startPos);
 	protected:
 
 		int state;
 
 		float force = 100;
-		const float slowForce = 50; // 100
-		const float walkForce = 100;  //150
-		const float runForce = 250;
-		const float sprintForce = 350;
+		//const float slowForce = 50; 
+		//const float walkForce = 100;
+		//const float runForce = 250;
+		//const float sprintForce = 350;
+
+		const float slowForce = 3000;
+		const float walkForce = 3000;
+		const float runForce = 3000;
+		const float sprintForce = 3000;
+
+		//const float slowForce = 150;
+		//const float walkForce = 150;
+		//const float runForce = 150;
+		//const float sprintForce = 150;
+
+
 		bool isBlinded = false;
+		bool hasCaughtPlayer = false;
 
 		float chaseAccumulator = 0.0f;
 		float stuckAccumulator = 0.0f;
@@ -96,11 +113,11 @@ namespace NCL::CSC8508 {
 		BehaviourSequence* patrolSequence;
 		BehaviourSequence* chaseSequence;
 	
-		BehaviourSequence* superCleanSequence;   ////
-		BehaviourSelector* chasePatrolSelector;	 ////
+		BehaviourSequence* superCleanSequence;  
+		BehaviourSelector* chasePatrolSelector;	
 
-		BehaviourAction* goToPaint;			     ////
-		BehaviourAction* cleanPaint;			 ////
+		BehaviourAction* goToPaint;			    
+		BehaviourAction* cleanPaint;			
 
 		BehaviourAction* chooseDestination;
 		BehaviourAction* goToDestination;

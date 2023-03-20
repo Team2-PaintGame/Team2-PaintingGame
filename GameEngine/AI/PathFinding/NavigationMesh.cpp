@@ -70,11 +70,14 @@ NavigationMesh::~NavigationMesh()
 {
 }
 
+
+
 bool NavigationMesh::FindPath(const Vector3& from, const Vector3& to, NavigationPath& outPath) {
 	/*const*/ NavTri* start	= GetTriForPosition(from);
 
 	if (start == nullptr) {
 		std::cout << "start is outside of the navmesh\n";
+		isOutNavMesh = true;
 		return false;
 	}
 	/*const*/ NavTri* end	= GetTriForPosition(to);
@@ -311,7 +314,16 @@ void NavigationMesh::StringPull(Vector3 startPosition, Vector3 endPosition, Navi
 			}
 		}
 	}
-	if (npts < maxPts)
+
+	if (npts < maxPts && 
+		(Maths::FloatAreaOfTri(portalApex, portalRight, endPosition) > 0.0f
+		|| Maths::FloatAreaOfTri(portalApex, portalLeft, endPosition) < 0.0f)) // if endpoint is outside funnel, add a midpoint
+	{
+		outPath.waypoints.insert(outPath.waypoints.begin(), (portalLeft + portalRight) * 0.5f);
+		npts++;
+	}
+
+	if (npts < maxPts )
 	{
 		Vector3 end = endPosition;
 		yPos = triRoute.front().centroid.y;
@@ -343,29 +355,32 @@ void NavigationMesh::FindPortalEdges(const Vector3& to) {
 	{
 		if (i == portalEdges.size() - 1)
 		{
-			int count = 0;
-			Vector3 lastVertex;
-			for (int j = routeVertices.size()  - 3; j < routeVertices.size(); ++j) //last triangle vertices
-			{
-				if (routeVertices[j] != portalEdges[i].leftPortal && routeVertices[j] != portalEdges[i].rightPortal)
-				{
-					lastVertex = routeVertices[j];
-				}
-			}
+			//int count = 0;
+			//Vector3 lastVertex;
+			//for (int j = routeVertices.size()  - 3; j < routeVertices.size(); ++j) //last triangle vertices
+			//{
+			//	if (routeVertices[j] != portalEdges[i].leftPortal && routeVertices[j] != portalEdges[i].rightPortal)
+			//	{
+			//		lastVertex = routeVertices[j];
+			//	}
+			//}
 
-			if (portalEdges[i].leftPortal == portalEdges[i - 1].leftPortal)
-			{
-				// last vertex is set to left
-				portalEdges[i].right = portalEdges[i].rightPortal;
-				portalEdges[i].left = lastVertex;
-			}
-			else if (portalEdges[i].rightPortal == portalEdges[i - 1].rightPortal)
-			{
-				// last vertex is set to right
-				portalEdges[i].left = portalEdges[i].leftPortal;
-				portalEdges[i].right = lastVertex;
-				
-			}
+			//if (portalEdges[i].leftPortal == portalEdges[i - 1].leftPortal)
+			//{
+			//	// last vertex is set to left
+			//	portalEdges[i].right = portalEdges[i].rightPortal;
+			//	portalEdges[i].left = lastVertex;
+			//}
+			//else if (portalEdges[i].rightPortal == portalEdges[i - 1].rightPortal)
+			//{
+			//	// last vertex is set to right
+			//	portalEdges[i].left = portalEdges[i].leftPortal;
+			//	portalEdges[i].right = lastVertex;
+			//	
+			//}
+			portalEdges[i].left = to;
+			portalEdges[i].right = to;
+
 	
 		}
 		else

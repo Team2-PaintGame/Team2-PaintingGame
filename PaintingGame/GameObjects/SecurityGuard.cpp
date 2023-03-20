@@ -30,8 +30,8 @@ namespace NCL::CSC8508 {
 		rigidBody = physicsWorld->createRigidBody(rp3d_transform);
 		rigidBody->addCollider(boundingVolume, rp3d::Transform::identity()); //collider
 		rigidBody->updateMassPropertiesFromColliders();
-		rigidBody->setLinearDamping(1.5f);
-		rigidBody->setAngularDamping(1.5f);
+		rigidBody->setLinearDamping(3.0f);
+		rigidBody->setAngularDamping(3.0f);
 
 		Vector3 lockXZAxis(0, 1, 0);
 		rigidBody->setAngularLockAxisFactor(~lockXZAxis);
@@ -41,14 +41,11 @@ namespace NCL::CSC8508 {
 		callbackPlayerOne = new SecurityCallbackClass(playerOne);
 		callbackPlayerTwo = new SecurityCallbackClass(playerTwo);
 
-		navigationMesh = new NavigationMesh("BasicLVL.navmesh");
+		navigationMesh = new NavigationMesh("BasicLVL1.navmesh");
 		navigationPath = new NavigationPath();
 
 		ink = CreateInkStream(physicsCommon, physicsWorld, position, assets->GetMesh("sphereMesh"), Vector4(1, 1, 1, 0.25), assets->GetShader("inkShader"));
 		ink->SetLayer(Layer::Bubbles);
-//		Layer layer = ink->GetLayer();
-//		int numLayer = (int)layer;
-//		std::cout << "Layer: " << numLayer << "\n";
 		gameWorld->AddGameObject(ink);
 
 		rigidBody->setUserData(this);
@@ -78,6 +75,8 @@ namespace NCL::CSC8508 {
 
 	void SecurityGuard::Update(float dt)
 	{
+		Vector3 lockXZAxis(0, 1, 0);
+		rigidBody->setAngularLockAxisFactor(~lockXZAxis);
 		if (isBlinded)
 		{
 			blindTimer += dt;
@@ -87,10 +86,9 @@ namespace NCL::CSC8508 {
 				SetIsBlindedFalse();
 			}
 		}
-//		gameWorld->CleanNearbyPaint(this->GetTransform().GetPosition());
 		animationController->Update(dt);
-//		DrawNavTris();
-//		DisplayPathfinding();
+		DrawNavTris();
+		DisplayPathfinding();
 		DrawTriRoute();
 		if (state == Initialise) {
 			state = Ongoing;
@@ -208,6 +206,7 @@ namespace NCL::CSC8508 {
 				if (navigationPath->waypoints.size() == 1) {
 					if (DistanceToTarget(navigationPath->waypoints.front()) <= 3.0f) {
 						std::cout << "Go To Paint - Reached Destination\n";
+
 						navigationPath->Clear();
 						return Success;
 					}
@@ -258,7 +257,7 @@ namespace NCL::CSC8508 {
 
 			else if (state == Ongoing) {
 				Vector3 destination = ChooseDestination();
-				Vector3 securityPosition = this->GetTransform().GetPosition();
+					Vector3 securityPosition = this->GetTransform().GetPosition();
 				bool foundPath = navigationMesh->FindPath(securityPosition, destination, *navigationPath);
 				if (foundPath) {
 					std::cout << "Choose Destination - Found Path\n";
@@ -267,6 +266,10 @@ namespace NCL::CSC8508 {
 				}
 				else
 				{
+					if (navigationMesh->GetIsOutNavMesh()) {
+					//	OutsideNavmeshRespawn(this->GetTransform().GetPosition());
+						navigationMesh->SetIsOutNavMeshFalse();
+					}
 					std::cout << "Choose Destination - Found NOT Path\n";
 					//return Failure;
 				}
@@ -285,14 +288,18 @@ namespace NCL::CSC8508 {
 			}
 			else if (state == Ongoing) {
 
-				Vector3 direction = navigationPath->waypoints.back() - this->GetTransform().GetPosition();
+				Vector3 nextWaypoint = navigationPath->waypoints.back();
+				nextWaypoint.y = this->GetTransform().GetPosition().y;
+				Vector3 direction = nextWaypoint - this->GetTransform().GetPosition();
+				
+				
 				Vector3 velocity = rigidBody->getLinearVelocity();
-								
+				/*				
 				if (LookForPlayers() != nullptr) {
 					navigationPath->Clear();
 					std::cout << " Going to the destination - Can see Player\n";
 					return Success;
-				}
+				}*/
 				//std::cout << "Velocity = " << velocity.Length() << "\n";
 				if (velocity.Length() < 0.1) {
 					//std::cout << "Velocity = " << velocity.Length() << "\n";
@@ -303,14 +310,16 @@ namespace NCL::CSC8508 {
 						return Success;
 					}
 				}
-				if (direction.Length() <= 4 && navigationPath->waypoints.size() >= 2) {
+				if (direction.Length() <= 5 && navigationPath->waypoints.size() >= 2) {
 					std::cout << " Going to the destination - Going Destination\n";
 					navigationPath->waypoints.pop_back();
 				}
 	
 				if (navigationPath->waypoints.size() == 1) {
-					if (DistanceToTarget(navigationPath->waypoints.front()) <= 3.0f) {
+					if (DistanceToTarget(navigationPath->waypoints.front()) <= 5.0f) {
 						std::cout << " Going to the destination - Reached Destination\n";
+						this->GetRigidBody()->resetForce();
+						this->GetRigidBody()->resetTorque();
 						navigationPath->Clear();
 						return Success;
 					}
@@ -359,8 +368,6 @@ namespace NCL::CSC8508 {
 			if (state == Initialise) {
 				Vector3 playerPosition = chasedPlayer->GetTransform().GetPosition();
 				Vector3 securityPosition = this->GetTransform().GetPosition();
-
-
 				bool foundPath = navigationMesh->FindPath(securityPosition, playerPosition, *navigationPath);
 				if (foundPath) {
 					std::cout << " Chase the Player - Path found\n";
@@ -368,6 +375,10 @@ namespace NCL::CSC8508 {
 					state = Ongoing;
 				}
 				else {
+					if (navigationMesh->GetIsOutNavMesh()) {
+						//OutsideNavmeshRespawn(this->GetTransform().GetPosition());
+						navigationMesh->SetIsOutNavMeshFalse();
+					}
 					std::cout << " Chase the Player - Path NOT found\n";
 					state = Failure;
 				}
@@ -377,7 +388,6 @@ namespace NCL::CSC8508 {
 				Vector3 direction = navigationPath->waypoints.back() - this->GetTransform().GetPosition();
 				chaseAccumulator += dt;
 				Vector3 velocity = rigidBody->getLinearVelocity();
-			//	std::cout << "Velocity = " << velocity.Length() << "\n";
 				if (velocity.Length() < 1)
 				{
 					stuckAccumulator += dt;
@@ -388,7 +398,6 @@ namespace NCL::CSC8508 {
 						rootSelector->Reset();
 						return Initialise;
 					}
-
 				}
 				if (chaseAccumulator >= 1.5) {
 					bool isPlayerVisible = LookForPlayer(chasedPlayer);
@@ -402,12 +411,11 @@ namespace NCL::CSC8508 {
 				}
 				if (direction.Length() <= 4 && navigationPath->waypoints.size() >= 2) {
 					navigationPath->waypoints.pop_back();
-						std::cout << " Chase the Player - Chasing player\n";
-
+					std::cout << " Chase the Player - Chasing player\n";
 				}
 				if (navigationPath->waypoints.size() == 1) {
 					if (DistanceToTarget(navigationPath->waypoints.back()) <= 4.0f) {
-								std::cout << " Chase the Player - Reached the player\n";
+						std::cout << " Chase the Player - Reached the player\n";
 						navigationPath->Clear();
 						chaseAccumulator = 0.0f;
 						return Success;
@@ -425,27 +433,48 @@ namespace NCL::CSC8508 {
 	{
 		attackThePlayer = new BehaviourAction("Attack the Goat ", [&](float dt, BehaviourState state)->BehaviourState {
 			if (state == Initialise) {
+				int lay = (int)this->GetLayer();
+				std::cout << "Player Layer = " << lay << "\n";
 				state = Ongoing;
 			}
 			else if (state == Ongoing) {
 				Vector3 direction = chasedPlayer->GetTransform().GetPosition() - this->GetTransform().GetPosition();
-				if (direction.Length() > 15) {
-					//	std::cout << "The player is too far away..\n";
-					state = Failure;
-				}
-				else {
-					// Respawns player at position location
-					reactphysics3d::Vector3 position(20.0f, 10.0f, 50.0f);
-					reactphysics3d::Transform rp3d_transform(position, rp3d::Quaternion::identity());
-					chasedPlayer->GetRigidBody()->setTransform(rp3d_transform);
+				DetermineChaseSpeed();
+				MoveSecurityGuard(direction);
+				if (hasCaughtPlayer) { // collision with player
+					std::cout << "Player Caught\n";
+					hasCaughtPlayer = false;
 					state = Success;
 				}
+				else if(direction.Length() > 20) {
+					// Respawns player at position location
+					std::cout << "Player has escaped\n";
+					state = Failure;
+				}
+
 			}
 
 			return state;
 			}
 
 		);
+	}
+
+	void SecurityGuard::CaughtPlayer() {
+		if (chasedPlayer == nullptr) { return; }
+	//	chasedPlayer->GetRigidBody()->resetForce();
+	//	chasedPlayer->GetRigidBody()->resetTorque();
+	//	this->GetRigidBody()->resetForce();
+	//	this->GetRigidBody()->resetTorque();
+		reactphysics3d::Vector3 position(200, 5.0f, 200.0f);
+		//	chasedPlayer->GetRigidBody()->resetForce();
+		//	chasedPlayer->GetRigidBody()->resetTorque();
+
+		//	this->GetRigidBody()->resetForce();
+	//	this->GetRigidBody()->resetTorque();
+		reactphysics3d::Transform rp3d_transform(position, rp3d::Quaternion::identity());
+		chasedPlayer->GetRigidBody()->setTransform(rp3d_transform);
+		
 	}
 
 	GameObject* SecurityGuard::LookForPlayers()
@@ -455,7 +484,8 @@ namespace NCL::CSC8508 {
 		{
 			if (isPlayerOneVisible) 
 			{
-				return playerOne;
+				//return playerOne;
+				return nullptr;
 			}
 			else
 			{
@@ -574,8 +604,10 @@ namespace NCL::CSC8508 {
 	void SecurityGuard::MoveSecurityGuard(Vector3 direction)
 	{
 		reactphysics3d::Vector3 forceDirection;
+
 		forceDirection = ~direction.Normalised();
 
+		Debug::DrawLine(this->GetTransform().GetPosition(), this->GetTransform().GetPosition() + forceDirection /** force*/, Debug::YELLOW, 1);
 		Vector3 up(0, 1, 0);
 		Vector3 negdirection(-direction.x, -direction.y, -direction.z);
 		Quaternion rotation = Quaternion::LookRotation(negdirection, up);
@@ -755,18 +787,45 @@ namespace NCL::CSC8508 {
 			index1 = i.indices[0];
 			index2 = i.indices[1];
 			index3 = i.indices[2];
-			Debug::DrawTriangle(navigationMesh->allVerts[index1], navigationMesh->allVerts[index2], navigationMesh->allVerts[index3]);
+//			Debug::DrawTriangle(navigationMesh->allVerts[index1], navigationMesh->allVerts[index2], navigationMesh->allVerts[index3]);
+			Debug::DrawLine(navigationMesh->allVerts[index1], navigationMesh->allVerts[index2], Debug::RED, 1);
+			Debug::DrawLine(navigationMesh->allVerts[index3], navigationMesh->allVerts[index2], Debug::RED, 1);
+			Debug::DrawLine(navigationMesh->allVerts[index1], navigationMesh->allVerts[index3], Debug::RED, 1);
+
+
 		}
 	}
 
 	void SecurityGuard::DisplayPathfinding() {
+
 		for (int i = 1; i < navigationPath->waypoints.size(); ++i) {
 			Vector3 a = navigationPath->waypoints[i - 1];
 			Vector3 b = navigationPath->waypoints[i];
-			Debug::DrawLine(a, b, Debug::BLACK);
+			Debug::DrawLine(a, b, Debug::BLACK, 10);
 		}
 	}
 
+	void SecurityGuard::OutsideNavmeshRespawn(Vector3 startPos)
+	{
+		float minDistance = FLT_MAX;
+		float distance = FLT_MAX;
+		Vector3 triPos;
+		for (auto i : navigationMesh->allTris)
+		{
+			distance = (i.centroid - startPos).Length();
+			if (distance < minDistance)
+			{
+				triPos = i.centroid;
+				std::cout << "Outside Nav position: " << triPos << "\n";
+			}
+		}
+
+
+		reactphysics3d::Vector3 position;
+		position = ~triPos;
+		reactphysics3d::Transform rp3d_transform(position, rp3d::Quaternion::identity());
+		this->GetRigidBody()->setTransform(rp3d_transform);
+	}
 
 
 

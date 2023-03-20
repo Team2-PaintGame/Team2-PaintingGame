@@ -11,6 +11,35 @@ GameEventListener::GameEventListener(reactphysics3d::PhysicsWorld* physicsWorld,
 
 void GameEventListener::onContact(const CollisionCallback::CallbackData& callbackData)
 {
+	for (reactphysics3d::uint p = 0; p < callbackData.getNbContactPairs(); p++) {
+		reactphysics3d::CollisionCallback::ContactPair contactPair = callbackData.getContactPair(p);
+		GameObject* obj = nullptr;
+		if (void* userData = contactPair.getBody1()->getUserData())
+		{
+			obj = (GameObject*)userData;
+
+			if (void* userData2 = contactPair.getBody2()->getUserData())
+			{
+				
+				GameObject* obj2 = (GameObject*)userData2;
+				if ((obj->GetLayer() == Layer::Player && obj2->GetLayer() == Layer::Enemy) && contactPair.getEventType() == ContactPair::EventType::ContactStart)
+				{
+					SecurityGuard* security = (SecurityGuard*)userData2;
+					std::cout << "Blaaah1\n";
+					security->SetHasCaughtPlayerTrue();
+					security->CaughtPlayer();
+				}
+				else if ((obj->GetLayer() == Layer::Enemy && obj2->GetLayer() == Layer::Player) && contactPair.getEventType() == ContactPair::EventType::ContactStart)
+				{
+					SecurityGuard* security = (SecurityGuard*)userData;
+					std::cout << "Blaaah2\n";
+					security->SetHasCaughtPlayerTrue();
+					security->CaughtPlayer();
+				}
+			}
+		}
+
+	}
 }
 
 void GameEventListener::onTrigger(const reactphysics3d::OverlapCallback::CallbackData& callbackData)
@@ -51,6 +80,12 @@ void GameEventListener::onTrigger(const reactphysics3d::OverlapCallback::Callbac
 					SecurityGuard* security = (SecurityGuard*)userData;
 					security->SetIsBlindedTrue();
 				}
+
+
+
+
+
+
 			}
 
 

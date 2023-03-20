@@ -15,8 +15,8 @@ using namespace CSC8508;
 
 
 int main() {
-//	Window* w = Window::CreateGameWindow("Painting Game", 1280, 720);
-	Window* w = Window::CreateGameWindow("Painting Game", 1920, 1080, true);
+	Window* w = Window::CreateGameWindow("Painting Game", 1280, 720);
+//	Window* w = Window::CreateGameWindow("Painting Game", 1920, 1080, true);
 	GameManager gameManager(w);
 	if (!w->HasInitialised()) {
 		return -1;
@@ -31,7 +31,7 @@ int main() {
 	std::cout << "Console Pos: " << w->GetScreenPosition() << "\n";
 	while (w->UpdateWindow()) {
 		float dt = w->GetTimer()->GetTimeDeltaSeconds();
-		w->LockMouseToWindow(true);
+	//a	w->LockMouseToWindow(true);
 		if (dt > 0.1f) {
 			std::cout << "Skipping large time delta" << std::endl;
 			continue; //must have hit a breakpoint or something to have a 1 second frame time!
