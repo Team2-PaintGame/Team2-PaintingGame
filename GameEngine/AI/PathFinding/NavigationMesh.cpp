@@ -245,7 +245,7 @@ void NavigationMesh::StringPull(Vector3 startPosition, Vector3 endPosition, Navi
 	
 
 
-	for (int i = 1; i < nPortals && npts < maxPts; ++i)
+	for (int i = 1; i <= nPortals && npts < maxPts; ++i)
 	{
 		left = portalEdges[i-1].left;
 		right = portalEdges[i-1].right;
@@ -315,13 +315,13 @@ void NavigationMesh::StringPull(Vector3 startPosition, Vector3 endPosition, Navi
 		}
 	}
 
-	if (npts < maxPts && 
+	/*if (npts < maxPts &&
 		(Maths::FloatAreaOfTri(portalApex, portalRight, endPosition) > 0.0f
 		|| Maths::FloatAreaOfTri(portalApex, portalLeft, endPosition) < 0.0f)) // if endpoint is outside funnel, add a midpoint
 	{
 		outPath.waypoints.insert(outPath.waypoints.begin(), (portalLeft + portalRight) * 0.5f);
 		npts++;
-	}
+	}*/
 
 	if (npts < maxPts )
 	{
