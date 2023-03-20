@@ -11,16 +11,11 @@ namespace NCL {
 		class LoadingScreen : public BaseScreen
 		{
 		public:
-			LoadingScreen(ScreenManager* screenManager, SceneNode* sceneNode = NULL) : BaseScreen(screenManager, sceneNode) {
-				screenType = ScreenType::LoadingScreen;
-				renderObj = sceneNode->GetRenderObject();
-				transform = renderObj->GetTransform();
-				int a = 0;
-			}
+			LoadingScreen(ScreenManager* screenManager, SceneNode* sceneNode = NULL);
 			void OnAwake() override;
 			PushdownResult OnUpdate(float dt, PushdownState** newState) override;
 			void SetThread(std::thread* t) { threadToWait = t; }
-			HUDOnLoad* hUDOnLoad;
+			RenderObject* GetLoader() { return (RenderObject *) hUDOnLoad; }
 
 		protected:
 			virtual PushdownResult onStateChange(PushdownState** newState);
@@ -31,7 +26,7 @@ namespace NCL {
 			Quaternion quat;
 			float timer = 0;
 			Transform* transform;
-			
+			HUDOnLoad* hUDOnLoad;
 			
 		};
 

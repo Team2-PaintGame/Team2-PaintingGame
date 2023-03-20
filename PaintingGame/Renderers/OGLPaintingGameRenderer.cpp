@@ -72,7 +72,13 @@ void OGLPaintingGameRenderer::RenderBasicScreen() { //change this to render stat
 
 	if (boundScreen->GetScreenType() == ScreenType::LoadingScreen)
 	{
-		//((LoadingScreen*)boundScreen)->;
+		r = ((LoadingScreen*)boundScreen)->GetLoader();
+		BindShader(r->GetShader());
+		BindMesh(r->GetMesh());
+		BindTextureToShader(r->GetDefaultTexture(), "mainTex", 0);
+		DrawBoundMesh();
+
+		SendModelMatrices((OGLShader*)r->GetShader(), r);
 	}
 	boundScreen->RenderMenu();
 }

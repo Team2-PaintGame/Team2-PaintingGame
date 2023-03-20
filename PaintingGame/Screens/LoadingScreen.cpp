@@ -9,17 +9,29 @@
 using namespace NCL;
 using namespace CSC8508;
 
+NCL::CSC8508::LoadingScreen::LoadingScreen(ScreenManager* screenManager, SceneNode* sceneNode) : BaseScreen(screenManager, sceneNode) {
+	NCL::Assets::OGLAssetLoader loader;
+	ShaderBase* loadScreenShader = loader.LoadShader("hud.vert", "hud.frag");
+
+	BaseScreen::sceneNode = new SceneNode(loader.LoadMesh(NCL::Assets::MeshType::Quad), loadScreenShader, TextureLoader::LoadAPITexture("Screens/bg3.jpg"));
+
+	screenType = ScreenType::LoadingScreen;
+	renderObj = this->sceneNode->GetRenderObject();
+	transform = renderObj->GetTransform();
+
+	hUDOnLoad = new HUDOnLoad(new Transform(), loader.LoadMesh(NCL::Assets::MeshType::Quad), loadScreenShader);
+	hUDOnLoad->SetDefaultTexture(TextureLoader::LoadAPITexture("loadingSprites.png"));
+	//loadThread = new std::thread(SpiningLoadScreen);
+}
+
 void NCL::CSC8508::LoadingScreen::OnAwake()
 {
-	NCL::Assets::OGLAssetLoader loader;
-	//hUDOnLoad = new HUDOnLoad(new Transform(), loader.LoadMesh(NCL::Assets::MeshType::Quad), loader.LoadShader("hud.vert", "hud.frag"));
-	//hUDOnLoad->SetDefaultTexture(TextureLoader::LoadAPITexture("loadingSprites.png"));
+	
 }
 
 PushdownState::PushdownResult LoadingScreen::OnUpdate(float dt, PushdownState** newState)
 {
-	//hUDOnLoad->Update(dt);
-
+	hUDOnLoad->Update(dt);
 	return onStateChange(newState);
 }
 

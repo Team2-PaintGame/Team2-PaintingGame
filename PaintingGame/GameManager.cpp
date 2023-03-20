@@ -23,7 +23,7 @@ GameManager::GameManager(Window* window) {
 
 #ifdef _WIN32
 	HGLRC context = ((OGLRenderer*)renderer)->CreateAnotherContext();
-	((OGLRenderer*)renderer)->ResetContext();
+	//((OGLRenderer*)renderer)->ResetContext();
 	((LoadingScreen*)screenManager->GetScreen(ScreenType::LoadingScreen))->SetThread(new std::thread(LoadAssets, gameAssets, (OGLRenderer*)renderer, context));
 #endif
 }

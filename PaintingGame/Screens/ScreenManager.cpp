@@ -34,9 +34,9 @@ void ScreenManager::LoadScreens() {
 }
 
 void ScreenManager::LoadLoadingScreen() {
-	screenSceneNodes.emplace(std::make_pair(ScreenType::LoadingScreen, std::make_unique<SceneNode>(assets->GetMesh("quadMesh"), assets->GetShader("screenShader"), assets->GetTexture("splashScreenTex"))));
+	//screenSceneNodes.emplace(std::make_pair(ScreenType::LoadingScreen, std::make_unique<SceneNode>(assets->GetMesh("quadMesh"), assets->GetShader("screenShader"), assets->GetTexture("splashScreenTex"))));
 
-	screens.insert(std::make_pair(ScreenType::LoadingScreen, std::make_unique<LoadingScreen>(this, screenSceneNodes.at(ScreenType::LoadingScreen).get())));
+	screens.insert(std::make_pair(ScreenType::LoadingScreen, std::make_unique<LoadingScreen>(this, nullptr)));
 }
 
 BaseScreen* NCL::CSC8508::ScreenManager::GetScreen(ScreenType screenType) const {
