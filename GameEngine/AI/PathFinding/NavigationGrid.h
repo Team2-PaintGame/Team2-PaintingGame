@@ -39,6 +39,7 @@ namespace NCL {
 		class NavigationGrid : public NavigationMap	{
 		public:
 			NavigationGrid();
+			NavigationGrid(const std::string& filename);
 			NavigationGrid(const std::string&filename, std::map<std::string, MeshGeometry*>& meshes, std::map<std::string, TextureBase*>& textures, ShaderBase* shader, GameWorld* world);
 			~NavigationGrid();
 

@@ -37,7 +37,7 @@ namespace NCL {
 			Player* CreatePlayer(Vector3 position, Team team);
 			virtual Player* AddPlayer(Vector3 position, Team team) = 0;
 			Gun* CreateGun(Vector3 position, Team team);
-
+			virtual void AddSecurityAI(Vector3 position, PlayerBase* target1, PlayerBase* target2);
 			GameWorld* world;
 
 			bool useGravity = true;
@@ -52,6 +52,7 @@ namespace NCL {
 			std::vector<DirectionalLight> directionalLights;
 			std::vector<PointLight> pointLights;
 			std::vector<SpotLight> spotLights;
+			Ink* ink;
 
 			//container for cameras
 			std::vector<Camera*> activeCameras;
