@@ -2,7 +2,6 @@
 #include "GameObject.h"
 #include "Camera.h"
 #include <chrono>
-
 using namespace NCL;
 using namespace NCL::CSC8508;
 
@@ -150,6 +149,24 @@ SceneContactPoint* GameWorld::Raycast(const reactphysics3d::Ray& r, GameObject* 
 	return closestHit;
 }
 
+double GetDistance(Vector3 vec1, Vector3 vec2)
+{
+	return std::sqrt(std::pow((vec1.x - vec2.x), 2) + std::pow((vec1.y - vec2.y), 2) + std::pow((vec1.z - vec2.z), 2));
+}
+
 void GameWorld::AddPaintedPosition(const Vector3& position) {
+	for (auto& element : paintedPositions)
+	{
+		if ((element.colour == Vector4{ 0,1,0,1 } && element.position == position)) {
+			return;
+		}
+		else if (element.colour == Vector4{ 0,1,0,1 } && GetDistance(element.position, position) < 2) {
+			return;
+		}
+		else if (element.colour != Vector4{ 0,1,01 } && GetDistance(element.position, position) < 2) {
+			element.colour = Vector4{ 0,1,01 };
+			return;
+		}
+	}
 	paintedPositions.push_back(PaintSplat(position, {0,1,0,1}));
 }

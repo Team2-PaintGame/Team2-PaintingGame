@@ -6,8 +6,6 @@
 #include "AnimationController.h"
 #include "PaintingObject.h"
 #include "Ink.h"
-#include "ScoreCamera.h"
-#include "ScoreBar.h"
 using namespace NCL;
 using namespace CSC8508;
 
@@ -50,8 +48,6 @@ void PaintingGame::InitWorld() {
 	world->AddGameObject(new PaintingObject(physicsCommon, physicsWorld, Vector3(50, 10, 50), assets->GetMesh("cubeMesh"), assets->GetMeshMaterial("screamPaintMat"), assets->GetShader("basicShader"), 10, "screamPaint"));
 	world->AddGameObject(new PaintingObject(physicsCommon, physicsWorld, Vector3(60, 10, 50), assets->GetMesh("cubeMesh"), assets->GetMeshMaterial("sunflowersMat"), assets->GetShader("basicShader"), 10, "sunflowers"));
 
-	//TODO null world and common
-	world->AddGameObject(new ScoreBar(physicsCommon, physicsWorld, assets->GetShader("scoreShader"),"ScoreBar"));
 }
 
 void PaintingGame::Update(float dt) {
@@ -59,6 +55,7 @@ void PaintingGame::Update(float dt) {
 	//Debug::ShowMemoryUsage();
 
 	world->UpdateWorld(dt);
+	world->CalculateNewScores();
 	physicsWorld->update(dt);
 	CreateSplatOnShoot();
 	Debug::UpdateRenderables(dt);

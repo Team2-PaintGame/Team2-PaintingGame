@@ -8,6 +8,11 @@ namespace NCL {
 		class GameObject;
 		class Constraint;
 
+		struct PaintSplat {
+			Vector3 position;
+			Vector4 colour;
+		};
+
 		typedef std::function<void(GameObject*)> GameObjectFunc;
 		typedef std::function<void(int, Vector3&, Vector4&)> Vector3and4Func;
 		typedef std::function<void(int, PaintSplat&)> PaintSplatFunc;
@@ -24,10 +29,7 @@ namespace NCL {
 			GameObject* object;
 		};
 
-		struct PaintSplat {
-			Vector3 position;
-			Vector4 colour;
-		};
+
 
 		class RaycastManager : public reactphysics3d::RaycastCallback {
 		public:
