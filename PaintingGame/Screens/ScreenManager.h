@@ -34,8 +34,9 @@ namespace NCL::CSC8508 {
 		BaseScreen* GetActiveScreen() const;
 		GameAssets* GetGameAssets() const { return assets; }
 		bool Update(float dt);
-	protected:
 		void LoadScreens();
+		void LoadLoadingScreen();
+	protected:
 		std::unordered_map<ScreenType, std::unique_ptr<BaseScreen>> screens;
 		std::unordered_map<ScreenType, std::unique_ptr<SceneNode>> screenSceneNodes;
 		GameAssets* assets;

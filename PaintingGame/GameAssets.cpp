@@ -6,7 +6,7 @@ using namespace Assets;
 GameAssets::GameAssets(Assets::AssetLoader* loader) {
 	this->loader = loader;
 
-#if 1 //#ifdef _ORBIS // Load without loading screen on ps4
+#ifdef _ORBIS // Load without loading screen on ps4
 	Load();
 #endif
 }

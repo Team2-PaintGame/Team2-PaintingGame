@@ -23,8 +23,8 @@ namespace NCL::CSC8508 {
 		GameAssets* gameAssets;
 		ScreenManager* screenManager;
 
-		//static GameManager* gameManager;
+		static GameManager* gameManager;
 
-		//std::thread assetThread;
+		std::thread assetThread;
 	};
 }

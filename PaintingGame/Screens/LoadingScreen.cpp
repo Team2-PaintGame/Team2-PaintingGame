@@ -12,21 +12,13 @@ using namespace CSC8508;
 void NCL::CSC8508::LoadingScreen::OnAwake()
 {
 	NCL::Assets::OGLAssetLoader loader;
-	hUDOnLoad = new HUDOnLoad(new Transform(), loader.LoadMesh(NCL::Assets::MeshType::Quad), loader.LoadShader("hud.vert", "hud.frag"));
-	hUDOnLoad->SetDefaultTexture(TextureLoader::LoadAPITexture("loadingSprites.png"));
-
-	//TextureBase* t = TextureLoader::LoadAPITexture("loadingSprites.png");
-	//GameScreen* gs;
-	//gs = (GameScreen*)screenManager->GetScreen(ScreenType::GameScreen);
-	//create thread 
-	//gs->SetCommand(command);
-//	GameScreen::OnLoad(gs, screenManager->GetGameAssets());
-	//threadToWait = new std::thread(GameScreen::OnLoad, gs, screenManager->GetGameAssets());
+	//hUDOnLoad = new HUDOnLoad(new Transform(), loader.LoadMesh(NCL::Assets::MeshType::Quad), loader.LoadShader("hud.vert", "hud.frag"));
+	//hUDOnLoad->SetDefaultTexture(TextureLoader::LoadAPITexture("loadingSprites.png"));
 }
 
 PushdownState::PushdownResult LoadingScreen::OnUpdate(float dt, PushdownState** newState)
 {
-	hUDOnLoad->Update(dt);
+	//hUDOnLoad->Update(dt);
 
 	return onStateChange(newState);
 }
@@ -35,8 +27,6 @@ PushdownState::PushdownResult LoadingScreen::onStateChange(PushdownState** newSt
 {
 	if (!threadToWait || threadToWait->joinable()) // if thread joinable
 	{
-		*newState = screenManager->GetScreen(ScreenType::SplashScreen);
-
 		if (threadToWait)
 		{
 			threadToWait->join();
@@ -44,6 +34,8 @@ PushdownState::PushdownResult LoadingScreen::onStateChange(PushdownState** newSt
 			threadToWait = nullptr;
 			GameManager::FinishLoadingCallback();
 		}
+
+		*newState = screenManager->GetScreen(ScreenType::SplashScreen);
 
 		return PushdownResult::Push;
 	}

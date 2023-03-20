@@ -9,20 +9,20 @@ using namespace CSC8508;
 
 PlatformConfigurations GameManager::sConfig = PlatformConfigurations();
 
-//GameManager* GameManager::gameManager = nullptr;
+GameManager* GameManager::gameManager = nullptr;
 
 GameManager::GameManager(Window* window) {
 	renderer = sConfig.rendererFactory->createRenderer(*window);
 	assetLoader = sConfig.assetLoaderFactory->createAssetLoader();
 	gameAssets = new GameAssets(assetLoader);
 	screenManager = new ScreenManager(gameAssets);
-	//gameManager = this;
+	gameManager = this;
 
 	renderer->BindDebugShader(gameAssets->GetShader("debugShader"));
 
-#if 0//#ifdef _WIN32
+#ifdef _WIN32
 	HGLRC context = ((OGLRenderer*)renderer)->CreateAnotherContext();
-	//((OGLRenderer*)renderer)->ResetContext();
+	((OGLRenderer*)renderer)->ResetContext();
 	((LoadingScreen*)screenManager->GetScreen(ScreenType::LoadingScreen))->SetThread(new std::thread(LoadAssets, gameAssets, (OGLRenderer*)renderer, context));
 #endif
 }
@@ -51,7 +51,7 @@ void GameManager::LoadAssets(GameAssets* assets, OGLRenderer* renderer, HGLRC co
 
 void GameManager::FinishLoadingCallback()
 {
-	//gameManager->FinishLoading();
+	gameManager->FinishLoading();
 }
 
 void GameManager::FinishLoading()
@@ -59,5 +59,6 @@ void GameManager::FinishLoading()
 	((OGLRenderer*)renderer)->ResetDefaultContext();
 	gameAssets->ReloadShaders();
 	gameAssets->ReloadMeshes();
+	screenManager->LoadScreens();
 }
 #endif
