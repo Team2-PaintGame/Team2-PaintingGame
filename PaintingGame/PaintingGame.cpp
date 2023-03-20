@@ -39,7 +39,6 @@ void PaintingGame::OperateOnCameras(CameraFunc f) {
 void PaintingGame::InitWorld() {
 	world->ClearAndErase();
 
-	loadingHud = new LoadingHud(physicsCommon, physicsWorld, assets->GetMesh("quadMesh"), assets->GetTexture("loadingTex"), assets->GetShader("hudShader"),Vector2(0.7,-0.7), Vector2(0.05));
 	world->AddGameObject(loadingHud);
 	world->AddGameObject(new Floor(physicsCommon, physicsWorld, Vector3(0, 0, 0), assets->GetMesh("floorMesh"), assets->GetTexture("basicTex"), assets->GetShader("basicShader"), 1));
 
@@ -60,7 +59,6 @@ void PaintingGame::Update(float dt) {
 	Debug::ShowNumberOfGameObjects(world->GetNumberOfGameObjects());
 	Debug::ShowNumberOfPaintedPositions(world->GetNumPaintedPositions());
 
-	loadingHud->Update(dt);
 	world->UpdateWorld(dt);
 	physicsWorld->update(dt);
 	Debug::UpdateRenderables(dt);
