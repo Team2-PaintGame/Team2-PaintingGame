@@ -6,6 +6,9 @@
 using namespace NCL;
 using namespace CSC8508;
 
+/* Only Required for PS4 */
+unsigned int sceLibcHeapExtendedAlloc = 1;			/* Switch to dynamic allocation */
+size_t       sceLibcHeapSize = 1024 * 1024 * 1024;	/* Set up heap area upper limit as 256 MiB */
 
 int main() {
 	Window* w = Window::CreateGameWindow("Painting Game", 1280, 720);
