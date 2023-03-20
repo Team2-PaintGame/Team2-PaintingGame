@@ -10,6 +10,7 @@ using namespace CSC8508;
 PlatformConfigurations GameManager::sConfig = PlatformConfigurations();
 
 GameManager* GameManager::gameManager = nullptr;
+bool GameManager::loadingFlag = false;
 
 GameManager::GameManager(Window* window) {
 	renderer = sConfig.rendererFactory->createRenderer(*window);
@@ -45,8 +46,10 @@ bool GameManager::RunGame(float dt) {
 //Static function to start the thread
 void GameManager::LoadAssets(GameAssets* assets, OGLRenderer* renderer, HGLRC context)
 {
+	loadingFlag = false;
 	renderer->MakeCurrent(context);
 	assets->Load();
+	loadingFlag = true;
 }
 
 void GameManager::FinishLoadingCallback()

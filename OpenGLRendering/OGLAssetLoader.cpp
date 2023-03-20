@@ -28,12 +28,6 @@ MeshGeometry* OGLAssetLoader::LoadMesh(const MeshType& meshType) {
 	}
 }
 
-MeshMaterial* OGLAssetLoader::LoadMeshMaterial(const string& name) {
-	MeshMaterial* meshMat = new MeshMaterial(name);
-	meshMat->LoadTextures();
-	return meshMat;
-}
-
 ShaderBase* OGLAssetLoader::LoadShader(const string& vertex, const string& fragment) {
 	return new OGLShader(vertex, fragment);
 }

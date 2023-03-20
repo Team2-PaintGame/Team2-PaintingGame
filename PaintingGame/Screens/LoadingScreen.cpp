@@ -25,7 +25,7 @@ PushdownState::PushdownResult LoadingScreen::OnUpdate(float dt, PushdownState** 
 
 PushdownState::PushdownResult LoadingScreen::onStateChange(PushdownState** newState)
 {
-	if (!threadToWait || threadToWait->joinable()) // if thread joinable
+	if (!threadToWait || GameManager::GetLoadingFlag()) // if thread joinable
 	{
 		if (threadToWait)
 		{
