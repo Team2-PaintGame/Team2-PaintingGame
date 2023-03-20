@@ -99,7 +99,6 @@ set(ADDITIONAL_LIBRARY_DEPENDENCIES
 )
 
 if(NOT WIN32)
-
 set(ADDITIONAL_PS4_DEPENDENCIES
     "libSceDbgVideoOut_stub_weak.a" 
     "libSceVideoOut_stub_weak.a"
@@ -115,7 +114,6 @@ set(ADDITIONAL_PS4_DEPENDENCIES
     "libSceNgs2_stub_weak.a" 
     "libSceAudioOut_stub_weak.a" 
     "-lSceAudio3d_stub_weak" 
-    "toolkit_debug" 
 )
 target_link_libraries(${PROJECT_NAME} LINK_PUBLIC "${ADDITIONAL_PS4_DEPENDENCIES}")
 endif()
@@ -128,4 +126,4 @@ include_directories("../GameEngine/AssetsHandling/")
 include_directories("../GameEngine/WindowingAndInput/")
 include_directories("../GameEngine/WindowingAndInput/PS4/")
 
-target_link_libraries(${PROJECT_NAME} PUBLIC "${ADDITIONAL_LIBRARY_DEPENDENCIES}")
+target_link_libraries(${PROJECT_NAME} PUBLIC "${ADDITIONAL_LIBRARY_DEPENDENCIES}"  "${SCE_ORBIS_SDK_DIR}/target/samples/sample_code/graphics/api_gnm/toolkit/toolkit_debug.a" )
