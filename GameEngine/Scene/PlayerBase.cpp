@@ -8,12 +8,25 @@
 using namespace NCL;
 using namespace CSC8508;
 
-PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon & physicsCommon, reactphysics3d::PhysicsWorld * physicsWorld, Vector3 position, MeshGeometry * mesh, TextureBase * texture, ShaderBase * shader, int size) : GameObject(physicsCommon, physicsWorld, "BasePlayer") {
+//TextureBase Constructor
+PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position,
+	MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, const std::unordered_map<std::string, MeshAnimation*>& animations,
+	int size, std::string objectName)
+	: AnimatedObject(physicsCommon, physicsWorld, position, mesh, texture, shader, animations, size, objectName) 
+{
+	AnimatedObject::SetAnimControler(animations);
 	SetMemberVariables(physicsCommon, physicsWorld, position, mesh, shader, size);
 	renderObject->SetDefaultTexture(texture);
 }
-PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, MeshMaterial* meshMaterial, ShaderBase* shader, int size) : GameObject(physicsCommon, physicsWorld, "BasePlayer") {
+
+//Mesh Material Constructor
+PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position,
+	MeshGeometry* mesh, MeshMaterial* meshMaterial, ShaderBase* shader, const std::unordered_map<std::string, MeshAnimation*>& animations,
+	int size, std::string objectName)
+	: AnimatedObject(physicsCommon, physicsWorld, position, mesh, meshMaterial, shader, animations, size, objectName) 
+{
 	SetMemberVariables(physicsCommon, physicsWorld, position, mesh, shader, size);
+	AnimatedObject::SetAnimControler(animations);
 	renderObject->LoadMaterialTextures(meshMaterial);
 	raycastManager = new RaycastManager();
 	raycastManager->setIgnore(rigidBody);
@@ -60,10 +73,14 @@ void PlayerBase::SetMemberVariables(reactphysics3d::PhysicsCommon& physicsCommon
 
 	// Create a rigid body in the physics world
 	rigidBody = physicsWorld->createRigidBody(rp3d_transform);
-	rigidBody->addCollider(boundingVolume, rp3d::Transform::identity()); //collider
+	reactphysics3d::Collider* collider = rigidBody->addCollider(boundingVolume, rp3d::Transform::identity()); //collider
+	//collider->setIsTrigger(true);
 	rigidBody->updateMassPropertiesFromColliders();
 	rigidBody->setLinearDamping(1.5f);
+	rigidBody->setUserData(this);
   
+	layer = Layer::Player;
+
 	camera = new Camera();
 }
 

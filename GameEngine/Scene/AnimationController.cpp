@@ -1,11 +1,12 @@
 #include "AnimationController.h"
 #include "MeshAnimation.h"
-#include "PlayerBase.h"
+#include "AnimatedObject.h"
+
 
 using namespace NCL;
 using namespace NCL::CSC8508;
 
-AnimationController::AnimationController(PlayerBase* gameObject, const std::unordered_map<std::string, MeshAnimation*>& animations) {
+AnimationController::AnimationController(/*PlayerBase**/AnimatedObject* gameObject, const std::unordered_map<std::string, MeshAnimation*>& animations) {
 	this->gameObject = gameObject;
 	this->animations = animations;
 	State* idleState = new State([&](float dt)->void {
@@ -40,6 +41,7 @@ AnimationController::AnimationController(PlayerBase* gameObject, const std::unor
 	this->AddTransition(idleToMoveStateTransition);
 	this->AddTransition(moveToIdleStateTransition);
 }
+
 void AnimationController::Update(float dt) {
 	StateMachine::Update(dt);
 

@@ -7,6 +7,7 @@ namespace NCL {
 	namespace CSC8508 {
 		class GameObject;
 		class Constraint;
+		class GameEventListener;
 
 		struct PaintSplat {
 			Vector3 position;
@@ -80,6 +81,9 @@ namespace NCL {
 			void AddGameObject(GameObject* o);
 			void RemoveGameObject(GameObject* o, bool andDelete = false);
 
+			void AddEventListener(GameEventListener* eventListener) { this->eventListener = eventListener; }
+			GameEventListener* GetEventListener() const { return eventListener; }
+
 			void AddConstraint(Constraint* c);
 			void RemoveConstraint(Constraint* c, bool andDelete = false);
 
@@ -109,13 +113,10 @@ namespace NCL {
 				return worldStateCounter;
 			}
 
-			void SetCollisionListener(GameObjectListener* listener) {
-				collisionManager = listener;
-				physicsWorld->setEventListener(listener);
-			}
+			reactphysics3d::PhysicsWorld& GetPhysicsWorld() const { return *physicsWorld; }
 
 			SceneContactPoint* Raycast(const reactphysics3d::Ray& r, GameObject* ignore = nullptr) const;
-
+			size_t GetNumberOfGameObjects() const { return gameObjects.size(); }
 			void AddPaintedPosition(const Vector3& position, int team);
 			size_t GetNumPaintedPositions() const { return paintedPositions.size(); }
 
@@ -148,9 +149,10 @@ namespace NCL {
 
 		protected:
 			RaycastManager* raycastManager;
-			GameObjectListener* collisionManager;
 			reactphysics3d::PhysicsWorld* physicsWorld = NULL;
 			std::vector<PaintSplat> paintedPositions;
+			GameEventListener* eventListener;
+			
 			std::vector<GameObject*> gameObjects;
 			std::vector<Constraint*> constraints;
 			bool shuffleConstraints;

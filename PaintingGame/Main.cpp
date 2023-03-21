@@ -28,8 +28,8 @@ int main() {
 
 	while (w->UpdateWindow()) {
 		float dt = w->GetTimer()->GetTimeDeltaSeconds();
-		if (dt > 0.1f) {
-			std::cout << "Skipping large time delta" << std::endl;
+		if (dt > 0.5f) {
+			std::cout << "Skipping large time delta: " << dt << std::endl;
 			continue; //must have hit a breakpoint or something to have a 1 second frame time!
 		}
 		w->SetTitle("Painting Game Frame time: " + std::to_string(1000.0f * dt));

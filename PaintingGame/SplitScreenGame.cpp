@@ -48,6 +48,8 @@ void SplitScreenGame::InitPlayers() {
 	player2->GetCamera()->SetVpSize(0.5f);
 	player1->GetCamera()->SetVpStartPos(Vector2(0.0f, 0.0f));
 	player2->GetCamera()->SetVpStartPos(Vector2(0.5f, 0.0f));
+
+	AddSecurityAI(Vector3(100, 5, 100), player1, player2);
 }
 
 void SplitScreenGame::CreateSplatOnShoot() {
@@ -67,11 +69,6 @@ Player* SplitScreenGame::AddPlayer(Vector3 position,Team team) {
 	Player* player = CreatePlayer(position, team);
 	activeCameras.push_back(player->GetCamera());
 	players.push_back(player);
-
-	/*FocusPoint* focusPoint = CreateFocusPoint();
-	focusPoint->SetPlayer(player);
-	world->AddGameObject(focusPoint);*/
-
 	return player;
 }
 

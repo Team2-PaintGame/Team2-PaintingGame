@@ -13,7 +13,7 @@ namespace NCL {
 	class Emitter {
 	public:
 		Emitter(MeshGeometry* emitterMesh);
-		Emitter(float angle = 20.0f);
+		Emitter(float angle = 2.0f);
 		Vector3 GetEmissionDirection();
 		unsigned int GetParticleEmissionRate() {
 			return particleEmissionRate;
@@ -49,6 +49,7 @@ namespace NCL {
 		virtual ~ParticleSystem();
 		void SetLooping(bool val) { looping = val; }
 		void StartEmission();					// If needed to run particle simulation again if looping is not enabled
+		size_t GetParticalsSize() { return particles.size(); };
 	protected:
 		void SetMemberVariables(Vector3 emitterPosition, MeshGeometry* mesh, ShaderBase* shader, bool enableGravity, float startSize, float startLifetime, float startSpeed, bool playOnAwake);
 		void GenerateParticles();
@@ -150,6 +151,8 @@ namespace NCL {
 		renderObject = new RenderObject(transforms, mesh, shader);
 		renderObject->SetInstanceCount(particles.size());
 		renderObject->SetIsInstanced(true);
+
+		layer = Layer::Paint;
 
 		if (!playOnAwake) {
 			elapsedTime = FLT_MAX;

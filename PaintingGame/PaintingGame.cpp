@@ -3,9 +3,18 @@
 #include <Debug.h>
 #include "Box.h"
 #include "Floor.h"
+#include "Assets.h"
+#include "Wall.h"
+#include "../GameObjects/MuseumItem.h"
+#include "SecurityGuard.h"
+//#include "InputController.h"
 #include "AnimationController.h"
 #include "PaintingObject.h"
 #include "Ink.h"
+#include "EventListener.h"
+
+
+
 using namespace NCL;
 using namespace CSC8508;
 
@@ -19,6 +28,7 @@ PaintingGame::PaintingGame(GameAssets* assets) {
 	//renderer->settings.SetIsDebugRenderingModeEnabled(true);
 	//renderer->settings.debugRendererSettings.SetIsCollisionShapeDisplayed(true);
 	//renderer->settings.debugRendererSettings.SetIsBroadPhaseAABBDisplayed(true);
+	world->AddEventListener(new GameEventListener(&world->GetPhysicsWorld(), world));
 }
 
 PaintingGame::~PaintingGame() {
@@ -34,7 +44,6 @@ void PaintingGame::OperateOnCameras(CameraFunc f) {
 
 void PaintingGame::InitWorld() {
 	world->ClearAndErase();
-
 
 	world->AddGameObject(new Floor(physicsCommon, physicsWorld, Vector3(0, 0, 0), assets->GetMesh("floorMesh"), assets->GetTexture("basicTex"), assets->GetShader("basicShader"), 1));
 
@@ -52,11 +61,15 @@ void PaintingGame::InitWorld() {
 
 void PaintingGame::Update(float dt) {
 	Debug::DrawFPS();
-	//Debug::ShowMemoryUsage();
+	Debug::ShowMemoryUsage();
+	Debug::ShowNumberOfGameObjects(world->GetNumberOfGameObjects());
+	Debug::ShowNumberOfPaintedPositions(world->GetNumPaintedPositions());
+	Debug::ShowNumberOfParticals(ink->GetParticalsSize());
+
 	world->UpdateWorld(dt);
 	world->CalculateNewScores();
 	physicsWorld->update(dt);
-	CreateSplatOnShoot();
+
 }
 
 Player* PaintingGame::CreatePlayer(Vector3 position,Team team) {
@@ -64,11 +77,11 @@ Player* PaintingGame::CreatePlayer(Vector3 position,Team team) {
 	animations.insert(std::make_pair("idleAnimation", assets->GetMeshAnimation("mainCharIdleAnim")));
 	animations.insert(std::make_pair("moveAnimation", assets->GetMeshAnimation("mainCharRunAnim")));
 	
-	Player* player; 
+		player =  new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("redMainCharMat"), assets->GetShader("skinningShader"), animations, 5, CreateGun(position, team), "Red Player");
 	if (team == Team::Red) {
-		player =  new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("redMainCharMat"), assets->GetShader("skinningShader"), animations, 5, 0, CreateGun(position, team));
+		player =  new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("redMainCharMat"), assets->GetShader("skinningShader"), animations, 5, CreateGun(position, team));
 	}
-
+		player =  new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("blueMainCharMat"), assets->GetShader("SecondskinningShader"), animations, 5, 0, CreateGun(position, team), "Blue Player");
 	else { //blue
 		player =  new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("blueMainCharMat"), assets->GetShader("SecondskinningShader"), animations, 5, 1, CreateGun(position, team));
 	}
@@ -77,22 +90,34 @@ Player* PaintingGame::CreatePlayer(Vector3 position,Team team) {
 	return player;
 }
 
-FocusPoint* PaintingGame::CreateFocusPoint() {
-	return new FocusPoint(physicsCommon, physicsWorld, assets->GetMesh("quadMesh"), assets->GetTexture("gunFocusTex"), assets->GetShader("hudShader"), Vector2(0.05));
-}
-
 Gun* PaintingGame::CreateGun(Vector3 position, Team team) {
 	Gun* gun;
-	Ink* ink = CreateInkStream(physicsCommon, physicsWorld, Vector3(0, 10, 0), assets->GetMesh("sphereMesh"), Vector4(0, 1, 0, 1), assets->GetShader("inkShader"));
+	ink = CreateInkStream(physicsCommon, physicsWorld, Vector3(0, 10, 0), assets->GetMesh("sphereMesh"), Vector4(0, 1, 0, 1), assets->GetShader("inkShader"));
+	FocusPoint* reticle = new FocusPoint(physicsCommon, physicsWorld, assets->GetMesh("quadMesh"), assets->GetTexture("gunFocusTex"), assets->GetShader("hudShader"), Vector2(0.05));
 
 	if (team == Team::Red) {
-		gun = new Gun(physicsCommon, physicsWorld, position, assets->GetMesh("gunMesh"), assets->GetMeshMaterial("gunMat"), assets->GetShader("basicShader"), 3, Debug::RED, ink);
+		gun = new Gun(physicsCommon, physicsWorld, position, assets->GetMesh("gunMesh"), assets->GetMeshMaterial("gunMat"), assets->GetShader("basicShader"), 3, Debug::RED, ink, reticle);
 	}
 	else { //blue
-		gun = new Gun(physicsCommon, physicsWorld, position, assets->GetMesh("gunMesh"), assets->GetMeshMaterial("gunMat"), assets->GetShader("basicShader"), 3, Debug::BLUE, ink);
+		gun = new Gun(physicsCommon, physicsWorld, position, assets->GetMesh("gunMesh"), assets->GetMeshMaterial("gunMat"), assets->GetShader("basicShader"), 3, Debug::BLUE, ink, reticle);
 	}
 
 	world->AddGameObject(gun);
 	world->AddGameObject(ink);
+	world->AddGameObject(reticle);
 	return gun;
 }
+
+void PaintingGame::AddSecurityAI(NCL::CSC8508::Vector3 position, PlayerBase* target1, PlayerBase* target2) // Vector3(-70.0f, 5.0f, 60.0f) // Change the hardcoded two targets
+{
+	std::unordered_map<std::string, MeshAnimation*> animations;
+	animations.insert(std::make_pair("idleAnimation", assets->GetMeshAnimation("mainCharIdleAnim")));
+	animations.insert(std::make_pair("moveAnimation", assets->GetMeshAnimation("mainCharRunAnim")));
+
+//	world->AddGameObject(new SecurityGuard(physicsCommon, physicsWorld, "Security Guard", position, assets->GetMesh("mainChar"), assets->GetTexture("basicTex"), assets->GetShader("basicShader"), Vector3(5, 5, 5), target1, target2));
+
+
+	world->AddGameObject(new SecurityGuard(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("blueMainCharMat"), assets->GetShader("skinningShader"), animations, 2, target1, target2, "Security Guard"));
+	//world->AddGameObject(new SecurityGuard(physicsCommon, physicsWorld, "Security Guard", position, assets->GetMesh("cubeMesh"), assets->GetTexture("basicTex"), assets->GetShader("basicShader"), Vector3(2, 2, 2), target1, target2));
+}
+

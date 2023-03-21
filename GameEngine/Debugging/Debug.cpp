@@ -24,6 +24,20 @@ double Debug::startTime = 0;
 double Debug::currentTime = 0;
 bool Debug::first = true;
 float Debug::fps = 0.0f;
+float Debug::renderingTime = 0.0f;
+int Debug::numberOfParticals = 0;
+int Debug::numberOfGameObjects = 0;
+int Debug::numberOfPaints = 0;
+int Debug::PageFaultCount = 0;
+int Debug::PeakWorkingSetSize = 0;
+int Debug::WorkingSetSize = 0;
+int Debug::QuotaPeakPagedPoolUsage = 0;
+int Debug::QuotaPagedPoolUsage = 0;
+int Debug::QuotaPeakNonPagedPoolUsage = 0;
+int Debug::QuotaNonPagedPoolUsage = 0;
+int Debug::PagefileUsage = 0;
+int Debug::PeakPagefileUsage = 0;
+
 
 void Debug::Print(const std::string& text, const Vector2& pos, const Vector4& colour) {
 	DebugStringEntry newEntry;
@@ -121,6 +135,8 @@ void NCL::Debug::DrawFPS()
 	}
 
 	//std::cout << "FPS: " << fps << "\n";
+
+	//Print("FPS: " + std::to_string(fps),10,1);
 }
 
 void NCL::Debug::ShowMemoryUsage(/*DWORD processID*/)
@@ -128,30 +144,41 @@ void NCL::Debug::ShowMemoryUsage(/*DWORD processID*/)
 	//HANDLE hProcess;
 	PROCESS_MEMORY_COUNTERS pmc;
 
-	// Print the process identifier.
-
-	//printf("\nProcess ID: %u\n", processID);
-
-	// Print information about the memory usage of the process.
-
-	/*hProcess = OpenProcess(PROCESS_QUERY_INFORMATION |
-		PROCESS_VM_READ,
-		FALSE, processID);
-	if (NULL == hProcess)
-		return;*/
-
 	if (GetProcessMemoryInfo(GetCurrentProcess(), &pmc, sizeof(pmc)))
 	{
-		std::cout << "PageFaultCount:" <<  pmc.PageFaultCount << std::endl;
-		std::cout << "PeakWorkingSetSize:" <<pmc.PeakWorkingSetSize << std::endl;
-		std::cout << "WorkingSetSize:" << pmc.WorkingSetSize << std::endl;
-		std::cout << "QuotaPeakPagedPoolUsage:" << pmc.QuotaPeakPagedPoolUsage << std::endl;
-		std::cout << "QuotaPagedPoolUsage:" << pmc.QuotaPagedPoolUsage << std::endl;
-		std::cout << "QuotaPeakNonPagedPoolUsage:" << pmc.QuotaPeakNonPagedPoolUsage << std::endl;
-		std::cout << "QuotaNonPagedPoolUsage:" << pmc.QuotaNonPagedPoolUsage << std::endl;
-		std::cout << "PagefileUsage:" << pmc.PagefileUsage << std::endl;
-		std::cout << "PeakPagefileUsage:" << pmc.PeakPagefileUsage << std::endl;
+		PageFaultCount = pmc.PageFaultCount;
+		PeakWorkingSetSize = pmc.PeakWorkingSetSize;
+		WorkingSetSize = pmc.WorkingSetSize;
+		QuotaPeakPagedPoolUsage = pmc.QuotaPeakPagedPoolUsage;
+		QuotaPagedPoolUsage = pmc.QuotaPagedPoolUsage;
+		QuotaPeakNonPagedPoolUsage = pmc.QuotaPeakNonPagedPoolUsage;
+		QuotaNonPagedPoolUsage = pmc.QuotaNonPagedPoolUsage;
+		PagefileUsage = pmc.PagefileUsage;
+		PeakPagefileUsage = pmc.PeakPagefileUsage;
 	}
 
 	//CloseHandle(hProcess);
+}
+
+void NCL::Debug::ShowNumberOfParticals(size_t nbParticals)
+{
+	numberOfParticals = nbParticals;
+	//Print("Number of particals Generated: " + std::to_string(nbParticals), 10, 5);
+}
+
+void NCL::Debug::ShowNumberOfGameObjects(size_t nbObjects)
+{
+	numberOfGameObjects = nbObjects;
+	//Print("No of GameObjects in world is: " + std::to_string(nbObjects), 10, 8);
+}
+
+void NCL::Debug::ShowNumberOfPaintedPositions(size_t nbPaints)
+{
+	numberOfPaints = nbPaints;
+	//Print("No of PaintedPositions in world is: " + std::to_string(nbPaints), 10, 10);
+}
+
+void NCL::Debug::ShowRenderTime(float time)
+{
+	renderingTime = time;
 }

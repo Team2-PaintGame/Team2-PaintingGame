@@ -12,6 +12,7 @@ set(Header_Files
     "GameManager.h"
     "PlatformConfigurations.h"
     "GameAssets.h"
+    "EventListener.h"
 )
 source_group("Header Files" FILES ${Header_Files})
 
@@ -24,6 +25,7 @@ set(Source_Files
     "PaintingGame.cpp"
     "GameManager.cpp"
     "GameAssets.cpp"
+    "EventListener.cpp"
 )
 
 if(USE_VULKAN)
@@ -38,7 +40,14 @@ set(GameObjects
     "./GameObjects/Ink.h"
     "./GameObjects/PaintingObject.h"
     "./GameObjects/HudElement.h"
+    "./GameObjects/HudElement.cpp"
     "./GameObjects/Gun.h"
+    "./GameObjects/SecurityGuard.h"
+    "./GameObjects/SecurityGuard.cpp"
+     "./GameObjects/Wall.h"
+     "./GameObjects/MuseumItem.h"
+
+    "./GameObjects/HUDOnLoad.h"
 )
 source_group("Game Objects" FILES ${GameObjects})
 
@@ -66,6 +75,8 @@ set(Screens
     "./Screens/MainMenuScreen.cpp" 
     "./Screens/GameScreen.h"
     "./Screens/GameScreen.cpp" 
+    "./Screens/LoadingScreen.h"
+    "./Screens/LoadingScreen.cpp" 
     "./Screens/ScreenManager.h"
     "./Screens/ScreenManager.cpp"
 )

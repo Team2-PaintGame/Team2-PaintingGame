@@ -6,6 +6,8 @@
 #include "OGLShader.h"
 #include "Camera.h"
 #include "Debug.h"
+#include "LoadingScreen.h"
+#include "HUDOnLoad.h"
 
 using namespace NCL;
 using namespace CSC8508;
@@ -27,6 +29,7 @@ OGLPaintingGameRenderer::~OGLPaintingGameRenderer() {
 }
 
 void OGLPaintingGameRenderer::RenderFrame() {	
+	
 	if (boundScreen) {
 		if (boundScreen->GetScreenType() == ScreenType::GameScreen) {
 			BuildObjectList();
@@ -67,15 +70,29 @@ void OGLPaintingGameRenderer::DeleteImGuiContext() {
 	ImGui::DestroyContext();
 }
 void OGLPaintingGameRenderer::RenderBasicScreen() { //change this to render static obj
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glViewport(0, 0, windowWidth, windowHeight);
 	RenderObject* r = boundScreen->GetSceneNode()->GetRenderObject();
 	BindShader(r->GetShader());
 	BindMesh(r->GetMesh());
 	BindTextureToShader(r->GetDefaultTexture(), "mainTex", 0);
 	DrawBoundMesh();
+
+	if (boundScreen->GetScreenType() == ScreenType::LoadingScreen)
+	{
+		r = ((LoadingScreen*)boundScreen)->GetLoader();
+		BindShader(r->GetShader());
+		BindMesh(r->GetMesh());
+		BindTextureToShader(r->GetDefaultTexture(), "mainTex", 0);
+		DrawBoundMesh();
+
+		SendModelMatrices((OGLShader*)r->GetShader(), r);
+	}
 	boundScreen->RenderMenu();
 }
 void OGLPaintingGameRenderer::RenderGameScreen() { //change this to RenderScreen
+	rendererStartTime = std::chrono::high_resolution_clock::now();
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	//send camera things and light things to shader
@@ -161,6 +178,7 @@ void OGLPaintingGameRenderer::RenderGameScreen() { //change this to RenderScreen
 
 	RenderDebugInformation();
 	boundScreen->RenderMenu();
+	rendererEndTime = std::chrono::high_resolution_clock::now();
 }
 
 

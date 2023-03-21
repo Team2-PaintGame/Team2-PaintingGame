@@ -5,10 +5,25 @@ using namespace Assets;
 
 GameAssets::GameAssets(Assets::AssetLoader* loader) {
 	this->loader = loader;
+
+#ifdef _ORBIS // Load without loading screen on ps4
+	Load();
+#endif
+}
+
+void GameAssets::Load()
+{
+	// Clear just in case
+	meshes.clear();
+	meshAnimations.clear();
+	meshMaterials.clear();
+	shaders.clear();
+	textures.clear();
+
+	LoadTextures();
 	LoadMeshes();
 	LoadMeshMaterials();
 	LoadMeshAnimations();
-	LoadTextures();
 	LoadShaders();
 }
 
@@ -44,16 +59,16 @@ void GameAssets::LoadMeshes() {
 }
 
 void GameAssets::LoadMeshMaterials() {
-	meshMaterials.insert(std::make_pair("goatMat", std::make_unique<MeshMaterial>("goat.mat")));
-	meshMaterials.insert(std::make_pair("redMainCharMat", new MeshMaterial("red_Aj_TPose.mat")));
-	meshMaterials.insert(std::make_pair("blueMainCharMat", new MeshMaterial("blue_Aj_TPose.mat")));
-	meshMaterials.insert(std::make_pair("monaLisaMat", new MeshMaterial("MonaLisa.mat")));
-	meshMaterials.insert(std::make_pair("appleFaceMat", new MeshMaterial("appleFace.mat")));
-	meshMaterials.insert(std::make_pair("handsPaintingMat", new MeshMaterial("handsPainting.mat")));
-	meshMaterials.insert(std::make_pair("nightSkyMat", new MeshMaterial("nightSky.mat")));
-	meshMaterials.insert(std::make_pair("screamPaintMat", new MeshMaterial("screamPaint.mat")));
-	meshMaterials.insert(std::make_pair("sunflowersMat", new MeshMaterial("sunflowers.mat")));
-	meshMaterials.insert(std::make_pair("gunMat", new MeshMaterial("PaintingGun.mat")));
+	meshMaterials.insert(std::make_pair("goatMat", loader->LoadMeshMaterial("goat.mat")));
+	meshMaterials.insert(std::make_pair("redMainCharMat", loader->LoadMeshMaterial("red_Aj_TPose.mat")));
+	meshMaterials.insert(std::make_pair("blueMainCharMat", loader->LoadMeshMaterial("blue_Aj_TPose.mat")));
+	meshMaterials.insert(std::make_pair("monaLisaMat", loader->LoadMeshMaterial("MonaLisa.mat")));
+	meshMaterials.insert(std::make_pair("appleFaceMat", loader->LoadMeshMaterial("appleFace.mat")));
+	meshMaterials.insert(std::make_pair("handsPaintingMat", loader->LoadMeshMaterial("handsPainting.mat")));
+	meshMaterials.insert(std::make_pair("nightSkyMat", loader->LoadMeshMaterial("nightSky.mat")));
+	meshMaterials.insert(std::make_pair("screamPaintMat", loader->LoadMeshMaterial("screamPaint.mat")));
+	meshMaterials.insert(std::make_pair("sunflowersMat", loader->LoadMeshMaterial("sunflowers.mat")));
+	meshMaterials.insert(std::make_pair("gunMat", loader->LoadMeshMaterial("PaintingGun.mat")));
 }
 
 void GameAssets::LoadMeshAnimations() {
@@ -64,6 +79,7 @@ void GameAssets::LoadMeshAnimations() {
 
 void GameAssets::LoadTextures() {
 	textures.insert(std::make_pair("basicTex", loader->LoadTexture("checkerboard.png")));
+	textures.insert(std::make_pair("loadingTex", loader->LoadTexture("loadingSprites.png")));
 	textures.insert(std::make_pair("grassTex", loader->LoadTexture("grass.jpg")));
 	textures.insert(std::make_pair("coinTex", loader->LoadTexture("coin.png")));
 	textures.insert(std::make_pair("floorTex", loader->LoadTexture("ground.png")));
@@ -77,10 +93,29 @@ void GameAssets::LoadTextures() {
 void GameAssets::LoadShaders() {
 	shaders.insert(std::make_pair("basicShader", loader->LoadShader("scene.vert", "scene.frag")));
 	shaders.insert(std::make_pair("terrainShader", loader->LoadShader("terrain.vert", "terrain.frag")));
-	shaders.insert(std::make_pair("skinningShader", loader->LoadShader("skinning.vert", "scene.frag")));
-	shaders.insert(std::make_pair("SecondskinningShader", loader->LoadShader("skinning.vert", "scene.frag")));
+	shaders.insert(std::make_pair("skinningShader", loader->LoadShader("skinning.vert", "character.frag")));
+	shaders.insert(std::make_pair("SecondskinningShader", loader->LoadShader("skinning.vert", "character.frag")));
 	shaders.insert(std::make_pair("screenShader", loader->LoadShader("screen.vert", "screen.frag")));
 	shaders.insert(std::make_pair("inkShader", loader->LoadShader("ink.vert", "ink.frag")));
 	shaders.insert(std::make_pair("debugShader", loader->LoadShader("Debug.vert", "Debug.frag")));
 	shaders.insert(std::make_pair("hudShader", loader->LoadShader("hud.vert", "hud.frag")));
+}
+
+void GameAssets::ReloadMeshes()
+{
+	meshes.clear();
+	LoadMeshes();
+}
+void GameAssets::ReloadShaders()
+{
+
+	for (auto& pair : shaders)
+	{
+		if (pair.second)
+		{
+			pair.second->ReloadShader();
+		}
+	}
+	//shaders.clear();
+	//LoadShaders();
 }

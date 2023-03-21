@@ -43,11 +43,30 @@ namespace NCL {
 
 		static void DrawFPS();
 		static void ShowMemoryUsage(/*DWORD processID*/);
+		static void ShowNumberOfParticals(size_t nbParticals);
+		static void ShowNumberOfGameObjects(size_t nbObjects);
+		static void ShowNumberOfPaintedPositions(size_t nbPaints);
+		static void ShowRenderTime(float time);
 		static int frames;
 		static double startTime;
 		static double currentTime;
 		static bool first;
 		static float fps;
+		static float renderingTime;
+
+		static int numberOfParticals;
+		static int numberOfGameObjects;
+		static int numberOfPaints;
+
+		static int PageFaultCount;
+		static int PeakWorkingSetSize;
+		static int WorkingSetSize;
+		static int QuotaPeakPagedPoolUsage;
+		static int QuotaPagedPoolUsage;
+		static int QuotaPeakNonPagedPoolUsage;
+		static int QuotaNonPagedPoolUsage;
+		static int PagefileUsage;
+		static int PeakPagefileUsage;
 
 
 		static const Vector4 RED;

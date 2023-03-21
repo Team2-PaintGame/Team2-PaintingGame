@@ -7,13 +7,16 @@ using namespace CSC8508;
 
 void Player::Update(float dt) {
 	PlayerBase::Update(dt);
-	if (animationController) {
-		animationController->Update(dt);
-	}
+	AnimatedObject::Update(dt);
+
+	//if (animationController) {
+	//	animationController->Update(dt);
+	//}
 	if (gun) {
 		gun->GetTransform()
 			.SetPosition(transform.GetPosition() + (transform.GetOrientation() * gunOffset))
-			.SetOrientation(transform.GetOrientation());
+			//.SetOrientation(transform.GetOrientation());
+			.SetOrientation(Quaternion::EulerAnglesToQuaternion(pitch, yaw, 0));
 	}
 }
 
@@ -26,16 +29,17 @@ void Player::Shoot() {
 		reactphysics3d::Vector3(startPos.x, startPos.y + 5, startPos.z),
 		reactphysics3d::Vector3(endPos.x, endPos.y, endPos.z));
 	Debug::DrawLine(startPos, endPos, Vector4(1, 1, 1, 1), 3);
+	gun->Shoot();
 }
 
-void Player::SetMemberVariables(const std::unordered_map<std::string, MeshAnimation*>& animations, Gun* gun) {
+void Player::SetMemberVariables(Gun* gun) {
 	camera->SetBasicCameraParameters(this, 0.1f, 500.0f);
 	camera->SetPerspectiveCameraParameters(Window::GetWindow()->GetScreenAspect());
 	camera->SetThirdPersonCamera();
 
-	animationController = new AnimationController(this, animations);
-	renderObject->SetRigged(true);
-	renderObject->SetAnimationController(animationController);
+//	animationController = new AnimationController(this, animations);
+//	renderObject->SetRigged(true);
+//	renderObject->SetAnimationController(animationController);
 
 	this->gun = gun;
 }
