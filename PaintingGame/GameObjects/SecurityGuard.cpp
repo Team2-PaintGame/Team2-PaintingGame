@@ -442,17 +442,20 @@ namespace NCL::CSC8508 {
 
 	void SecurityGuard::CaughtPlayer() {
 		if (chasedPlayer == nullptr) { return; }
-	//	chasedPlayer->GetRigidBody()->resetForce();
-	//	chasedPlayer->GetRigidBody()->resetTorque();
-	//	this->GetRigidBody()->resetForce();
-	//	this->GetRigidBody()->resetTorque();
-		reactphysics3d::Vector3 position(200, 5.0f, 200.0f);
-		//	chasedPlayer->GetRigidBody()->resetForce();
-		//	chasedPlayer->GetRigidBody()->resetTorque();
+		chasedPlayer->GetRigidBody()->resetForce();
+		chasedPlayer->GetRigidBody()->resetTorque();
+		this->GetRigidBody()->resetForce();
+		this->GetRigidBody()->resetTorque();
 
-		//	this->GetRigidBody()->resetForce();
-	//	this->GetRigidBody()->resetTorque();
+		reactphysics3d::Vector3 position(200, 5.0f, 200.0f);
 		reactphysics3d::Transform rp3d_transform(position, rp3d::Quaternion::identity());
+		chasedPlayer->GetRigidBody()->setTransform(rp3d_transform);
+		
+		chasedPlayer->GetRigidBody()->resetForce();
+		chasedPlayer->GetRigidBody()->resetTorque();
+		this->GetRigidBody()->resetForce();
+		this->GetRigidBody()->resetTorque();
+
 		chasedPlayer->GetRigidBody()->setTransform(rp3d_transform);
 		
 	}
@@ -571,7 +574,6 @@ namespace NCL::CSC8508 {
 		float angle = Vector3::Dot(forward, direction);
 		angle = acos(angle / (forward.Length() * direction.Length()));
 		angle = angle * 180 / PI;
-//		std::cout << "Angle: " << angle;
 		if (angle <= 180 && angle >= 100) { 
 			return true;
 		}
@@ -603,8 +605,6 @@ namespace NCL::CSC8508 {
 	{
 		return (destination - this->GetTransform().GetPosition()).Length();
 	}
-
-
 
 	Vector3 SecurityGuard::ChooseRandomDestination()
 	{

@@ -74,13 +74,13 @@ bool NavigationMesh::FindPath(const Vector3& from, const Vector3& to, Navigation
 	/*const*/ NavTri* start	= GetTriForPosition(from);
 
 	if (start == nullptr) {
-		std::cout << "start is outside of the navmesh\n";
+		//std::cout << "start is outside of the navmesh\n";
 		isOutNavMesh = true;
 		return false;
 	}
 	/*const*/ NavTri* end	= GetTriForPosition(to);
 	if (end == nullptr) {
-		std::cout << "end is outside of the navmesh\n";
+		//std::cout << "end is outside of the navmesh\n";
 		return false;
 	}
 
