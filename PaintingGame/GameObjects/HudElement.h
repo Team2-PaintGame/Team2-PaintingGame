@@ -28,5 +28,16 @@ namespace NCL {
 			HudElement(physicsCommon, physicsWorld, Vector2(), mesh, texture, shader, scale) {
 		}
 	};
+
+	class LoadingHud : public HudElement {
+	public:
+		LoadingHud(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader,Vector2 pos, Vector2 scale) :
+			HudElement(physicsCommon, physicsWorld, pos, mesh, texture, shader, scale) {
+			renderObject->SetIsOccluded(true);
+		}
+		void Update(float dt);
+	private:
+		Quaternion quat;
+	};
 }
 

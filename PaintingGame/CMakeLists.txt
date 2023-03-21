@@ -40,12 +40,14 @@ set(GameObjects
     "./GameObjects/Ink.h"
     "./GameObjects/PaintingObject.h"
     "./GameObjects/HudElement.h"
+    "./GameObjects/HudElement.cpp"
     "./GameObjects/Gun.h"
     "./GameObjects/SecurityGuard.h"
     "./GameObjects/SecurityGuard.cpp"
      "./GameObjects/Wall.h"
      "./GameObjects/MuseumItem.h"
 
+    "./GameObjects/HUDOnLoad.h"
 )
 source_group("Game Objects" FILES ${GameObjects})
 
@@ -73,6 +75,8 @@ set(Screens
     "./Screens/MainMenuScreen.cpp" 
     "./Screens/GameScreen.h"
     "./Screens/GameScreen.cpp" 
+    "./Screens/LoadingScreen.h"
+    "./Screens/LoadingScreen.cpp" 
     "./Screens/ScreenManager.h"
     "./Screens/ScreenManager.cpp"
 )

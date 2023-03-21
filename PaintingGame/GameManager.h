@@ -10,12 +10,24 @@ namespace NCL::CSC8508 {
 		GameManager(Window* window);
 		~GameManager();
 		bool RunGame(float dt);
+		void calculateRenderingTime();
+#ifdef _WIN32
+		static void LoadAssets(GameAssets* assets, OGLRenderer* renderer, HGLRC context);
+		static void FinishLoadingCallback();
+		static bool GetLoadingFlag() { return loadingFlag; }
+#endif
 		static PlatformConfigurations sConfig;
 	protected:
+		void FinishLoading();
+
 		RendererBase* renderer;
 		Assets::AssetLoader* assetLoader;
 		GameAssets* gameAssets;
 		ScreenManager* screenManager;
-		
+
+		static GameManager* gameManager;
+		static bool loadingFlag;
+
+		std::thread assetThread;
 	};
 }

@@ -2,7 +2,6 @@
 #include "GameObject.h"
 #include "Camera.h"
 #include <chrono>
-
 using namespace NCL;
 using namespace NCL::CSC8508;
 
@@ -84,10 +83,10 @@ void GameWorld::OperateOnContents(GameObjectFunc f) {
 	}
 }
 
-void GameWorld::OperateOnPaintedPositions(Vector3Func f) {
+void GameWorld::OperateOnPaintedPositions(Vector3and4Func f) {
 	int index = 0;
-	for (Vector3& pos : paintedPositions) {
-		f(index++, pos);
+	for (auto& splat : paintedPositions) {
+		f(index++, splat.position, splat.colour);
 	}
 }
 
@@ -151,8 +150,39 @@ SceneContactPoint* GameWorld::Raycast(const reactphysics3d::Ray& r, GameObject* 
 	return closestHit;
 }
 
-void GameWorld::AddPaintedPosition(const Vector3& position) {
-	paintedPositions.push_back(position);
+double GetDistance(Vector3 vec1, Vector3 vec2)
+{
+	return std::sqrt(std::pow((vec1.x - vec2.x), 2) + std::pow((vec1.y - vec2.y), 2) + std::pow((vec1.z - vec2.z), 2));
+}
+
+void GameWorld::AddPaintedPosition(const Vector3& position, Vector4 team) {
+	Vector4 colour;
+	if (team == RedTeamColour) {
+		colour = RedTeamColour;
+	} 
+	else if (team == BlueTeamColour) {
+		colour = BlueTeamColour;
+	}
+	for (auto& element : paintedPositions)
+	{
+		if ((element.colour == colour && element.position == position)) {
+			return;
+		}
+		else if (element.colour == colour && GetDistance(element.position, position) < 2) {
+			return;
+		}
+		else if (element.colour != colour && GetDistance(element.position, position) < 2) {
+			if (colour == RedTeamColour) {
+				colour = BlueTeamColour;
+			}
+			else {
+				colour = RedTeamColour;
+			}
+			element.colour = colour; 
+			return;
+		}
+	}
+	paintedPositions.push_back(PaintSplat(position, colour));
 }
 
 bool GameWorld::CleanNearbyPaint(Vector3 SecurityPos, float range)

@@ -24,6 +24,7 @@ double Debug::startTime = 0;
 double Debug::currentTime = 0;
 bool Debug::first = true;
 float Debug::fps = 0.0f;
+float Debug::renderingTime = 0.0f;
 int Debug::numberOfParticals = 0;
 int Debug::numberOfGameObjects = 0;
 int Debug::numberOfPaints = 0;
@@ -36,6 +37,7 @@ int Debug::QuotaPeakNonPagedPoolUsage = 0;
 int Debug::QuotaNonPagedPoolUsage = 0;
 int Debug::PagefileUsage = 0;
 int Debug::PeakPagefileUsage = 0;
+
 
 void Debug::Print(const std::string& text, const Vector2& pos, const Vector4& colour) {
 	DebugStringEntry newEntry;
@@ -174,4 +176,9 @@ void NCL::Debug::ShowNumberOfPaintedPositions(size_t nbPaints)
 {
 	numberOfPaints = nbPaints;
 	//Print("No of PaintedPositions in world is: " + std::to_string(nbPaints), 10, 10);
+}
+
+void NCL::Debug::ShowRenderTime(float time)
+{
+	renderingTime = time;
 }

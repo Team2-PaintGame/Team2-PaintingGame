@@ -3,6 +3,7 @@
 #include <OGLRenderer.h>
 #include <glad/gl.h>
 #include "ScreenManager.h"
+#include "OGLMesh.h"
 
 namespace NCL {
 	namespace CSC8508 {
@@ -98,6 +99,7 @@ namespace NCL {
 			reactphysics3d::DebugRenderer* debugRenderer;
 		};*/
 		class OGLPaintingGameRenderer : public OGLRenderer {
+		#define ATOMIC_COUNT 3
 		public:
 			OGLPaintingGameRenderer(Window& w);
 			~OGLPaintingGameRenderer();
@@ -114,7 +116,7 @@ namespace NCL {
 			void DeleteImGuiContext();
 
 			void RenderBasicScreen();
-			void RenderGameScreen();
+			void RenderGameScreen();	
 
 			void RenderPaintSplat(OGLShader* shader);
 
@@ -132,6 +134,9 @@ namespace NCL {
 			void SetDebugStringBufferSizes(size_t newVertCount);
 			void SetDebugLineBufferSizes(size_t newVertCount);
 
+			//ScoreBar methods
+
+
 
 			vector<const RenderObject*> activeObjects;
 			BaseScreen* boundScreen;
@@ -148,6 +153,8 @@ namespace NCL {
 
 			DebugTextRenderer debugTextRenderer;
 			DebugLinesRenderer debugLineRenderer;
+
+
 		};
 		
 		// Concrete factory for creating Painting Game OpenGL renderer

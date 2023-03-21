@@ -9,10 +9,11 @@ using namespace CSC8508;
 
 bool GameScreen::sPauseCallback = false;
 
-void GameScreen::OnAwake() {
+void NCL::CSC8508::GameScreen::OnAwake()
+{
 	isMenuDisplayed = false;
 	isDebugDisplayed = false;
-	LoadGame();
+	LoadGame(screenManager->GetGameAssets());
 	sceneNode->GetPhysicsWorld()->setIsDebugRenderingEnabled(isDebugRenderingEnabled);
 	sceneNode->GetPhysicsWorld()->getDebugRenderer().setIsDebugItemDisplayed(reactphysics3d::DebugRenderer::DebugItem::COLLISION_SHAPE, true);
 	sceneNode->GetPhysicsWorld()->getDebugRenderer().setIsDebugItemDisplayed(reactphysics3d::DebugRenderer::DebugItem::COLLIDER_BROADPHASE_AABB, true);
@@ -20,24 +21,37 @@ void GameScreen::OnAwake() {
 	Window::GetWindow()->LockMouseToWindow(true);
 }
 
-void GameScreen::LoadGame() {
+void GameScreen::OnAwake1(GameAssets* assets) {
+	//thread start 
+	isMenuDisplayed = false;
+	isDebugDisplayed = false;
+	LoadGame(assets);
+	sceneNode->GetPhysicsWorld()->setIsDebugRenderingEnabled(isDebugRenderingEnabled);
+	sceneNode->GetPhysicsWorld()->getDebugRenderer().setIsDebugItemDisplayed(reactphysics3d::DebugRenderer::DebugItem::COLLISION_SHAPE, true);
+	sceneNode->GetPhysicsWorld()->getDebugRenderer().setIsDebugItemDisplayed(reactphysics3d::DebugRenderer::DebugItem::COLLIDER_BROADPHASE_AABB, true);
+
+	Window::GetWindow()->LockMouseToWindow(true);
+
+}
+
+void GameScreen::LoadGame(GameAssets* assets) {
 
 	delete sceneNode;
 
 	switch (command)
 	{
 	case ScreenCommand::CreateSinglePlayerGame: 
-		sceneNode = new SinglePlayerGame(screenManager->GetGameAssets());
+		sceneNode = new SinglePlayerGame(assets);
 	break;
 	case ScreenCommand::CreateSplitScreenGame:
-		sceneNode = new SplitScreenGame(screenManager->GetGameAssets());
+		sceneNode = new SplitScreenGame(assets);
 		break;
 	case ScreenCommand::CreateNetworkedGameAsServer:
-		sceneNode = new NetworkedGame(screenManager->GetGameAssets());
+		sceneNode = new NetworkedGame(assets);
 		((NetworkedGame*)(sceneNode))->StartAsServer();
 		break;
 	case ScreenCommand::CreateNetworkedGameAsClient:
-		sceneNode = new NetworkedGame(screenManager->GetGameAssets());
+		sceneNode = new NetworkedGame(assets);
 		((NetworkedGame*)(sceneNode))->StartAsClient(127, 0, 0, 1);
 		break;
 	default:
@@ -85,13 +99,11 @@ PushdownState::PushdownResult GameScreen::onStateChange(PushdownState** newState
 void NCL::CSC8508::GameScreen::DebugWindow()
 {
 	ImGui::Begin("Debug Window");
-	ImGui::Text(std::to_string(Debug::fps).c_str());
-	ImGui::Text("Number of GameObjects");
-	ImGui::Text(std::to_string(Debug::numberOfGameObjects).c_str());
-	ImGui::Text("Number of Paints");
-	ImGui::Text(std::to_string(Debug::numberOfPaints).c_str());
-	ImGui::Text("Number of Particals");
-	ImGui::Text(std::to_string(Debug::numberOfParticals).c_str());
+	ImGui::Text(("FPS: " + std::to_string(Debug::fps)).c_str());
+	ImGui::Text(("Rendertime: " + std::to_string(Debug::renderingTime) + " in us").c_str());
+	ImGui::Text(("Number of GameObjects: " + std::to_string(Debug::numberOfGameObjects)).c_str());
+	ImGui::Text(("Number of Paints: " + std::to_string(Debug::numberOfPaints)).c_str());
+	ImGui::Text(("Number of Particals: " + std::to_string(Debug::numberOfParticals)).c_str());
 	if (ImGui::Button("Memory Footprint")) {
 		ImGui::OpenPopup("MemoryFootprint");
 	}
@@ -99,14 +111,13 @@ void NCL::CSC8508::GameScreen::DebugWindow()
 		isDebugDisplayed = false;
 	}
 	if (ImGui::BeginPopupModal("MemoryFootprint")) {
-
-		ImGui::Text(std::to_string(Debug::PageFaultCount).c_str());
-		ImGui::Text(std::to_string(Debug::PeakWorkingSetSize).c_str());
-		ImGui::Text(std::to_string(Debug::WorkingSetSize).c_str());
-		ImGui::Text(std::to_string(Debug::QuotaNonPagedPoolUsage).c_str());
-		ImGui::Text(std::to_string(Debug::QuotaPagedPoolUsage).c_str());
-		ImGui::Text(std::to_string(Debug::QuotaPeakNonPagedPoolUsage).c_str());
-		ImGui::Text(std::to_string(Debug::QuotaPeakPagedPoolUsage).c_str());
+		ImGui::Text(("PageFaultCount: " + std::to_string(Debug::PageFaultCount)).c_str());
+		ImGui::Text(("PeakWorkingSetSize: " + std::to_string(Debug::PeakWorkingSetSize)).c_str());
+		ImGui::Text(("WorkingSetSize: " + std::to_string(Debug::WorkingSetSize)).c_str());
+		ImGui::Text(("QuotaNonPagedPoolUsage: " + std::to_string(Debug::QuotaNonPagedPoolUsage)).c_str());
+		ImGui::Text(("QuotaPagedPoolUsage: " + std::to_string(Debug::QuotaPagedPoolUsage)).c_str());
+		ImGui::Text(("QuotaPeakNonPagedPoolUsage: " + std::to_string(Debug::QuotaPeakNonPagedPoolUsage)).c_str());
+		ImGui::Text(("QuotaPeakPagedPoolUsage: " + std::to_string(Debug::QuotaPeakPagedPoolUsage)).c_str());
 
 		if (ImGui::Button("Exit")) {
 			isDebugDisplayed = false;
@@ -114,6 +125,11 @@ void NCL::CSC8508::GameScreen::DebugWindow()
 		ImGui::EndPopup();
 	}
 	ImGui::End();
+}
+
+void NCL::CSC8508::GameScreen::OnLoad(GameScreen* gs, GameAssets* assets)
+{
+	gs->OnAwake1(assets);
 }
 
 void GameScreen::GamePauseCallback() {

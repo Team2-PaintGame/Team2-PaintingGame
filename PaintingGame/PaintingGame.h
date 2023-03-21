@@ -52,6 +52,7 @@ namespace NCL {
 			std::vector<DirectionalLight> directionalLights;
 			std::vector<PointLight> pointLights;
 			std::vector<SpotLight> spotLights;
+			Ink* ink;
 
 			//container for cameras
 			std::vector<Camera*> activeCameras;

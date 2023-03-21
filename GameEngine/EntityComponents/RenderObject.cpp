@@ -1,6 +1,8 @@
 #include "RenderObject.h"
 #include "MeshGeometry.h"
 
+#include "OGLTexture.h"
+
 using namespace NCL::CSC8508;
 using namespace NCL;
 
@@ -33,7 +35,6 @@ TextureBase* RenderObject::GetDefaultTexture() const {
 
 void RenderObject::LoadMaterialTextures(MeshMaterial* material) {
 	multipleTextures = true;
-	material->LoadTextures();
 	int meshLayers = mesh->GetSubMeshCount();
 	for (int i = 0; i < meshLayers; i++) {
 		AddTexture(material->GetMaterialForLayer(i)->GetEntry("Diffuse"), "mainTex", i);
@@ -48,6 +49,7 @@ void RenderObject::AddTexture(TextureBase* t, std::string uniform, int subMeshIn
 		}
 		else {
 			subMeshTextures.insert(std::make_pair(subMeshIndex, std::vector<std::pair<std::string, TextureBase*>>{std::make_pair(uniform, t)}));
+			std::cout << uniform << " - " << ((OGLTexture*)t)->GetObjectID() << "\n";
 		}
 	}
 }

@@ -21,7 +21,7 @@ void SinglePlayerGame::CreateSplatOnShoot() {
 	if (playerController->Shoot()) {
 		SceneContactPoint* closestCollision = world->Raycast(player->GetShootRay());
 		if (closestCollision->isHit) {
-			world->AddPaintedPosition(closestCollision->hitPos);
+			//world->AddPaintedPosition(closestCollision->hitPos, player->GetTeamColour());
 		}
 	}
 }
@@ -36,4 +36,5 @@ Player* SinglePlayerGame::AddPlayer(Vector3 position, Team team) {
 void SinglePlayerGame::Update(float dt) {
 	playerController->Update(dt);
 	PaintingGame::Update(dt);
+	Debug::Print("Team 1 score:" + std::to_string(world->GetTeamOneScore()), Vector2(5, 90));
 }

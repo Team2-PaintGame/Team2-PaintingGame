@@ -6,6 +6,8 @@
 #include "OGLShader.h"
 #include "Camera.h"
 #include "Debug.h"
+#include "LoadingScreen.h"
+#include "HUDOnLoad.h"
 
 using namespace NCL;
 using namespace CSC8508;
@@ -19,6 +21,7 @@ OGLPaintingGameRenderer::OGLPaintingGameRenderer(Window& w) : OGLRenderer(w) {
 
 	SetDebugStringBufferSizes(10000);
 	SetDebugLineBufferSizes(1000);
+
 }
 
 OGLPaintingGameRenderer::~OGLPaintingGameRenderer() {
@@ -26,19 +29,28 @@ OGLPaintingGameRenderer::~OGLPaintingGameRenderer() {
 }
 
 void OGLPaintingGameRenderer::RenderFrame() {	
+	
 	if (boundScreen) {
 		if (boundScreen->GetScreenType() == ScreenType::GameScreen) {
 			BuildObjectList();
 			SortObjectList();
 			RenderGameScreen();
+
+
+			glDisable(GL_CULL_FACE); //Todo - text indices are going the wrong way...
+			glDisable(GL_BLEND);
+			glDisable(GL_DEPTH_TEST);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			NewRenderLines();
+			NewRenderText();
+			glDisable(GL_BLEND);
+			glEnable(GL_DEPTH_TEST);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		}
 		else {
 			RenderBasicScreen();
 		}
 	}
-
-	NewRenderLines();
-	NewRenderText();
 }
 
 void OGLPaintingGameRenderer::CreateImGuiContext() {
@@ -60,15 +72,29 @@ void OGLPaintingGameRenderer::DeleteImGuiContext() {
 	ImGui::DestroyContext();
 }
 void OGLPaintingGameRenderer::RenderBasicScreen() { //change this to render static obj
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glViewport(0, 0, windowWidth, windowHeight);
 	RenderObject* r = boundScreen->GetSceneNode()->GetRenderObject();
 	BindShader(r->GetShader());
 	BindMesh(r->GetMesh());
 	BindTextureToShader(r->GetDefaultTexture(), "mainTex", 0);
 	DrawBoundMesh();
+
+	if (boundScreen->GetScreenType() == ScreenType::LoadingScreen)
+	{
+		r = ((LoadingScreen*)boundScreen)->GetLoader();
+		BindShader(r->GetShader());
+		BindMesh(r->GetMesh());
+		BindTextureToShader(r->GetDefaultTexture(), "mainTex", 0);
+		DrawBoundMesh();
+
+		SendModelMatrices((OGLShader*)r->GetShader(), r);
+	}
 	boundScreen->RenderMenu();
 }
 void OGLPaintingGameRenderer::RenderGameScreen() { //change this to RenderScreen
+	rendererStartTime = std::chrono::high_resolution_clock::now();
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	//send camera things and light things to shader
@@ -151,23 +177,29 @@ void OGLPaintingGameRenderer::RenderGameScreen() { //change this to RenderScreen
 			}
 		}
 	);
+
 	RenderDebugInformation();
 	boundScreen->RenderMenu();
+	rendererEndTime = std::chrono::high_resolution_clock::now();
 }
+
+
 
 void OGLPaintingGameRenderer::RenderPaintSplat(OGLShader* shader) {
 	GameWorld* world = boundScreen->GetSceneNode()->GetWorld();
 	if (world) {
 		world->OperateOnPaintedPositions(
-			[&](int index, Vector3& pos) {
+			[&](int index, Vector3& pos, Vector4& col) {
 				std::string i = std::to_string(index);
 				glUniform3fv(glGetUniformLocation(shader->GetProgramID(), ("paintedPos[" + i + "]").c_str()), 1, pos.array);
+				glUniform4fv(glGetUniformLocation(shader->GetProgramID(), "paintColour"), 1, col.array);
 			}
 		);
 		int splatVectorSize = glGetUniformLocation(shader->GetProgramID(), "numOfSplats");
 		glUniform1i(splatVectorSize, world->GetNumPaintedPositions());
 	}
 }
+
 
 void OGLPaintingGameRenderer::BuildObjectList() {
 	activeObjects.clear();
