@@ -21,14 +21,14 @@ void Player::Update(float dt) {
 }
 
 void Player::Shoot() {
-	Ray r = CollisionDetection::BuildRayFromMouse(*camera);
-	Vector3 startPos = r.GetPosition();
-	Vector3 endPos = r.GetPosition() + r.GetDirection() * 1000;
+	//Ray r = CollisionDetection::BuildRayFromMouse(*camera);
+	//Vector3 startPos = r.GetPosition();
+	//Vector3 endPos = r.GetPosition() + r.GetDirection() * 1000;
 
-	shootRay = reactphysics3d::Ray(
-		reactphysics3d::Vector3(startPos.x, startPos.y + 5, startPos.z),
-		reactphysics3d::Vector3(endPos.x, endPos.y, endPos.z));
-	Debug::DrawLine(startPos, endPos, Vector4(1, 1, 1, 1), 3);
+	//shootRay = reactphysics3d::Ray(
+	//	reactphysics3d::Vector3(startPos.x, startPos.y + 5, startPos.z),
+	//	reactphysics3d::Vector3(endPos.x, endPos.y, endPos.z));
+	//Debug::DrawLine(startPos, endPos, Vector4(1, 1, 1, 1), 3);
 	gun->Shoot();
 }
 

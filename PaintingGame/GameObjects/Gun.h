@@ -35,6 +35,14 @@ namespace NCL {
 		void Shoot() {
 			ink->StartEmission();
 		}
+
+		bool didJustShoot() {
+			return ink->isJustStarting();
+		}
+
+		bool isShooting() {
+			return ink->isEmitting();
+		}
 	protected:
 		Ink* ink = NULL;
 		const Vector3 inkOffset = Vector3(0, 0.5, -2);
