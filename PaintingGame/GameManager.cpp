@@ -20,12 +20,12 @@ GameManager::GameManager(Window* window) {
 	screenManager = new ScreenManager(gameAssets);
 	gameManager = this;
 
-	renderer->BindDebugShader(gameAssets->GetShader("debugShader"));
-
 #ifdef _WIN32
 	HGLRC context = ((OGLRenderer*)renderer)->CreateAnotherContext();
 	//((OGLRenderer*)renderer)->ResetContext();
 	((LoadingScreen*)screenManager->GetScreen(ScreenType::LoadingScreen))->SetThread(new std::thread(LoadAssets, gameAssets, (OGLRenderer*)renderer, context));
+#else
+	renderer->BindDebugShader(gameAssets->GetShader("debugShader"));
 #endif
 }
 
@@ -41,6 +41,7 @@ bool GameManager::RunGame(float dt) {
 	renderer->BindScreen(screenManager->GetActiveScreen());
 	renderer->Render();
 	calculateRenderingTime();
+	Debug::UpdateRenderables(dt);
 	return isRunning;
 }
 
@@ -71,5 +72,6 @@ void GameManager::FinishLoading()
 	gameAssets->ReloadShaders();
 	gameAssets->ReloadMeshes();
 	screenManager->LoadScreens();
+	renderer->BindDebugShader(gameAssets->GetShader("debugShader"));
 }
 #endif

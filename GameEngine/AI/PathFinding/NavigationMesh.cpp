@@ -74,12 +74,13 @@ bool NavigationMesh::FindPath(const Vector3& from, const Vector3& to, Navigation
 	/*const*/ NavTri* start	= GetTriForPosition(from);
 
 	if (start == nullptr) {
-		std::cout << "start is outside of the navmesh\n";
+		//std::cout << "start is outside of the navmesh\n";
+		isOutNavMesh = true;
 		return false;
 	}
 	/*const*/ NavTri* end	= GetTriForPosition(to);
 	if (end == nullptr) {
-		std::cout << "end is outside of the navmesh\n";
+		//std::cout << "end is outside of the navmesh\n";
 		return false;
 	}
 
@@ -239,10 +240,7 @@ void NavigationMesh::StringPull(Vector3 startPosition, Vector3 endPosition, Navi
 
 	bool equal;
 	float triArea;
-	
-
-
-	for (int i = 1; i < nPortals && npts < maxPts; ++i)
+	for (int i = 1; i <= nPortals && npts < maxPts; ++i)
 	{
 		left = portalEdges[i-1].left;
 		right = portalEdges[i-1].right;
@@ -311,7 +309,8 @@ void NavigationMesh::StringPull(Vector3 startPosition, Vector3 endPosition, Navi
 			}
 		}
 	}
-	if (npts < maxPts)
+
+	if (npts < maxPts )
 	{
 		Vector3 end = endPosition;
 		yPos = triRoute.front().centroid.y;
@@ -343,30 +342,8 @@ void NavigationMesh::FindPortalEdges(const Vector3& to) {
 	{
 		if (i == portalEdges.size() - 1)
 		{
-			int count = 0;
-			Vector3 lastVertex;
-			for (int j = routeVertices.size()  - 3; j < routeVertices.size(); ++j) //last triangle vertices
-			{
-				if (routeVertices[j] != portalEdges[i].leftPortal && routeVertices[j] != portalEdges[i].rightPortal)
-				{
-					lastVertex = routeVertices[j];
-				}
-			}
-
-			if (portalEdges[i].leftPortal == portalEdges[i - 1].leftPortal)
-			{
-				// last vertex is set to left
-				portalEdges[i].right = portalEdges[i].rightPortal;
-				portalEdges[i].left = lastVertex;
-			}
-			else if (portalEdges[i].rightPortal == portalEdges[i - 1].rightPortal)
-			{
-				// last vertex is set to right
-				portalEdges[i].left = portalEdges[i].leftPortal;
-				portalEdges[i].right = lastVertex;
-				
-			}
-	
+			portalEdges[i].left = to;
+			portalEdges[i].right = to;	
 		}
 		else
 		{
@@ -422,4 +399,48 @@ float NavigationMesh::Heuristic(NavTri* hNode, NavTri* endNode) /*const*/ {
 	}
 	return nullptr;
 }
+
+Vector3 NavigationMesh::FindClosestPoint(Vector3 to) {
+	NavTri* end = GetTriForPosition(to);
+	if (end == nullptr) {
+		float minDistance = FLT_MAX;
+		float distance = FLT_MAX;
+		Vector3 centroid;
+		for (auto i : allTris)
+		{
+			distance = (i.centroid - to).Length();
+			if (distance < minDistance)
+			{
+				centroid = i.centroid;
+				minDistance = distance;
+				
+			}
+		}
+		end = GetTriForPosition(centroid);
+
+		Vector3 centroidToPoint = to - centroid;
+		float ratio = 0.95;
+		Vector3 toPoint = centroid + centroidToPoint * ratio;
+		NavTri* test = GetTriForPosition(toPoint);
+		while (test == nullptr)
+		{
+			std::cout << "Not close enough\n";
+			ratio -= 0.05;
+			toPoint = centroid + centroidToPoint * ratio;
+			test = GetTriForPosition(toPoint);
+		}
+		//Debug::DrawLine(centroid, toPoint, Debug::YELLOW, 1);
+
+		return toPoint;
+
+	}
+	else // destination is inside the navmesh
+	{
+		return to;
+	}
+
+
+
+}
+
 

@@ -9,8 +9,14 @@ namespace NCL {
 		class Constraint;
 		class GameEventListener;
 
+		struct PaintSplat {
+			Vector3 position;
+			Vector4 colour;
+		};
+
 		typedef std::function<void(GameObject*)> GameObjectFunc;
-		typedef std::function<void(int, Vector3&)> Vector3Func;
+		typedef std::function<void(int, Vector3&, Vector4&)> Vector3and4Func;
+		typedef std::function<void(int, PaintSplat&)> PaintSplatFunc;
 
 		typedef std::vector<GameObject*>::const_iterator GameObjectIterator;
 
@@ -23,6 +29,8 @@ namespace NCL {
 			reactphysics3d::CollisionBody* body;
 			GameObject* object;
 		};
+
+
 
 		class RaycastManager : public reactphysics3d::RaycastCallback {
 		public:
@@ -90,7 +98,7 @@ namespace NCL {
 			virtual void UpdateWorld(float dt);
 
 			void OperateOnContents(GameObjectFunc f);
-			void OperateOnPaintedPositions(Vector3Func f);
+			void OperateOnPaintedPositions(Vector3and4Func f);
 
 
 			void GetObjectIterators(
@@ -108,21 +116,57 @@ namespace NCL {
 			reactphysics3d::PhysicsWorld& GetPhysicsWorld() const { return *physicsWorld; }
 
 			SceneContactPoint* Raycast(const reactphysics3d::Ray& r, GameObject* ignore = nullptr) const;
+			size_t GetNumberOfGameObjects() const { return gameObjects.size(); }
+			void AddPaintedPosition(const Vector3& position, Vector4 team);
+			size_t GetNumPaintedPositions() const { return paintedPositions.size(); }
 
-			void AddPaintedPosition(const Vector3& position);
-			size_t GetNumPaintedPositions() const { return paintedPositions.size();}
-			size_t GetNumberOfGameObjects() const { return gameObjects.size();}
+			void CalculateNewScores() 
+			{
+				int team1Score = 0;
+				int team2Score = 0;
+				for (auto& element : paintedPositions) 
+				{
+					if (element.colour == Vector4(1, 0, 0, 1)) {
+						team2Score += 10;
+					}
+					else if (element.colour == Vector4(0, 0, 1, 1)) {
+						team1Score += 10;
+					}
+				}
+				SetTeamOneScore(team1Score);
+				SetTeamTwoScore(team2Score);
+			}
+
+			void SetTeamOneScore(int score) { teamOneScore = score; }
+
+			int GetTeamOneScore() { return teamOneScore; }
+
+			void SetTeamTwoScore(int score) { teamTwoScore = score; }
+
+			int GetTeamTwoScore() { return teamTwoScore; }
+
+			bool CleanNearbyPaint(Vector3 SecurityPos, float range);
+			Vector3 FindClosestPaintSplat(Vector3 position);
+			int GetSizePaintedPositions();
+
 		protected:
 			RaycastManager* raycastManager;
 			reactphysics3d::PhysicsWorld* physicsWorld = NULL;
+			std::vector<PaintSplat> paintedPositions;
 			GameEventListener* eventListener;
-			std::vector<Vector3> paintedPositions;
+			
 			std::vector<GameObject*> gameObjects;
 			std::vector<Constraint*> constraints;
 			bool shuffleConstraints;
 			bool shuffleObjects;
-			int		worldIDCounter;
-			int		worldStateCounter;
+			int	worldIDCounter;
+			int	worldStateCounter;
+			int teamOneScore = 0;
+			int teamTwoScore = 0;
+
+			Vector4 RedTeamColour = {1,0,0,1};
+			Vector4 BlueTeamColour = {0,0,1,1};
+			
 		};
 	}
 }

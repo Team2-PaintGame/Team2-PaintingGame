@@ -21,6 +21,7 @@ OGLPaintingGameRenderer::OGLPaintingGameRenderer(Window& w) : OGLRenderer(w) {
 
 	SetDebugStringBufferSizes(10000);
 	SetDebugLineBufferSizes(1000);
+
 }
 
 OGLPaintingGameRenderer::~OGLPaintingGameRenderer() {
@@ -34,14 +35,22 @@ void OGLPaintingGameRenderer::RenderFrame() {
 			BuildObjectList();
 			SortObjectList();
 			RenderGameScreen();
+
+
+			glDisable(GL_CULL_FACE); //Todo - text indices are going the wrong way...
+			glDisable(GL_BLEND);
+			glDisable(GL_DEPTH_TEST);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			NewRenderLines();
+			NewRenderText();
+			glDisable(GL_BLEND);
+			glEnable(GL_DEPTH_TEST);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		}
 		else {
 			RenderBasicScreen();
 		}
 	}
-
-	NewRenderLines();
-	NewRenderText();
 }
 
 void OGLPaintingGameRenderer::CreateImGuiContext() {
@@ -168,24 +177,29 @@ void OGLPaintingGameRenderer::RenderGameScreen() { //change this to RenderScreen
 			}
 		}
 	);
+
 	RenderDebugInformation();
 	boundScreen->RenderMenu();
 	rendererEndTime = std::chrono::high_resolution_clock::now();
 }
 
+
+
 void OGLPaintingGameRenderer::RenderPaintSplat(OGLShader* shader) {
 	GameWorld* world = boundScreen->GetSceneNode()->GetWorld();
 	if (world) {
 		world->OperateOnPaintedPositions(
-			[&](int index, Vector3& pos) {
+			[&](int index, Vector3& pos, Vector4& col) {
 				std::string i = std::to_string(index);
 				glUniform3fv(glGetUniformLocation(shader->GetProgramID(), ("paintedPos[" + i + "]").c_str()), 1, pos.array);
+				glUniform4fv(glGetUniformLocation(shader->GetProgramID(), "paintColour"), 1, col.array);
 			}
 		);
 		int splatVectorSize = glGetUniformLocation(shader->GetProgramID(), "numOfSplats");
 		glUniform1i(splatVectorSize, world->GetNumPaintedPositions());
 	}
 }
+
 
 void OGLPaintingGameRenderer::BuildObjectList() {
 	activeObjects.clear();

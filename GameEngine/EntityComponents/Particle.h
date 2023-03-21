@@ -11,26 +11,28 @@ namespace NCL {
 	public:
 		void Update(float dt);
 		virtual ~Particle() {}
-	
+		Vector4 GetColour() { return particleColour; }
 	protected:
-		Particle(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Transform* emitterTransform, Vector3 particlePosition, float lifeSpan, float speed, Vector3 direction, bool enableGravity);
+		Particle(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Transform* emitterTransform, Vector3 particlePosition, float lifeSpan, float speed, Vector3 direction, Vector4 colour, bool enableGravity, Layer layer);
 		float speed;
 		float lifeSpan;
 		Vector3 direction;
 		float elapsedTime = 0.0f;
+		Vector4 particleColour; 
 	};
 
 
 	class CapsuleParticle : public Particle {
 	public:
-		CapsuleParticle(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Transform* emitterTransform, Vector3 particlePosition, float lifeSpan, float speed, Vector3 direction, bool enableGravity);
+		CapsuleParticle(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Transform* emitterTransform, Vector3 particlePosition, float lifeSpan, float speed, Vector3 direction, bool enableGravity, Layer layer);
 		virtual ~CapsuleParticle();
 	};
 
 	class SphereParticle : public Particle {
 	public:
-		SphereParticle(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Transform* emitterTransform, Vector3 particlePosition, float lifeSpan, float speed, Vector3 direction, bool enableGravity);
+		SphereParticle(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Transform* emitterTransform, Vector3 particlePosition, float lifeSpan, float speed, Vector3 direction, Vector4 colour, bool enableGravity, Layer layer);
 		virtual ~SphereParticle();
+
 	};
 }
 

@@ -7,7 +7,8 @@ enum class Layer {
 	Player,
 	Enemy,
 	StaticObjects,
-	Paint
+	Paint,
+	Bubbles
 };
 
 
