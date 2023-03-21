@@ -3,6 +3,7 @@
 #include "SplashScreen.h"
 #include "MainMenuScreen.h"
 #include "LoadingScreen.h"
+#include <chrono>
 
 using namespace NCL;
 using namespace CSC8508;
@@ -39,7 +40,14 @@ bool GameManager::RunGame(float dt) {
 	bool isRunning =  screenManager->Update(dt);
 	renderer->BindScreen(screenManager->GetActiveScreen());
 	renderer->Render();
+	calculateRenderingTime();
 	return isRunning;
+}
+
+void GameManager::calculateRenderingTime()
+{
+	std::chrono::microseconds duration = std::chrono::duration_cast<std::chrono::microseconds>(renderer->rendererEndTime - renderer->rendererStartTime);
+	Debug::ShowRenderTime(duration.count());
 }
 
 #ifdef _WIN32

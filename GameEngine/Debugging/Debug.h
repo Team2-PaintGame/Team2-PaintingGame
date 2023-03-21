@@ -46,11 +46,13 @@ namespace NCL {
 		static void ShowNumberOfParticals(size_t nbParticals);
 		static void ShowNumberOfGameObjects(size_t nbObjects);
 		static void ShowNumberOfPaintedPositions(size_t nbPaints);
+		static void ShowRenderTime(float time);
 		static int frames;
 		static double startTime;
 		static double currentTime;
 		static bool first;
 		static float fps;
+		static float renderingTime;
 
 		static int numberOfParticals;
 		static int numberOfGameObjects;

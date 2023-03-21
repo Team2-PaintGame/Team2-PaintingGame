@@ -63,6 +63,8 @@ void OGLPaintingGameRenderer::DeleteImGuiContext() {
 	ImGui::DestroyContext();
 }
 void OGLPaintingGameRenderer::RenderBasicScreen() { //change this to render static obj
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glViewport(0, 0, windowWidth, windowHeight);
 	RenderObject* r = boundScreen->GetSceneNode()->GetRenderObject();
 	BindShader(r->GetShader());
@@ -83,6 +85,7 @@ void OGLPaintingGameRenderer::RenderBasicScreen() { //change this to render stat
 	boundScreen->RenderMenu();
 }
 void OGLPaintingGameRenderer::RenderGameScreen() { //change this to RenderScreen
+	rendererStartTime = std::chrono::high_resolution_clock::now();
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	//send camera things and light things to shader
@@ -167,6 +170,7 @@ void OGLPaintingGameRenderer::RenderGameScreen() { //change this to RenderScreen
 	);
 	RenderDebugInformation();
 	boundScreen->RenderMenu();
+	rendererEndTime = std::chrono::high_resolution_clock::now();
 }
 
 void OGLPaintingGameRenderer::RenderPaintSplat(OGLShader* shader) {

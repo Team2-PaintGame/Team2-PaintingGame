@@ -99,13 +99,11 @@ PushdownState::PushdownResult GameScreen::onStateChange(PushdownState** newState
 void NCL::CSC8508::GameScreen::DebugWindow()
 {
 	ImGui::Begin("Debug Window");
-	ImGui::Text(std::to_string(Debug::fps).c_str());
-	ImGui::Text("Number of GameObjects");
-	ImGui::Text(std::to_string(Debug::numberOfGameObjects).c_str());
-	ImGui::Text("Number of Paints");
-	ImGui::Text(std::to_string(Debug::numberOfPaints).c_str());
-	ImGui::Text("Number of Particals");
-	ImGui::Text(std::to_string(Debug::numberOfParticals).c_str());
+	ImGui::Text(("FPS: " + std::to_string(Debug::fps)).c_str());
+	ImGui::Text(("Rendertime: " + std::to_string(Debug::renderingTime) + " in us").c_str());
+	ImGui::Text(("Number of GameObjects: " + std::to_string(Debug::numberOfGameObjects)).c_str());
+	ImGui::Text(("Number of Paints: " + std::to_string(Debug::numberOfPaints)).c_str());
+	ImGui::Text(("Number of Particals: " + std::to_string(Debug::numberOfParticals)).c_str());
 	if (ImGui::Button("Memory Footprint")) {
 		ImGui::OpenPopup("MemoryFootprint");
 	}
