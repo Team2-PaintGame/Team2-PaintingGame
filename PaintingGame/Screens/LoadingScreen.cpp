@@ -21,6 +21,8 @@ NCL::CSC8508::LoadingScreen::LoadingScreen(ScreenManager* screenManager, SceneNo
 
 	hUDOnLoad = new HUDOnLoad(new Transform(), loader.LoadMesh(NCL::Assets::MeshType::Quad), loadScreenShader);
 	hUDOnLoad->SetDefaultTexture(TextureLoader::LoadAPITexture("loadingSprites.png"));
+	hUDOnLoad->GetTransform()->SetScale(Vector3(0.075f));
+	hUDOnLoad->GetTransform()->SetPosition(Vector3(0.8f, -0.8f, 1));
 }
 
 void NCL::CSC8508::LoadingScreen::OnAwake()
