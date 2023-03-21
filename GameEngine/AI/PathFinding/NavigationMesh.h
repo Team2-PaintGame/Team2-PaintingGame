@@ -74,8 +74,12 @@ namespace NCL {
 			bool  TriInList(NavTri* n, std::vector<NavTri*>& list) /*const*/;
 			float Heuristic(NavTri* hNode, NavTri* endNode) /*const*/;
 			Vector3 FindClosestPoint(Vector3 to);
+			void FindMinMaxPoints();
 		protected:
 			bool isOutNavMesh = false;
+			float MinX = FLT_MAX, MaxX = FLT_MIN;
+			float MinY = FLT_MAX, MaxY = FLT_MIN;
+			float MinZ = FLT_MAX, MaxZ = FLT_MIN;
 		};
 	}
 }

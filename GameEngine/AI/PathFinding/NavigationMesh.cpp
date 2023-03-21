@@ -70,7 +70,40 @@ NavigationMesh::~NavigationMesh()
 {
 }
 
+void NavigationMesh::FindMinMaxPoints()
+{
 
+	for (auto i : allVerts)
+	{
+		if (i.x < MinX)
+		{
+			MinX = i.x;
+		}
+		if (i.x > MaxX)
+		{
+			MaxX = i.x;
+		}
+
+		if (i.y < MinY)
+		{
+			MinX = i.y;
+		}
+		if (i.y > MaxY)
+		{
+			MaxX = i.y;
+				
+		}
+
+		if (i.z < MinZ)
+		{
+			MinX = i.z;
+		}
+		if (i.z > MaxZ)
+		{
+			MaxX = i.z;
+		}
+	}
+}
 
 bool NavigationMesh::FindPath(const Vector3& from, const Vector3& to, NavigationPath& outPath) {
 	/*const*/ NavTri* start	= GetTriForPosition(from);
@@ -405,7 +438,7 @@ float NavigationMesh::Heuristic(NavTri* hNode, NavTri* endNode) /*const*/ {
 Vector3 NavigationMesh::FindClosestPoint(Vector3 to) {
 	NavTri* end = GetTriForPosition(to);
 	if (end == nullptr) {
-		std::cout << "Destination is outside of the navmesh\n";
+		/*std::cout << "Destination is outside of the navmesh\n";
 		float minDistance = FLT_MAX;
 		float distance = FLT_MAX;
 		Vector3 centroid;
@@ -423,9 +456,22 @@ Vector3 NavigationMesh::FindClosestPoint(Vector3 to) {
 		end = GetTriForPosition(centroid);
 
 		Vector3 centroidToPoint = to - centroid;
+		float ratio = 0.95;
+		Vector3 toPoint = centroid + centroidToPoint * ratio;
+		NavTri* test = GetTriForPosition(toPoint);
+		while (test == nullptr)
+		{
+			std::cout << "Not close enough\n";
+			ratio -= 0.5;
+			toPoint = centroid + centroidToPoint * ratio;
+			test = GetTriForPosition(toPoint);
+		}
+		Debug::DrawLine(centroid, toPoint, Debug::YELLOW, 1);*/
+		Vector3 min(MinX, MinY, MinZ);
+		Vector3 max(MaxX, MaxY, MaxZ);
+		Vector3 toPoint = Vector3::Clamp(to, min, max);
 
-		Vector3 toPoint = centroid + centroidToPoint * 0.85;
-		Debug::DrawLine(centroid, toPoint, Debug::YELLOW, 1);
+
 		return toPoint;
 
 	}

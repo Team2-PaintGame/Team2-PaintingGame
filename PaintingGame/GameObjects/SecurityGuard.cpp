@@ -43,7 +43,7 @@ namespace NCL::CSC8508 {
 
 		navigationMesh = new NavigationMesh("BasicLVL1.navmesh");
 		navigationPath = new NavigationPath();
-
+		navigationMesh->FindMinMaxPoints();
 		ink = CreateInkStream(physicsCommon, physicsWorld, position, assets->GetMesh("sphereMesh"), Vector4(1, 1, 1, 0.25), assets->GetShader("inkShader"));
 		ink->SetLayer(Layer::Bubbles);
 		gameWorld->AddGameObject(ink);
