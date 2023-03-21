@@ -53,12 +53,10 @@ void PaintingGame::InitWorld() {
 void PaintingGame::Update(float dt) {
 	Debug::DrawFPS();
 	//Debug::ShowMemoryUsage();
-
 	world->UpdateWorld(dt);
 	world->CalculateNewScores();
 	physicsWorld->update(dt);
 	CreateSplatOnShoot();
-	Debug::UpdateRenderables(dt);
 }
 
 Player* PaintingGame::CreatePlayer(Vector3 position,Team team) {
@@ -68,11 +66,11 @@ Player* PaintingGame::CreatePlayer(Vector3 position,Team team) {
 	
 	Player* player; 
 	if (team == Team::Red) {
-		player =  new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("redMainCharMat"), assets->GetShader("skinningShader"), animations, 5, CreateGun(position, team));
+		player =  new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("redMainCharMat"), assets->GetShader("skinningShader"), animations, 5, 0, CreateGun(position, team));
 	}
 
 	else { //blue
-		player =  new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("blueMainCharMat"), assets->GetShader("SecondskinningShader"), animations, 5, CreateGun(position, team));
+		player =  new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("blueMainCharMat"), assets->GetShader("SecondskinningShader"), animations, 5, 1, CreateGun(position, team));
 	}
 
 	world->AddGameObject(player);

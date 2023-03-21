@@ -116,7 +116,7 @@ namespace NCL {
 
 			SceneContactPoint* Raycast(const reactphysics3d::Ray& r, GameObject* ignore = nullptr) const;
 
-			void AddPaintedPosition(const Vector3& position);
+			void AddPaintedPosition(const Vector3& position, int team);
 			size_t GetNumPaintedPositions() const { return paintedPositions.size(); }
 
 			void CalculateNewScores() 
@@ -128,7 +128,7 @@ namespace NCL {
 					if (element.colour == Vector4(1, 0, 0, 1)) {
 						team2Score += 10;
 					}
-					else if (element.colour == Vector4(0, 1, 0, 1)) {
+					else if (element.colour == Vector4(0, 0, 1, 1)) {
 						team1Score += 10;
 					}
 				}
@@ -157,8 +157,11 @@ namespace NCL {
 			bool shuffleObjects;
 			int	worldIDCounter;
 			int	worldStateCounter;
-			int teamOneScore;
-			int teamTwoScore;
+			int teamOneScore = 0;
+			int teamTwoScore = 0;
+
+			Vector4 RedTeamColour = {1,0,0,1};
+			Vector4 BlueTeamColour = {0,0,1,1};
 			
 		};
 	}

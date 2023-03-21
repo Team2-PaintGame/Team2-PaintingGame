@@ -56,7 +56,7 @@ void SplitScreenGame::CreateSplatOnShoot() {
 		if (playerControllers[index]->Shoot()) {
 			SceneContactPoint* closestCollision = world->Raycast(player->GetShootRay());
 			if (closestCollision->isHit) {
-				world->AddPaintedPosition(closestCollision->hitPos);
+				world->AddPaintedPosition(closestCollision->hitPos, player->GetTeamColour());
 			}
 		}
 		index++;
@@ -81,6 +81,8 @@ void SplitScreenGame::Update(float dt) {
 		pc->Update(dt);
 	}
 	PaintingGame::Update(dt);
+	Debug::Print("Blue Team Score:" + std::to_string(world->GetTeamOneScore()), Vector2(5, 90));
+	Debug::Print("Red Team Score:" + std::to_string(world->GetTeamTwoScore()), Vector2(40, 90));
 }
 
 

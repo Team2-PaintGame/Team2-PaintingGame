@@ -28,5 +28,6 @@ bool GameManager::RunGame(float dt) {
 	bool isRunning =  screenManager->Update(dt);
 	renderer->BindScreen(screenManager->GetActiveScreen());
 	renderer->Render();
+	Debug::UpdateRenderables(dt);
 	return isRunning;
 }

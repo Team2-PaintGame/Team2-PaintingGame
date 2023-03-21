@@ -154,19 +154,32 @@ double GetDistance(Vector3 vec1, Vector3 vec2)
 	return std::sqrt(std::pow((vec1.x - vec2.x), 2) + std::pow((vec1.y - vec2.y), 2) + std::pow((vec1.z - vec2.z), 2));
 }
 
-void GameWorld::AddPaintedPosition(const Vector3& position) {
+void GameWorld::AddPaintedPosition(const Vector3& position, int team) {
+	Vector4 colour;
+	if (team == 0) {
+		colour = RedTeamColour;
+	} 
+	else if (team == 1) {
+		colour = BlueTeamColour;
+	}
 	for (auto& element : paintedPositions)
 	{
-		if ((element.colour == Vector4{ 0,1,0,1 } && element.position == position)) {
+		if ((element.colour == colour && element.position == position)) {
 			return;
 		}
-		else if (element.colour == Vector4{ 0,1,0,1 } && GetDistance(element.position, position) < 2) {
+		else if (element.colour == colour && GetDistance(element.position, position) < 2) {
 			return;
 		}
-		else if (element.colour != Vector4{ 0,1,01 } && GetDistance(element.position, position) < 2) {
-			element.colour = Vector4{ 0,1,01 };
+		else if (element.colour != colour && GetDistance(element.position, position) < 2) {
+			if (colour == RedTeamColour) {
+				colour = BlueTeamColour;
+			}
+			else {
+				colour = RedTeamColour;
+			}
+			element.colour = colour; 
 			return;
 		}
 	}
-	paintedPositions.push_back(PaintSplat(position, {0,1,0,1}));
+	paintedPositions.push_back(PaintSplat(position, colour));
 }
