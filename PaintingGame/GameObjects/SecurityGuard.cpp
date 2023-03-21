@@ -644,6 +644,7 @@ namespace NCL::CSC8508 {
 		{
 			std::cout << "Going to Paint Splat\n";
 			Vector3 paintPos = gameWorld->FindClosestPaintSplat(this->GetTransform().GetPosition());
+			paintPos = navigationMesh->FindClosestPoint(paintPos);
 			return paintPos;
 		}
 	}

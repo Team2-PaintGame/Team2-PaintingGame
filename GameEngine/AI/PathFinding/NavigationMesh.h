@@ -73,6 +73,7 @@ namespace NCL {
 			/*const*/ NavTri* GetTriForPosition(const Vector3& pos) /*const*/;
 			bool  TriInList(NavTri* n, std::vector<NavTri*>& list) /*const*/;
 			float Heuristic(NavTri* hNode, NavTri* endNode) /*const*/;
+			Vector3 FindClosestPoint(Vector3 to);
 		protected:
 			bool isOutNavMesh = false;
 		};

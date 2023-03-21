@@ -242,9 +242,6 @@ void NavigationMesh::StringPull(Vector3 startPosition, Vector3 endPosition, Navi
 
 	bool equal;
 	float triArea;
-	
-
-
 	for (int i = 1; i <= nPortals && npts < maxPts; ++i)
 	{
 		left = portalEdges[i-1].left;
@@ -315,14 +312,6 @@ void NavigationMesh::StringPull(Vector3 startPosition, Vector3 endPosition, Navi
 		}
 	}
 
-	/*if (npts < maxPts &&
-		(Maths::FloatAreaOfTri(portalApex, portalRight, endPosition) > 0.0f
-		|| Maths::FloatAreaOfTri(portalApex, portalLeft, endPosition) < 0.0f)) // if endpoint is outside funnel, add a midpoint
-	{
-		outPath.waypoints.insert(outPath.waypoints.begin(), (portalLeft + portalRight) * 0.5f);
-		npts++;
-	}*/
-
 	if (npts < maxPts )
 	{
 		Vector3 end = endPosition;
@@ -355,33 +344,8 @@ void NavigationMesh::FindPortalEdges(const Vector3& to) {
 	{
 		if (i == portalEdges.size() - 1)
 		{
-			//int count = 0;
-			//Vector3 lastVertex;
-			//for (int j = routeVertices.size()  - 3; j < routeVertices.size(); ++j) //last triangle vertices
-			//{
-			//	if (routeVertices[j] != portalEdges[i].leftPortal && routeVertices[j] != portalEdges[i].rightPortal)
-			//	{
-			//		lastVertex = routeVertices[j];
-			//	}
-			//}
-
-			//if (portalEdges[i].leftPortal == portalEdges[i - 1].leftPortal)
-			//{
-			//	// last vertex is set to left
-			//	portalEdges[i].right = portalEdges[i].rightPortal;
-			//	portalEdges[i].left = lastVertex;
-			//}
-			//else if (portalEdges[i].rightPortal == portalEdges[i - 1].rightPortal)
-			//{
-			//	// last vertex is set to right
-			//	portalEdges[i].left = portalEdges[i].leftPortal;
-			//	portalEdges[i].right = lastVertex;
-			//	
-			//}
 			portalEdges[i].left = to;
-			portalEdges[i].right = to;
-
-	
+			portalEdges[i].right = to;	
 		}
 		else
 		{
@@ -436,5 +400,68 @@ float NavigationMesh::Heuristic(NavTri* hNode, NavTri* endNode) /*const*/ {
 		return &t;
 	}
 	return nullptr;
+}
+
+Vector3 NavigationMesh::FindClosestPoint(Vector3 to) {
+	NavTri* end = GetTriForPosition(to);
+	if (end == nullptr) {
+		std::cout << "Destination is outside of the navmesh\n";
+		float minDistance = FLT_MAX;
+		float distance = FLT_MAX;
+		Vector3 centroid;
+		for (auto i : allTris)
+		{
+			distance = (i.centroid - to).Length();
+			if (distance < minDistance)
+			{
+				centroid = i.centroid;
+				minDistance = distance;
+				
+			}
+		}
+		std::cout << "Outside Nav position: " << centroid << "\n";
+		end = GetTriForPosition(centroid);
+		float vertDistance[3];
+		for (int i = 0; i < 3; ++i)
+		{
+			vertDistance[i] = (allVerts[end->indices[i]] - centroid).Length();
+		}
+
+		if (vertDistance[0] > vertDistance[1] && vertDistance[0] > vertDistance[2]) // index 1 & 2 closest
+		{
+			Vector3 closestEdge = allVerts[end->indices[1]] - allVerts[end->indices[2]];
+			Debug::DrawLine(allVerts[end->indices[1]], allVerts[end->indices[2]], Debug::YELLOW, 1);
+			Vector3 closestEdgeNorm = closestEdge.Normalised();
+			float dot = Vector3::Dot(to, closestEdgeNorm);
+			Vector3 closestPoint = closestEdge * (dot / closestEdge.Length());
+			return closestPoint;
+		}
+		else if (vertDistance[1] > vertDistance[0] && vertDistance[1] > vertDistance[2]) // index 0 & 2 closest
+		{
+			Vector3 closestEdge = allVerts[end->indices[0]] - allVerts[end->indices[2]];
+			Debug::DrawLine(allVerts[end->indices[0]], allVerts[end->indices[2]], Debug::YELLOW, 1);
+			Vector3 closestEdgeNorm = closestEdge.Normalised();
+			float dot = Vector3::Dot(to, closestEdgeNorm);
+			Vector3 closestPoint = closestEdge * (dot / closestEdge.Length());
+			return closestPoint;
+		}
+		else if (vertDistance[2] > vertDistance[1] && vertDistance[2] > vertDistance[0]) // index 1 & 0 closest
+		{
+			Vector3 closestEdge = allVerts[end->indices[1]] - allVerts[end->indices[0]];
+			Debug::DrawLine(allVerts[end->indices[1]], allVerts[end->indices[0]], Debug::YELLOW, 1);
+			Vector3 closestEdgeNorm = closestEdge.Normalised();
+			float dot = Vector3::Dot(to, closestEdgeNorm);
+			Vector3 closestPoint = closestEdge * (dot / closestEdge.Length());
+			return closestPoint;
+		}
+
+
+
+	}
+	else // destination is inside the navmesh
+	{
+		return to;
+	}
+
 }
 
