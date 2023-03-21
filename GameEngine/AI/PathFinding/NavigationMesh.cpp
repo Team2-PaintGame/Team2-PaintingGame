@@ -421,41 +421,12 @@ Vector3 NavigationMesh::FindClosestPoint(Vector3 to) {
 		}
 		std::cout << "Outside Nav position: " << centroid << "\n";
 		end = GetTriForPosition(centroid);
-		float vertDistance[3];
-		for (int i = 0; i < 3; ++i)
-		{
-			vertDistance[i] = (allVerts[end->indices[i]] - centroid).Length();
-		}
 
-		if (vertDistance[0] > vertDistance[1] && vertDistance[0] > vertDistance[2]) // index 1 & 2 closest
-		{
-			Vector3 closestEdge = allVerts[end->indices[1]] - allVerts[end->indices[2]];
-			Debug::DrawLine(allVerts[end->indices[1]], allVerts[end->indices[2]], Debug::YELLOW, 1);
-			Vector3 closestEdgeNorm = closestEdge.Normalised();
-			float dot = Vector3::Dot(to, closestEdgeNorm);
-			Vector3 closestPoint = closestEdge * (dot / closestEdge.Length());
-			return closestPoint;
-		}
-		else if (vertDistance[1] > vertDistance[0] && vertDistance[1] > vertDistance[2]) // index 0 & 2 closest
-		{
-			Vector3 closestEdge = allVerts[end->indices[0]] - allVerts[end->indices[2]];
-			Debug::DrawLine(allVerts[end->indices[0]], allVerts[end->indices[2]], Debug::YELLOW, 1);
-			Vector3 closestEdgeNorm = closestEdge.Normalised();
-			float dot = Vector3::Dot(to, closestEdgeNorm);
-			Vector3 closestPoint = closestEdge * (dot / closestEdge.Length());
-			return closestPoint;
-		}
-		else if (vertDistance[2] > vertDistance[1] && vertDistance[2] > vertDistance[0]) // index 1 & 0 closest
-		{
-			Vector3 closestEdge = allVerts[end->indices[1]] - allVerts[end->indices[0]];
-			Debug::DrawLine(allVerts[end->indices[1]], allVerts[end->indices[0]], Debug::YELLOW, 1);
-			Vector3 closestEdgeNorm = closestEdge.Normalised();
-			float dot = Vector3::Dot(to, closestEdgeNorm);
-			Vector3 closestPoint = closestEdge * (dot / closestEdge.Length());
-			return closestPoint;
-		}
+		Vector3 centroidToPoint = to - centroid;
 
-
+		Vector3 toPoint = centroid + centroidToPoint * 0.85;
+		Debug::DrawLine(centroid, toPoint, Debug::YELLOW, 1);
+		return toPoint;
 
 	}
 	else // destination is inside the navmesh
