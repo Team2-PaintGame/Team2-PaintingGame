@@ -28,7 +28,6 @@ int main() {
 	w->GetTimer()->GetTimeDeltaSeconds(); //Clear the timer so we don't get a larget first dt!
 
 	w->SetConsolePosition(1950, 100);
-	std::cout << "Console Pos: " << w->GetScreenPosition() << "\n";
 	while (w->UpdateWindow()) {
 		float dt = w->GetTimer()->GetTimeDeltaSeconds();
 		w->LockMouseToWindow(true);

@@ -43,7 +43,6 @@ namespace NCL::CSC8508 {
 
 		navigationMesh = new NavigationMesh("BasicLVL1.navmesh");
 		navigationPath = new NavigationPath();
-		navigationMesh->FindMinMaxPoints();
 		ink = CreateInkStream(physicsCommon, physicsWorld, position, assets->GetMesh("sphereMesh"), Vector4(1, 1, 1, 0.25), assets->GetShader("inkShader"));
 		ink->SetLayer(Layer::Bubbles);
 		gameWorld->AddGameObject(ink);
@@ -75,8 +74,6 @@ namespace NCL::CSC8508 {
 
 	void SecurityGuard::Update(float dt)
 	{
-		//Vector3 lockXZAxis(0, 1, 0);
-		//rigidBody->setAngularLockAxisFactor(~lockXZAxis);
 		if (isBlinded)
 		{
 			blindTimer += dt;
@@ -87,9 +84,9 @@ namespace NCL::CSC8508 {
 			}
 		}
 		animationController->Update(dt);
-		DrawNavTris();
+	/*	DrawNavTris();
 		DisplayPathfinding();
-		DrawTriRoute();
+		DrawTriRoute();*/
 		if (state == Initialise) {
 			state = Ongoing;
 		}
@@ -166,10 +163,10 @@ namespace NCL::CSC8508 {
 	{
 		goToPaint = new BehaviourAction("Go To Paint ", [&](float dt, BehaviourState state)->BehaviourState {
 			if (state == Initialise) {
-				std::cout << "Go To Paint - Initialise\n";
-				if (gameWorld->GetNumPaintedPositions() >= 100)
+				//std::cout << "Go To Paint - Initialise\n";
+				if (gameWorld->GetNumPaintedPositions() >= 420)
 				{
-					std::cout << "Theres too much paint!\n";
+					//std::cout << "Theres too much paint!\n";
 					Vector3 paintPos = gameWorld->FindClosestPaintSplat(this->GetTransform().GetPosition());
 					paintPos = navigationMesh->FindClosestPoint(paintPos);
 
@@ -182,7 +179,7 @@ namespace NCL::CSC8508 {
 				}
 				else
 				{
-					std::cout << "Its too clean to clean\n";
+					//std::cout << "Its too clean to clean\n";
 					state = Failure;
 				}	
 			}
@@ -194,7 +191,6 @@ namespace NCL::CSC8508 {
 
 				Vector3 velocity = rigidBody->getLinearVelocity();
 				if (velocity.Length() < 0.1) {
-					//std::cout << "Velocity = " << velocity.Length() << "\n";
 					stuckAccumulator += dt;
 					if (stuckAccumulator > 5.0) {
 						stuckAccumulator = 0.0f;
@@ -203,13 +199,12 @@ namespace NCL::CSC8508 {
 					}
 				}
 				if (direction.Length() <= 5 && navigationPath->waypoints.size() >= 2) {
-					std::cout << "Go To Paint - Going Destination\n";
+					//std::cout << "Go To Paint - Going Destination\n";
 					navigationPath->waypoints.pop_back();
 				}
 				if (navigationPath->waypoints.size() == 1) {
 					if (DistanceToTarget(navigationPath->waypoints.front()) <= 5.0f) {
-						std::cout << "Go To Paint - Reached Destination\n";
-
+					//	std::cout << "Go To Paint - Reached Destination\n";
 						navigationPath->Clear();
 						return Success;
 					}
@@ -263,18 +258,12 @@ namespace NCL::CSC8508 {
 				Vector3 securityPosition = this->GetTransform().GetPosition();
 				bool foundPath = navigationMesh->FindPath(securityPosition, destination, *navigationPath);
 				if (foundPath) {
-					std::cout << "Choose Destination - Found Path\n";
-					//std::cout << "Size of outpath: " << navigationPath->waypoints.size() << "\n";
+					//std::cout << "Choose Destination - Found Path\n";
 					return Success;
 				}
 				else
 				{
-					if (navigationMesh->GetIsOutNavMesh()) {
-					//	OutsideNavmeshRespawn(this->GetTransform().GetPosition());
-						navigationMesh->SetIsOutNavMeshFalse();
-					}
-					std::cout << "Choose Destination - Found NOT Path\n";
-					//return Failure;
+					//std::cout << "Choose Destination - Found NOT Path\n";
 				}
 			}
 			return state;
@@ -298,7 +287,7 @@ namespace NCL::CSC8508 {
 								
 				if (LookForPlayers() != nullptr) {
 					navigationPath->Clear();
-					std::cout << " Going to the destination - Can see Player\n";
+				//	std::cout << " Going to the destination - Can see Player\n";
 					return Success;
 				}
 				if (velocity.Length() < 0.1) {
@@ -310,13 +299,13 @@ namespace NCL::CSC8508 {
 					}
 				}
 				if (direction.Length() <= 5 && navigationPath->waypoints.size() >= 2) {
-					std::cout << " Going to the destination - Going Destination\n";
+				//	std::cout << " Going to the destination - Going Destination\n";
 					navigationPath->waypoints.pop_back();
 				}
 	
 				if (navigationPath->waypoints.size() == 1) {
 					if (DistanceToTarget(navigationPath->waypoints.front()) <= 5.0f) {
-						std::cout << " Going to the destination - Reached Destination\n";
+				//		std::cout << " Going to the destination - Reached Destination\n";
 						this->GetRigidBody()->resetForce();
 						this->GetRigidBody()->resetTorque();
 						navigationPath->Clear();
@@ -346,12 +335,11 @@ namespace NCL::CSC8508 {
 
 				chasedPlayer = LookForPlayers();
 				if (chasedPlayer != nullptr) {
-					std::cout << " Looking for Player - Can see Player\n";
-					
+					//std::cout << " Looking for Player - Can see Player\n";
 					state = Success;
 				}
 				else {
-					std::cout << " Looking for Player - Player not visible\n";
+					//std::cout << " Looking for Player - Player not visible\n";
 					state = Failure;
 				}
 			}
@@ -369,11 +357,11 @@ namespace NCL::CSC8508 {
 				Vector3 securityPosition = this->GetTransform().GetPosition();
 				bool foundPath = navigationMesh->FindPath(securityPosition, playerPosition, *navigationPath);
 				if (foundPath) {
-					std::cout << " Chase the Player - Path found\n";
+					//std::cout << " Chase the Player - Path found\n";
 					state = Ongoing;
 				}
 				else {
-					std::cout << " Chase the Player - Path NOT found\n";
+					//std::cout << " Chase the Player - Path NOT found\n";
 					state = Failure;
 				}
 				
@@ -385,7 +373,7 @@ namespace NCL::CSC8508 {
 				Vector3 velocity = rigidBody->getLinearVelocity();
 				chaseAccumulator += dt;
 				
-				if (velocity.Length() < 1)
+				if (velocity.Length() < 0.1)
 				{
 					stuckAccumulator += dt;
 					if (stuckAccumulator > 5)
@@ -396,7 +384,7 @@ namespace NCL::CSC8508 {
 						return Initialise;
 					}
 				}
-				if (chaseAccumulator >= 1.5) {
+				if (chaseAccumulator >= 1.0) {
 					bool isPlayerVisible = LookForPlayer(chasedPlayer);
 					chaseAccumulator = 0.0f;
 					if (isPlayerVisible) {
@@ -405,13 +393,13 @@ namespace NCL::CSC8508 {
 						return Initialise;
 					}
 				}
-				if (direction.Length() <= 4 && navigationPath->waypoints.size() >= 2) {
+				if (direction.Length() <= 5 && navigationPath->waypoints.size() >= 2) {
 					navigationPath->waypoints.pop_back();
-					std::cout << " Chase the Player - Chasing player\n";
+					//std::cout << " Chase the Player - Chasing player\n";
 				}
 				if (navigationPath->waypoints.size() == 1) {
-					if (DistanceToTarget(navigationPath->waypoints.back()) <= 4.0f) {
-						std::cout << " Chase the Player - Reached the player\n";
+					if (DistanceToTarget(navigationPath->waypoints.back()) <= 5.0f) {
+						//std::cout << " Chase the Player - Reached the player\n";
 						navigationPath->Clear();
 						chaseAccumulator = 0.0f;
 						return Success;
@@ -438,13 +426,12 @@ namespace NCL::CSC8508 {
 				DetermineChaseSpeed();
 				MoveSecurityGuard(direction);
 				if (hasCaughtPlayer) { // collision with player
-					std::cout << "Player Caught\n";
+					//std::cout << "Player Caught\n";
 					hasCaughtPlayer = false;
 					state = Success;
 				}
 				else if(direction.Length() > 20) {
-					// Respawns player at position location
-					std::cout << "Player has escaped\n";
+				//	std::cout << "Player has escaped\n";
 					state = Failure;
 				}
 			}
@@ -549,12 +536,12 @@ namespace NCL::CSC8508 {
 			return;
 		}
 
-		if (player == playerOne) {
-			Debug::DrawLine(securityPosition, playerPosition, Debug::BLUE, 0.1f);
-		}
-		else if (player == playerTwo) {
-			Debug::DrawLine(securityPosition, playerPosition, Debug::RED, 0.1f);
-		}
+		//if (player == playerOne) {
+		//	Debug::DrawLine(securityPosition, playerPosition, Debug::BLUE, 0.1f);
+		//}
+		//else if (player == playerTwo) {
+		//	Debug::DrawLine(securityPosition, playerPosition, Debug::RED, 0.1f);
+		//}
 		reactphysics3d::Ray ray(~securityPosition, ~playerPosition); // '~' converts NCL Vector3 to reactphysics3d Vector3
 		reactphysics3d::RaycastInfo rayCastInfo;
 		physicsWorld->raycast(ray, *(&callbackClass));
@@ -600,7 +587,7 @@ namespace NCL::CSC8508 {
 
 		forceDirection = ~direction.Normalised();
 
-		Debug::DrawLine(this->GetTransform().GetPosition(), this->GetTransform().GetPosition() + forceDirection /** force*/, Debug::YELLOW, 1);
+//		Debug::DrawLine(this->GetTransform().GetPosition(), this->GetTransform().GetPosition() + forceDirection /** force*/, Debug::YELLOW, 1);
 		Vector3 up(0, 1, 0);
 		Vector3 negdirection(-direction.x, -direction.y, -direction.z);
 		Quaternion rotation = Quaternion::LookRotation(negdirection, up);
@@ -630,12 +617,12 @@ namespace NCL::CSC8508 {
 	{
 		if (gameWorld->GetSizePaintedPositions() < 1)
 		{
-			std::cout << "No Paint\n";
+			//std::cout << "No Paint\n";
 			return ChooseRandomDestination();
 		}
 		else
 		{
-			std::cout << "Going to Paint Splat\n";
+		//	std::cout << "Going to Paint Splat\n";
 			Vector3 paintPos = gameWorld->FindClosestPaintSplat(this->GetTransform().GetPosition());
 			paintPos = navigationMesh->FindClosestPoint(paintPos);
 			return paintPos;

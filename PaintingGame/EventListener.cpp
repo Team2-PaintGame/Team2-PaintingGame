@@ -20,25 +20,21 @@ void GameEventListener::onContact(const CollisionCallback::CallbackData& callbac
 
 			if (void* userData2 = contactPair.getBody2()->getUserData())
 			{
-				
 				GameObject* obj2 = (GameObject*)userData2;
 				if ((obj->GetLayer() == Layer::Player && obj2->GetLayer() == Layer::Enemy) && contactPair.getEventType() == ContactPair::EventType::ContactStart)
 				{
 					SecurityGuard* security = (SecurityGuard*)userData2;
-					std::cout << "Blaaah1\n";
 					security->SetHasCaughtPlayerTrue();
 					security->CaughtPlayer();
 				}
 				else if ((obj->GetLayer() == Layer::Enemy && obj2->GetLayer() == Layer::Player) && contactPair.getEventType() == ContactPair::EventType::ContactStart)
 				{
 					SecurityGuard* security = (SecurityGuard*)userData;
-					std::cout << "Blaaah2\n";
 					security->SetHasCaughtPlayerTrue();
 					security->CaughtPlayer();
 				}
 			}
 		}
-
 	}
 }
 

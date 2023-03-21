@@ -64,8 +64,8 @@ namespace NCL::CSC8508 {
 		Vector3 GetForwardVector();
 		bool IsPlayerInFront(Vector3& playerPosition, Vector3& securityPosition);
 		bool IsInFieldOfView(Vector3 direction);
-		void SetIsBlindedTrue() { isBlinded = true; std::cout << "isBlinded = true\n"; }
-		void SetIsBlindedFalse() { isBlinded = false; std::cout << "isBlinded = false\n";}
+		void SetIsBlindedTrue() { isBlinded = true; }
+		void SetIsBlindedFalse() { isBlinded = false; }
 
 		Vector3 ChooseRandomDestination();
 		Vector3 ChooseDestination();
