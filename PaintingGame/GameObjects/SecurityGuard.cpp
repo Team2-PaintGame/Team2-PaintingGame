@@ -370,28 +370,21 @@ namespace NCL::CSC8508 {
 				bool foundPath = navigationMesh->FindPath(securityPosition, playerPosition, *navigationPath);
 				if (foundPath) {
 					std::cout << " Chase the Player - Path found\n";
-					//std::cout << "Size of outpath: " << navigationPath->waypoints.size() << "\n";
 					state = Ongoing;
 				}
 				else {
-					//if (navigationMesh->GetIsOutNavMesh()) {
-					//	//OutsideNavmeshRespawn(this->GetTransform().GetPosition());
-					//	navigationMesh->SetIsOutNavMeshFalse();
-					//}
 					std::cout << " Chase the Player - Path NOT found\n";
 					state = Failure;
 				}
 				
 			}
 			else if (state == Ongoing) {
-				//Vector3 direction = navigationPath->waypoints.back() - this->GetTransform().GetPosition();
-
 				Vector3 nextWaypoint = navigationPath->waypoints.back();
 				nextWaypoint.y = this->GetTransform().GetPosition().y;
 				Vector3 direction = nextWaypoint - this->GetTransform().GetPosition();
-
-				chaseAccumulator += dt;
 				Vector3 velocity = rigidBody->getLinearVelocity();
+				chaseAccumulator += dt;
+				
 				if (velocity.Length() < 1)
 				{
 					stuckAccumulator += dt;
@@ -405,7 +398,6 @@ namespace NCL::CSC8508 {
 				}
 				if (chaseAccumulator >= 1.5) {
 					bool isPlayerVisible = LookForPlayer(chasedPlayer);
-					//std::cout << "1.5 seconds accumulated\n";
 					chaseAccumulator = 0.0f;
 					if (isPlayerVisible) {
 						navigationPath->Clear();
@@ -437,13 +429,9 @@ namespace NCL::CSC8508 {
 	{
 		attackThePlayer = new BehaviourAction("Attack the Goat ", [&](float dt, BehaviourState state)->BehaviourState {
 			if (state == Initialise) {
-			/*	int lay = (int)this->GetLayer();
-				std::cout << "Player Layer = " << lay << "\n";*/
 				state = Ongoing;
 			}
 			else if (state == Ongoing) {
-				//Vector3 direction = chasedPlayer->GetTransform().GetPosition() - this->GetTransform().GetPosition();
-
 				Vector3 nextWaypoint = chasedPlayer->GetTransform().GetPosition();
 				nextWaypoint.y = this->GetTransform().GetPosition().y;
 				Vector3 direction = nextWaypoint - this->GetTransform().GetPosition();
@@ -459,12 +447,9 @@ namespace NCL::CSC8508 {
 					std::cout << "Player has escaped\n";
 					state = Failure;
 				}
-
 			}
-
 			return state;
 			}
-
 		);
 	}
 
