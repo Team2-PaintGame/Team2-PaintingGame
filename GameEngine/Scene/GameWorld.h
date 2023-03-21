@@ -117,7 +117,7 @@ namespace NCL {
 
 			SceneContactPoint* Raycast(const reactphysics3d::Ray& r, GameObject* ignore = nullptr) const;
 			size_t GetNumberOfGameObjects() const { return gameObjects.size(); }
-			void AddPaintedPosition(const Vector3& position, int team);
+			void AddPaintedPosition(const Vector3& position, Vector4 team);
 			size_t GetNumPaintedPositions() const { return paintedPositions.size(); }
 
 			void CalculateNewScores() 

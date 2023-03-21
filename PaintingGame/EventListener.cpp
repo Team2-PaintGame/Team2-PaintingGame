@@ -1,6 +1,6 @@
 #include "EventListener.h"
 #include "GameWorld.h"
-
+#include "Ink.h"
 
 using namespace NCL::CSC8508;
 
@@ -50,7 +50,7 @@ void GameEventListener::onTrigger(const reactphysics3d::OverlapCallback::Callbac
 
 		if (obj && valid)
 		{
-			gameWorld->AddPaintedPosition(obj->GetTransform().GetPosition());
+			gameWorld->AddPaintedPosition(obj->GetTransform().GetPosition(), ((Particle*)obj)->GetColour());
 			obj->SetActive(false);
 			cb->setIsActive(false);
 		}

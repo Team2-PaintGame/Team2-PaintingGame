@@ -21,7 +21,7 @@ void SinglePlayerGame::CreateSplatOnShoot() {
 	if (playerController->Shoot()) {
 		SceneContactPoint* closestCollision = world->Raycast(player->GetShootRay());
 		if (closestCollision->isHit) {
-			world->AddPaintedPosition(closestCollision->hitPos, player->GetTeamColour());
+			//world->AddPaintedPosition(closestCollision->hitPos, player->GetTeamColour());
 		}
 	}
 }

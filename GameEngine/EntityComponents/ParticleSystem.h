@@ -130,7 +130,7 @@ namespace NCL {
 	inline void ParticleSystem<T>::GenerateParticles() {
 		if (elapsedTime < duration || looping) {
 			while (accumulator > 1.0 / emitter.GetParticleEmissionRate() && particles.size() < maxParticles) {
-				particles.emplace_back(std::make_unique<T>(physicsCommon, physicsWorld, &transform, Vector3(), startLifetime, startSpeed, emitter.GetEmissionDirection(), enableGravity));
+				particles.emplace_back(std::make_unique<T>(physicsCommon, physicsWorld, &transform, Vector3(), startLifetime, startSpeed, emitter.GetEmissionDirection(), renderObject->GetColour(), enableGravity));
 				transforms.emplace_back(&particles.back()->GetTransform());
 				accumulator -= 1.0 / emitter.GetParticleEmissionRate();
 			}

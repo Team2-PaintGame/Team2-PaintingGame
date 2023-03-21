@@ -37,6 +37,9 @@ namespace NCL {
 		virtual void Update(float dt);
 		virtual void Shoot();
 		const reactphysics3d::Ray& GetShootRay() const { return shootRay; }
+
+		int GetTeamColour() { return playerTeam; }
+
 	protected:
 		void SetMemberVariables(Gun* gun);
 		//AnimationController* animationController = NULL;
