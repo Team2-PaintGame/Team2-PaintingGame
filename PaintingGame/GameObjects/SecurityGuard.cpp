@@ -75,8 +75,8 @@ namespace NCL::CSC8508 {
 
 	void SecurityGuard::Update(float dt)
 	{
-		Vector3 lockXZAxis(0, 1, 0);
-		rigidBody->setAngularLockAxisFactor(~lockXZAxis);
+		//Vector3 lockXZAxis(0, 1, 0);
+		//rigidBody->setAngularLockAxisFactor(~lockXZAxis);
 		if (isBlinded)
 		{
 			blindTimer += dt;
@@ -105,11 +105,9 @@ namespace NCL::CSC8508 {
 		}
 		if (ink) {
 			ink->SetLayer(Layer::Bubbles);
-			ink->GetTransform()
-				.SetPosition(transform.GetPosition()).SetOrientation(transform.GetOrientation());
+			ink->GetTransform().SetPosition(transform.GetPosition()).SetOrientation(transform.GetOrientation());
 		}
 	}
-
 
 	void SecurityGuard::InitBehaviorTree()
 	{
@@ -173,6 +171,8 @@ namespace NCL::CSC8508 {
 				{
 					std::cout << "Theres too much paint!\n";
 					Vector3 paintPos = gameWorld->FindClosestPaintSplat(this->GetTransform().GetPosition());
+					paintPos = navigationMesh->FindClosestPoint(paintPos);
+
 					Vector3 securityPos = this->GetTransform().GetPosition();
 					bool foundPath = navigationMesh->FindPath(securityPos, paintPos, *navigationPath);
 					if (foundPath)
@@ -188,7 +188,10 @@ namespace NCL::CSC8508 {
 			}
 			else if (state == Ongoing) 
 			{
-				Vector3 direction = navigationPath->waypoints.back() - this->GetTransform().GetPosition();
+				Vector3 nextWaypoint = navigationPath->waypoints.back();
+				nextWaypoint.y = this->GetTransform().GetPosition().y;
+				Vector3 direction = nextWaypoint - this->GetTransform().GetPosition();
+
 				Vector3 velocity = rigidBody->getLinearVelocity();
 				if (velocity.Length() < 0.1) {
 					//std::cout << "Velocity = " << velocity.Length() << "\n";
@@ -199,12 +202,12 @@ namespace NCL::CSC8508 {
 						return Success;
 					}
 				}
-				if (direction.Length() <= 4 && navigationPath->waypoints.size() >= 2) {
+				if (direction.Length() <= 5 && navigationPath->waypoints.size() >= 2) {
 					std::cout << "Go To Paint - Going Destination\n";
 					navigationPath->waypoints.pop_back();
 				}
 				if (navigationPath->waypoints.size() == 1) {
-					if (DistanceToTarget(navigationPath->waypoints.front()) <= 3.0f) {
+					if (DistanceToTarget(navigationPath->waypoints.front()) <= 5.0f) {
 						std::cout << "Go To Paint - Reached Destination\n";
 
 						navigationPath->Clear();
@@ -234,7 +237,7 @@ namespace NCL::CSC8508 {
 			else if (state == Ongoing)
 			{
 				Vector3 securityPos = this->GetTransform().GetPosition();
-				if (gameWorld->CleanNearbyPaint(securityPos, 50))
+				if (gameWorld->CleanNearbyPaint(securityPos, 30))
 				{
 					ink->SetLayer(Layer::Bubbles);
 					BubbleEmission();
@@ -257,7 +260,7 @@ namespace NCL::CSC8508 {
 
 			else if (state == Ongoing) {
 				Vector3 destination = ChooseDestination();
-					Vector3 securityPosition = this->GetTransform().GetPosition();
+				Vector3 securityPosition = this->GetTransform().GetPosition();
 				bool foundPath = navigationMesh->FindPath(securityPosition, destination, *navigationPath);
 				if (foundPath) {
 					std::cout << "Choose Destination - Found Path\n";
@@ -291,18 +294,14 @@ namespace NCL::CSC8508 {
 				Vector3 nextWaypoint = navigationPath->waypoints.back();
 				nextWaypoint.y = this->GetTransform().GetPosition().y;
 				Vector3 direction = nextWaypoint - this->GetTransform().GetPosition();
-				
-				
 				Vector3 velocity = rigidBody->getLinearVelocity();
-				/*				
+								
 				if (LookForPlayers() != nullptr) {
 					navigationPath->Clear();
 					std::cout << " Going to the destination - Can see Player\n";
 					return Success;
-				}*/
-				//std::cout << "Velocity = " << velocity.Length() << "\n";
+				}
 				if (velocity.Length() < 0.1) {
-					//std::cout << "Velocity = " << velocity.Length() << "\n";
 					stuckAccumulator += dt;
 					if (stuckAccumulator > 5.0) {
 						stuckAccumulator = 0.0f;
@@ -375,17 +374,22 @@ namespace NCL::CSC8508 {
 					state = Ongoing;
 				}
 				else {
-					if (navigationMesh->GetIsOutNavMesh()) {
-						//OutsideNavmeshRespawn(this->GetTransform().GetPosition());
-						navigationMesh->SetIsOutNavMeshFalse();
-					}
+					//if (navigationMesh->GetIsOutNavMesh()) {
+					//	//OutsideNavmeshRespawn(this->GetTransform().GetPosition());
+					//	navigationMesh->SetIsOutNavMeshFalse();
+					//}
 					std::cout << " Chase the Player - Path NOT found\n";
 					state = Failure;
 				}
 				
 			}
 			else if (state == Ongoing) {
-				Vector3 direction = navigationPath->waypoints.back() - this->GetTransform().GetPosition();
+				//Vector3 direction = navigationPath->waypoints.back() - this->GetTransform().GetPosition();
+
+				Vector3 nextWaypoint = navigationPath->waypoints.back();
+				nextWaypoint.y = this->GetTransform().GetPosition().y;
+				Vector3 direction = nextWaypoint - this->GetTransform().GetPosition();
+
 				chaseAccumulator += dt;
 				Vector3 velocity = rigidBody->getLinearVelocity();
 				if (velocity.Length() < 1)
@@ -433,12 +437,16 @@ namespace NCL::CSC8508 {
 	{
 		attackThePlayer = new BehaviourAction("Attack the Goat ", [&](float dt, BehaviourState state)->BehaviourState {
 			if (state == Initialise) {
-				int lay = (int)this->GetLayer();
-				std::cout << "Player Layer = " << lay << "\n";
+			/*	int lay = (int)this->GetLayer();
+				std::cout << "Player Layer = " << lay << "\n";*/
 				state = Ongoing;
 			}
 			else if (state == Ongoing) {
-				Vector3 direction = chasedPlayer->GetTransform().GetPosition() - this->GetTransform().GetPosition();
+				//Vector3 direction = chasedPlayer->GetTransform().GetPosition() - this->GetTransform().GetPosition();
+
+				Vector3 nextWaypoint = chasedPlayer->GetTransform().GetPosition();
+				nextWaypoint.y = this->GetTransform().GetPosition().y;
+				Vector3 direction = nextWaypoint - this->GetTransform().GetPosition();
 				DetermineChaseSpeed();
 				MoveSecurityGuard(direction);
 				if (hasCaughtPlayer) { // collision with player
@@ -484,8 +492,8 @@ namespace NCL::CSC8508 {
 		{
 			if (isPlayerOneVisible) 
 			{
-				//return playerOne;
-				return nullptr;
+				return playerOne;
+				//return nullptr;
 			}
 			else
 			{

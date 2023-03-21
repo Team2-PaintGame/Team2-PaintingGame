@@ -75,6 +75,7 @@ namespace NCL {
 			float Heuristic(NavTri* hNode, NavTri* endNode) /*const*/;
 			Vector3 FindClosestPoint(Vector3 to);
 			void FindMinMaxPoints();
+			
 		protected:
 			bool isOutNavMesh = false;
 			float MinX = FLT_MAX, MaxX = FLT_MIN;

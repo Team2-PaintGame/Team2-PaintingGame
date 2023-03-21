@@ -438,7 +438,7 @@ float NavigationMesh::Heuristic(NavTri* hNode, NavTri* endNode) /*const*/ {
 Vector3 NavigationMesh::FindClosestPoint(Vector3 to) {
 	NavTri* end = GetTriForPosition(to);
 	if (end == nullptr) {
-		/*std::cout << "Destination is outside of the navmesh\n";
+		std::cout << "Destination is outside of the navmesh\n";
 		float minDistance = FLT_MAX;
 		float distance = FLT_MAX;
 		Vector3 centroid;
@@ -452,6 +452,12 @@ Vector3 NavigationMesh::FindClosestPoint(Vector3 to) {
 				
 			}
 		}
+	//	end = GetTriForPosition(centroid);
+	//	Vector3 planeNormal = end->triPlane.GetNormal();
+
+
+		
+
 		std::cout << "Outside Nav position: " << centroid << "\n";
 		end = GetTriForPosition(centroid);
 
@@ -462,15 +468,11 @@ Vector3 NavigationMesh::FindClosestPoint(Vector3 to) {
 		while (test == nullptr)
 		{
 			std::cout << "Not close enough\n";
-			ratio -= 0.5;
+			ratio -= 0.05;
 			toPoint = centroid + centroidToPoint * ratio;
 			test = GetTriForPosition(toPoint);
 		}
-		Debug::DrawLine(centroid, toPoint, Debug::YELLOW, 1);*/
-		Vector3 min(MinX, MinY, MinZ);
-		Vector3 max(MaxX, MaxY, MaxZ);
-		Vector3 toPoint = Vector3::Clamp(to, min, max);
-
+		Debug::DrawLine(centroid, toPoint, Debug::YELLOW, 1);
 
 		return toPoint;
 
@@ -480,5 +482,8 @@ Vector3 NavigationMesh::FindClosestPoint(Vector3 to) {
 		return to;
 	}
 
+
+
 }
+
 
