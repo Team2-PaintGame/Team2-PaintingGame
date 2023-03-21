@@ -12,7 +12,8 @@ Particle::Particle(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d:
 	this->speed = speed;
 	this->direction = direction;
 	this->particleColour = colour;
-	layer = Layer::Paint;
+	//layer = Layer::Paint;
+	this->layer = layer;
 }
 
 void Particle::Update(float dt) {

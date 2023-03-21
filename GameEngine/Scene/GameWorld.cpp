@@ -190,7 +190,7 @@ bool GameWorld::CleanNearbyPaint(Vector3 SecurityPos, float range)
 	bool hasCleaned = false;
 	for (auto paintPos = paintedPositions.begin(); paintPos != paintedPositions.end();)
 	{
-		float distance = (SecurityPos - *paintPos).Length();
+		float distance = (SecurityPos - paintPos->position).Length();
 		if (distance < range)
 		{
 			
@@ -212,10 +212,10 @@ Vector3 GameWorld::FindClosestPaintSplat(Vector3 position)
 	float min = FLT_MAX;
 	for (auto i : paintedPositions)
 	{
-		float distance = (i - position).Length();
+		float distance = (i.position - position).Length();
 		if (distance < min)
 		{
-			paintPos = i;
+			paintPos = i.position;
 		}
 	}
 	return paintPos;
