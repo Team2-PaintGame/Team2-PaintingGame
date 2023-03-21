@@ -111,7 +111,7 @@ void NCL::CSC8508::GameScreen::DebugWindow()
 		isDebugDisplayed = false;
 	}
 	if (ImGui::BeginPopupModal("MemoryFootprint")) {
-		ImGui::Text(("totalVirtualMemory: " + std::to_string(Debug::totalVirtualMemory / 1073741824) + "GB").c_str()); //1048576
+		ImGui::Text(("totalVirtualMemory: " + std::to_string(Debug::totalVirtualMemory / 1073741824) + "GB").c_str());
 		ImGui::Text(("usedVirtualMemory: " + std::to_string(Debug::usedVirtualMemory / 1073741824) + "GB").c_str());
 		ImGui::Text(("totalPhysMemory: " + std::to_string(Debug::totalPhysMemory / 1073741824) + "GB").c_str());
 		ImGui::Text(("usedphysMemory: " + std::to_string(Debug::usedphysMemory / 1073741824) + "GB").c_str());
