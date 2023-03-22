@@ -3,12 +3,11 @@ ConstantBuffer RenderObjectData {
 	float3x3 inverseModel = float3x3(1.0f);
 	bool hasVertexColours = false;
 	float4 objectColour = float4(1,1,1,1);
-	column_major matrix shadowMatrix = float4x4(1.0f);
+	//column_major matrix shadowMatrix = float4x4(1.0f);
 };
 
 ConstantBuffer CameraData {
 	column_major matrix viewProjMatrix = float4x4(1.0f);
-	float3 cameraPos;
 };
 
 struct VS_INPUT {
@@ -24,8 +23,8 @@ struct VS_OUTPUT {
 	float2 UV			: TEXCOORD0;
 	float4 Colour		: TEXCOORD1;
 	float3 Normal		: NORMAL;
-	float3 WorldPos		: WPOS;
-	float4 ShadowProj	: TEXCOORD2;
+	float3 WorldPos		: WPOS;   
+	//float4 ShadowProj	: TEXCOORD2;
 };
 
 VS_OUTPUT main(VS_INPUT Input) {
@@ -46,6 +45,6 @@ VS_OUTPUT main(VS_INPUT Input) {
 
 	Output.Normal		= normalize(mul(normalMatrix, normalize(Input.Normal)));
 	Output.WorldPos		= mul(modelMatrix, float4(Input.Position.xyz, 1)).xyz;
-	Output.ShadowProj 	= mul(shadowMatrix, float4(Input.Position.xyz, 1));
+	//Output.ShadowProj 	= mul(shadowMatrix, float4(Input.Position.xyz, 1));
 	return Output;
 }

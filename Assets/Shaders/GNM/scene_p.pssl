@@ -1,23 +1,29 @@
-struct Light {
+//struct Light {
+	//float3	lightPos;
+	//float1	lightRadius;
+	//float4	lightColour;
+//};
+//
+//struct PerFrameData {
+    //Light light;
+	//float3 cameraPos;
+	//bool hasTexture;
+	//float3 paintedPos[1000];
+	//int numOfSplats;
+//};
+
+ConstantBuffer FragmentData {
 	float3	lightPos;
 	float1	lightRadius;
 	float4	lightColour;
-};
-
-struct PerFrameData {
-    Light light;
-    SamplerState samp0 : register(s0);
-	Texture2D colorMap : register( t0 );
 	float3 cameraPos;
 	bool hasTexture;
-	float3 paintedPos[1000];
-	int numOfSplats;
-};
+	//float3 paintedPos[1000];
+	//int numOfSplats;
+}
 
-struct PsUniformData {
-    PerFrameData* pFrameData;
-};
-
+SamplerState samp0 : register(s0);
+Texture2D colorMap : register( t0 );
 
 struct VS_INPUT {
 	float4 Position		: S_POSITION;
@@ -25,7 +31,7 @@ struct VS_INPUT {
 	float4 Colour		: TEXCOORD1;
 	float3 Normal		: NORMAL;
 	float3 WorldPos		: WPOS;
-	float4 ShadowProj	: TEXCOORD2;
+	//float4 ShadowProj	: TEXCOORD2;
 };
 
 float4 modulus(float4 x){return x - floor(x * (1.0/289.0)) * 289.0;}
@@ -54,13 +60,12 @@ float SplatNoise(float3 inWorldPos) {
 }
 
 
-float4 main(VS_INPUT In, PsUniformData uniforms : S_SRT_DATA) : S_TARGET_OUTPUT {
+float4 main(VS_INPUT In) : S_TARGET_OUTPUT {
 	
-	Light light = uniforms.pFrameData->light;
-	float3 incident = normalize(light.lightPos - In.WorldPos);
+	float3 incident = normalize(lightPos - In.WorldPos);
 	float lambert  = max (0.0 , dot ( incident , In.Normal )) * 0.9; 
 	
-	float3 viewDir = normalize ( uniforms.pFrameData->cameraPos - In.WorldPos );
+	float3 viewDir = normalize ( cameraPos - In.WorldPos );
 	float3 halfDir = normalize ( incident + viewDir );
 
 	float rFactor = max (0.0 , dot ( halfDir , In.Normal ));
@@ -68,24 +73,24 @@ float4 main(VS_INPUT In, PsUniformData uniforms : S_SRT_DATA) : S_TARGET_OUTPUT 
 	
 	float4 albedo = In.Colour;
 	
-	if(uniforms.pFrameData->hasTexture) {
-	 albedo *= uniforms.pFrameData->colorMap.Sample(uniforms.pFrameData->samp0, In.UV.xy);
+	if(hasTexture) {
+	 albedo *= colorMap.Sample(samp0, In.UV.xy);
 	}
 	
-	for(int i = 0; i < uniforms.pFrameData->numOfSplats;i++){
-		float distanceBetween = distance(uniforms.pFrameData->paintedPos[i], In.WorldPos);
-		if (distanceBetween <= 5 - SplatNoise(In.WorldPos)){
-			albedo = float4(float3(0.51,1,0.1),1);
-		}
-	}
+	//for(int i = 0; i < numOfSplats;i++){
+		//float distanceBetween = distance(paintedPos[i], In.WorldPos);
+		//if (distanceBetween <= 5 - SplatNoise(In.WorldPos)){
+			//albedo = float4(float3(0.51,1,0.1),1);
+		//}
+	//}
 	
 	albedo.rgb = pow(albedo.rgb, float3(2.2));
 	
 	albedo.rgb = albedo.rgb * 0.05f; //ambient
 	
-	albedo.rgb += albedo.rgb * light.lightColour.rgb * lambert; //diffuse light
+	albedo.rgb += albedo.rgb * lightColour.rgb * lambert; //diffuse light
 	
-	albedo.rgb += light.lightColour.rgb * sFactor; //specular light
+	albedo.rgb += lightColour.rgb * sFactor; //specular light
 	
 	albedo.rgb = pow(albedo.rgb, float3(1.0 / 2.2f));
 	
