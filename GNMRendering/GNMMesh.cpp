@@ -165,10 +165,15 @@ void	GNMMesh::InitAttributeBuffer(sce::Gnm::Buffer &buffer, Gnm::DataFormat form
 	buffer.setResourceMemoryType(Gnm::kResourceMemoryTypeRO);
 }
 
-void GNMMesh::SubmitDraw(Gnmx::GnmxGfxContext& cmdList, Gnm::ShaderStage stage) {
+void GNMMesh::SubmitDraw(Gnmx::GnmxGfxContext& cmdList, Gnm::ShaderStage stage, int numInstances) {
 	cmdList.setVertexBuffers(stage, 0, attributeCount, attributeBuffers);
 	cmdList.setPrimitiveType(primitiveType);
 	cmdList.setIndexSize(indexType);
-	cmdList.drawIndex(GetIndexCount(), indexBuffer);
+	if (numInstances > 0) {
+		cmdList.drawIndexMultiInstanced(GetIndexCount(), numInstances, indexBuffer, attributeBuffers);
+	}
+	else {
+		cmdList.drawIndex(GetIndexCount(), indexBuffer);
+	}
 } 
 #endif
