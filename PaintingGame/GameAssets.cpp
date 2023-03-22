@@ -80,11 +80,11 @@ void GameAssets::LoadShaders() {
 	shaders.insert(std::make_pair("hudShader", loader->LoadShader("hud.vert", "hud.frag")));
 #endif // _WIN32
 #ifdef __ORBIS__
-	shaders.insert(std::make_pair("basicShader", loader->LoadShader("screen_vv.sb", "simplePixel_p.sb")));
-	shaders.insert(std::make_pair("skinningShader", loader->LoadShader("screen_vv.sb", "simplePixel_p.sb")));
-	shaders.insert(std::make_pair("SecondskinningShader", loader->LoadShader("screen_vv.sb", "simplePixel_p.sb")));
+	shaders.insert(std::make_pair("basicShader", loader->LoadShader("scene_vv.sb", "scene_p.sb")));
+	shaders.insert(std::make_pair("skinningShader", loader->LoadShader("scene_vv.sb", "scene_p.sb")));
+	shaders.insert(std::make_pair("SecondskinningShader", loader->LoadShader("scene_vv.sb", "scene_p.sb")));
 	shaders.insert(std::make_pair("screenShader", loader->LoadShader("screen_vv.sb", "simplePixel_p.sb")));
-	shaders.insert(std::make_pair("inkShader", loader->LoadShader("screen_vv.sb", "simplePixel_p.sb")));
+	shaders.insert(std::make_pair("inkShader", loader->LoadShader("scene_vv.sb", "simplePixel_p.sb")));
 	shaders.insert(std::make_pair("debugShader", loader->LoadShader("screen_vv.sb", "simplePixel_p.sb")));
 	shaders.insert(std::make_pair("hudShader", loader->LoadShader("hud_vv.sb", "simplePixel_p.sb")));
 #endif // __ORBIS__
