@@ -17,7 +17,7 @@ namespace NCL::GNM {
 	public:
 		GNMMesh();
 		GNMMesh(const std::string& filename);
-		~GNMMesh();
+		virtual ~GNMMesh();
 		
 		static GNMMesh* GenerateTriangle();
 		static GNMMesh* GenerateQuad();
@@ -36,8 +36,11 @@ namespace NCL::GNM {
 		{
 			float position[3];
 			float textureCoord[2];
+			float colour[4];
 			float normal[3];
 			float tangent[3];
+			float skinWeight[4];
+			int skinIndex[4];
 		};
 
 		sce::Gnm::IndexSize		indexType;
