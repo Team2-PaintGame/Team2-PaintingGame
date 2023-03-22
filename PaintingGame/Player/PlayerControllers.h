@@ -1,5 +1,6 @@
 #pragma once
 #include <Window.h>
+#include <Xinput.h>
 #include <XBoxGamepad.h>
 #include "PlayerController.h"
 #include <PS4Gamepad.h>
@@ -68,10 +69,10 @@ namespace NCL {
 			return gamepad.leftStickX < 0.0f;
 		}
 		bool Shoot() override {
-			return false;
+			return gamepad.IsPressed(XINPUT_GAMEPAD_RIGHT_SHOULDER);
 		}
 		bool Pause() override {
-			return gamepad.GetButtonDown(VK_PAD_START);
+			return gamepad.IsPressed(XINPUT_GAMEPAD_START);
 		}
 
 		float ViewDy() override {
