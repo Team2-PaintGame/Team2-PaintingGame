@@ -19,8 +19,7 @@ namespace NCL {
 		//typedef std::function<void(Camera*)> CameraFunc;
 		enum class Team {
 			Red,
-			Blue,
-			None
+			Blue
 		};
 		class PaintingGame : public SceneNode {
 		public:
