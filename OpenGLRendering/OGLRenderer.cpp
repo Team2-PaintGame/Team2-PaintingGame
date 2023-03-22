@@ -171,7 +171,6 @@ void OGLRenderer::DrawBoundMesh(int subLayer, int numInstances) {
 			glDrawArrays(mode, 0, count);
 		}
 	}
-	//glBindVertexArray(0);
 }
 
 void OGLRenderer::BindTextureToShader(const TextureBase*t, const std::string& uniform, int texUnit) const{
@@ -429,6 +428,10 @@ static void APIENTRY DebugCallback(GLenum source, GLenum type, GLuint id, GLenum
 	case GL_DEBUG_SEVERITY_HIGH: severityName = "Priority(High)"; break;
 	case GL_DEBUG_SEVERITY_MEDIUM: severityName = "Priority(Medium)"; break;
 	case GL_DEBUG_SEVERITY_LOW: severityName = "Priority(Low)"; break;
+	}
+
+	if (severity == GL_DEBUG_SEVERITY_HIGH) {
+		bool a = true;
 	}
 
 	std::cout << "OpenGL Debug Output: " + sourceName + ", " + typeName + ", " + severityName + ", " + string(message) << std::endl;

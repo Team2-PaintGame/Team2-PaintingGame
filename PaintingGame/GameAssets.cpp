@@ -119,3 +119,8 @@ void GameAssets::ReloadShaders()
 	//shaders.clear();
 	//LoadShaders();
 }
+void GameAssets::ReloadDebug()
+{
+	shaders.erase("debugShader");
+	shaders.insert(std::make_pair("debugShader", loader->LoadShader("Debug.vert", "Debug.frag")));
+}

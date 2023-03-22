@@ -38,6 +38,10 @@ GameManager::~GameManager() {
 
 bool GameManager::RunGame(float dt) {
 	bool isRunning =  screenManager->Update(dt);
+
+	//gameAssets->ReloadDebug();
+	//renderer->BindDebugShader(gameAssets->GetShader("debugShader"));
+	((OGLRenderer*)renderer)->ResetDefaultContext();
 	renderer->BindScreen(screenManager->GetActiveScreen());
 	renderer->Render();
 	calculateRenderingTime();
@@ -73,5 +77,7 @@ void GameManager::FinishLoading()
 	gameAssets->ReloadMeshes();
 	screenManager->LoadScreens();
 	renderer->BindDebugShader(gameAssets->GetShader("debugShader"));
+
+	((OGLPaintingGameRenderer*)renderer)->ResetDebugRenderers();
 }
 #endif
