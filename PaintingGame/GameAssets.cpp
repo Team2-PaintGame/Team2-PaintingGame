@@ -93,8 +93,8 @@ void GameAssets::LoadTextures() {
 	textures.insert(std::make_pair("goatTex", loader->LoadTexture("goat1.jpg")));
 	textures.insert(std::make_pair("doorTex", loader->LoadTexture("door.jpg")));
 	textures.insert(std::make_pair("gunFocusTex", loader->LoadTexture("gunFocusPoint.png")));
-	textures.insert(std::make_pair("splashScreenTex", loader->LoadTexture("Screens/bg.jpg"))); 
-	textures.insert(std::make_pair("mainMenuScreenTex", loader->LoadTexture("Screens/bg2.jpg")));
+	textures.insert(std::make_pair("splashScreenTex", loader->LoadTexture("Screens/bg.png"))); 
+	textures.insert(std::make_pair("mainMenuScreenTex", loader->LoadTexture("Screens/bg2.png")));
 }
 
 void GameAssets::LoadShaders() {
