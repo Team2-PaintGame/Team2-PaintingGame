@@ -36,6 +36,14 @@ public:
 
 	static void DeleteSounds();
 
+	bool IsStreaming() {
+		return streaming;
+	}
+
+	virtual double StreamData(ALuint buffer, double timeLeft) {
+		return 0.0f;
+	}
+
 protected:
 	Sound();
 	virtual ~Sound(void);
@@ -53,6 +61,7 @@ protected:
 	unsigned int	bitRate;
 	unsigned int	size;
 	unsigned int	channels;
+	bool streaming;
 
 	static map<string, Sound*> sounds;
 };

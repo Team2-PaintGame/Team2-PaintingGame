@@ -14,7 +14,7 @@ PaintingGame::PaintingGame(GameAssets* assets) {
 	this->assets = assets;
 	physicsWorld = physicsCommon.createPhysicsWorld();
 	physicsWorld->setIsGravityEnabled(useGravity);
-	
+
 	world = new GameWorld(physicsWorld);
 	InitWorld();
 	//renderer->settings.SetIsDebugRenderingModeEnabled(true);
@@ -57,22 +57,22 @@ void PaintingGame::Update(float dt) {
 	Debug::UpdateRenderables(dt);
 }
 
-Player* PaintingGame::CreatePlayer(Vector3 position,Team team) {
+Player* PaintingGame::CreatePlayer(Vector3 position, Team team) {
 	std::unordered_map<std::string, MeshAnimation*> animations;
 	animations.insert(std::make_pair("idleAnimation", assets->GetMeshAnimation("mainCharIdleAnim")));
 	animations.insert(std::make_pair("moveAnimation", assets->GetMeshAnimation("mainCharRunAnim")));
-	
-	Player* player; 
+
+	Player* player;
 	if (team == Team::Red) {
-		player =  new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("redMainCharMat"), assets->GetShader("skinningShader"), animations, 5, CreateGun(position, team));
+		player = new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("redMainCharMat"), assets->GetShader("skinningShader"), animations, 5, CreateGun(position, team));
 	}
 
 	else { //blue
-		player =  new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("blueMainCharMat"), assets->GetShader("SecondskinningShader"), animations, 5, CreateGun(position, team));
+		player = new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("blueMainCharMat"), assets->GetShader("SecondskinningShader"), animations, 5, CreateGun(position, team));
 	}
 
 	Sound::AddSound("H:/2022/csc8508/project/Assets/Sounds/41579__erdie__steps-on-stone01.wav");
-	
+
 	s->SetSound(Sound::GetSound("H:/2022/csc8508/project/Assets/Sounds/41579__erdie__steps-on-stone01.wav"));
 	s->SetLooping(true);
 	s->SetTarget(player);

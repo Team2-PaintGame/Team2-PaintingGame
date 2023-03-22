@@ -9,12 +9,14 @@ Sound::Sound() {
 	length = 0;
 	data = NULL;
 	buffer = 0;
+	streaming = false;
+
 }
 
 Sound::~Sound(void) {
 	//alDeleteBuffers(1, &buffer);
 	delete data;
-	
+
 }
 
 ALenum Sound::GetOALFormat() {
@@ -93,6 +95,7 @@ void Sound::LoadWAVChunkInfo(ifstream& file, string& name, unsigned int& size) {
 void Sound::AddSound(string name) {
 	if (!GetSound(name)) {
 		Sound* s = new Sound();
+
 
 		string extension = name.substr(name.length() - 3, 3);
 
