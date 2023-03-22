@@ -51,11 +51,11 @@ void PaintingGame::InitWorld() {
 		world->AddGameObject(new Box(physicsCommon, physicsWorld, Vector3(0, 10, 0), assets->GetMesh("cubeMesh"), assets->GetTexture("doorTex"), assets->GetShader("basicShader"), 2));
 	}
 
-	world->AddGameObject(new PaintingObject(physicsCommon, physicsWorld, Vector3(30, 10, 50), assets->GetMesh("cubeMesh"), assets->GetMeshMaterial("monaLisaMat"), assets->GetShader("basicShader"), 10, "MonaLisa"));
-	world->AddGameObject(new PaintingObject(physicsCommon, physicsWorld, Vector3(20, 10, 50), assets->GetMesh("cubeMesh"), assets->GetMeshMaterial("handsPaintingMat"), assets->GetShader("basicShader"), 10, "handsPaint"));
-	world->AddGameObject(new PaintingObject(physicsCommon, physicsWorld, Vector3(10, 10, 50), assets->GetMesh("cubeMesh"), assets->GetMeshMaterial("nightSkyMat"), assets->GetShader("basicShader"), 10, "nightSky"));
-	world->AddGameObject(new PaintingObject(physicsCommon, physicsWorld, Vector3(50, 10, 50), assets->GetMesh("cubeMesh"), assets->GetMeshMaterial("screamPaintMat"), assets->GetShader("basicShader"), 10, "screamPaint"));
-	world->AddGameObject(new PaintingObject(physicsCommon, physicsWorld, Vector3(60, 10, 50), assets->GetMesh("cubeMesh"), assets->GetMeshMaterial("sunflowersMat"), assets->GetShader("basicShader"), 10, "sunflowers"));
+	world->AddGameObject(new PaintingObject(physicsCommon, physicsWorld, Vector3(187, 10,1.2),Quaternion(), assets->GetMesh("cubeMesh"), assets->GetMeshMaterial("monaLisaMat"), assets->GetShader("basicShader"), 10, "MonaLisa"));
+	world->AddGameObject(new PaintingObject(physicsCommon, physicsWorld, Vector3(248, 10, 53), Quaternion::EulerAnglesToQuaternion(0,90,180), assets->GetMesh("cubeMesh"), assets->GetMeshMaterial("handsPaintingMat"), assets->GetShader("basicShader"), 10, "handsPaint"));
+	world->AddGameObject(new PaintingObject(physicsCommon, physicsWorld, Vector3(248, 10, 144), Quaternion::EulerAnglesToQuaternion(0, 90, 180), assets->GetMesh("cubeMesh"), assets->GetMeshMaterial("nightSkyMat"), assets->GetShader("basicShader"), 10, "nightSky"));
+	world->AddGameObject(new PaintingObject(physicsCommon, physicsWorld, Vector3(103.6, 10, 46), Quaternion::EulerAnglesToQuaternion(0, -90, 180), assets->GetMesh("cubeMesh"), assets->GetMeshMaterial("screamPaintMat"), assets->GetShader("basicShader"), 10, "screamPaint"));
+	world->AddGameObject(new PaintingObject(physicsCommon, physicsWorld, Vector3(65.5, 10, 248), Quaternion::EulerAnglesToQuaternion(0, 0, 180), assets->GetMesh("cubeMesh"), assets->GetMeshMaterial("sunflowersMat"), assets->GetShader("basicShader"), 10, "sunflowers"));
 
 }
 

@@ -59,6 +59,7 @@ void SplitScreenGame::CreateSplatOnShoot() {
 			SceneContactPoint* closestCollision = world->Raycast(player->GetShootRay());
 			if (closestCollision->isHit) {
 				//world->AddPaintedPosition(closestCollision->hitPos, player->GetTeamColour());
+				std::cout << "X: " << closestCollision->hitPos.x << "Y: " << closestCollision->hitPos.y << "Z: " << closestCollision->hitPos.z << "\n";
 			}
 		}
 		index++;
