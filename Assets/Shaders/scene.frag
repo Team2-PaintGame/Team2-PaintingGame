@@ -8,10 +8,10 @@ uniform vec3	lightPos;
 uniform float	lightRadius;
 uniform vec4	lightColour;
 
-uniform vec3 paintedPos[1000];
-uniform vec3 paintedColor[1000];
+uniform vec3 paintedPos[500];
+uniform vec4 paintedColor[500];
 
-uniform vec4 paintColour;
+//uniform vec4 paintColour;
 
 uniform int numOfSplats;
 
