@@ -111,13 +111,10 @@ Gun* PaintingGame::CreateGun(NCL::Maths::Vector3 position, Team team) {
 void PaintingGame::AddSecurityAI(NCL::CSC8508::Vector3 position, PlayerBase* target1, PlayerBase* target2) // Vector3(-70.0f, 5.0f, 60.0f) // Change the hardcoded two targets
 {
 	std::unordered_map<std::string, MeshAnimation*> animations;
-	animations.insert(std::make_pair("idleAnimation", assets->GetMeshAnimation("mainCharIdleAnim")));
-	animations.insert(std::make_pair("moveAnimation", assets->GetMeshAnimation("mainCharRunAnim")));
+	animations.insert(std::make_pair("idleAnimation", assets->GetMeshAnimation("AiIdleAnim")));
+	animations.insert(std::make_pair("moveAnimation", assets->GetMeshAnimation("AiRunAnim")));
 
-//	world->AddGameObject(new SecurityGuard(physicsCommon, physicsWorld, "Security Guard", position, assets->GetMesh("mainChar"), assets->GetTexture("basicTex"), assets->GetShader("basicShader"), Vector3(5, 5, 5), target1, target2));
-
-
-	world->AddGameObject(new SecurityGuard(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("blueMainCharMat"), assets->GetShader("skinningShader"), animations, 4, target1, target2, world, assets, "Security Guard"));
-	//world->AddGameObject(new SecurityGuard(physicsCommon, physicsWorld, "Security Guard", position, assets->GetMesh("cubeMesh"), assets->GetTexture("basicTex"), assets->GetShader("basicShader"), Vector3(2, 2, 2), target1, target2));
+	world->AddGameObject(new SecurityGuard(physicsCommon, physicsWorld, position, assets->GetMesh("AiMesh"), assets->GetMeshMaterial("AiMat"), assets->GetShader("THIRDskinningShader"), animations, 4, target1, target2, world, assets, "Security Guard"));
+	
 }
 

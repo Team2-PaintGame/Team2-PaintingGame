@@ -19,6 +19,7 @@ namespace NCL {
 		ShaderBase* GetShader(const std::string& identifier) const;
 		void ReloadMeshes();
 		void ReloadShaders();
+		void ReloadDebug();
 
 		void Load();
 		//SoundBase* GetSound(const std::string& identifier);

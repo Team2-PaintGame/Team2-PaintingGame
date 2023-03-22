@@ -85,10 +85,10 @@ namespace NCL::CSC8508 {
 		//const float runForce = 250;
 		//const float sprintForce = 350;
 
-		const float slowForce = 3000;
+		const float slowForce = 2000;
 		const float walkForce = 3000;
-		const float runForce = 3000;
-		const float sprintForce = 3000;
+		const float runForce = 4000;
+		const float sprintForce = 5000;
 
 		//const float slowForce = 150;
 		//const float walkForce = 150;

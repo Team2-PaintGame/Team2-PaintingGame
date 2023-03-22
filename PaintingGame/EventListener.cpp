@@ -2,6 +2,7 @@
 #include "GameWorld.h"
 #include "Ink.h"
 #include "SecurityGuard.h"
+#include "Player.h"
 
 using namespace NCL::CSC8508;
 
@@ -25,12 +26,16 @@ void GameEventListener::onContact(const CollisionCallback::CallbackData& callbac
 				if ((obj->GetLayer() == Layer::Player && obj2->GetLayer() == Layer::Enemy) && contactPair.getEventType() == ContactPair::EventType::ContactStart)
 				{
 					SecurityGuard* security = (SecurityGuard*)userData2;
+					Player* player = (Player*)userData;
+					player->SetHasRespawnedTrue();
 					security->SetHasCaughtPlayerTrue();
 					security->CaughtPlayer();
 				}
 				else if ((obj->GetLayer() == Layer::Enemy && obj2->GetLayer() == Layer::Player) && contactPair.getEventType() == ContactPair::EventType::ContactStart)
 				{
 					SecurityGuard* security = (SecurityGuard*)userData;
+					Player* player = (Player*)userData2;
+					player->SetHasRespawnedTrue();
 					security->SetHasCaughtPlayerTrue();
 					security->CaughtPlayer();
 				}

@@ -30,7 +30,7 @@ namespace NCL {
 		struct DebugLinesRenderer {
 			GLuint vao;
 			GLuint vertVbo;
-			size_t count;
+			size_t count = 0;
 
 			DebugLinesRenderer() {
 				glGenVertexArrays(1, &vao);
@@ -46,7 +46,7 @@ namespace NCL {
 			GLuint vertVBO;
 			GLuint colourVBO;
 			GLuint texCoordVBO;
-			size_t count;
+			size_t count = 0;
 
 			DebugTextRenderer() {
 				glGenVertexArrays(1, &vao);
@@ -107,6 +107,15 @@ namespace NCL {
 
 			void BindDebugShader(ShaderBase* dShader) { debugShader = dShader; }
 
+			void ResetDebugRenderers()
+			{
+				debugLineRenderer = new DebugLinesRenderer();
+				debugTextRenderer = new DebugTextRenderer();
+
+				SetDebugStringBufferSizes(10000);
+				SetDebugLineBufferSizes(1000);
+			}
+
 			//RendererSettings settings, skybox, shadow!!!!!!!!!!!! lines, debug, set player class and its camera, fix camera class.
 		protected:
 			void RenderFrame()	override;
@@ -151,8 +160,8 @@ namespace NCL {
 			vector<Vector4> debugTextColours;
 			vector<Vector2> debugTextUVs;
 
-			DebugTextRenderer debugTextRenderer;
-			DebugLinesRenderer debugLineRenderer;
+			DebugTextRenderer* debugTextRenderer = nullptr;
+			DebugLinesRenderer* debugLineRenderer = nullptr;
 
 
 		};
