@@ -645,10 +645,8 @@ namespace NCL::CSC8508 {
 			force = 0;
 			return;
 		}
-		
 		int numWaypoints = navigationPath->waypoints.size();
-
-		
+				
 		float distanceToNextWaypoint = INT_MIN;
 		Vector3 nextWaypoint;
 		if (numWaypoints < 1)

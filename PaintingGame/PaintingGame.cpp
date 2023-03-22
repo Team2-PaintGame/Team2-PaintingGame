@@ -114,10 +114,7 @@ void PaintingGame::AddSecurityAI(NCL::CSC8508::Vector3 position, PlayerBase* tar
 	animations.insert(std::make_pair("idleAnimation", assets->GetMeshAnimation("AiIdleAnim")));
 	animations.insert(std::make_pair("moveAnimation", assets->GetMeshAnimation("AiRunAnim")));
 
-//	world->AddGameObject(new SecurityGuard(physicsCommon, physicsWorld, "Security Guard", position, assets->GetMesh("mainChar"), assets->GetTexture("basicTex"), assets->GetShader("basicShader"), Vector3(5, 5, 5), target1, target2));
-
-
 	world->AddGameObject(new SecurityGuard(physicsCommon, physicsWorld, position, assets->GetMesh("AiMesh"), assets->GetMeshMaterial("AiMat"), assets->GetShader("skinningShader"), animations, 4, target1, target2, world, assets, "Security Guard"));
-	//world->AddGameObject(new SecurityGuard(physicsCommon, physicsWorld, "Security Guard", position, assets->GetMesh("cubeMesh"), assets->GetTexture("basicTex"), assets->GetShader("basicShader"), Vector3(2, 2, 2), target1, target2));
+	
 }
 
