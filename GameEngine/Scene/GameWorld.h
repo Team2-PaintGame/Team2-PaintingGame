@@ -145,7 +145,9 @@ namespace NCL {
 
 			int GetTeamTwoScore() { return teamTwoScore; }
 
-
+			bool CleanNearbyPaint(Vector3 SecurityPos, float range);
+			Vector3 FindClosestPaintSplat(Vector3 position);
+			int GetSizePaintedPositions();
 
 		protected:
 			RaycastManager* raycastManager;

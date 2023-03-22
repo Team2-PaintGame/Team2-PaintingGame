@@ -31,6 +31,7 @@ GameWorld::GameWorld(reactphysics3d::PhysicsWorld* physicsWorld)	{
 	shuffleObjects		= false;
 	worldIDCounter		= 0;
 	worldStateCounter	= 0;
+	paintedPositions.reserve(1000);
 }
 
 GameWorld::~GameWorld()	{
@@ -182,4 +183,45 @@ void GameWorld::AddPaintedPosition(const Vector3& position, Vector4 team) {
 		}
 	}
 	paintedPositions.push_back(PaintSplat(position, colour));
+}
+
+bool GameWorld::CleanNearbyPaint(Vector3 SecurityPos, float range)
+{
+	bool hasCleaned = false;
+	for (auto paintPos = paintedPositions.begin(); paintPos != paintedPositions.end();)
+	{
+		float distance = (SecurityPos - paintPos->position).Length();
+		if (distance < range)
+		{
+			
+			paintPos = paintedPositions.erase(paintPos);
+			hasCleaned = true;
+		}
+		else
+		{
+			paintPos++;
+		}
+
+	}
+	return hasCleaned;
+}
+
+Vector3 GameWorld::FindClosestPaintSplat(Vector3 position)
+{
+	Vector3 paintPos;
+	float min = FLT_MAX;
+	for (auto i : paintedPositions)
+	{
+		float distance = (i.position - position).Length();
+		if (distance < min)
+		{
+			paintPos = i.position;
+		}
+	}
+	return paintPos;
+}
+
+int GameWorld::GetSizePaintedPositions()
+{
+	return paintedPositions.size();
 }

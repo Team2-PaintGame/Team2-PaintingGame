@@ -28,15 +28,20 @@ float Debug::renderingTime = 0.0f;
 int Debug::numberOfParticals = 0;
 int Debug::numberOfGameObjects = 0;
 int Debug::numberOfPaints = 0;
-int Debug::PageFaultCount = 0;
-int Debug::PeakWorkingSetSize = 0;
-int Debug::WorkingSetSize = 0;
-int Debug::QuotaPeakPagedPoolUsage = 0;
-int Debug::QuotaPagedPoolUsage = 0;
-int Debug::QuotaPeakNonPagedPoolUsage = 0;
-int Debug::QuotaNonPagedPoolUsage = 0;
-int Debug::PagefileUsage = 0;
-int Debug::PeakPagefileUsage = 0;
+DWORD Debug::PageFaultCount = 0;
+size_t Debug::PeakWorkingSetSize = 0;
+size_t Debug::WorkingSetSize = 0;
+size_t Debug::QuotaPeakPagedPoolUsage = 0;
+size_t Debug::QuotaPagedPoolUsage = 0;
+size_t Debug::QuotaPeakNonPagedPoolUsage = 0;
+size_t Debug::QuotaNonPagedPoolUsage = 0;
+size_t Debug::PagefileUsage = 0;
+size_t Debug::PeakPagefileUsage = 0;
+
+DWORDLONG Debug::totalVirtualMemory = 0;
+DWORDLONG Debug::usedVirtualMemory = 0;
+DWORDLONG Debug::totalPhysMemory = 0;
+DWORDLONG Debug::usedphysMemory = 0;
 
 
 void Debug::Print(const std::string& text, const Vector2& pos, const Vector4& colour) {
@@ -143,6 +148,16 @@ void NCL::Debug::ShowMemoryUsage(/*DWORD processID*/)
 {
 	//HANDLE hProcess;
 	PROCESS_MEMORY_COUNTERS pmc;
+
+	MEMORYSTATUSEX memInfo;
+	memInfo.dwLength = sizeof(MEMORYSTATUSEX);
+	GlobalMemoryStatusEx(&memInfo);
+
+	totalVirtualMemory = memInfo.ullTotalPageFile;
+	usedVirtualMemory = memInfo.ullTotalPageFile - memInfo.ullAvailPageFile;
+
+	totalPhysMemory = memInfo.ullTotalPhys;
+	usedphysMemory = memInfo.ullTotalPhys - memInfo.ullAvailPhys;
 
 	if (GetProcessMemoryInfo(GetCurrentProcess(), &pmc, sizeof(pmc)))
 	{
