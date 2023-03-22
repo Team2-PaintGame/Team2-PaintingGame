@@ -192,7 +192,7 @@ void OGLPaintingGameRenderer::RenderPaintSplat(OGLShader* shader) {
 			[&](int index, Vector3& pos, Vector4& col) {
 				std::string i = std::to_string(index);
 				glUniform3fv(glGetUniformLocation(shader->GetProgramID(), ("paintedPos[" + i + "]").c_str()), 1, pos.array);
-				glUniform4fv(glGetUniformLocation(shader->GetProgramID(), "paintColour"), 1, col.array);
+				glUniform4fv(glGetUniformLocation(shader->GetProgramID(), ("paintedColor[" + i + "]").c_str()), 1, col.array);
 			}
 		);
 		int splatVectorSize = glGetUniformLocation(shader->GetProgramID(), "numOfSplats");

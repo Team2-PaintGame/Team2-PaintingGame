@@ -9,6 +9,7 @@ uniform float	lightRadius;
 uniform vec4	lightColour;
 
 uniform vec3 paintedPos[1000];
+uniform vec3 paintedColor[1000];
 
 uniform vec4 paintColour;
 
@@ -84,7 +85,7 @@ void main(void)
 	for(int i = 0; i < numOfSplats;i++){
 		float distanceBetween = distance(paintedPos[i], IN.worldPos.xyz);
 		if (distanceBetween <= 5 - SplatNoise(IN.localPos.xyz)*(3+(0.1*(mod(i, 10))))){
-			albedo = paintColour;
+			albedo = paintedColor[i];
 		}
 	}
 	
