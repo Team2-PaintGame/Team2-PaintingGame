@@ -442,22 +442,31 @@ namespace NCL::CSC8508 {
 
 	void SecurityGuard::CaughtPlayer() {
 		if (chasedPlayer == nullptr) { return; }
-		chasedPlayer->GetRigidBody()->resetForce();
-		chasedPlayer->GetRigidBody()->resetTorque();
-		this->GetRigidBody()->resetForce();
-		this->GetRigidBody()->resetTorque();
 
-		reactphysics3d::Vector3 position(200, 5.0f, 200.0f);
+		chasedPlayer->GetRigidBody()->resetForce();
+		this->GetRigidBody()->resetForce();
+		reactphysics3d::Vector3 newVelocity(0, 0, 0);
+		this->GetRigidBody()->setLinearVelocity(newVelocity);
+
+
+		chasedPlayer->GetRigidBody()->setLinearVelocity(newVelocity);
+		reactphysics3d::Vector3 position(200, 15.0f, 200.0f);
 		reactphysics3d::Transform rp3d_transform(position, rp3d::Quaternion::identity());
 		chasedPlayer->GetRigidBody()->setTransform(rp3d_transform);
-		
-		chasedPlayer->GetRigidBody()->resetForce();
-		chasedPlayer->GetRigidBody()->resetTorque();
-		this->GetRigidBody()->resetForce();
-		this->GetRigidBody()->resetTorque();
 
-		chasedPlayer->GetRigidBody()->setTransform(rp3d_transform);
-		
+		chasedPlayer->GetRigidBody()->setLinearVelocity(newVelocity);
+		reactphysics3d::Vector3 position2(200, 10.0f, 200.0f);
+		reactphysics3d::Transform rp3d_transform2(position2, rp3d::Quaternion::identity());
+		chasedPlayer->GetRigidBody()->setTransform(rp3d_transform2);
+
+
+		chasedPlayer->GetRigidBody()->setLinearVelocity(newVelocity);
+		reactphysics3d::Vector3 position3(200, 5.0f, 200.0f);
+		reactphysics3d::Transform rp3d_transform3(position3, rp3d::Quaternion::identity());
+		chasedPlayer->GetRigidBody()->setTransform(rp3d_transform3);
+
+
+
 	}
 
 	GameObject* SecurityGuard::LookForPlayers()

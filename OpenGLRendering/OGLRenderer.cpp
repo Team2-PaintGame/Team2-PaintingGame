@@ -431,7 +431,7 @@ static void APIENTRY DebugCallback(GLenum source, GLenum type, GLuint id, GLenum
 	case GL_DEBUG_SEVERITY_LOW: severityName = "Priority(Low)"; break;
 	}
 
-	std::cout << "OpenGL Debug Output: " + sourceName + ", " + typeName + ", " + severityName + ", " + string(message) << std::endl;
+//	std::cout << "OpenGL Debug Output: " + sourceName + ", " + typeName + ", " + severityName + ", " + string(message) << std::endl;
 }
 #endif
 #endif
