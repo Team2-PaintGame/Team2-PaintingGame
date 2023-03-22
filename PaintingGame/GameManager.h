@@ -10,6 +10,7 @@ namespace NCL::CSC8508 {
 		GameManager(Window* window);
 		~GameManager();
 		bool RunGame(float dt);
+		void calculateRenderingTime();
 #ifdef _WIN32
 		static void LoadAssets(GameAssets* assets, OGLRenderer* renderer, HGLRC context);
 		static void FinishLoadingCallback();

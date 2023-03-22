@@ -23,6 +23,7 @@ namespace NCL {
 			renderObject->SetColour(color);
 
 			this->ink = ink;
+			ink->SetLayer(Layer::Paint);
 			this->reticle = reticle;
 		}
 		virtual void Update(float dt) {

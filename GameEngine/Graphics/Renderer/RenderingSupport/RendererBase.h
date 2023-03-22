@@ -11,6 +11,7 @@ https://research.ncl.ac.uk/game/
 #include "ShaderBase.h"
 #include "TextureBase.h"
 #include "MeshGeometry.h"
+#include <chrono>
 
 namespace NCL::Rendering {
 	enum class VerticalSyncState {
@@ -49,6 +50,11 @@ namespace NCL::Rendering {
 		virtual void BindScreen(void* screen) {};
 
 		virtual void BindDebugShader(ShaderBase* shader) {} //Currently we only override it in OGLPaintingGameRenderer
+
+		//measuring rendering time.
+		Timepoint rendererStartTime;
+		Timepoint rendererEndTime;
+
 	protected:
 		virtual void OnWindowResize(int w, int h) = 0;
 		virtual void OnWindowDetach() {}; //Most renderers won't care about this

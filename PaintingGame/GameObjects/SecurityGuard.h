@@ -16,29 +16,20 @@
 #include "NavigationPath.h"
 #include "NavigationMesh.h"
 #include"AnimationController.h"
+#include "Ink.h"
+#include "GameAssets.h"
 
 namespace NCL::CSC8508 {
 
-	class SecurityGuard : public /*GameObject*/ AnimatedObject
+	class SecurityGuard : public AnimatedObject
 	{
 	public:
-/*
-		//TextureBase Constructor
-		SecurityGuard(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position,
-			MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, const std::unordered_map<std::string, MeshAnimation*>& animations,
-			int size, GameObject* playerOne, GameObject* playerTwo, std::string objectName);
-*/
 		//Mesh Material Constructor
 		SecurityGuard(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position,
 			MeshGeometry* mesh, MeshMaterial* meshMaterial, ShaderBase* shader, const std::unordered_map<std::string, MeshAnimation*>& animations,
-			int size, GameObject* playerOne, GameObject* playerTwo, std::string objectName);
+			int size, GameObject* playerOne, GameObject* playerTwo, GameWorld* gameWorld, GameAssets* assets, std::string objectName);
 
-
-
-
-
-
-	virtual	~SecurityGuard();
+		virtual	~SecurityGuard();
 		virtual void Update(float dt); // should this be virutal??
 
 		void InitChooseDestination();
@@ -48,47 +39,79 @@ namespace NCL::CSC8508 {
 		void InitChaseThePlayer();
 		void InitAttackThePlayer();
 
+		void InitGoToPaint();
+		void InitCleanPaint();
+
 		void InitPatrolSequence();
 		void InitChaseSequence();
 		void InitRootSelector();
 		void InitBehaviorTree();
+		void InitSuperCleanSequence();
+		void InitChasePatrolSelector();
 
 		bool LookForPlayer(GameObject* player);
 		GameObject* LookForPlayers();
-		Vector3 ChooseDestination();
+	
 		void DisplayPathfinding();
 		void MoveSecurityGuard(Vector3 direction);
 		float DistanceToTarget(Vector3 destination);
 		GameObject* FindClosestPlayer();
 		void DetermineSpeed();
+		void DetermineChaseSpeed();
 		void RaycastAgainstPlayer(GameObject* player, SecurityCallbackClass* callbackClass, bool& isPlayerVisible);
 		void DrawNavTris();
 		void DrawTriRoute();
 		Vector3 GetForwardVector();
 		bool IsPlayerInFront(Vector3& playerPosition, Vector3& securityPosition);
 		bool IsInFieldOfView(Vector3 direction);
+		void SetIsBlindedTrue() { isBlinded = true; }
+		void SetIsBlindedFalse() { isBlinded = false; }
 
+		Vector3 ChooseRandomDestination();
+		Vector3 ChooseDestination();
+
+		void BubbleEmission() { ink->StartEmission(); }
+
+		void SetHasCaughtPlayerTrue() { hasCaughtPlayer = true; }
+		void CaughtPlayer();
+		void OutsideNavmeshRespawn(Vector3 startPos);
 	protected:
 
 		int state;
-		int nodeSize;
-		int gridWidth;
-		int gridHeight;
 
 		float force = 100;
-		const float slowForce = 100; // 100
-		const float walkForce = 100;  //150
-		const float runForce = 100;
+		//const float slowForce = 50; 
+		//const float walkForce = 100;
+		//const float runForce = 250;
+		//const float sprintForce = 350;
 
-		//const float slowForce = 1; // 100
-		//const float walkForce = 1;  //150
-		//const float runForce = 1;
+		const float slowForce = 2000;
+		const float walkForce = 3000;
+		const float runForce = 4000;
+		const float sprintForce = 5000;
 
-		float timeAccumulator = 0.0f;
+		//const float slowForce = 150;
+		//const float walkForce = 150;
+		//const float runForce = 150;
+		//const float sprintForce = 150;
+
+
+		bool isBlinded = false;
+		bool hasCaughtPlayer = false;
+
+		float chaseAccumulator = 0.0f;
+		float stuckAccumulator = 0.0f;
+		float blindTimer = 0.0f;
 
 		BehaviourSelector* rootSelector;
 		BehaviourSequence* patrolSequence;
 		BehaviourSequence* chaseSequence;
+	
+		BehaviourSequence* superCleanSequence;  
+		BehaviourSelector* chasePatrolSelector;	
+
+		BehaviourAction* goToPaint;			    
+		BehaviourAction* cleanPaint;			
 
 		BehaviourAction* chooseDestination;
 		BehaviourAction* goToDestination;
@@ -97,14 +120,6 @@ namespace NCL::CSC8508 {
 		BehaviourAction* chaseThePlayer;
 		BehaviourAction* attackThePlayer;
 
-		//rp3d::BoxShape* boundingVolume;
-//		rp3d::CollisionShape* boundingVolume;
-
-//	reactphysics3d::PhysicsWorld* physicsWorld;
-
-//		vector <Vector3> navigableNodes;
-		
-//		NavigationGrid* navigationGrid;
 		NavigationPath* navigationPath;
 		NavigationMesh* navigationMesh;
 
@@ -113,8 +128,9 @@ namespace NCL::CSC8508 {
 		GameObject* chasedPlayer;
 		SecurityCallbackClass* callbackPlayerOne;
 		SecurityCallbackClass* callbackPlayerTwo;
+		GameWorld* gameWorld;
 
-//		AnimationController* animationController = NULL;
+		Ink* ink = NULL;
 	};
 
 }

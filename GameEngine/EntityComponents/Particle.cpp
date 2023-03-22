@@ -2,7 +2,7 @@
 
 using namespace NCL;
 
-Particle::Particle(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Transform* emitterTransform, Vector3 particlePosition, float lifeSpan, float speed, Vector3 direction, bool enableGravity) : GameObject(physicsCommon, physicsWorld, "Particle") {
+Particle::Particle(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Transform* emitterTransform, Vector3 particlePosition, float lifeSpan, float speed, Vector3 direction, Vector4 colour, bool enableGravity, Layer layer) : GameObject(physicsCommon, physicsWorld, "Particle") {
 	transform
 		.SetPosition(emitterTransform->GetPosition() + particlePosition)
 		.SetScale(emitterTransform->GetScale())
@@ -11,8 +11,9 @@ Particle::Particle(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d:
 	this->lifeSpan = lifeSpan;
 	this->speed = speed;
 	this->direction = direction;
-
-	layer = Layer::Paint;
+	this->particleColour = colour;
+	//layer = Layer::Paint;
+	this->layer = layer;
 }
 
 void Particle::Update(float dt) {
@@ -31,7 +32,7 @@ void Particle::Update(float dt) {
 }
 
 
-CapsuleParticle::CapsuleParticle(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Transform* emitterTransform, Vector3 particlePosition, float lifeSpan, float speed, Vector3 direction, bool enableGravity) : Particle(physicsCommon, physicsWorld, emitterTransform, particlePosition, lifeSpan, speed, direction, enableGravity) {
+CapsuleParticle::CapsuleParticle(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Transform* emitterTransform, Vector3 particlePosition, float lifeSpan, float speed, Vector3 direction, bool enableGravity, Layer layer) : Particle(physicsCommon, physicsWorld, emitterTransform, particlePosition, lifeSpan, speed, direction, {0,0,0,}, enableGravity, layer) {
 	boundingVolume = physicsCommon.createCapsuleShape(transform.GetScale().x / 2.0f, transform.GetScale().x);
 	reactphysics3d::Transform rp3d_transform(~transform.GetPosition(), ~transform.GetOrientation());
 
@@ -48,7 +49,7 @@ CapsuleParticle::~CapsuleParticle() {
 	physicsCommon.destroyCapsuleShape(dynamic_cast<rp3d::CapsuleShape*>(boundingVolume));
 }
 
-SphereParticle::SphereParticle(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Transform* emitterTransform, Vector3 particlePosition, float lifeSpan, float speed, Vector3 direction, bool enableGravity) : Particle(physicsCommon, physicsWorld, emitterTransform, particlePosition, lifeSpan, speed, direction, enableGravity) {
+SphereParticle::SphereParticle(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Transform* emitterTransform, Vector3 particlePosition, float lifeSpan, float speed, Vector3 direction, Vector4 colour, bool enableGravity, Layer layer) : Particle(physicsCommon, physicsWorld, emitterTransform, particlePosition, lifeSpan, speed, direction, colour, enableGravity, layer) {
 	boundingVolume = physicsCommon.createSphereShape(transform.GetScale().x / 2.0f);
 	reactphysics3d::Transform rp3d_transform(~transform.GetPosition(), ~transform.GetOrientation());
 

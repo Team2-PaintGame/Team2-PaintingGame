@@ -1,6 +1,8 @@
 #include "EventListener.h"
 #include "GameWorld.h"
-
+#include "Ink.h"
+#include "SecurityGuard.h"
+#include "Player.h"
 
 using namespace NCL::CSC8508;
 
@@ -11,6 +13,35 @@ GameEventListener::GameEventListener(reactphysics3d::PhysicsWorld* physicsWorld,
 
 void GameEventListener::onContact(const CollisionCallback::CallbackData& callbackData)
 {
+	for (reactphysics3d::uint p = 0; p < callbackData.getNbContactPairs(); p++) {
+		reactphysics3d::CollisionCallback::ContactPair contactPair = callbackData.getContactPair(p);
+		GameObject* obj = nullptr;
+		if (void* userData = contactPair.getBody1()->getUserData())
+		{
+			obj = (GameObject*)userData;
+
+			if (void* userData2 = contactPair.getBody2()->getUserData())
+			{
+				GameObject* obj2 = (GameObject*)userData2;
+				if ((obj->GetLayer() == Layer::Player && obj2->GetLayer() == Layer::Enemy) && contactPair.getEventType() == ContactPair::EventType::ContactStart)
+				{
+					SecurityGuard* security = (SecurityGuard*)userData2;
+					Player* player = (Player*)userData;
+					player->SetHasRespawnedTrue();
+					security->SetHasCaughtPlayerTrue();
+					security->CaughtPlayer();
+				}
+				else if ((obj->GetLayer() == Layer::Enemy && obj2->GetLayer() == Layer::Player) && contactPair.getEventType() == ContactPair::EventType::ContactStart)
+				{
+					SecurityGuard* security = (SecurityGuard*)userData;
+					Player* player = (Player*)userData2;
+					player->SetHasRespawnedTrue();
+					security->SetHasCaughtPlayerTrue();
+					security->CaughtPlayer();
+				}
+			}
+		}
+	}
 }
 
 void GameEventListener::onTrigger(const reactphysics3d::OverlapCallback::CallbackData& callbackData)
@@ -28,6 +59,7 @@ void GameEventListener::onTrigger(const reactphysics3d::OverlapCallback::Callbac
 		reactphysics3d::CollisionBody* cb = nullptr;
 		GameObject* obj = nullptr;
 		bool valid = true;
+		
 		if (void* userData = overlapPair.getBody1()->getUserData())
 		{
 			obj = (GameObject*) userData;
@@ -39,7 +71,26 @@ void GameEventListener::onTrigger(const reactphysics3d::OverlapCallback::Callbac
 			{
 				GameObject* obj2 = (GameObject*)userData2;
 				valid &= !(obj2->GetLayer() == Layer::Paint || obj2->GetLayer() == Layer::Player);
+
+				if ((obj->GetLayer() == Layer::Paint && obj2->GetLayer() == Layer::Enemy)  )
+				{
+					SecurityGuard* security = (SecurityGuard*)userData2;
+					security->SetIsBlindedTrue();
+				}
+				else if ((obj->GetLayer() == Layer::Enemy && obj2->GetLayer() == Layer::Paint))
+				{
+					SecurityGuard* security = (SecurityGuard*)userData;
+					security->SetIsBlindedTrue();
+				}
+
+
+
+
+
+
 			}
+
+
 		}
 		else if (userData = overlapPair.getBody2()->getUserData())
 		{
@@ -50,10 +101,13 @@ void GameEventListener::onTrigger(const reactphysics3d::OverlapCallback::Callbac
 
 		if (obj && valid)
 		{
-			gameWorld->AddPaintedPosition(obj->GetTransform().GetPosition());
+			gameWorld->AddPaintedPosition(obj->GetTransform().GetPosition(), ((Particle*)obj)->GetColour());
 			obj->SetActive(false);
 			cb->setIsActive(false);
 		}
+
+
+		
 
        /* GameObjectIterator first;
         GameObjectIterator last;

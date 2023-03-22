@@ -3,6 +3,7 @@
 #include "SplashScreen.h"
 #include "MainMenuScreen.h"
 #include "LoadingScreen.h"
+#include <chrono>
 
 using namespace NCL;
 using namespace CSC8508;
@@ -19,12 +20,12 @@ GameManager::GameManager(Window* window) {
 	screenManager = new ScreenManager(gameAssets);
 	gameManager = this;
 
-	renderer->BindDebugShader(gameAssets->GetShader("debugShader"));
-
 #ifdef _WIN32
 	HGLRC context = ((OGLRenderer*)renderer)->CreateAnotherContext();
 	//((OGLRenderer*)renderer)->ResetContext();
 	((LoadingScreen*)screenManager->GetScreen(ScreenType::LoadingScreen))->SetThread(new std::thread(LoadAssets, gameAssets, (OGLRenderer*)renderer, context));
+#else
+	renderer->BindDebugShader(gameAssets->GetShader("debugShader"));
 #endif
 }
 
@@ -37,9 +38,21 @@ GameManager::~GameManager() {
 
 bool GameManager::RunGame(float dt) {
 	bool isRunning =  screenManager->Update(dt);
+
+	//gameAssets->ReloadDebug();
+	//renderer->BindDebugShader(gameAssets->GetShader("debugShader"));
+	((OGLRenderer*)renderer)->ResetDefaultContext();
 	renderer->BindScreen(screenManager->GetActiveScreen());
 	renderer->Render();
+	calculateRenderingTime();
+	Debug::UpdateRenderables(dt);
 	return isRunning;
+}
+
+void GameManager::calculateRenderingTime()
+{
+	std::chrono::microseconds duration = std::chrono::duration_cast<std::chrono::microseconds>(renderer->rendererEndTime - renderer->rendererStartTime);
+	Debug::ShowRenderTime(duration.count());
 }
 
 #ifdef _WIN32
@@ -63,5 +76,8 @@ void GameManager::FinishLoading()
 	gameAssets->ReloadShaders();
 	gameAssets->ReloadMeshes();
 	screenManager->LoadScreens();
+	renderer->BindDebugShader(gameAssets->GetShader("debugShader"));
+
+	((OGLPaintingGameRenderer*)renderer)->ResetDebugRenderers();
 }
 #endif

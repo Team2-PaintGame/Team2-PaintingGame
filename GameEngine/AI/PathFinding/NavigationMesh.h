@@ -23,6 +23,7 @@ namespace NCL {
 			void StringPull(Vector3 startPosition, Vector3 endPosition, NavigationPath& outPath);
 			void FindRouteVertices();
 			void FindPortalEdges(const Vector3& to);
+			
 
 		protected:
 			struct NavTri {
@@ -65,12 +66,18 @@ namespace NCL {
 			std::vector<NavTri> triRoute;
 			std::vector<Vector3> routeVertices;
 			std::vector<PortalEdge> portalEdges;
-
+			void SetIsOutNavMeshFalse() { isOutNavMesh = false; }
+			bool GetIsOutNavMesh() { return isOutNavMesh; }
 			void FindLeftAndRightVertex(Vector3 portalApex, int triIndex, Vector3& portalLeft, Vector3& portalRight);
 			NavTri* RemoveBestTri(std::vector<NavTri*>& list);
 			/*const*/ NavTri* GetTriForPosition(const Vector3& pos) /*const*/;
 			bool  TriInList(NavTri* n, std::vector<NavTri*>& list) /*const*/;
 			float Heuristic(NavTri* hNode, NavTri* endNode) /*const*/;
+			Vector3 FindClosestPoint(Vector3 to);
+			
+		protected:
+			bool isOutNavMesh = false;
+
 		};
 	}
 }

@@ -48,7 +48,7 @@ ShaderBase* NCL::GameAssets::GetShader(const std::string& identifier) const {
 }
 
 void GameAssets::LoadMeshes() {
-	meshes.insert(std::make_pair("floorMesh", loader->LoadMesh("BasicLVL.msh")));
+	meshes.insert(std::make_pair("floorMesh", loader->LoadMesh("BasicLVL1.msh")));
 	meshes.insert(std::make_pair("cubeMesh", loader->LoadMesh("cube.msh")));
 	meshes.insert(std::make_pair("mainChar", loader->LoadMesh("Aj_TPose.msh")));
 	meshes.insert(std::make_pair("sphereMesh", loader->LoadMesh("sphere.msh")));
@@ -56,6 +56,8 @@ void GameAssets::LoadMeshes() {
 	meshes.insert(std::make_pair("capsuleMesh", loader->LoadMesh("capsule.msh")));
 	meshes.insert(std::make_pair("gunMesh", loader->LoadMesh("PaintingGun.msh")));
 	meshes.insert(std::make_pair("quadMesh", loader->LoadMesh(MeshType::Quad)));
+
+	meshes.insert(std::make_pair("AiMesh", loader->LoadMesh("X Bot.msh")));
 }
 
 void GameAssets::LoadMeshMaterials() {
@@ -69,12 +71,17 @@ void GameAssets::LoadMeshMaterials() {
 	meshMaterials.insert(std::make_pair("screamPaintMat", loader->LoadMeshMaterial("screamPaint.mat")));
 	meshMaterials.insert(std::make_pair("sunflowersMat", loader->LoadMeshMaterial("sunflowers.mat")));
 	meshMaterials.insert(std::make_pair("gunMat", loader->LoadMeshMaterial("PaintingGun.mat")));
+
+	meshMaterials.insert(std::make_pair("AiMat", loader->LoadMeshMaterial("X Bot.mat")));
 }
 
 void GameAssets::LoadMeshAnimations() {
 	meshAnimations.insert(std::make_pair("mainCharTauntAnim", std::make_unique<MeshAnimation>("Taunt.anm")));
 	meshAnimations.insert(std::make_pair("mainCharIdleAnim", std::make_unique<MeshAnimation>("AJIdle.anm")));
 	meshAnimations.insert(std::make_pair("mainCharRunAnim", std::make_unique<MeshAnimation>("AJRun.anm")));
+
+	meshAnimations.insert(std::make_pair("AiIdleAnim", std::make_unique<MeshAnimation>("XBot_Idle.anm")));
+	meshAnimations.insert(std::make_pair("AiRunAnim", std::make_unique<MeshAnimation>("XBot_Running.anm")));
 }
 
 void GameAssets::LoadTextures() {
@@ -86,8 +93,8 @@ void GameAssets::LoadTextures() {
 	textures.insert(std::make_pair("goatTex", loader->LoadTexture("goat1.jpg")));
 	textures.insert(std::make_pair("doorTex", loader->LoadTexture("door.jpg")));
 	textures.insert(std::make_pair("gunFocusTex", loader->LoadTexture("gunFocusPoint.png")));
-	textures.insert(std::make_pair("splashScreenTex", loader->LoadTexture("Screens/bg.jpg"))); 
-	textures.insert(std::make_pair("mainMenuScreenTex", loader->LoadTexture("Screens/bg2.jpg")));
+	textures.insert(std::make_pair("splashScreenTex", loader->LoadTexture("Screens/bg.png"))); 
+	textures.insert(std::make_pair("mainMenuScreenTex", loader->LoadTexture("Screens/bg2.png")));
 }
 
 void GameAssets::LoadShaders() {
@@ -95,6 +102,7 @@ void GameAssets::LoadShaders() {
 	shaders.insert(std::make_pair("terrainShader", loader->LoadShader("terrain.vert", "terrain.frag")));
 	shaders.insert(std::make_pair("skinningShader", loader->LoadShader("skinning.vert", "character.frag")));
 	shaders.insert(std::make_pair("SecondskinningShader", loader->LoadShader("skinning.vert", "character.frag")));
+	shaders.insert(std::make_pair("THIRDskinningShader", loader->LoadShader("skinning.vert", "character.frag")));
 	shaders.insert(std::make_pair("screenShader", loader->LoadShader("screen.vert", "screen.frag")));
 	shaders.insert(std::make_pair("inkShader", loader->LoadShader("ink.vert", "ink.frag")));
 	shaders.insert(std::make_pair("debugShader", loader->LoadShader("Debug.vert", "Debug.frag")));
@@ -118,4 +126,9 @@ void GameAssets::ReloadShaders()
 	}
 	//shaders.clear();
 	//LoadShaders();
+}
+void GameAssets::ReloadDebug()
+{
+	shaders.erase("debugShader");
+	shaders.insert(std::make_pair("debugShader", loader->LoadShader("Debug.vert", "Debug.frag")));
 }
