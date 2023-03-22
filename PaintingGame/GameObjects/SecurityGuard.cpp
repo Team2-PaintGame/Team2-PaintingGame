@@ -2,7 +2,7 @@
 #include <fstream>
 #include "Assets.h"
 #include <cmath>
-
+#include "Player.h"
 #include <Window.h>
 
 namespace NCL::CSC8508 {
@@ -474,7 +474,7 @@ namespace NCL::CSC8508 {
 		bool isPlayerOneVisible = LookForPlayer(playerOne);
 		if (playerTwo == nullptr) // only one player game
 		{
-			if (isPlayerOneVisible) 
+			if (isPlayerOneVisible ) 
 			{
 				return playerOne;
 				//return nullptr;
@@ -523,6 +523,13 @@ namespace NCL::CSC8508 {
 	bool SecurityGuard::LookForPlayer(GameObject* player)
 	{
 		bool isPlayerVisible = false;
+
+		Player* play = (Player*)player;
+		if (play->GetHasRespawned())
+		{
+			return isPlayerVisible;
+		}
+
 
 		if (player == playerOne)
 		{
