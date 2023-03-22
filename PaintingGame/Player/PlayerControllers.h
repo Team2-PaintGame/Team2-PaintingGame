@@ -173,6 +173,11 @@ namespace NCL {
 
 			return cursorPosition;
 		}
+		void Update(float dt) override
+		{
+			gamepad.Poll();
+			PlayerController::Update(dt);
+		}
 	protected:
 		Vector2 cursorPosition;
 		PS4::PS4Gamepad gamepad;
