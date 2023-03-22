@@ -11,21 +11,21 @@ using namespace CSC8508;
 //TextureBase Constructor
 PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position,
 	MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, const std::unordered_map<std::string, MeshAnimation*>& animations,
-	int size, std::string objectName)
+	int size, std::string objectName, bool networked)
 	: AnimatedObject(physicsCommon, physicsWorld, position, mesh, texture, shader, animations, size, objectName) 
 {
 	AnimatedObject::SetAnimControler(animations);
-	SetMemberVariables(physicsCommon, physicsWorld, position, mesh, shader, size);
+	SetMemberVariables(physicsCommon, physicsWorld, position, mesh, shader, size, networked);
 	renderObject->SetDefaultTexture(texture);
 }
 
 //Mesh Material Constructor
 PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position,
 	MeshGeometry* mesh, MeshMaterial* meshMaterial, ShaderBase* shader, const std::unordered_map<std::string, MeshAnimation*>& animations,
-	int size, std::string objectName)
+	int size, std::string objectName, bool networked)
 	: AnimatedObject(physicsCommon, physicsWorld, position, mesh, meshMaterial, shader, animations, size, objectName) 
 {
-	SetMemberVariables(physicsCommon, physicsWorld, position, mesh, shader, size);
+	SetMemberVariables(physicsCommon, physicsWorld, position, mesh, shader, size, networked);
 	AnimatedObject::SetAnimControler(animations);
 	renderObject->LoadMaterialTextures(meshMaterial);
 	raycastManager = new RaycastManager();
@@ -42,8 +42,11 @@ PlayerBase::~PlayerBase() {
 }
 
 void PlayerBase::Update(float dt) {
-	camera->Update(dt);
-	CameraSpring(camera);
+	if (camera)
+	{
+		camera->Update(dt);
+		CameraSpring(camera);
+	}
 }
 
 void PlayerBase::SetYawPitch(float dx, float dy) {
@@ -60,7 +63,7 @@ void PlayerBase::SetYawPitch(float dx, float dy) {
 	}
 }
 
-void PlayerBase::SetMemberVariables(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, ShaderBase* shader, int size) {
+void PlayerBase::SetMemberVariables(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, ShaderBase* shader, int size, bool networked) {
 	
 	transform.SetScale(Vector3(size))
 			 .SetPosition(position);
@@ -81,7 +84,10 @@ void PlayerBase::SetMemberVariables(reactphysics3d::PhysicsCommon& physicsCommon
   
 	layer = Layer::Player;
 
-	camera = new Camera();
+	if (!networked)
+	{
+		camera = new Camera();
+	}
 }
 
 void PlayerBase::CameraSpring(Camera* cam) {

@@ -135,7 +135,7 @@ void NetworkedGame::ServerCreateClientPlayer(SpawnPacket* payload)
 {
 	// Server create client player and send packet
 	// back to client to create server character
-	ClientPlayer = CreatePlayer(payload->position, Team::Blue);
+	ClientPlayer = CreatePlayer(payload->position, Team::Blue, true);
 	ClientPlayer->GetTransform().SetPosition(payload->position);
 	ClientPlayerID = payload->playerID;
 	SpawnPacket packet;
@@ -148,7 +148,7 @@ void NetworkedGame::ServerCreateClientPlayer(SpawnPacket* payload)
 void NetworkedGame::ClientCreateServerPlayer(SpawnPacket* payload)
 {
 	// client creates server player
-	ServerPlayer = CreatePlayer(payload->position, Team::Red);
+	ServerPlayer = CreatePlayer(payload->position, Team::Red, true);
 	ServerPlayerID = payload->playerID;
 }
 
