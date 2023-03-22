@@ -424,7 +424,7 @@ Vector3 NavigationMesh::FindClosestPoint(Vector3 to) {
 		NavTri* test = GetTriForPosition(toPoint);
 		while (test == nullptr)
 		{
-			std::cout << "Not close enough\n";
+			//std::cout << "Not close enough\n";
 			ratio -= 0.05;
 			toPoint = centroid + centroidToPoint * ratio;
 			test = GetTriForPosition(toPoint);
