@@ -252,6 +252,7 @@ NCL::Player* NetworkedGame::SpawnNetworkedPlayer() {
 	if (thisClient) {
 		// send to server that player has been spawned
 		ClientPlayer = AddPlayer(Vector3(115.0f, 15.0f, 55.0f), Team::Blue);
+	//	AddSecurityAI(Vector3(100, 5, 100), ServerPlayer, ClientPlayer);
 		ClientPlayerID = 2;
 		SpawnPacket packet;
 		packet.position = ClientPlayer->GetTransform().GetPosition();

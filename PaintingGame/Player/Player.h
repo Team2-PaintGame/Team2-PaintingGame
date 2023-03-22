@@ -39,7 +39,12 @@ namespace NCL {
 		const reactphysics3d::Ray& GetShootRay() const { return shootRay; }
 
 		int GetTeamColour() { return playerTeam; }
-
+		bool GetHasRespawned() { return hasRespawned; }
+		void SetHasRespawnedTrue() { hasRespawned = true; }
+		void SetHasRespawnedFalse() { hasRespawned = false; }
+		float GetRespawnTimer() { return respawnTimer; }
+		void SetRespawnTimer(float dt) { respawnTimer += dt; }
+		void ResetSpawnTimer() { respawnTimer = 0.0f; }
 	protected:
 		void SetMemberVariables(Gun* gun);
 		//AnimationController* animationController = NULL;
@@ -47,5 +52,7 @@ namespace NCL {
 		Gun* gun = NULL;
 		int playerTeam; // 0 is Red, 1 is Blue
 		const Vector3 gunOffset = Vector3(0.5, 1, -4);
+		bool hasRespawned = false;
+		float respawnTimer = 0.0f;
 	};
 }

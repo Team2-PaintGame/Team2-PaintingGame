@@ -24,6 +24,17 @@ void PlayerController::Update(float dt) {
 	fwdAxis.Normalise();
 	rightAxis.Normalise();
 
+	if (player->GetHasRespawned() == true)
+	{
+		player->SetRespawnTimer(dt);
+		if (player->GetRespawnTimer() >= 3.0)
+		{
+			player->ResetSpawnTimer();
+			player->SetHasRespawnedFalse();
+		}
+		return;
+	}
+	
 	float force = 5000.f;
 	float side_damping = 0.33f;
 
