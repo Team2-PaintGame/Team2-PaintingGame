@@ -167,8 +167,14 @@ void	GNMShader::SubmitShaderSwitch(Gnmx::GnmxGfxContext& cmdList) {
 	cmdList.setPsShader(pixelShader, &pixelCache);
 }
 
-int		GNMShader::GetConstantBufferIndex(const string &name) {
-	sce::Shader::Binary::Buffer* constantBuffer = vertexBinary.getBufferResourceByName(name.c_str());
+int		GNMShader::GetConstantBufferIndex(const string &name, const sce::Gnm::ShaderStage& shaderStage) {
+	sce::Shader::Binary::Buffer* constantBuffer;
+	if (shaderStage == Gnm::kShaderStageVs) {
+		constantBuffer = vertexBinary.getBufferResourceByName(name.c_str());
+	}
+	else if (shaderStage == Gnm::kShaderStagePs) {
+		constantBuffer = pixelBinary.getBufferResourceByName(name.c_str());
+	}
 	if (!constantBuffer) {
 		return -1;
 	}
