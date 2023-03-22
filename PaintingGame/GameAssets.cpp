@@ -56,6 +56,8 @@ void GameAssets::LoadMeshes() {
 	meshes.insert(std::make_pair("capsuleMesh", loader->LoadMesh("capsule.msh")));
 	meshes.insert(std::make_pair("gunMesh", loader->LoadMesh("PaintingGun.msh")));
 	meshes.insert(std::make_pair("quadMesh", loader->LoadMesh(MeshType::Quad)));
+
+	meshes.insert(std::make_pair("AiMesh", loader->LoadMesh("X Bot.msh")));
 }
 
 void GameAssets::LoadMeshMaterials() {
@@ -69,12 +71,17 @@ void GameAssets::LoadMeshMaterials() {
 	meshMaterials.insert(std::make_pair("screamPaintMat", loader->LoadMeshMaterial("screamPaint.mat")));
 	meshMaterials.insert(std::make_pair("sunflowersMat", loader->LoadMeshMaterial("sunflowers.mat")));
 	meshMaterials.insert(std::make_pair("gunMat", loader->LoadMeshMaterial("PaintingGun.mat")));
+
+	meshMaterials.insert(std::make_pair("AiMat", loader->LoadMeshMaterial("X Bot.mat")));
 }
 
 void GameAssets::LoadMeshAnimations() {
 	meshAnimations.insert(std::make_pair("mainCharTauntAnim", std::make_unique<MeshAnimation>("Taunt.anm")));
 	meshAnimations.insert(std::make_pair("mainCharIdleAnim", std::make_unique<MeshAnimation>("AJIdle.anm")));
 	meshAnimations.insert(std::make_pair("mainCharRunAnim", std::make_unique<MeshAnimation>("AJRun.anm")));
+
+	meshAnimations.insert(std::make_pair("AiIdleAnim", std::make_unique<MeshAnimation>("XBot_Idle.anm")));
+	meshAnimations.insert(std::make_pair("AiRunAnim", std::make_unique<MeshAnimation>("XBot_Running.anm")));
 }
 
 void GameAssets::LoadTextures() {
