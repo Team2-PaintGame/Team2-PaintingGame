@@ -33,6 +33,7 @@ namespace NCL {
 		virtual void Update(float dt);
 		void SetYawPitch(float dx, float dy);
 		float GetPitch() const { return pitch; }
+		void SetPitch(float ptch) { pitch = std::clamp(ptch, -25.f, 25.0f); } // used for networking, sorry
 		float GetYaw() const { return yaw; }
 		virtual void Shoot() {}
 

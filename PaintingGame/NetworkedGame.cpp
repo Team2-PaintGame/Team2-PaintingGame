@@ -109,6 +109,7 @@ void NetworkedGame::UpdateAsServer(float dt) {
 	packet.position = ServerPlayer->GetTransform().GetPosition();
 	packet.playerID = ServerPlayerID;
 	packet.startedShooting = justShot;
+	packet.gunPitch = ServerPlayer->GetPitch();
 	thisServer->SendGlobalPacket(packet);
 	thisServer->UpdateServer();
 }
@@ -126,6 +127,7 @@ void NetworkedGame::UpdateAsClient(float dt) {
 		packet.position = ClientPlayer->GetTransform().GetPosition();
 		packet.playerID = ClientPlayerID;
 		packet.startedShooting = justShot;
+		packet.gunPitch = ClientPlayer->GetPitch();
 		thisClient->SendPacket(packet);
 	}
 	thisClient->UpdateClient();
@@ -158,6 +160,7 @@ void NetworkedGame::EnactClientUpdatesOnServer(ClientPacket* payload)
 	if (ClientPlayer) {
 		ClientPlayer->GetTransform().SetOrientation(payload->orientation);
 		ClientPlayer->GetTransform().SetPosition(payload->position);
+		ClientPlayer->SetPitch(payload->gunPitch);
 
 		reactphysics3d::Transform newRBTransform = reactphysics3d::Transform(~payload->position, ~payload->orientation);
 		ClientPlayer->GetRigidBody()->setTransform(newRBTransform);
@@ -174,6 +177,7 @@ void NetworkedGame::EnactServerUpdatesOnClient(ServerPacket* payload)
 	if (ServerPlayer) {
 		ServerPlayer->GetTransform().SetOrientation(payload->orientation);
 		ServerPlayer->GetTransform().SetPosition(payload->position);
+		ServerPlayer->SetPitch( payload->gunPitch);
 
 		reactphysics3d::Transform newRBTransform = reactphysics3d::Transform(~payload->position, ~payload->orientation);
 		ServerPlayer->GetRigidBody()->setTransform(newRBTransform);

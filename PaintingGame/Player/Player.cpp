@@ -19,7 +19,8 @@ void Player::Update(float dt) {
 		}
 		else
 		{
-			gun->GetTransform().SetOrientation(transform.GetOrientation());
+			Vector3 euler = transform.GetOrientation().ToEuler();
+			gun->GetTransform().SetOrientation(Quaternion::EulerAnglesToQuaternion(pitch, euler.y, euler.z));
 		}
 	}
 }
