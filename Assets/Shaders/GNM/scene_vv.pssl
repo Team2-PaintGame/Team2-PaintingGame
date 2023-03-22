@@ -8,6 +8,7 @@ ConstantBuffer RenderObjectData {
 
 ConstantBuffer CameraData {
 	column_major matrix viewProjMatrix = float4x4(1.0f);
+	float3 cameraPos;
 };
 
 struct VS_INPUT {

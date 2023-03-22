@@ -15,7 +15,6 @@ struct PerFrameData {
 };
 
 struct PsUniformData {
-    //Material* m_pMaterial;
     PerFrameData* pFrameData;
 };
 

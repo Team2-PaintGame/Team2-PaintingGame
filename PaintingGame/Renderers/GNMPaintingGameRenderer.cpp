@@ -3,7 +3,7 @@
 #include "GameWorld.h"
 #include <GNMTexture.h>
 #include "GNMShader.h"
-#include "GNMMesh.h"
+#include <GNMMesh.h>
 #include "Camera.h"
 #include "Debug.h"
 
@@ -18,6 +18,15 @@ GNMPaintingGameRenderer::GNMPaintingGameRenderer(Window& w) : GNMRenderer(w) {
 	lightRadius = 1000.0f;
 	lightPosition = Vector3(0.0f, 20.0f, 0.0f);
 
+	shaderVariables.cameraVariables = (CameraVariables*)onionAllocator->allocate(sizeof(CameraVariables), Gnm::kEmbeddedDataAlignment4);
+	shaderVariables.renderObjectVariables = (RenderObjectVariables*)onionAllocator->allocate(sizeof(RenderObjectVariables), Gnm::kEmbeddedDataAlignment4);
+
+	shaderBuffers.cameraBuffer.initAsConstantBuffer(shaderVariables.cameraVariables, sizeof(CameraVariables));
+	shaderBuffers.cameraBuffer.setResourceMemoryType(Gnm::kResourceMemoryTypeRO); // it's a constant buffer, so read-only is OK
+
+	shaderBuffers.objBuffer.initAsConstantBuffer(shaderVariables.renderObjectVariables, sizeof(RenderObjectVariables));
+	shaderBuffers.objBuffer.setResourceMemoryType(Gnm::kResourceMemoryTypeRO); // it's a constant buffer, so read-only is OK
+	
 	//SetDebugStringBufferSizes(10000);
 	//SetDebugLineBufferSizes(1000);
 }
@@ -67,87 +76,77 @@ void GNMPaintingGameRenderer::RenderGameScreen() { //change this to RenderScreen
 	//glEnable(GL_BLEND);
 	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	////send camera things and light things to shader
-	//boundScreen->GetSceneNode()->OperateOnCameras(
-	//	[&](Camera* cam) {
-	//		cam->SetPerspectiveCameraParameters(Window::GetWindow()->GetScreenAspect() * cam->GetAspectMultiplier());
-	//		glViewport(cam->GetVpStartPos().x * windowWidth, cam->GetVpStartPos().y * windowWidth, windowWidth * cam->GetVpSize().x, windowHeight * cam->GetVpSize().y);
-	//		Matrix4 viewMatrix = cam->BuildViewMatrix();
-	//		Matrix4 projMatrix = cam->BuildProjectionMatrix();
-	//		Vector3 camPos = cam->GetPosition();
-	//		ShaderVariablesLocations locations;
-	//		OGLShader* activeShader = nullptr;
-	//		for (const auto& i : activeObjects) {
-	//			if (i->GetIsOccluded()) {
-	//				glEnable(GL_CULL_FACE);
-	//				glCullFace(GL_BACK);
-	//				glEnable(GL_DEPTH_TEST);
-	//			}
-	//			else {
-	//				glDisable(GL_CULL_FACE);
-	//				glDisable(GL_DEPTH_TEST);
-	//			}
-	//			OGLShader* shader = (OGLShader*)(i)->GetShader();
-	//			BindShader(shader);
-	//			if (activeShader != shader) {
-	//				locations.projLocation = glGetUniformLocation(shader->GetProgramID(), "projMatrix");
-	//				locations.viewLocation = glGetUniformLocation(shader->GetProgramID(), "viewMatrix");
-	//				locations.shadowLocation = glGetUniformLocation(shader->GetProgramID(), "shadowMatrix");
-	//				locations.colourLocation = glGetUniformLocation(shader->GetProgramID(), "objectColour");
-	//				locations.hasVColLocation = glGetUniformLocation(shader->GetProgramID(), "hasVertexColours");
-	//				locations.hasTexLocation = glGetUniformLocation(shader->GetProgramID(), "hasTexture");
-	//				locations.useFogLocation = glGetUniformLocation(shader->GetProgramID(), "useFog");
-	//				locations.fogColourLocation = glGetUniformLocation(shader->GetProgramID(), "fogColour");
-	//				locations.skyboxTexLocation = glGetUniformLocation(shader->GetProgramID(), "skyboxTex");
-	//				locations.lightPosLocation = glGetUniformLocation(shader->GetProgramID(), "lightPos");
-	//				locations.lightColourLocation = glGetUniformLocation(shader->GetProgramID(), "lightColour");
-	//				locations.lightRadiusLocation = glGetUniformLocation(shader->GetProgramID(), "lightRadius");
-	//				locations.cameraLocation = glGetUniformLocation(shader->GetProgramID(), "cameraPos");
-	//				locations.jointsLocation = glGetUniformLocation(shader->GetProgramID(), "joints");
-	//				locations.shadowTexLocation = glGetUniformLocation(shader->GetProgramID(), "shadowTex");
+	boundScreen->GetSceneNode()->OperateOnCameras(
+		[&](Camera* cam) {
+			cam->SetPerspectiveCameraParameters(Window::GetWindow()->GetScreenAspect() * cam->GetAspectMultiplier());
+			currentGFXContext->setupScreenViewport(cam->GetVpStartPos().x * currentGNMBuffer->colourTarget.getWidth(), cam->GetVpStartPos().y * currentGNMBuffer->colourTarget.getWidth(), currentGNMBuffer->colourTarget.getWidth() * cam->GetVpSize().x, currentGNMBuffer->colourTarget.getHeight() * cam->GetVpSize().y, 0.5f, 0.5f);
+			
+			shaderVariables.cameraVariables->viewProjMatrix = cam->BuildProjectionMatrix() * cam->BuildViewMatrix();
+			shaderVariables.cameraVariables->cameraPos = cam->GetPosition();
 
+			for (const auto& i : activeObjects) {
+				//Primitive Setup State
+				Gnm::PrimitiveSetup primitiveSetup;
+				primitiveSetup.init();
+				primitiveSetup.setFrontFace(Gnm::kPrimitiveSetupFrontFaceCcw);
 
-	//				glUniform3fv(locations.cameraLocation, 1, camPos.array);
-	//				glUniformMatrix4fv(locations.projLocation, 1, false, (float*)&projMatrix);
-	//				glUniformMatrix4fv(locations.viewLocation, 1, false, (float*)&viewMatrix);
-	//				glUniform3fv(locations.lightPosLocation, 1, (float*)&lightPosition);
-	//				glUniform4fv(locations.lightColourLocation, 1, (float*)&lightColour);
-	//				glUniform1f(locations.lightRadiusLocation, lightRadius);
-	//				//glUniform1i(locations.shadowTexLocation, 1);
+				////Screen Access State
+				Gnm::DepthStencilControl dsc;
+				dsc.init();
+				dsc.setDepthControl(Gnm::kDepthControlZWriteEnable, Gnm::kCompareFuncLessEqual);
 
-	//				////binding skybox texture to shader:
-	//				//glUniform1i(locations.skyboxTexLocation, 0);
-	//				//glActiveTexture(GL_TEXTURE0);
-	//				//glBindTexture(GL_TEXTURE_2D, skybox->GetFinalTexID());
-	//				//glGenerateMipmap(GL_TEXTURE_2D);
-	//				//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+				if (i->GetIsOccluded()) {
+					primitiveSetup.setCullFace(Gnm::kPrimitiveSetupCullFaceBack);
+					dsc.setDepthEnable(true);
+				}
+				else {
+					primitiveSetup.setCullFace(Gnm::kPrimitiveSetupCullFaceNone);
+					dsc.setDepthEnable(false);
+				}
+				currentGFXContext->setPrimitiveSetup(primitiveSetup);
+				currentGFXContext->setDepthStencilControl(dsc);
 
-	//				activeShader = shader;
-	//			}
+				GNMShader* shader = (GNMShader*)(i)->GetShader();
 
-	//			SendModelMatrices(shader, i);
+				SendModelMatrices(shader, i);
+				//send color data
+				shaderVariables.renderObjectVariables->objectColour = i->GetColour();
+				shaderVariables.renderObjectVariables->hasVertexColours = !(*i).GetMesh()->GetColourData().empty();
 
-	//			Vector4 colour = i->GetColour();
-	//			glUniform4fv(locations.colourLocation, 1, colour.array);
+				if (i->isSingleTextured()) {
+					RenderWithDefaultTexture(i);
+				}
+				else {
+					RenderWithMultipleTexture(i);
+				}
+				if (i->IsRigged()) {
+					vector<Matrix4> frameMatrices;
+					i->GetFrameMatrices(frameMatrices);
+					//glUniformMatrix4fv(locations.jointsLocation, frameMatrices.size(), false, (float*)frameMatrices.data());
+				}
+				RenderPaintSplat(shader);
+				
+				
+				int objIndex = shader->GetConstantBufferIndex("RenderObjectData");
+				int camIndex = shader->GetConstantBufferIndex("CameraData");
 
-	//			glUniform1i(locations.hasVColLocation, !(*i).GetMesh()->GetColourData().empty());
+				currentGFXContext->setConstantBuffers(Gnm::kShaderStageVs, objIndex, 1, &shaderBuffers.objBuffer);
+				currentGFXContext->setConstantBuffers(Gnm::kShaderStageVs, camIndex, 1, &shaderBuffers.cameraBuffer);
 
-	//			if (i->isSingleTextured()) {
-	//				RenderWithDefaultTexture(locations, i);
-	//			}
-	//			else {
-	//				RenderWithMultipleTexture(locations, i);
-	//			}
-	//			if (i->IsRigged()) {
-	//				vector<Matrix4> frameMatrices;
-	//				i->GetFrameMatrices(frameMatrices);
-	//				glUniformMatrix4fv(locations.jointsLocation, frameMatrices.size(), false, (float*)frameMatrices.data());
-	//			}
-	//			RenderPaintSplat(shader);
-	//		}
-	//	}
-	//);
-	//RenderDebugInformation();
-	//boundScreen->RenderMenu();
+				Gnm::Sampler trilinearSampler;
+				trilinearSampler.init();
+				trilinearSampler.setMipFilterMode(Gnm::kMipFilterModeLinear);
+
+				currentGFXContext->setTextures(Gnm::kShaderStagePs, 0, 1, &((GNMTexture*)(i->GetDefaultTexture()))->GetAPITexture());
+				currentGFXContext->setSamplers(Gnm::kShaderStagePs, 0, 1, &trilinearSampler);
+
+				((GNMShader*)(i->GetShader()))->SubmitShaderSwitch(*currentGFXContext);
+				((GNMMesh*)(i->GetMesh()))->SubmitDraw(*currentGFXContext, Gnm::ShaderStage::kShaderStageVs);
+			}
+		}
+	);
+	RenderDebugInformation();
+	boundScreen->RenderMenu();
 }
 
 void GNMPaintingGameRenderer::RenderPaintSplat(GNMShader* shader) {
@@ -184,24 +183,24 @@ void GNMPaintingGameRenderer::SortObjectList() {
 }
 
 void GNMPaintingGameRenderer::SendModelMatrices(GNMShader* shader, const RenderObject* r) {
-	/*unsigned int numInstances = r->GetInstanceCount();
+
+
+	unsigned int numInstances = r->GetInstanceCount();
 	if (r->GetIsInstanced()) {
 		if (numInstances == 0) {
 			return;
 		}
-		std::vector<Transform*> transforms = r->GetTransforms();
+		/*std::vector<Transform*> transforms = r->GetTransforms();
 		for (int i = 0; i < numInstances; i++) {
 			std::string index = std::to_string(i);
 			Matrix4 modelMatrix = transforms[i]->GetMatrix();
 			int modelArrayLocation = glGetUniformLocation(shader->GetProgramID(), ("modelMatrices[" + index + "]").c_str());
 			glUniformMatrix4fv(modelArrayLocation, 1, false, (float*)&modelMatrix);
-		}
+		}*/
 	}
 	else {
-		Matrix4 modelMatrix = r->GetTransform()->GetMatrix();
-		int modelLocation = glGetUniformLocation(shader->GetProgramID(), "modelMatrix");
-		glUniformMatrix4fv(modelLocation, 1, false, (float*)&modelMatrix);
-	}*/
+		shaderVariables.renderObjectVariables->modelMatrix = r->GetTransform()->GetMatrix();
+	}
 }
 
 void GNMPaintingGameRenderer::RenderWithDefaultTexture(const RenderObject* r) {

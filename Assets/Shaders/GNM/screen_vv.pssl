@@ -2,8 +2,6 @@ struct VS_INPUT
 {
 	float3 Position		: POSITION0;
 	float2 UV			: TEXCOORD0;
-	float3 Normal		: TEXCOORD1;
-	float3 Tangent		: TEXCOORD2;
 };
 
 struct VS_OUTPUT

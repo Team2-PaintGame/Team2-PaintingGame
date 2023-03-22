@@ -15,12 +15,33 @@ namespace NCL {
 			~DebugTextRenderer() {}
 		};
 
+		struct ShaderBuffers {
+			Gnm::Buffer	cameraBuffer;
+			Gnm::Buffer objBuffer;
+		};
+		
+		struct RenderObjectVariables {
+			Matrix4 modelMatrix;
+			bool hasVertexColours;
+			Vector4 objectColour;
+		};
+
+		struct CameraVariables {
+			Matrix4 viewProjMatrix;
+			Vector3 cameraPos;
+		};
+
+		struct ShaderVariables {
+			CameraVariables* cameraVariables;
+			RenderObjectVariables* renderObjectVariables;
+		};
+
 		class GNMPaintingGameRenderer : public GNMRenderer {
 		public:
 			GNMPaintingGameRenderer(Window& w);
 			virtual ~GNMPaintingGameRenderer();
-			virtual void BindScreen(void* screen) { boundScreen = (BaseScreen*)screen; };
-			void BindDebugShader(ShaderBase* dShader) { debugShader = dShader; }
+			virtual void BindScreen(void* screen) override { boundScreen = (BaseScreen*)screen; };
+			void BindDebugShader(ShaderBase* dShader) override { debugShader = dShader; }
 		protected:
 			void RenderFrame()	override;
 
@@ -58,6 +79,9 @@ namespace NCL {
 
 			DebugTextRenderer debugTextRenderer;
 			DebugLinesRenderer debugLineRenderer;
+
+			ShaderBuffers shaderBuffers;
+			ShaderVariables shaderVariables;
 		};
 
 		// Concrete factory for creating Painting Game OpenGL renderer
