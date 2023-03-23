@@ -213,7 +213,7 @@ Vector3 GameWorld::FindClosestPaintSplat(Vector3 position)
 	for (auto i : paintedPositions)
 	{
 		float distance = (i.position - position).Length();
-		if (distance < min)
+		if (distance < min && i.position.y < 10)
 		{
 			paintPos = i.position;
 		}

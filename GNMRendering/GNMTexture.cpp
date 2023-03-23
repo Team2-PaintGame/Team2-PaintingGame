@@ -1,14 +1,15 @@
-#ifdef _ORBIS
+#ifdef __ORBIS__
 #include "GNMTexture.h"
 #include <fstream>
 #include <gnf.h>
-
-#include <.\graphics\api_gnm\toolkit\allocators.h>
-#include <.\graphics\api_gnm\toolkit\stack_allocator.h>
+#include <..\samples\sample_code\graphics\api_gnm\toolkit\allocators.h>
+#include <..\samples\sample_code\graphics\api_gnm\toolkit\stack_allocator.h>
+#include <TextureLoader.h>
+#include "Assets.h"
 
 using namespace sce;
-using namespace NCL::PS4;
-using namespace NCL::GNM;
+using namespace NCL;
+using namespace Rendering;
 
 GNMTexture::GNMTexture()
 {
@@ -59,5 +60,31 @@ GNMTexture* GNMTexture::LoadTextureFromFile(const std::string& filename) {
 	file.close();
 	delete[] rawContents;
 	return tex;
+}
+
+TextureBase* GNMTexture::RGBATextureFromFilename(const std::string& name) {
+
+	std::string binaryFilename = name.substr(0, name.find_last_of('.')) + ".gnf";
+	std::string realPath = Assets::TEXTUREDIR + binaryFilename;
+	return LoadTextureFromFile(realPath);
+
+	/*std::ifstream file(name, std::ios::binary);
+
+	if (!file) {
+		return NULL;
+	}
+
+	char* texData = nullptr;
+	int width = 0;
+	int height = 0;
+	int channels = 0;
+	int flags = 0;
+	TextureLoader::LoadTexture(name, texData, width, height, channels, flags);
+
+	TextureBase* gnmTex = LoadTextureFromFile(name);
+
+	free(texData);
+
+	return gnmTex;*/
 }
 #endif

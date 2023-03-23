@@ -1,0 +1,107 @@
+//struct Light {
+	//float3	lightPos;
+	//float1	lightRadius;
+	//float4	lightColour;
+//};
+//
+//struct PerFrameData {
+    //Light light;
+	//float3 cameraPos;
+	//bool hasTexture;
+	//float3 paintedPos[1000];
+	//int numOfSplats;
+//};
+
+
+ConstantBuffer FragmentData {
+	float3	lightPos;
+	float1	lightRadius;
+	float4	lightColour;
+	float3 cameraPos;
+	bool hasTexture;
+	//float3 paintedPos[1000];
+	//int numOfSplats;
+}
+
+SamplerState samp0 : register(s0);
+Texture2D colorMap : register( t0 );
+
+struct VS_INPUT {
+	float4 Position		: S_POSITION;
+	float2 UV			: TEXCOORD0;
+	float4 Colour		: TEXCOORD1;
+	float3 Normal		: NORMAL;
+	float3 WorldPos		: WPOS;
+	//float4 ShadowProj	: TEXCOORD2;
+};
+
+float4 modulus(float4 x){return x - floor(x * (1.0/289.0)) * 289.0;}
+float4 permutate(float4 x){return modulus(((x * 34.0) + 1.0) * x);}
+
+float SplatNoise(float3 inWorldPos) {
+	float3 floorP = floor(inWorldPos);
+	float3 dist = inWorldPos - floorP;
+	dist = dist * dist * (3.0 - 2.0 * dist);
+
+	float4 b = floorP.xxyy + float4(0.0, 1.0, 0.0, 1.0);
+	float4 permB = permutate(b.xyxy);
+	float4 permB2 = permutate(permB.xyxy + b.zzww);
+
+	float4 c = permB2 + floorP.zzzz;
+	float4 permC = permutate(c);
+	float4 permC2 = permutate(c + 1.0);
+
+	float4 fractalC = frac(permC * (1.0/41.0));
+	float4 fractalC2 = frac(permC2 * (1.0/41.0));
+
+	float4 shapePass = fractalC2 * dist.z + fractalC * (1.0 - dist.z);
+	float2 shapePass2 = shapePass.yw * dist.x + shapePass.xz * (1.0 - dist.x);
+
+	return shapePass2.y * dist.y + shapePass2.x * (1.0 - dist.y);
+}
+
+
+float4 main(VS_INPUT In) : S_TARGET_OUTPUT {
+	
+	float3 incident = normalize(lightPos - In.WorldPos);
+	float lambert  = max (0.0 , dot ( incident , In.Normal )) * 0.9; 
+	
+	float3 viewDir = normalize ( cameraPos - In.WorldPos );
+	float3 halfDir = normalize ( incident + viewDir );
+
+	float rFactor = max (0.0 , dot ( halfDir , In.Normal ));
+	float sFactor = pow ( rFactor , 100.0);
+	
+	float4 albedo = In.Colour;
+	
+	if(hasTexture) {
+	 albedo *= colorMap.Sample(samp0, In.UV.xy);
+	}
+	
+	//for(int i = 0; i < numOfSplats;i++){
+		//float distanceBetween = distance(paintedPos[i], In.WorldPos);
+		//if (distanceBetween <= 5 - SplatNoise(In.WorldPos)){
+			//albedo = float4(float3(0.51,1,0.1),1);
+		//}
+	//}
+	
+	albedo.rgb = pow(albedo.rgb, float3(2.2));
+	
+	albedo.rgb = albedo.rgb * 0.05f; //ambient
+	
+	albedo.rgb += albedo.rgb * lightColour.rgb * lambert; //diffuse light
+	
+	albedo.rgb += lightColour.rgb * sFactor; //specular light
+	
+	albedo.rgb = pow(albedo.rgb, float3(1.0 / 2.2f));
+	
+	albedo.a = albedo.a;
+
+
+	float3x3 testmat = float3x3(1);
+	float3 testvec = float3(0);
+
+	float3 answer = mul(testmat, testvec);
+
+	return albedo + float4(answer,1);
+}  

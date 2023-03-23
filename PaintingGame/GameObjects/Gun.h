@@ -18,7 +18,7 @@ namespace NCL {
 				.SetScale(Vector3(size))
 				.SetPosition(position);
 
-			renderObject = new RenderObject(&transform, mesh, shader);
+			renderObject = new CSC8508::RenderObject(&transform, mesh, shader);
 			renderObject->LoadMaterialTextures(material);
 			renderObject->SetColour(color);
 
@@ -35,6 +35,14 @@ namespace NCL {
 		}
 		void Shoot() {
 			ink->StartEmission();
+		}
+
+		bool didJustShoot() {
+			return ink->isJustStarting();
+		}
+
+		bool isShooting() {
+			return ink->isEmitting();
 		}
 	protected:
 		Ink* ink = NULL;

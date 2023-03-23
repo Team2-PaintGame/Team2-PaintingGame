@@ -4,6 +4,7 @@
 #include "StateTransition.h"
 
 #include <map>
+#include <unordered_map>
 #include <string>
 
 namespace NCL {

@@ -1,5 +1,5 @@
 #pragma once
-#ifdef _ORBIS
+#ifdef __ORBIS__
 #include "PS4MemoryAware.h"
 
 #include <gnmx.h>

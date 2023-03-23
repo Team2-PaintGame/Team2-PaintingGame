@@ -5,7 +5,6 @@
 #include "Debug.h"
 using namespace NCL;
 using namespace CSC8508;
-using namespace std;
 
 NavigationMesh::NavigationMesh()
 {
@@ -13,7 +12,7 @@ NavigationMesh::NavigationMesh()
 
 NavigationMesh::NavigationMesh(const std::string&filename)
 {
-	ifstream file(Assets::DATADIR + filename);
+	std::ifstream file(Assets::DATADIR + filename);
 
 	int numVertices = 0;
 	int numIndices	= 0;
@@ -147,7 +146,7 @@ bool NavigationMesh::FindPath(const Vector3& from, const Vector3& to, Navigation
 
 void NavigationMesh::FindRouteVertices() {
 	routeVertices.clear();
-	vector<NavTri>::reverse_iterator rit = triRoute.rbegin();
+	std::vector<NavTri>::reverse_iterator rit = triRoute.rbegin();
 	for (; rit != triRoute.rend(); rit++) {
 		for (int i = 0; i < 3; ++i)
 		{
@@ -323,7 +322,7 @@ void NavigationMesh::StringPull(Vector3 startPosition, Vector3 endPosition, Navi
 
 void NavigationMesh::FindPortalEdges(const Vector3& to) {
 	int numTris = triRoute.size();
-	vector<NavTri>::reverse_iterator it = triRoute.rbegin();
+	std::vector<NavTri>::reverse_iterator it = triRoute.rbegin();
 	int i = 0;
 	portalEdges.clear();
 	for (; it != triRoute.rend() - 1; it++)

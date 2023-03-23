@@ -45,11 +45,20 @@ namespace NCL {
 		void SetRunTime(float duration) {
 			this->duration = duration;
 		}
+		float GetDuration() { return duration; }
 		virtual void Update(float dt);
 		virtual ~ParticleSystem();
 		void SetLooping(bool val) { looping = val; }
 		void StartEmission();					// If needed to run particle simulation again if looping is not enabled
 		size_t GetParticalsSize() { return particles.size(); };
+
+		bool isJustStarting() {
+			return elapsedTime < 0.015f;
+		}
+
+		bool isEmitting() {
+			return elapsedTime > 0.0f;
+		}
 	protected:
 		void SetMemberVariables(Vector3 emitterPosition, MeshGeometry* mesh, ShaderBase* shader, bool enableGravity, float startSize, float startLifetime, float startSpeed, bool playOnAwake);
 		void GenerateParticles();
@@ -148,7 +157,7 @@ namespace NCL {
 
 		emitter.SetTransform(&transform);
 
-		renderObject = new RenderObject(transforms, mesh, shader);
+		renderObject = new CSC8508::RenderObject(transforms, mesh, shader);
 		renderObject->SetInstanceCount(particles.size());
 		renderObject->SetIsInstanced(true);
 
