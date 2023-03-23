@@ -79,11 +79,13 @@ void GameAssets::LoadMeshAnimations() {
 }
 
 void GameAssets::LoadTextures() {
-	textures.insert(std::make_pair("basicTex", loader->LoadTexture("checkerboard.png")));
+	textures.insert(std::make_pair("basicTex", loader->LoadTexture("WhiteMarble.jpg")));
+//	textures.insert(std::make_pair("basicTex", loader->LoadTexture("checkerboard.png")));
 	textures.insert(std::make_pair("loadingTex", loader->LoadTexture("loadingSprites.png")));
 	textures.insert(std::make_pair("gunFocusTex", loader->LoadTexture("gunFocusPoint.png")));
 	textures.insert(std::make_pair("splashScreenTex", loader->LoadTexture("Screens/bg.png"))); 
 	textures.insert(std::make_pair("mainMenuScreenTex", loader->LoadTexture("Screens/bg2.png")));
+
 }
 
 void GameAssets::LoadShaders() {

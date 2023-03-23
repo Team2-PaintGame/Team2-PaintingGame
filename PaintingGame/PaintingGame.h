@@ -55,7 +55,7 @@ namespace NCL {
 
 			//container for cameras
 			std::vector<Camera*> activeCameras;
-			
+			uint32_t seed;
 		};
 	}
 }
