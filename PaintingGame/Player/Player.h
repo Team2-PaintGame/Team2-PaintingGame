@@ -15,8 +15,8 @@ namespace NCL {
 		//TextureBase Constructor
 		Player(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, 
 			TextureBase* texture, ShaderBase* shader, const std::unordered_map<std::string, MeshAnimation*>& animations, int size, int team, Gun* gun,
-			std::string objectName)
-			: PlayerBase(physicsCommon, physicsWorld, position, mesh, texture, shader, animations, size, objectName)
+			std::string objectName, bool networked = false)
+			: PlayerBase(physicsCommon, physicsWorld, position, mesh, texture, shader, animations, size, objectName, networked)
 		{
 			SetMemberVariables(gun);
 			playerTeam = team;
@@ -24,8 +24,8 @@ namespace NCL {
 		//Mesh Material Constructor
 		Player(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh,
 			MeshMaterial* meshMaterial, ShaderBase* shader, const std::unordered_map<std::string, MeshAnimation*>& animations, int size, int team, Gun* gun,
-			std::string objectName)
-			: PlayerBase(physicsCommon, physicsWorld, position, mesh, meshMaterial, shader, animations, size, objectName) 
+			std::string objectName, bool networked = false)
+			: PlayerBase(physicsCommon, physicsWorld, position, mesh, meshMaterial, shader, animations, size, objectName, networked) 
 		{
 			SetMemberVariables(gun);
 			playerTeam = team;

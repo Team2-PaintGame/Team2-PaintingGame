@@ -11,21 +11,21 @@ using namespace CSC8508;
 //TextureBase Constructor
 PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position,
 	MeshGeometry* mesh, TextureBase* texture, ShaderBase* shader, const std::unordered_map<std::string, MeshAnimation*>& animations,
-	int size, std::string objectName)
+	int size, std::string objectName, bool networked)
 	: AnimatedObject(physicsCommon, physicsWorld, position, mesh, texture, shader, animations, size, objectName) 
 {
 	AnimatedObject::SetAnimControler(animations);
-	SetMemberVariables(physicsCommon, physicsWorld, position, mesh, shader, size);
+	SetMemberVariables(physicsCommon, physicsWorld, position, mesh, shader, size, networked);
 	renderObject->SetDefaultTexture(texture);
 }
 
 //Mesh Material Constructor
 PlayerBase::PlayerBase(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position,
 	MeshGeometry* mesh, MeshMaterial* meshMaterial, ShaderBase* shader, const std::unordered_map<std::string, MeshAnimation*>& animations,
-	int size, std::string objectName)
+	int size, std::string objectName, bool networked)
 	: AnimatedObject(physicsCommon, physicsWorld, position, mesh, meshMaterial, shader, animations, size, objectName) 
 {
-	SetMemberVariables(physicsCommon, physicsWorld, position, mesh, shader, size);
+	SetMemberVariables(physicsCommon, physicsWorld, position, mesh, shader, size, networked);
 	AnimatedObject::SetAnimControler(animations);
 	renderObject->LoadMaterialTextures(meshMaterial);
 	raycastManager = new RaycastManager();
@@ -42,8 +42,11 @@ PlayerBase::~PlayerBase() {
 }
 
 void PlayerBase::Update(float dt) {
-	camera->Update(dt);
-	CameraSpring(camera);
+	if (camera)
+	{
+		camera->Update(dt);
+		CameraSpring(camera);
+	}
 }
 
 void PlayerBase::SetYawPitch(float dx, float dy) {
@@ -60,7 +63,7 @@ void PlayerBase::SetYawPitch(float dx, float dy) {
 	}
 }
 
-void PlayerBase::SetMemberVariables(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, ShaderBase* shader, int size) {
+void PlayerBase::SetMemberVariables(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, ShaderBase* shader, int size, bool networked) {
 	
 	transform.SetScale(Vector3(size))
 			 .SetPosition(position);
@@ -81,22 +84,28 @@ void PlayerBase::SetMemberVariables(reactphysics3d::PhysicsCommon& physicsCommon
   
 	layer = Layer::Player;
 
-	camera = new Camera();
+	if (!networked)
+	{
+		camera = new Camera();
+	}
 }
 
 void PlayerBase::CameraSpring(Camera* cam) {
 
 	RaycastManager raycastManager = RaycastManager();
 
-	ray = reactphysics3d::Ray(~transform.GetPosition(), ~transform.GetPosition() + ~camera->GetNormalizedRotation() * camera->GetMaxOffSet().Length());
-	//Debug::DrawLine(transform.GetPosition(), ray.point2, Vector4(1, 1, 1, 1),1.0f);
-
+	ray = reactphysics3d::Ray(~transform.GetPosition(), ~transform.GetPosition() + ~camera->GetNormalizedRotation() * (camera->GetMaxOffSet().Length() + 15)) ;
+//	ray = reactphysics3d::Ray(~transform.GetPosition(), ~camera->GetPosition());
+	
 	
 	 physicsWorld->raycast(ray, &raycastManager);
 	 if (raycastManager.isHit()) { //if it hits something
 		 SceneContactPoint* closestCollision = raycastManager.getHit();
 		 Vector3 new_rotated_offset = closestCollision->hitPos - ~transform.GetPosition();
-		 camera->SetOffsetFromPlayer(camera->GetMaxOffSet().Normalised() * new_rotated_offset.Length());
+		 Vector3 newOffest = camera->GetMaxOffSet().Normalised() * (new_rotated_offset.Length() / 2 );
+//		 camera->SetOffsetFromPlayer(camera->GetMaxOffSet().Normalised() * new_rotated_offset.Length());
+		 camera->SetOffsetFromPlayer(newOffest);
+		// Debug::DrawLine(transform.GetPosition(), ray.point2, Vector4(1, 1, 1, 1), 0.50f);
 	 }
 	 else {
 		 camera->SetOffsetFromPlayer(camera->GetMaxOffSet());
