@@ -11,11 +11,6 @@
 #include "AnimationController.h"
 #include "PaintingObject.h"
 #include "Ink.h"
-#ifdef _WIN32
-#include "../Audio/SoundSystem.h"
-#include "../Audio/Sound.h"
-#include "../Audio/SoundEmitter.h"
-#endif
 #include <iostream>
 #include "EventListener.h"
 #include "GameTimer.h"
@@ -39,6 +34,7 @@ PaintingGame::PaintingGame(GameAssets* assets) {
 	timer = GameTimer();
 
 	maxSplats = 10000;
+
 #ifdef _WIN32
 	glGenBuffers(1, &paintSplatSSBO);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, paintSplatSSBO);
@@ -124,11 +120,6 @@ Player* PaintingGame::CreatePlayer(NCL::Maths::Vector3 position,Team team, bool 
 		player =  new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("blueMainCharMat"), assets->GetShader("SecondskinningShader"), animations, 5, 1, CreateGun(position, team), "Blue Player", networked);
 	}
 
-#ifdef _WIN32
-	std::string soundPath = "C:/Users/alwin/OneDrive/Documents/TeamProjectV4/Assets/Sounds/14615__man__canon.wav";
-	Sound* shootingSound = new Sound(soundPath);
-	player->SetShootingSound(shootingSound);
-#endif // _WIN32
 	
 	world->AddGameObject(player);
 	return player;

@@ -30,13 +30,10 @@ int main() {
 	w->SetConsolePosition(1950, 100);
 	while (w->UpdateWindow()) {
 		float dt = w->GetTimer()->GetTimeDeltaSeconds();
-	//	w->LockMouseToWindow(true);
 		if (dt > 0.5f) {
 			std::cout << "Skipping large time delta: " << dt << std::endl;
 			continue; //must have hit a breakpoint or something to have a 1 second frame time!
 		}
-
-	
 
 		w->SetTitle("Painting Game Frame time: " + std::to_string(1000.0f * dt));
 		if (!gameManager.RunGame(dt)) {

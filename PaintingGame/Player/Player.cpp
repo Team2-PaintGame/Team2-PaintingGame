@@ -37,9 +37,6 @@ void Player::Shoot() {
 	//Debug::DrawLine(startPos, endPos, Vector4(1, 1, 1, 1), 3);
 	gun->Shoot();
 	Debug::DrawLine(startPos, endPos, Vector4(1, 1, 1, 1), 3);
-#ifdef _WIN32
-	shootingSound->Play();
-#endif
 }
 
 void Player::SetMemberVariables(Gun* gun) {
@@ -52,9 +49,3 @@ void Player::SetMemberVariables(Gun* gun) {
 	layer = Layer::Player;
 	this->gun = gun;
 }
-
-#ifdef _WIN32
-void Player::SetShootingSound(Sound* sound) { 
-	shootingSound = sound;
-}
-#endif

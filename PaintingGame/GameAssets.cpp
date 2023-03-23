@@ -1,5 +1,8 @@
 #include "GameAssets.h"
 
+
+#include "Assets.h"
+
 using namespace NCL;
 using namespace Assets;
 
@@ -46,6 +49,7 @@ TextureBase* NCL::GameAssets::GetTexture(const std::string& identifier) const {
 ShaderBase* NCL::GameAssets::GetShader(const std::string& identifier) const {
 	return shaders.count(identifier) ? shaders.at(identifier).get() : nullptr;
 }
+
 
 void GameAssets::LoadMeshes() {
 	meshes.insert(std::make_pair("floorMesh", loader->LoadMesh("BasicLVL1.msh")));
