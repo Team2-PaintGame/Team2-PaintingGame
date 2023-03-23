@@ -28,6 +28,7 @@ float Debug::renderingTime = 0.0f;
 int Debug::numberOfParticals = 0;
 int Debug::numberOfGameObjects = 0;
 int Debug::numberOfPaints = 0;
+#ifdef _WIN32
 DWORD Debug::PageFaultCount = 0;
 size_t Debug::PeakWorkingSetSize = 0;
 size_t Debug::WorkingSetSize = 0;
@@ -42,7 +43,7 @@ DWORDLONG Debug::totalVirtualMemory = 0;
 DWORDLONG Debug::usedVirtualMemory = 0;
 DWORDLONG Debug::totalPhysMemory = 0;
 DWORDLONG Debug::usedphysMemory = 0;
-
+#endif
 
 void Debug::Print(const std::string& text, const Vector2& pos, const Vector4& colour) {
 	DebugStringEntry newEntry;
@@ -146,6 +147,7 @@ void NCL::Debug::DrawFPS()
 
 void NCL::Debug::ShowMemoryUsage(/*DWORD processID*/)
 {
+#ifdef _WIN32
 	//HANDLE hProcess;
 	PROCESS_MEMORY_COUNTERS pmc;
 
@@ -171,7 +173,7 @@ void NCL::Debug::ShowMemoryUsage(/*DWORD processID*/)
 		PagefileUsage = pmc.PagefileUsage;
 		PeakPagefileUsage = pmc.PeakPagefileUsage;
 	}
-
+#endif
 	//CloseHandle(hProcess);
 }
 

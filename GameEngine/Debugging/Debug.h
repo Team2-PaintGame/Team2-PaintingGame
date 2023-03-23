@@ -3,9 +3,12 @@
 #include "Vector4.h"
 #include "Matrix4.h"
 #include "SimpleFont.h"
-#include <windows.h>
 #include <stdio.h>
+#ifdef _WIN32
 #include <Psapi.h>
+#include <windows.h>
+#endif // _WIN32
+
 
 namespace NCL {
 	using namespace NCL::Maths;
@@ -58,6 +61,7 @@ namespace NCL {
 		static int numberOfGameObjects;
 		static int numberOfPaints;
 
+#ifdef _WIN32
 		static DWORD PageFaultCount;
 		static size_t PeakWorkingSetSize;
 		static size_t WorkingSetSize;
@@ -72,7 +76,7 @@ namespace NCL {
 		static DWORDLONG usedVirtualMemory;
 		static DWORDLONG totalPhysMemory;
 		static DWORDLONG usedphysMemory;
-
+#endif
 
 		static const Vector4 RED;
 		static const Vector4 GREEN;

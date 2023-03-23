@@ -2,9 +2,7 @@
 #include "Debug.h"
 #include "PaintingGame.h"
 #include "GameManager.h"
-#include <windows.h>
 #include <stdio.h>
-#include <Psapi.h>
 
 using namespace NCL;
 using namespace CSC8508;

@@ -1,4 +1,5 @@
 #include "LoadingScreen.h"
+#ifdef _WIN32
 #include "GameScreen.h"
 #include "HUDOnLoad.h"
 #include "OGLTexture.h"
@@ -58,3 +59,4 @@ PushdownState::PushdownResult LoadingScreen::onStateChange(PushdownState** newSt
 		return PushdownResult::NoChange;
 	}
 }
+#endif

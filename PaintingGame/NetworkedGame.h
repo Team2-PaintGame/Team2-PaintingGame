@@ -1,4 +1,5 @@
 #pragma once
+#ifdef _WIN32
 #include "PaintingGame.h"
 #include <NetworkBase.h>
 #include <NetworkObject.h>
@@ -74,4 +75,4 @@ namespace NCL {
 		};
 	}
 }
-
+#endif

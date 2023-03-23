@@ -16,7 +16,7 @@ namespace NCL {
 				.SetScale(scale)
 				.SetPosition(position);
 
-			renderObject = new RenderObject(&transform, mesh, shader);
+			renderObject = new CSC8508::RenderObject(&transform, mesh, shader);
 			renderObject->SetDefaultTexture(texture);
 			renderObject->SetIsOccluded(false);
 		}

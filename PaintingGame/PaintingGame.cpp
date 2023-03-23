@@ -34,14 +34,13 @@ PaintingGame::PaintingGame(GameAssets* assets) {
 	timer = GameTimer();
 
 	maxSplats = 10000;
-
+#ifdef _WIN32
 	glGenBuffers(1, &paintSplatSSBO);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, paintSplatSSBO);
 	glBufferData(GL_SHADER_STORAGE_BUFFER, maxSplats * sizeof(PaintSplat), NULL, GL_DYNAMIC_DRAW);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 4, paintSplatSSBO);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-	
-
+#endif
 }
 
 PaintingGame::~PaintingGame() {
@@ -135,6 +134,7 @@ void PaintingGame::AddSecurityAI(NCL::CSC8508::Vector3 position, PlayerBase* tar
 
 void PaintingGame::SendPaintSplatData()
 {
+#ifdef _WIN32
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, paintSplatSSBO);
 
 	for (int i = 0; i < world->GetNumPaintedPositions(); i++) {
@@ -176,6 +176,7 @@ void PaintingGame::SendPaintSplatData()
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 	world->splatsToChangeColour.clear();
 	world->cleanedSplats.clear();
+#endif
 }
 
 
