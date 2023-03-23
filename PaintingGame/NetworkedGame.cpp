@@ -143,9 +143,10 @@ void NetworkedGame::ServerCreateClientPlayer(SpawnPacket* payload)
 	SpawnPacket packet;
 	packet.playerID = ServerPlayerID;
 	packet.position = ServerPlayer->GetTransform().GetPosition();
+	packet.seed = seed;
 	thisServer->SendGlobalPacket(packet);
 	thisServer->UpdateServer();
-	AddSecurityAI(Vector3(100, 5, 100), ClientPlayer, ServerPlayer);
+	AddSecurityAI(Vector3(100, 5, 100), ClientPlayer, ServerPlayer, packet.seed);
 }
 
 void NetworkedGame::ClientCreateServerPlayer(SpawnPacket* payload)
@@ -153,7 +154,7 @@ void NetworkedGame::ClientCreateServerPlayer(SpawnPacket* payload)
 	// client creates server player
 	ServerPlayer = CreatePlayer(payload->position, Team::Red, true);
 	ServerPlayerID = payload->playerID;
-	AddSecurityAI(Vector3(100, 5, 100), ClientPlayer, ServerPlayer);
+	AddSecurityAI(Vector3(100, 5, 100), ClientPlayer, ServerPlayer, payload->seed);
 }
 
 void NetworkedGame::EnactClientUpdatesOnServer(ClientPacket* payload)

@@ -36,7 +36,7 @@ namespace NCL {
 			Player* CreatePlayer(Vector3 position, Team team, bool networked = false);
 			virtual Player* AddPlayer(Vector3 position, Team team) = 0;
 			Gun* CreateGun(Vector3 position, Team team);
-			virtual void AddSecurityAI(Vector3 position, PlayerBase* target1, PlayerBase* target2);
+			virtual void AddSecurityAI(Vector3 position, PlayerBase* target1, PlayerBase* target2, uint32_t seed);
 			GameWorld* world;
 
 			bool useGravity = true;
