@@ -1,6 +1,4 @@
-#pragma once
 #ifdef __ORBIS__
-#include "AssetLoader.h"
 #include "GNMAssetLoader.h"
 #include "GNMTexture.h"
 #include "GNMMesh.h"
@@ -11,12 +9,11 @@ using namespace GNM;
 using namespace Assets;
 	
 GNMAssetLoader::GNMAssetLoader() {
-	TextureLoader::RegisterAPILoadFunction(GNMTexture::LoadTextureFromFile);
+	TextureLoader::RegisterAPILoadFunction(GNMTexture::RGBATextureFromFilename);
 }
 
 MeshGeometry* GNMAssetLoader::LoadMesh(const string& name) {
 	GNMMesh* mesh = new GNMMesh(name);
-	mesh->SetPrimitiveType(GeometryPrimitive::Triangles);
 	mesh->UploadToGPU();
 	return mesh;
 }

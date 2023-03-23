@@ -6,6 +6,8 @@
 #include "OGLShader.h"
 #include "Camera.h"
 #include "Debug.h"
+#include "LoadingScreen.h"
+#include "HUDOnLoad.h"
 
 using namespace NCL;
 using namespace CSC8508;
@@ -17,8 +19,10 @@ OGLPaintingGameRenderer::OGLPaintingGameRenderer(Window& w) : OGLRenderer(w) {
 	lightRadius = 1000.0f;
 	lightPosition = Vector3(0.0f, 20.0f, 0.0f);
 
+#ifdef _ORBIS
 	SetDebugStringBufferSizes(10000);
 	SetDebugLineBufferSizes(1000);
+#endif
 }
 
 OGLPaintingGameRenderer::~OGLPaintingGameRenderer() {
@@ -26,19 +30,28 @@ OGLPaintingGameRenderer::~OGLPaintingGameRenderer() {
 }
 
 void OGLPaintingGameRenderer::RenderFrame() {	
+	
 	if (boundScreen) {
 		if (boundScreen->GetScreenType() == ScreenType::GameScreen) {
 			BuildObjectList();
 			SortObjectList();
 			RenderGameScreen();
+
+			NewRenderLines();
+			glDisable(GL_CULL_FACE); //Todo - text indices are going the wrong way...
+			glDisable(GL_BLEND);
+			glDisable(GL_DEPTH_TEST);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			
+			NewRenderText();
+			glDisable(GL_BLEND);
+			glEnable(GL_DEPTH_TEST);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		}
 		else {
 			RenderBasicScreen();
 		}
 	}
-
-	NewRenderLines();
-	NewRenderText();
 }
 
 void OGLPaintingGameRenderer::CreateImGuiContext() {
@@ -60,15 +73,29 @@ void OGLPaintingGameRenderer::DeleteImGuiContext() {
 	ImGui::DestroyContext();
 }
 void OGLPaintingGameRenderer::RenderBasicScreen() { //change this to render static obj
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glViewport(0, 0, windowWidth, windowHeight);
 	RenderObject* r = boundScreen->GetSceneNode()->GetRenderObject();
 	BindShader(r->GetShader());
 	BindMesh(r->GetMesh());
 	BindTextureToShader(r->GetDefaultTexture(), "mainTex", 0);
 	DrawBoundMesh();
+
+	if (boundScreen->GetScreenType() == ScreenType::LoadingScreen)
+	{
+		r = ((LoadingScreen*)boundScreen)->GetLoader();
+		BindShader(r->GetShader());
+		BindMesh(r->GetMesh());
+		BindTextureToShader(r->GetDefaultTexture(), "mainTex", 0);
+		DrawBoundMesh();
+
+		SendModelMatrices((OGLShader*)r->GetShader(), r);
+	}
 	boundScreen->RenderMenu();
 }
 void OGLPaintingGameRenderer::RenderGameScreen() { //change this to RenderScreen
+	rendererStartTime = std::chrono::high_resolution_clock::now();
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	//send camera things and light things to shader
@@ -151,23 +178,29 @@ void OGLPaintingGameRenderer::RenderGameScreen() { //change this to RenderScreen
 			}
 		}
 	);
+
 	RenderDebugInformation();
 	boundScreen->RenderMenu();
+	rendererEndTime = std::chrono::high_resolution_clock::now();
 }
+
+
 
 void OGLPaintingGameRenderer::RenderPaintSplat(OGLShader* shader) {
 	GameWorld* world = boundScreen->GetSceneNode()->GetWorld();
 	if (world) {
-		world->OperateOnPaintedPositions(
-			[&](int index, Vector3& pos) {
+		/*world->OperateOnPaintedPositions(
+			[&](int index, Vector3& pos, Vector4& col) {
 				std::string i = std::to_string(index);
 				glUniform3fv(glGetUniformLocation(shader->GetProgramID(), ("paintedPos[" + i + "]").c_str()), 1, pos.array);
+				glUniform4fv(glGetUniformLocation(shader->GetProgramID(), ("paintedColor[" + i + "]").c_str()), 1, col.array);
 			}
-		);
+		);*/
 		int splatVectorSize = glGetUniformLocation(shader->GetProgramID(), "numOfSplats");
 		glUniform1i(splatVectorSize, world->GetNumPaintedPositions());
 	}
 }
+
 
 void OGLPaintingGameRenderer::BuildObjectList() {
 	activeObjects.clear();
@@ -312,14 +345,14 @@ void OGLPaintingGameRenderer::NewRenderText() {
 	}
 
 
-	glBindBuffer(GL_ARRAY_BUFFER, debugTextRenderer.vertVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, debugTextRenderer->vertVBO);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, frameVertCount * sizeof(Vector3), debugTextPos.data());
-	glBindBuffer(GL_ARRAY_BUFFER, debugTextRenderer.colourVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, debugTextRenderer->colourVBO);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, frameVertCount * sizeof(Vector4), debugTextColours.data());
-	glBindBuffer(GL_ARRAY_BUFFER, debugTextRenderer.texCoordVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, debugTextRenderer->texCoordVBO);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, frameVertCount * sizeof(Vector2), debugTextUVs.data());
 
-	glBindVertexArray(debugTextRenderer.vao);
+	glBindVertexArray(debugTextRenderer->vao);
 	glDrawArrays(GL_TRIANGLES, 0, frameVertCount);
 	glBindVertexArray(0);
 }
@@ -352,46 +385,46 @@ void OGLPaintingGameRenderer::NewRenderLines() {
 
 			SetDebugLineBufferSizes(frameLineCount);
 
-			glBindBuffer(GL_ARRAY_BUFFER, debugLineRenderer.vertVbo);
+			glBindBuffer(GL_ARRAY_BUFFER, debugLineRenderer->vertVbo);
 			glBufferSubData(GL_ARRAY_BUFFER, 0, lines.size() * sizeof(Debug::DebugLineEntry), lines.data());
 
 
-			glBindVertexArray(debugLineRenderer.vao);
+			glBindVertexArray(debugLineRenderer->vao);
 			glDrawArrays(GL_LINES, 0, frameLineCount);
 			glBindVertexArray(0);
 		});
 }
 
 void OGLPaintingGameRenderer::SetDebugStringBufferSizes(size_t newVertCount) {
-	if (newVertCount > debugTextRenderer.count) {
-		debugTextRenderer.count = newVertCount;
+	if (newVertCount > debugTextRenderer->count) {
+		debugTextRenderer->count = newVertCount;
 
-		glBindBuffer(GL_ARRAY_BUFFER, debugTextRenderer.vertVBO);
-		glBufferData(GL_ARRAY_BUFFER, debugTextRenderer.count * sizeof(Vector3), nullptr, GL_DYNAMIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, debugTextRenderer->vertVBO);
+		glBufferData(GL_ARRAY_BUFFER, debugTextRenderer->count * sizeof(Vector3), nullptr, GL_DYNAMIC_DRAW);
 
-		glBindBuffer(GL_ARRAY_BUFFER, debugTextRenderer.colourVBO);
-		glBufferData(GL_ARRAY_BUFFER, debugTextRenderer.count * sizeof(Vector4), nullptr, GL_DYNAMIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, debugTextRenderer->colourVBO);
+		glBufferData(GL_ARRAY_BUFFER, debugTextRenderer->count * sizeof(Vector4), nullptr, GL_DYNAMIC_DRAW);
 
-		glBindBuffer(GL_ARRAY_BUFFER, debugTextRenderer.texCoordVBO);
-		glBufferData(GL_ARRAY_BUFFER, debugTextRenderer.count * sizeof(Vector2), nullptr, GL_DYNAMIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, debugTextRenderer->texCoordVBO);
+		glBufferData(GL_ARRAY_BUFFER, debugTextRenderer->count * sizeof(Vector2), nullptr, GL_DYNAMIC_DRAW);
 
-		debugTextPos.reserve(debugTextRenderer.count);
-		debugTextColours.reserve(debugTextRenderer.count);
-		debugTextUVs.reserve(debugTextRenderer.count);
+		debugTextPos.reserve(debugTextRenderer->count);
+		debugTextColours.reserve(debugTextRenderer->count);
+		debugTextUVs.reserve(debugTextRenderer->count);
 
-		glBindVertexArray(debugTextRenderer.vao);
+		glBindVertexArray(debugTextRenderer->vao);
 
 		glVertexAttribFormat(0, 3, GL_FLOAT, false, 0);
 		glVertexAttribBinding(0, 0);
-		glBindVertexBuffer(0, debugTextRenderer.vertVBO, 0, sizeof(Vector3));
+		glBindVertexBuffer(0, debugTextRenderer->vertVBO, 0, sizeof(Vector3));
 
 		glVertexAttribFormat(1, 4, GL_FLOAT, false, 0);
 		glVertexAttribBinding(1, 1);
-		glBindVertexBuffer(1, debugTextRenderer.colourVBO, 0, sizeof(Vector4));
+		glBindVertexBuffer(1, debugTextRenderer->colourVBO, 0, sizeof(Vector4));
 
 		glVertexAttribFormat(2, 2, GL_FLOAT, false, 0);
 		glVertexAttribBinding(2, 2);
-		glBindVertexBuffer(2, debugTextRenderer.texCoordVBO, 0, sizeof(Vector2));
+		glBindVertexBuffer(2, debugTextRenderer->texCoordVBO, 0, sizeof(Vector2));
 
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
@@ -402,25 +435,25 @@ void OGLPaintingGameRenderer::SetDebugStringBufferSizes(size_t newVertCount) {
 }
 
 void OGLPaintingGameRenderer::SetDebugLineBufferSizes(size_t newVertCount) {
-	if (newVertCount > debugLineRenderer.count) {
-		debugLineRenderer.count = newVertCount;
+	if (newVertCount > debugLineRenderer->count) {
+		debugLineRenderer->count = newVertCount;
 
-		glBindBuffer(GL_ARRAY_BUFFER, debugLineRenderer.vertVbo);
-		glBufferData(GL_ARRAY_BUFFER, debugLineRenderer.count * sizeof(Debug::DebugLineEntry), nullptr, GL_DYNAMIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, debugLineRenderer->vertVbo);
+		glBufferData(GL_ARRAY_BUFFER, debugLineRenderer->count * sizeof(Debug::DebugLineEntry), nullptr, GL_DYNAMIC_DRAW);
 
-		debugLineData.reserve(debugLineRenderer.count);
+		debugLineData.reserve(debugLineRenderer->count);
 
-		glBindVertexArray(debugLineRenderer.vao);
+		glBindVertexArray(debugLineRenderer->vao);
 
 		int realStride = sizeof(Debug::DebugLineEntry) / 2;
 
 		glVertexAttribFormat(0, 3, GL_FLOAT, false, offsetof(Debug::DebugLineEntry, start));
 		glVertexAttribBinding(0, 0);
-		glBindVertexBuffer(0, debugLineRenderer.vertVbo, 0, realStride);
+		glBindVertexBuffer(0, debugLineRenderer->vertVbo, 0, realStride);
 
 		glVertexAttribFormat(1, 4, GL_FLOAT, false, offsetof(Debug::DebugLineEntry, colourA));
 		glVertexAttribBinding(1, 0);
-		glBindVertexBuffer(1, debugLineRenderer.vertVbo, sizeof(Vector4), realStride);
+		glBindVertexBuffer(1, debugLineRenderer->vertVbo, sizeof(Vector4), realStride);
 
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);

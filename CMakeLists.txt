@@ -34,8 +34,11 @@ set(CMAKE_CONFIGURATION_TYPES
 # Global compiler options
 ################################################################################
 #set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD 23)
-
+if(MSVC)
+	set(CMAKE_CXX_STANDARD 23)
+else()
+	set(CMAKE_CXX_STANDARD 17)
+endif()
 ################################################################################
 # Nuget packages function stub.
 ################################################################################
@@ -63,7 +66,11 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 find_package(Vulkan)
 
 set(ASSET_ROOT "${CMAKE_SOURCE_DIR}/Assets/" CACHE STRING "" FORCE)
+if(WIN32)
 add_compile_definitions(ASSETROOTLOCATION="${ASSET_ROOT}") 
+else()
+add_compile_definitions(ASSETROOTLOCATION="/host/${ASSET_ROOT}") 
+endif()
 
 set(USE_VULKAN CACHE BOOL FORCE)
 if(USE_VULKAN)

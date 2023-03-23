@@ -6,6 +6,7 @@
 #include "MeshGeometry.h"
 #include "ShaderBase.h"
 #include <AssetLoader.h>
+#include <unordered_map>
 
 namespace NCL {
 	using namespace Rendering;
@@ -17,6 +18,11 @@ namespace NCL {
 		MeshAnimation* GetMeshAnimation(const std::string& identifier) const;
 		TextureBase* GetTexture(const std::string& identifier) const;
 		ShaderBase* GetShader(const std::string& identifier) const;
+		void ReloadMeshes();
+		void ReloadShaders();
+		void ReloadDebug();
+
+		void Load();
 		//SoundBase* GetSound(const std::string& identifier);
 	protected:
 		Assets::AssetLoader* loader;

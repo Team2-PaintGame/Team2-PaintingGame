@@ -16,7 +16,7 @@ namespace NCL {
 		class PS4MemoryAware {
 		protected:
 			PS4MemoryAware() {}
-			~PS4MemoryAware() {}
+			virtual ~PS4MemoryAware() {}
 		protected:
 			static sce::Gnmx::Toolkit::IAllocator*	onionAllocator;
 			static sce::Gnmx::Toolkit::IAllocator*	garlicAllocator;

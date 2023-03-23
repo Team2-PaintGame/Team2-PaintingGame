@@ -16,8 +16,8 @@ namespace NCL::GNM {
 		//friend class GNMRenderer;
 	public:
 		GNMMesh();
-		GNMMesh(const std::string& filename) {}
-		~GNMMesh();
+		GNMMesh(const std::string& filename);
+		virtual ~GNMMesh();
 		
 		static GNMMesh* GenerateTriangle();
 		static GNMMesh* GenerateQuad();
@@ -26,7 +26,7 @@ namespace NCL::GNM {
 		static GNMMesh* GenerateHeightMap(const std::string& filename, int heightMultiplier = 10) { return nullptr; }
 
 		void	UploadToGPU(Rendering::RendererBase* renderer = nullptr) override;
-		void	SubmitDraw(Gnmx::GnmxGfxContext& cmdList, Gnm::ShaderStage stage);
+		void	SubmitDraw(Gnmx::GnmxGfxContext& cmdList, Gnm::ShaderStage stage, int numInstances = 0);
 
 		void	InitAttributeBuffer(sce::Gnm::Buffer& buffer, Gnm::DataFormat format, void* offset);
 
@@ -36,8 +36,11 @@ namespace NCL::GNM {
 		{
 			float position[3];
 			float textureCoord[2];
+			float colour[4];
 			float normal[3];
 			float tangent[3];
+			float skinWeight[4];
+			int skinIndex[4];
 		};
 
 		sce::Gnm::IndexSize		indexType;

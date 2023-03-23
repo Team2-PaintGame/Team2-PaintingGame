@@ -81,9 +81,14 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
 if(MSVC)
 else()
 	target_compile_options(${PROJECT_NAME} PRIVATE
-		-std=c++17;
-        ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
-        ${DEFAULT_CXX_EXCEPTION_HANDLING};
+        #$<$<CONFIG:Debug>:
+        #    -O0
+        #>
+        #-frtti;
+        #-fexceptions;
+        -std=c++17;
+        #${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
+        #${DEFAULT_CXX_EXCEPTION_HANDLING};
     )
 endif()
 ################################################################################
@@ -93,6 +98,26 @@ set(ADDITIONAL_LIBRARY_DEPENDENCIES
     "GameEngine"
 )
 
+if(NOT WIN32)
+set(ADDITIONAL_PS4_DEPENDENCIES
+    "libSceDbgVideoOut_stub_weak.a" 
+    "libSceVideoOut_stub_weak.a"
+    "libSceGnm_debug.a"
+    "libSceGnmx_debug.a" 
+    "libSceGpuAddress.a" 
+    "libSceGnmDriver_stub_weak.a" 
+    "libSceShaderBinary.a" 
+    "libSceGnf_debug.a" 
+    "libScePad_stub_weak.a" 
+    "libSceUserService_stub_weak.a" 
+    "libSceSysmodule_stub_weak.a" 
+    "libSceNgs2_stub_weak.a" 
+    "libSceAudioOut_stub_weak.a" 
+    "-lSceAudio3d_stub_weak" 
+)
+target_link_libraries(${PROJECT_NAME} LINK_PUBLIC "${ADDITIONAL_PS4_DEPENDENCIES}")
+endif()
+
 include_directories("./")
 include_directories("../GameEngine/")
 include_directories("../GameEngine/Graphics/Renderer/RenderingSupport/")
@@ -101,4 +126,4 @@ include_directories("../GameEngine/AssetsHandling/")
 include_directories("../GameEngine/WindowingAndInput/")
 include_directories("../GameEngine/WindowingAndInput/PS4/")
 
-target_link_libraries(${PROJECT_NAME} PUBLIC "${ADDITIONAL_LIBRARY_DEPENDENCIES}")
+target_link_libraries(${PROJECT_NAME} PUBLIC "${ADDITIONAL_LIBRARY_DEPENDENCIES}"  "${SCE_ORBIS_SDK_DIR}/target/samples/sample_code/graphics/api_gnm/toolkit/toolkit_debug.a" )

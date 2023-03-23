@@ -38,6 +38,7 @@ set(AI_Pathfinding
     "./AI/PathFinding/NavigationMesh.h"
     "./AI/PathFinding/NavigationMap.h"
     "./AI/PathFinding/NavigationPath.h"
+    "./AI/PathFinding/SecurityCallbackClass.h"
 )
 source_group("AI\\Pathfinding" FILES ${AI_Pathfinding})
 
@@ -92,6 +93,8 @@ set(Entity_Components
     "./EntityComponents/Particle.cpp"
     "./EntityComponents/SceneNode.h"
     "./EntityComponents/SceneNode.cpp"
+    "./EntityComponents/AnimatedObject.h"
+    "./EntityComponents/AnimatedObject.cpp"
 )
 source_group("Entity Components" FILES ${Entity_Components})
 
@@ -273,6 +276,15 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
 ################################################################################
 # Compile and link options
 ################################################################################
+if(WIN32) 
+    list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../Middleware/ReactPhysics3D/Win32") 
+else()
+    list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../Middleware/ReactPhysics3D/ORBIS") 
+endif() 
+
+#Import the ReactPhysics3D library 
+find_package(ReactPhysics3D REQUIRED)
+
 if(MSVC)
     target_compile_options(${PROJECT_NAME} PRIVATE
         $<$<CONFIG:Debug>:
@@ -298,22 +310,24 @@ if(MSVC)
     )
 else()
 	target_compile_options(${PROJECT_NAME} PRIVATE
-		-std=c++17;
-        ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
-        ${DEFAULT_CXX_EXCEPTION_HANDLING};
+        $<$<CONFIG:Debug>:
+            -O0
+        >
+        #-frtti;
+        -fexceptions;
+        -std=c++17;
+        #${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
+        #${DEFAULT_CXX_EXCEPTION_HANDLING};
     )
 endif()
 
 if(WIN32) 
     list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../Middleware/ReactPhysics3D/Win32") 
 	list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../Middleware/OpenAL/Win32") 
+    find_package(OpenAL REQUIRED)
 else()
     list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../Middleware/ReactPhysics3D/ORBIS") 
 endif() 
-
-#Import the ReactPhysics3D library 
-find_package(ReactPhysics3D REQUIRED)
-find_package(OpenAL REQUIRED)
 
 include_directories("./")
 include_directories("Maths/")
@@ -343,7 +357,7 @@ include_directories("../Middleware/ImGui/")
 set(ADDITIONAL_LIBRARY_DEPENDENCIES
     "ReactPhysics3D::ReactPhysics3D"
 )
-
+if(WIN32)
 target_link_libraries(${PROJECT_NAME} PUBLIC "${ADDITIONAL_LIBRARY_DEPENDENCIES}" "${OPENAL_LIBRARY}/OpenAL32.lib")
 
 
@@ -354,3 +368,4 @@ include_directories("../Middleware/OpenAL/Win32/include")
 link_directories("../Middleware/OpenAL/Win32/lib/Debug/")
 
 target_link_libraries(${PROJECT_NAME} LINK_PUBLIC  ${CMAKE_SOURCE_DIR}/Middleware/OpenAL/Win32/lib/Debug/OpenAL32.lib)
+endif()

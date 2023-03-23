@@ -25,9 +25,10 @@ namespace NCL {
 				return true;
 			}
 
-		protected:
+	//	protected:
 
 			std::vector <Vector3> waypoints;
+			
 		};
 	}
 }

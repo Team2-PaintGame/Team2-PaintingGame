@@ -34,7 +34,7 @@ namespace NCL {
 			if (rigidBody) {
 				physicsWorld->destroyRigidBody(rigidBody);
 			}
-			physicsCommon.destroyConcaveMeshShape(dynamic_cast<rp3d::ConcaveMeshShape*>(boundingVolume));
+			physicsCommon.destroyConcaveMeshShape((rp3d::ConcaveMeshShape*)(boundingVolume));
 		}
 	};
 }

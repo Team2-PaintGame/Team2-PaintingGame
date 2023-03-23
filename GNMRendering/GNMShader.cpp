@@ -1,6 +1,6 @@
 #ifdef __ORBIS__
 #include "GNMShader.h"
-
+#include "Assets.h"
 #include <iostream>
 #include <fstream>
 #include <gnmx\shader_parser.h>
@@ -23,8 +23,8 @@ GNMShader::GNMShader()
 GNMShader* GNMShader::GenerateShader(const string& vertex,const string& pixel) {
 	GNMShader* shader = new GNMShader();
 
-	shader->GenerateVertexShader(vertex, true);
-	shader->GeneratePixelShader(pixel);
+	shader->GenerateVertexShader(Assets::SHADERDIR + vertex, true);
+	shader->GeneratePixelShader(Assets::SHADERDIR + pixel);
 
 	return shader;
 }
@@ -167,8 +167,14 @@ void	GNMShader::SubmitShaderSwitch(Gnmx::GnmxGfxContext& cmdList) {
 	cmdList.setPsShader(pixelShader, &pixelCache);
 }
 
-int		GNMShader::GetConstantBufferIndex(const string &name) {
-	sce::Shader::Binary::Buffer* constantBuffer = vertexBinary.getBufferResourceByName(name.c_str());
+int		GNMShader::GetConstantBufferIndex(const string &name, const sce::Gnm::ShaderStage& shaderStage) {
+	sce::Shader::Binary::Buffer* constantBuffer;
+	if (shaderStage == Gnm::kShaderStageVs) {
+		constantBuffer = vertexBinary.getBufferResourceByName(name.c_str());
+	}
+	else if (shaderStage == Gnm::kShaderStagePs) {
+		constantBuffer = pixelBinary.getBufferResourceByName(name.c_str());
+	}
 	if (!constantBuffer) {
 		return -1;
 	}

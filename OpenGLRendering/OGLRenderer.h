@@ -70,6 +70,14 @@ namespace NCL {
 #ifdef _WIN32
 			void InitWithWin32(Window& w);
 			void DestroyWithWin32();
+
+		public:
+			HGLRC CreateAnotherContext();
+			bool MakeCurrent(HGLRC context);
+			void ResetDefaultContext();
+			void ResetContext();
+
+		protected:
 			HDC		deviceContext;		//...Device context?
 			HGLRC	renderContext;		//Permanent Rendering Context		
 #endif

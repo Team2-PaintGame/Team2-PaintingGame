@@ -69,6 +69,8 @@ namespace NCL {
 
 			bool connected = false;
 
+			bool justShot = false;
+
 		};
 	}
 }
