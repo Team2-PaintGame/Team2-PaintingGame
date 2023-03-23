@@ -443,6 +443,8 @@ namespace NCL::CSC8508 {
 	void SecurityGuard::CaughtPlayer() {
 		if (chasedPlayer == nullptr) { return; }
 
+		reactphysics3d::Vector3 pos = ~((PlayerBase*)chasedPlayer)->GetSpawnPosition();
+
 		chasedPlayer->GetRigidBody()->resetForce();
 		this->GetRigidBody()->resetForce();
 		reactphysics3d::Vector3 newVelocity(0, 0, 0);
@@ -450,19 +452,19 @@ namespace NCL::CSC8508 {
 
 
 		chasedPlayer->GetRigidBody()->setLinearVelocity(newVelocity);
-		reactphysics3d::Vector3 position(200, 15.0f, 200.0f);
-		reactphysics3d::Transform rp3d_transform(position, rp3d::Quaternion::identity());
+		//reactphysics3d::Vector3 position(200, 15.0f, 200.0f);
+		reactphysics3d::Transform rp3d_transform(pos, rp3d::Quaternion::identity());
 		chasedPlayer->GetRigidBody()->setTransform(rp3d_transform);
 
 		chasedPlayer->GetRigidBody()->setLinearVelocity(newVelocity);
-		reactphysics3d::Vector3 position2(200, 10.0f, 200.0f);
-		reactphysics3d::Transform rp3d_transform2(position2, rp3d::Quaternion::identity());
+		//reactphysics3d::Vector3 position2(200, 10.0f, 200.0f);
+		reactphysics3d::Transform rp3d_transform2(pos, rp3d::Quaternion::identity());
 		chasedPlayer->GetRigidBody()->setTransform(rp3d_transform2);
 
 
 		chasedPlayer->GetRigidBody()->setLinearVelocity(newVelocity);
-		reactphysics3d::Vector3 position3(200, 5.0f, 200.0f);
-		reactphysics3d::Transform rp3d_transform3(position3, rp3d::Quaternion::identity());
+		//reactphysics3d::Vector3 position3(200, 5.0f, 200.0f);
+		reactphysics3d::Transform rp3d_transform3(pos, rp3d::Quaternion::identity());
 		chasedPlayer->GetRigidBody()->setTransform(rp3d_transform3);
 
 
@@ -723,53 +725,6 @@ namespace NCL::CSC8508 {
 			force = walkForce;
 			return;
 		}
-
-
-
-		//if (numWaypoints == 1)
-		//{
-		//	force = slowForce;
-		//	return;
-		//}
-		//if (numWaypoints == 2 || numWaypoints == 3)
-		//{
-		//	force = walkForce;
-		//	return;
-		//}
-		//
-		//vector<Vector3>::iterator it = navigationPath->waypoints.end() - 1;
-		//if (numWaypoints >= 4)
-		//{
-		//	Vector3 nextThreeWaypoints[3];
-		//	int i = 0;
-		//	for (it ; it != navigationPath->waypoints.end() - 4; --it)
-		//	{
-		//		nextThreeWaypoints[i] = *it;
-		//		++i;
-		//	}
-		//	Vector3 playerPos = this->GetTransform().GetPosition();
-		//	Vector3 firstWaypointDirection, secondWaypointDirection, thirdWaypointDirection;
-		//	firstWaypointDirection = (nextThreeWaypoints[0] - playerPos).Normalised();
-		//	secondWaypointDirection = (nextThreeWaypoints[1] - playerPos).Normalised();
-		//	thirdWaypointDirection = (nextThreeWaypoints[2] - playerPos).Normalised();
-
-		//	if (firstWaypointDirection == secondWaypointDirection && secondWaypointDirection == thirdWaypointDirection) //Going in a straight line
-		//	{
-		//		force = runForce;
-		//		return;
-		//	}
-
-		//	if (firstWaypointDirection == secondWaypointDirection && secondWaypointDirection != thirdWaypointDirection) // third waypoint there is a turn
-		//	{
-		//		force = walkForce;
-		//		return;
-		//	}
-		//	if (firstWaypointDirection != secondWaypointDirection && secondWaypointDirection != thirdWaypointDirection) // second waypoint there is a turn
-		//	{
-		//		force = slowForce;
-		//		return;
-		//	}
-		//}
 	}
 
 
