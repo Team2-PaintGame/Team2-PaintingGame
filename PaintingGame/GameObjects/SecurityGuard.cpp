@@ -476,8 +476,8 @@ namespace NCL::CSC8508 {
 		{
 			if (isPlayerOneVisible ) 
 			{
-				return playerOne;
-				//return nullptr;
+				//return playerOne;
+				return nullptr;
 			}
 			else
 			{

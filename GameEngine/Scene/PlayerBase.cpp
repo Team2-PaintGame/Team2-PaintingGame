@@ -94,15 +94,18 @@ void PlayerBase::CameraSpring(Camera* cam) {
 
 	RaycastManager raycastManager = RaycastManager();
 
-	ray = reactphysics3d::Ray(~transform.GetPosition(), ~transform.GetPosition() + ~camera->GetNormalizedRotation() * camera->GetMaxOffSet().Length());
-	//Debug::DrawLine(transform.GetPosition(), ray.point2, Vector4(1, 1, 1, 1),1.0f);
-
+	ray = reactphysics3d::Ray(~transform.GetPosition(), ~transform.GetPosition() + ~camera->GetNormalizedRotation() * (camera->GetMaxOffSet().Length() + 15)) ;
+//	ray = reactphysics3d::Ray(~transform.GetPosition(), ~camera->GetPosition());
+	
 	
 	 physicsWorld->raycast(ray, &raycastManager);
 	 if (raycastManager.isHit()) { //if it hits something
 		 SceneContactPoint* closestCollision = raycastManager.getHit();
 		 Vector3 new_rotated_offset = closestCollision->hitPos - ~transform.GetPosition();
-		 camera->SetOffsetFromPlayer(camera->GetMaxOffSet().Normalised() * new_rotated_offset.Length());
+		 Vector3 newOffest = camera->GetMaxOffSet().Normalised() * (new_rotated_offset.Length() / 2 );
+//		 camera->SetOffsetFromPlayer(camera->GetMaxOffSet().Normalised() * new_rotated_offset.Length());
+		 camera->SetOffsetFromPlayer(newOffest);
+		 Debug::DrawLine(transform.GetPosition(), ray.point2, Vector4(1, 1, 1, 1), 0.50f);
 	 }
 	 else {
 		 camera->SetOffsetFromPlayer(camera->GetMaxOffSet());
