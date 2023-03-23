@@ -32,7 +32,7 @@ void Player::Shoot() {
 	shootRay = reactphysics3d::Ray(
 		reactphysics3d::Vector3(startPos.x, startPos.y + 5, startPos.z),
 		reactphysics3d::Vector3(endPos.x, endPos.y, endPos.z));
-	Debug::DrawLine(startPos, endPos, Vector4(1, 1, 1, 1), 3);
+	//Debug::DrawLine(startPos, endPos, Vector4(1, 1, 1, 1), 3);
 	gun->Shoot();
 }
 

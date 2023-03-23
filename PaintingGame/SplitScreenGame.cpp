@@ -27,8 +27,8 @@ SplitScreenGame::~SplitScreenGame() {
 void SplitScreenGame::InitPlayers() {
 	players.clear();
 	
-	Player* player1 = AddPlayer(Vector3(13.0f, 4.2, 34.0f), Team::Red);
-	Player* player2 = AddPlayer(Vector3(194.0f, 4.24f, 208.0f), Team::Blue);
+	Player* player1 = AddPlayer(Vector3(13.0f, 4.2, 34.0f), Team::Blue);
+	Player* player2 = AddPlayer(Vector3(194.0f, 4.24f, 208.0f), Team::Red);
 
 	playerControllers.push_back(GameManager::sConfig.playerControllerFactory->createPlayerController(player1));
 	
@@ -55,7 +55,7 @@ void SplitScreenGame::CreateSplatOnShoot() {
 			SceneContactPoint* closestCollision = world->Raycast(player->GetShootRay());
 			if (closestCollision->isHit) {
 				//world->AddPaintedPosition(closestCollision->hitPos, player->GetTeamColour());
-				std::cout << "X: " << closestCollision->hitPos.x << "Y: " << closestCollision->hitPos.y << "Z: " << closestCollision->hitPos.z << "\n";
+				//std::cout << "X: " << closestCollision->hitPos.x << "Y: " << closestCollision->hitPos.y << "Z: " << closestCollision->hitPos.z << "\n";
 			}
 		}
 		index++;
