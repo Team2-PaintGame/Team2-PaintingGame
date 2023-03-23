@@ -64,5 +64,6 @@ namespace NCL::CSC8508 {
 		ScreenCommand command = ScreenCommand::None;
 		ScreenManager* screenManager;
 		ScreenType screenType = ScreenType::None;
+		bool bisNetworkedGame = false;
 	};
 }

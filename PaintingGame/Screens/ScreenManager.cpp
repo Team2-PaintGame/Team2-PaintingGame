@@ -51,7 +51,7 @@ bool ScreenManager::Update(float dt) {
 }
 
 PushdownState::PushdownResult BaseScreen::OnUpdate(float dt, PushdownState** newState) {
-	if (!isMenuDisplayed) {
+	if (!isMenuDisplayed || bisNetworkedGame) {
 		sceneNode->Update(dt);
 	}
 	return onStateChange(newState);
