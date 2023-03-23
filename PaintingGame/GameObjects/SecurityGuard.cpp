@@ -74,36 +74,36 @@ namespace NCL::CSC8508 {
 
 	void SecurityGuard::Update(float dt)
 	{
-		if (isBlinded)
-		{
-			blindTimer += dt;
-			if (blindTimer > 5.0f)
-			{
-				blindTimer = 0.0f;
-				SetIsBlindedFalse();
-			}
-		}
-		animationController->Update(dt);
-	/*	DrawNavTris();
-		DisplayPathfinding();
-		DrawTriRoute();*/
-		if (state == Initialise) {
-			state = Ongoing;
-		}
-		if (state == Ongoing) {
-			state = rootSelector->Execute(dt);
-		}
-		if (state == Success) {
-			rootSelector->Reset();
-			state = Initialise;
-		}
-		if (state == Failure) {
-			state = Initialise;
-		}
-		if (ink) {
-			ink->SetLayer(Layer::Bubbles);
-			ink->GetTransform().SetPosition(transform.GetPosition()).SetOrientation(transform.GetOrientation());
-		}
+	//	if (isBlinded)
+	//	{
+	//		blindTimer += dt;
+	//		if (blindTimer > 5.0f)
+	//		{
+	//			blindTimer = 0.0f;
+	//			SetIsBlindedFalse();
+	//		}
+	//	}
+	//	animationController->Update(dt);
+	///*	DrawNavTris();
+	//	DisplayPathfinding();
+	//	DrawTriRoute();*/
+	//	if (state == Initialise) {
+	//		state = Ongoing;
+	//	}
+	//	if (state == Ongoing) {
+	//		state = rootSelector->Execute(dt);
+	//	}
+	//	if (state == Success) {
+	//		rootSelector->Reset();
+	//		state = Initialise;
+	//	}
+	//	if (state == Failure) {
+	//		state = Initialise;
+	//	}
+	//	if (ink) {
+	//		ink->SetLayer(Layer::Bubbles);
+	//		ink->GetTransform().SetPosition(transform.GetPosition()).SetOrientation(transform.GetOrientation());
+	//	}
 	}
 
 	void SecurityGuard::InitBehaviorTree()

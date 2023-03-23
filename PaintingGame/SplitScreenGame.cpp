@@ -31,8 +31,8 @@ SplitScreenGame::~SplitScreenGame() {
 void SplitScreenGame::InitPlayers() {
 	players.clear();
 	
-	Player* player1 = AddPlayer(Vector3(20.0f, 10.0f, 20.0f), Team::Red);
-	Player* player2 = AddPlayer(Vector3(30.0f, 10.0f, 20.0f), Team::Blue);
+	Player* player1 = AddPlayer(Vector3(13.0f, 4.2, 34.0f), Team::Red);
+	Player* player2 = AddPlayer(Vector3(194.0f, 4.24f, 208.0f), Team::Blue);
 
 	playerControllers.push_back(GameManager::sConfig.playerControllerFactory->createPlayerController(player1));
 	
@@ -74,7 +74,6 @@ Player* SplitScreenGame::AddPlayer(Vector3 position,Team team) {
 }
 
 void SplitScreenGame::Update(float dt) {
-
 	for (PlayerController* pc : playerControllers) {
 		pc->Update(dt);
 	}
