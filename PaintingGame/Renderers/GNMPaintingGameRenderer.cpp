@@ -18,21 +18,27 @@ GNMPaintingGameRenderer::GNMPaintingGameRenderer(Window& w) : GNMRenderer(w) {
 	lightRadius = 1000.0f;
 	lightPosition = Vector3(0.0f, 20.0f, 0.0f);
 
-	shaderVariables.cameraVariables = (CameraVariables*)onionAllocator->allocate(sizeof(CameraVariables), Gnm::kEmbeddedDataAlignment4);
-	shaderVariables.renderObjectVariables = (RenderObjectVariables*)onionAllocator->allocate(sizeof(RenderObjectVariables), Gnm::kEmbeddedDataAlignment4);
-	shaderVariables.fragmentVariables = (FragmentVariables*)onionAllocator->allocate(sizeof(FragmentVariables), Gnm::kEmbeddedDataAlignment4);
+	//shaderVariables.cameraVariables = (CameraVariables*)onionAllocator->allocate(sizeof(CameraVariables), Gnm::kEmbeddedDataAlignment4);
+	//shaderVariables.renderObjectVariables = (RenderObjectVariables*)onionAllocator->allocate(sizeof(RenderObjectVariables), Gnm::kEmbeddedDataAlignment4);
+	//shaderVariables.fragmentVariables = (FragmentVariables*)garlicAllocator->allocate(sizeof(FragmentVariables), Gnm::kEmbeddedDataAlignment4);
 
-	shaderBuffers.cameraBuffer.initAsConstantBuffer(shaderVariables.cameraVariables, sizeof(CameraVariables));
-	shaderBuffers.cameraBuffer.setResourceMemoryType(Gnm::kResourceMemoryTypeRO); // it's a constant buffer, so read-only is OK
+	//shaderBuffers.cameraBuffer.initAsConstantBuffer(shaderVariables.cameraVariables, sizeof(CameraVariables));
+	//shaderBuffers.cameraBuffer.setResourceMemoryType(Gnm::kResourceMemoryTypeRO); // it's a constant buffer, so read-only is OK
 
-	shaderBuffers.objBuffer.initAsConstantBuffer(shaderVariables.renderObjectVariables, sizeof(RenderObjectVariables));
-	shaderBuffers.objBuffer.setResourceMemoryType(Gnm::kResourceMemoryTypeRO); // it's a constant buffer, so read-only is OK
+	//shaderBuffers.objBuffer.initAsConstantBuffer(shaderVariables.renderObjectVariables, sizeof(RenderObjectVariables));
+	//shaderBuffers.objBuffer.setResourceMemoryType(Gnm::kResourceMemoryTypeRO); // it's a constant buffer, so read-only is OK
 
-	shaderBuffers.fragmentBuffer.initAsConstantBuffer(shaderVariables.fragmentVariables, sizeof(FragmentVariables));
-	shaderBuffers.fragmentBuffer.setResourceMemoryType(Gnm::kResourceMemoryTypeRO); // it's a constant buffer, so read-only is OK
+	//shaderBuffers.fragmentBuffer.initAsConstantBuffer(shaderVariables.fragmentVariables, sizeof(FragmentVariables));
+	//shaderBuffers.fragmentBuffer.setResourceMemoryType(Gnm::kResourceMemoryTypeRO); // it's a constant buffer, so read-only is OK
 	
 	//SetDebugStringBufferSizes(10000);
 	//SetDebugLineBufferSizes(1000);
+
+	viewProjMat = (Matrix4*)onionAllocator->allocate(sizeof(Matrix4), Gnm::kEmbeddedDataAlignment4);
+	//*viewProjMat = Matrix4();
+
+	cameraBuffer.initAsConstantBuffer(viewProjMat, sizeof(Matrix4));
+	cameraBuffer.setResourceMemoryType(Gnm::kResourceMemoryTypeRO); // it's a constant buffer, so read-only is OK
 }
 
 GNMPaintingGameRenderer::~GNMPaintingGameRenderer() {}
@@ -84,12 +90,12 @@ void GNMPaintingGameRenderer::RenderGameScreen() { //change this to RenderScreen
 		[&](Camera* cam) {
 			cam->SetPerspectiveCameraParameters(Window::GetWindow()->GetScreenAspect() * cam->GetAspectMultiplier());
 			currentGFXContext->setupScreenViewport(cam->GetVpStartPos().x * currentGNMBuffer->colourTarget.getWidth(), cam->GetVpStartPos().y * currentGNMBuffer->colourTarget.getWidth(), currentGNMBuffer->colourTarget.getWidth() * cam->GetVpSize().x, currentGNMBuffer->colourTarget.getHeight() * cam->GetVpSize().y, 0.5f, 0.5f);
-			
-			shaderVariables.cameraVariables->viewProjMatrix = cam->BuildProjectionMatrix() * cam->BuildViewMatrix();
+			*viewProjMat = cam->BuildProjectionMatrix() * cam->BuildViewMatrix();
+			/*shaderVariables.cameraVariables->viewProjMatrix = cam->BuildProjectionMatrix() * cam->BuildViewMatrix();
 			shaderVariables.fragmentVariables->cameraPos = cam->GetPosition();
 			shaderVariables.fragmentVariables->lightColour = lightColour;
 			shaderVariables.fragmentVariables->lightPos = lightPosition;
-			shaderVariables.fragmentVariables->lightRadius = lightRadius;
+			shaderVariables.fragmentVariables->lightRadius = lightRadius;*/
 
 			for (const auto& i : activeObjects) {
 				//Primitive Setup State
@@ -127,6 +133,7 @@ void GNMPaintingGameRenderer::RenderGameScreen() { //change this to RenderScreen
 				SetShaderBufffers(shader);
 
 				if (i->GetDefaultTexture()) {
+					//shaderVariables.fragmentVariables->hasTexture = true;
 					Gnm::Sampler trilinearSampler;
 					trilinearSampler.init();
 					trilinearSampler.setMipFilterMode(Gnm::kMipFilterModeLinear);
@@ -181,7 +188,7 @@ void GNMPaintingGameRenderer::BuildObjectList() {
 }
 
 void GNMPaintingGameRenderer::SetShaderBufffers(GNMShader* shader) {
-	int objIndex = shader->GetConstantBufferIndex("RenderObjectData", Gnm::kShaderStageVs);
+	/*int objIndex = shader->GetConstantBufferIndex("RenderObjectData", Gnm::kShaderStageVs);
 	int camIndex = shader->GetConstantBufferIndex("CameraData", Gnm::kShaderStageVs);
 	int fragIndex = shader->GetConstantBufferIndex("FragmentData", Gnm::kShaderStagePs);
 
@@ -193,7 +200,7 @@ void GNMPaintingGameRenderer::SetShaderBufffers(GNMShader* shader) {
 	}
 	if (fragIndex >= 0) {
 		currentGFXContext->setConstantBuffers(Gnm::kShaderStagePs, fragIndex, 1, &shaderBuffers.fragmentBuffer);
-	}
+	}*/
 }
 
 void GNMPaintingGameRenderer::SortObjectList() {
@@ -217,12 +224,33 @@ void GNMPaintingGameRenderer::SendModelMatrices(GNMShader* shader, const RenderO
 		}*/
 	}
 	else {
-		shaderVariables.renderObjectVariables->modelMatrix = r->GetTransform()->GetMatrix();
-		shaderVariables.renderObjectVariables->inverseModel = Matrix3(r->GetTransform()->GetMatrix().Inverse());
+		Matrix4* modelMat = (Matrix4*)currentGFXContext->allocateFromCommandBuffer(sizeof(Matrix4), Gnm::kEmbeddedDataAlignment4);
+		*modelMat = r->GetTransform()->GetMatrix();
+
+		Gnm::Buffer constantBuffer;
+		constantBuffer.initAsConstantBuffer(modelMat, sizeof(Matrix4));
+		constantBuffer.setResourceMemoryType(Gnm::kResourceMemoryTypeRO); // it's a constant buffer, so read-only is OK
+
+		int objIndex = shader->GetConstantBufferIndex("RenderObjectData", Gnm::kShaderStageVs);
+		int camIndex = shader->GetConstantBufferIndex("CameraData", Gnm::kShaderStageVs);
+
+		if (objIndex >= 0) {
+			currentGFXContext->setConstantBuffers(Gnm::kShaderStageVs, objIndex, 1, &constantBuffer);
+		}
+		if (camIndex >= 0) {
+			currentGFXContext->setConstantBuffers(Gnm::kShaderStageVs, camIndex, 1, &cameraBuffer);
+		}
+
+		/*currentGFXContext->setConstantBuffers(Gnm::kShaderStageVs, objIndex, 1, &constantBuffer);
+		currentGFXContext->setConstantBuffers(Gnm::kShaderStageVs, camIndex, 1, &cameraBuffer);*/
+
+		//shaderVariables.renderObjectVariables->modelMatrix = r->GetTransform()->GetMatrix();
+		//shaderVariables.renderObjectVariables->inverseModel = Matrix3(r->GetTransform()->GetMatrix().Inverse());
 	}
 	//send color data
-	shaderVariables.renderObjectVariables->objectColour = r->GetColour();
-	shaderVariables.renderObjectVariables->hasVertexColours = !(*r).GetMesh()->GetColourData().empty();
+	//shaderVariables.renderObjectVariables->hasVertexColours = !(*r).GetMesh()->GetColourData().empty();
+	//shaderVariables.renderObjectVariables->objectColour = r->GetColour();
+	//*(shaderVariables.renderObjectVariables) = 
 }
 
 void GNMPaintingGameRenderer::RenderWithDefaultTexture(const RenderObject* r) {

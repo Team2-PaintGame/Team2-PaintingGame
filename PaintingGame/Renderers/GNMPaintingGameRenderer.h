@@ -95,8 +95,11 @@ namespace NCL {
 			DebugTextRenderer debugTextRenderer;
 			DebugLinesRenderer debugLineRenderer;
 
-			ShaderBuffers shaderBuffers;
-			ShaderVariables shaderVariables;
+			/*ShaderBuffers shaderBuffers;
+			ShaderVariables shaderVariables;*/
+
+			NCL::Maths::Matrix4* viewProjMat;
+			Gnm::Buffer	cameraBuffer;
 		};
 
 		// Concrete factory for creating Painting Game OpenGL renderer
