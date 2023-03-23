@@ -51,5 +51,5 @@ void PlayerController::Update(float dt) {
 		player->Shoot();
 	}
 
-	player->targetPosition = GetCursorPosition(dt);
+	//player->targetPosition = GetCursorPosition(dt);
 }

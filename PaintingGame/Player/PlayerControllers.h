@@ -136,16 +136,16 @@ namespace NCL {
 
 		// Get the input for moving forward from the Xbox controller
 		bool MoveForward() override {
-			return gamepad.GetAxis(0).y > 0.0f;
+			return gamepad.GetAxis(0).y < 0.5f;
 		}
 		bool MoveBackward() override {
-			return gamepad.GetAxis(0).y < 0.0f;
+			return gamepad.GetAxis(0).y > -0.5f;
 		}
 		bool MoveRight() override {
-			return gamepad.GetAxis(0).x > 0.0f;
+			return gamepad.GetAxis(0).x > 0.5f;
 		}
 		bool MoveLeft() override {
-			return gamepad.GetAxis(0).x < 0.0f;
+			return gamepad.GetAxis(0).x < -0.5f;
 		}
 		bool Shoot() override {
 			return false;
