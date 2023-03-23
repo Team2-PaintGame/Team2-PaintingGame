@@ -84,6 +84,7 @@ void GameAssets::LoadTextures() {
 	textures.insert(std::make_pair("gunFocusTex", loader->LoadTexture("gunFocusPoint.png")));
 	textures.insert(std::make_pair("splashScreenTex", loader->LoadTexture("Screens/bg.png"))); 
 	textures.insert(std::make_pair("mainMenuScreenTex", loader->LoadTexture("Screens/bg2.png")));
+	textures.insert(std::make_pair("gameOverScreenTex", loader->LoadTexture("Screens/bg3.jpg")));
 }
 
 void GameAssets::LoadShaders() {

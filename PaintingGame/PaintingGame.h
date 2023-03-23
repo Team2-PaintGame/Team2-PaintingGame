@@ -46,7 +46,7 @@ namespace NCL {
 			bool useFog = true;
 
 			GameTimer timer;
-			float gameTime = 80;
+			float gameTime = 40;
 
 			std::string gameOverString;
 
