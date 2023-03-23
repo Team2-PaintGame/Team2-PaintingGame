@@ -21,7 +21,8 @@ GNMTexture::~GNMTexture()
 }
 
 GNMTexture* GNMTexture::LoadTextureFromFile(const std::string& filename) {
-	std::ifstream file(filename, std::ios::binary);
+	std::string binaryFilename = filename.substr(0, filename.find_last_of('.')) + ".gnf";
+	std::ifstream file(binaryFilename, std::ios::binary);
 
 	if (!file) {
 		return NULL;
@@ -43,7 +44,7 @@ GNMTexture* GNMTexture::LoadTextureFromFile(const std::string& filename) {
 	Gnm::SizeAlign dataParams	= getTexturePixelsSize(contentsDesc, 0);
 
 	void *pixelsAddr = garlicAllocator->allocate(dataParams);
-	Gnm::registerResource(nullptr, ownerHandle, pixelsAddr, dataParams.m_size, filename.c_str(), Gnm::kResourceTypeTextureBaseAddress, 0);
+	Gnm::registerResource(nullptr, ownerHandle, pixelsAddr, dataParams.m_size, binaryFilename.c_str(), Gnm::kResourceTypeTextureBaseAddress, 0);
 
 	file.seekg(getTexturePixelsByteOffset(contentsDesc, 0), ios::cur); //fast forward in the file a bit
 	file.read((char*)pixelsAddr, dataParams.m_size);
@@ -63,9 +64,7 @@ GNMTexture* GNMTexture::LoadTextureFromFile(const std::string& filename) {
 }
 
 TextureBase* GNMTexture::RGBATextureFromFilename(const std::string& name) {
-
-	std::string binaryFilename = name.substr(0, name.find_last_of('.')) + ".gnf";
-	std::string realPath = Assets::TEXTUREDIR + binaryFilename;
+	std::string realPath = Assets::TEXTUREDIR + name;
 	return LoadTextureFromFile(realPath);
 
 	/*std::ifstream file(name, std::ios::binary);

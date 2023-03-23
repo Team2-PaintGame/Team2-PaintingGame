@@ -98,6 +98,9 @@ void GNMPaintingGameRenderer::RenderGameScreen() { //change this to RenderScreen
 			shaderVariables.fragmentVariables->lightRadius = lightRadius;*/
 
 			for (const auto& i : activeObjects) {
+				//if (i->GetIsInstanced()) {
+				//	return;
+				//}
 				//Primitive Setup State
 				Gnm::PrimitiveSetup primitiveSetup;
 				primitiveSetup.init();
@@ -145,6 +148,14 @@ void GNMPaintingGameRenderer::RenderGameScreen() { //change this to RenderScreen
 					currentGFXContext->setSamplers(Gnm::kShaderStagePs, 0, 1, &trilinearSampler);
 					//currentGFXContext->setBlendControl(0, blend);
 				}
+				else if (i->HasTextureAtIndex(0)) {
+					Gnm::Sampler trilinearSampler;
+					trilinearSampler.init();
+					trilinearSampler.setMipFilterMode(Gnm::kMipFilterModeLinear);
+
+					currentGFXContext->setTextures(Gnm::kShaderStagePs, 0, 1, &((GNMTexture*)(i->GetTextures(0)[0].second))->GetAPITexture());
+					currentGFXContext->setSamplers(Gnm::kShaderStagePs, 0, 1, &trilinearSampler);
+				}
 
 				if (i->isSingleTextured()) {
 					RenderWithDefaultTexture(i);
@@ -152,12 +163,12 @@ void GNMPaintingGameRenderer::RenderGameScreen() { //change this to RenderScreen
 				else {
 					RenderWithMultipleTexture(i);
 				}
-				((GNMShader*)(i->GetShader()))->SubmitShaderSwitch(*currentGFXContext);
-				unsigned int numInstances = i->GetInstanceCount();
+				//unsigned int numInstances = i->GetInstanceCount();
 
 				SendModelMatrices(shader, i);
 				SetShaderBufffers(shader);
-				((GNMMesh*)(i->GetMesh()))->SubmitDraw(*currentGFXContext, Gnm::ShaderStage::kShaderStageVs, numInstances);
+				((GNMShader*)(i->GetShader()))->SubmitShaderSwitch(*currentGFXContext);
+				((GNMMesh*)(i->GetMesh()))->SubmitDraw(*currentGFXContext, Gnm::ShaderStage::kShaderStageVs, 0);
 			}
 		}
 	);
@@ -228,15 +239,15 @@ void GNMPaintingGameRenderer::SendModelMatrices(GNMShader* shader, const RenderO
 		if (numInstances == 0) {
 			return;
 		}
-		std::vector<Transform*> transforms = r->GetTransforms();
-		Matrix4* modelMat[100];
-		for (int i = 0; i < numInstances; i++) {
+		//std::vector<Transform*> transforms = r->GetTransforms();
+		//Matrix4* modelMat[100];
+		//for (int i = 0; i < numInstances; i++) {
 
-			modelMat[i] = (Matrix4*)currentGFXContext->allocateFromCommandBuffer(sizeof(Matrix4), Gnm::kEmbeddedDataAlignment4);
-			*modelMat[i] = transforms[i]->GetMatrix();
-		}
-		constantBuffer.initAsConstantBuffer(modelMat[0], sizeof(Matrix4) * numInstances);
-		constantBuffer.setResourceMemoryType(Gnm::kResourceMemoryTypeRO); // it's a constant buffer, so read-only is OK
+		//	modelMat[i] = (Matrix4*)currentGFXContext->allocateFromCommandBuffer(sizeof(Matrix4), Gnm::kEmbeddedDataAlignment4);
+		//	*modelMat[i] = transforms[i]->GetMatrix();
+		//}
+		//constantBuffer.initAsConstantBuffer(modelMat[0], sizeof(Matrix4) * numInstances);
+		//constantBuffer.setResourceMemoryType(Gnm::kResourceMemoryTypeRO); // it's a constant buffer, so read-only is OK
 	}
 	else {
 		Matrix4* modelMat = (Matrix4*)currentGFXContext->allocateFromCommandBuffer(sizeof(Matrix4), Gnm::kEmbeddedDataAlignment4);

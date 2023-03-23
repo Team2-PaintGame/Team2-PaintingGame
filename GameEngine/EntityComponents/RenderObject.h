@@ -34,6 +34,10 @@ namespace NCL {
 				return subMeshTextures.at(subMeshIndex);
 			}
 
+			bool HasTextureAtIndex(int subMeshIndex) const {
+				return subMeshTextures.count(subMeshIndex) > 0;
+			}
+
 			unsigned int GetInstanceCount()  const {
 				return (unsigned int)numInstances;
 			}
