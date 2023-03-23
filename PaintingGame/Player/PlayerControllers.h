@@ -148,7 +148,7 @@ namespace NCL {
 			return gamepad.GetAxis(0).x < -0.5f;
 		}
 		bool Shoot() override {
-			return false;
+			return gamepad.GetButtonDown(gamepad.GetButton(0));
 		}
 		bool Pause() override {
 			//return gamepad.GetButtonDown(VK_PAD_START);

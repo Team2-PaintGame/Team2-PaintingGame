@@ -22,7 +22,7 @@ void GameScreen::OnAwake() {
 void GameScreen::LoadGame() {
 
 	delete sceneNode;
-
+	command = ScreenCommand::CreateSinglePlayerGame;
 	switch (command)
 	{
 	case ScreenCommand::CreateSinglePlayerGame: 

@@ -10,7 +10,12 @@ using namespace CSC8508;
 ScreenManager::ScreenManager(GameAssets* assets) {
 	this->assets = assets;
 	LoadScreens();
+#ifdef _WIN32
 	machine = std::make_unique<PushdownMachine>((PushdownState*)GetScreen(ScreenType::SplashScreen));
+#endif
+#ifdef __ORBIS__
+	machine = std::make_unique<PushdownMachine>((PushdownState*)GetScreen(ScreenType::GameScreen));
+#endif
 }
 
 void ScreenManager::LoadScreens() {

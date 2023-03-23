@@ -37,8 +37,8 @@ GNMPaintingGameRenderer::GNMPaintingGameRenderer(Window& w) : GNMRenderer(w) {
 	viewProjMat = (Matrix4*)onionAllocator->allocate(sizeof(Matrix4), Gnm::kEmbeddedDataAlignment4);
 	//*viewProjMat = Matrix4();
 
-	cameraBuffer.initAsConstantBuffer(viewProjMat, sizeof(Matrix4));
-	cameraBuffer.setResourceMemoryType(Gnm::kResourceMemoryTypeRO); // it's a constant buffer, so read-only is OK
+	shaderBuffers.cameraBuffer.initAsConstantBuffer(viewProjMat, sizeof(Matrix4));
+	shaderBuffers.cameraBuffer.setResourceMemoryType(Gnm::kResourceMemoryTypeRO); // it's a constant buffer, so read-only is OK
 }
 
 GNMPaintingGameRenderer::~GNMPaintingGameRenderer() {}
@@ -108,6 +108,9 @@ void GNMPaintingGameRenderer::RenderGameScreen() { //change this to RenderScreen
 				dsc.init();
 				dsc.setDepthControl(Gnm::kDepthControlZWriteEnable, Gnm::kCompareFuncLessEqual);
 
+				Gnm::BlendControl blend;
+				blend.setBlendEnable(true);
+
 				if (i->GetIsOccluded()) {
 					primitiveSetup.setCullFace(Gnm::kPrimitiveSetupCullFaceBack);
 					dsc.setDepthEnable(true);
@@ -118,10 +121,10 @@ void GNMPaintingGameRenderer::RenderGameScreen() { //change this to RenderScreen
 				}
 				currentGFXContext->setPrimitiveSetup(primitiveSetup);
 				currentGFXContext->setDepthStencilControl(dsc);
+				
 
 				GNMShader* shader = (GNMShader*)(i)->GetShader();
 				//((GNMShader*)(i->GetShader()))->SubmitShaderSwitch(*currentGFXContext);
-				SendModelMatrices(shader, i);
 
 				if (i->IsRigged()) {
 					//vector<Matrix4> frameMatrices;
@@ -130,7 +133,7 @@ void GNMPaintingGameRenderer::RenderGameScreen() { //change this to RenderScreen
 				}
 				RenderPaintSplat(shader);
 				
-				SetShaderBufffers(shader);
+				
 
 				if (i->GetDefaultTexture()) {
 					//shaderVariables.fragmentVariables->hasTexture = true;
@@ -140,7 +143,7 @@ void GNMPaintingGameRenderer::RenderGameScreen() { //change this to RenderScreen
 
 					currentGFXContext->setTextures(Gnm::kShaderStagePs, 0, 1, &((GNMTexture*)(i->GetDefaultTexture()))->GetAPITexture());
 					currentGFXContext->setSamplers(Gnm::kShaderStagePs, 0, 1, &trilinearSampler);
-
+					//currentGFXContext->setBlendControl(0, blend);
 				}
 
 				if (i->isSingleTextured()) {
@@ -150,7 +153,11 @@ void GNMPaintingGameRenderer::RenderGameScreen() { //change this to RenderScreen
 					RenderWithMultipleTexture(i);
 				}
 				((GNMShader*)(i->GetShader()))->SubmitShaderSwitch(*currentGFXContext);
-				((GNMMesh*)(i->GetMesh()))->SubmitDraw(*currentGFXContext, Gnm::ShaderStage::kShaderStageVs);
+				unsigned int numInstances = i->GetInstanceCount();
+
+				SendModelMatrices(shader, i);
+				SetShaderBufffers(shader);
+				((GNMMesh*)(i->GetMesh()))->SubmitDraw(*currentGFXContext, Gnm::ShaderStage::kShaderStageVs, numInstances);
 			}
 		}
 	);
@@ -188,6 +195,11 @@ void GNMPaintingGameRenderer::BuildObjectList() {
 }
 
 void GNMPaintingGameRenderer::SetShaderBufffers(GNMShader* shader) {
+	int camIndex = shader->GetConstantBufferIndex("CameraData", Gnm::kShaderStageVs);
+
+	if (camIndex >= 0) {
+		currentGFXContext->setConstantBuffers(Gnm::kShaderStageVs, camIndex, 1, &shaderBuffers.cameraBuffer);
+	}
 	/*int objIndex = shader->GetConstantBufferIndex("RenderObjectData", Gnm::kShaderStageVs);
 	int camIndex = shader->GetConstantBufferIndex("CameraData", Gnm::kShaderStageVs);
 	int fragIndex = shader->GetConstantBufferIndex("FragmentData", Gnm::kShaderStagePs);
@@ -211,35 +223,27 @@ void GNMPaintingGameRenderer::SendModelMatrices(GNMShader* shader, const RenderO
 
 
 	unsigned int numInstances = r->GetInstanceCount();
+	Gnm::Buffer constantBuffer;
 	if (r->GetIsInstanced()) {
 		if (numInstances == 0) {
 			return;
 		}
-		/*std::vector<Transform*> transforms = r->GetTransforms();
+		std::vector<Transform*> transforms = r->GetTransforms();
+		Matrix4* modelMat[100];
 		for (int i = 0; i < numInstances; i++) {
-			std::string index = std::to_string(i);
-			Matrix4 modelMatrix = transforms[i]->GetMatrix();
-			int modelArrayLocation = glGetUniformLocation(shader->GetProgramID(), ("modelMatrices[" + index + "]").c_str());
-			glUniformMatrix4fv(modelArrayLocation, 1, false, (float*)&modelMatrix);
-		}*/
+
+			modelMat[i] = (Matrix4*)currentGFXContext->allocateFromCommandBuffer(sizeof(Matrix4), Gnm::kEmbeddedDataAlignment4);
+			*modelMat[i] = transforms[i]->GetMatrix();
+		}
+		constantBuffer.initAsConstantBuffer(modelMat[0], sizeof(Matrix4) * numInstances);
+		constantBuffer.setResourceMemoryType(Gnm::kResourceMemoryTypeRO); // it's a constant buffer, so read-only is OK
 	}
 	else {
 		Matrix4* modelMat = (Matrix4*)currentGFXContext->allocateFromCommandBuffer(sizeof(Matrix4), Gnm::kEmbeddedDataAlignment4);
 		*modelMat = r->GetTransform()->GetMatrix();
 
-		Gnm::Buffer constantBuffer;
 		constantBuffer.initAsConstantBuffer(modelMat, sizeof(Matrix4));
 		constantBuffer.setResourceMemoryType(Gnm::kResourceMemoryTypeRO); // it's a constant buffer, so read-only is OK
-
-		int objIndex = shader->GetConstantBufferIndex("RenderObjectData", Gnm::kShaderStageVs);
-		int camIndex = shader->GetConstantBufferIndex("CameraData", Gnm::kShaderStageVs);
-
-		if (objIndex >= 0) {
-			currentGFXContext->setConstantBuffers(Gnm::kShaderStageVs, objIndex, 1, &constantBuffer);
-		}
-		if (camIndex >= 0) {
-			currentGFXContext->setConstantBuffers(Gnm::kShaderStageVs, camIndex, 1, &cameraBuffer);
-		}
 
 		/*currentGFXContext->setConstantBuffers(Gnm::kShaderStageVs, objIndex, 1, &constantBuffer);
 		currentGFXContext->setConstantBuffers(Gnm::kShaderStageVs, camIndex, 1, &cameraBuffer);*/
@@ -247,6 +251,13 @@ void GNMPaintingGameRenderer::SendModelMatrices(GNMShader* shader, const RenderO
 		//shaderVariables.renderObjectVariables->modelMatrix = r->GetTransform()->GetMatrix();
 		//shaderVariables.renderObjectVariables->inverseModel = Matrix3(r->GetTransform()->GetMatrix().Inverse());
 	}
+
+	int objIndex = shader->GetConstantBufferIndex("RenderObjectData", Gnm::kShaderStageVs);
+
+	if (objIndex >= 0) {
+		currentGFXContext->setConstantBuffers(Gnm::kShaderStageVs, objIndex, 1, &constantBuffer);
+	}
+
 	//send color data
 	//shaderVariables.renderObjectVariables->hasVertexColours = !(*r).GetMesh()->GetColourData().empty();
 	//shaderVariables.renderObjectVariables->objectColour = r->GetColour();

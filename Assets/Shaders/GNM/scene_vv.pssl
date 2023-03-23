@@ -1,13 +1,14 @@
+
 ConstantBuffer RenderObjectData {
-	column_major matrix modelMatrix = float4x4(1.0f);
-	float3x3 inverseModel = float3x3(1.0f);
-	bool hasVertexColours = false;
-	float4 objectColour = float4(1,1,1,1);
+	column_major float4x4 modelMatrix;
+	float3x3 inverseModel;
+	bool hasVertexColours;
+	float4 objectColour;
 	//column_major matrix shadowMatrix = float4x4(1.0f);
 };
 
 ConstantBuffer CameraData {
-	column_major matrix viewProjMatrix = float4x4(1.0f);
+	column_major matrix viewProjMatrix = matrix(1.0f);
 };
 
 struct VS_INPUT {

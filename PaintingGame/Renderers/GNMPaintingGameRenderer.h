@@ -18,7 +18,7 @@ namespace NCL {
 
 		struct ShaderBuffers {
 			Gnm::Buffer	cameraBuffer;
-			Gnm::Buffer objBuffer;
+			//Gnm::Buffer objBuffer;
 			Gnm::Buffer fragmentBuffer;
 		};
 		
@@ -99,7 +99,8 @@ namespace NCL {
 			ShaderVariables shaderVariables;*/
 
 			NCL::Maths::Matrix4* viewProjMat;
-			Gnm::Buffer	cameraBuffer;
+			//Gnm::Buffer	cameraBuffer;
+			ShaderBuffers shaderBuffers;
 		};
 
 		// Concrete factory for creating Painting Game OpenGL renderer

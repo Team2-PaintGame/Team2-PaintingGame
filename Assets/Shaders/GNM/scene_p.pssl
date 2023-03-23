@@ -12,6 +12,7 @@
 	//int numOfSplats;
 //};
 
+
 ConstantBuffer FragmentData {
 	float3	lightPos;
 	float1	lightRadius;

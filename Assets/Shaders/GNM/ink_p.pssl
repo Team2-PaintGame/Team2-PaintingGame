@@ -1,75 +1,26 @@
-struct Light {
-	float3	lightPos;
-	float1	lightRadius;
-	float4	lightColour;
-};
 
-struct PerFrameData {
-    Light light;
-    SamplerState samp0 : register(s0);
-	Texture2D colorMap : register( t0 );
-	float3 cameraPos;
-	bool hasTexture;
-	//float3 paintedPos[1000];
-	//int numOfSplats;
-};
+SamplerState samp0 : register(s0);
 
-struct PsUniformData {
-    //Material* m_pMaterial;
-    PerFrameData* pFrameData;
-};
+Texture2D colorMap : register( t0 );
 
 
-struct VS_INPUT {
+struct VS_OUTPUT
+{
 	float4 Position		: S_POSITION;
 	float2 UV			: TEXCOORD0;
 	float4 Colour		: TEXCOORD1;
-	float3 Normal		: NORMAL;
-	float3 WorldPos		: WPOS;
-	//float4 ShadowProj	: TEXCOORD2;
 };
 
-//float4 modulus(float4 x){return x - floor(x * (1.0/289.0)) * 289.0;}
-//float4 permutate(float4 x){return modulus(((x * 34.0) + 1.0) * x);}
+float4 main(VS_OUTPUT In) : S_TARGET_OUTPUT
+{
+	//float4 test = colorMap.Sample(samp0, In.UV.xy);
 
-float4 main(VS_INPUT In, PsUniformData uniforms : S_SRT_DATA) : S_TARGET_OUTPUT {
-	
-	Light light = uniforms.pFrameData->light;
-	float3 incident = normalize(light.lightPos - In.WorldPos);
-	//float lambert  = max (0.0 , dot ( incident , In.Normal )) * 0.9; 
-	
-	float3 viewDir = normalize ( uniforms.pFrameData->cameraPos - In.WorldPos );
-	float3 halfDir = normalize ( incident + viewDir );
+	//float3x3 testmat = float3x3(1);
+	//float3 testvec = float3(0);
 
-	float rFactor = max (0.0 , dot ( halfDir , In.Normal ));
-	float sFactor = pow ( rFactor , 100.0);
-	
-	float4 albedo = In.Colour;
-	
-	if(uniforms.pFrameData->hasTexture) {
-	 albedo *= uniforms.pFrameData->colorMap.Sample(uniforms.pFrameData->samp0, In.UV.xy);
-	}else{
-		albedo = In.Colour;
-	}
-	
+	//float3 answer = mul(testmat, testvec);
 
-	albedo.rgb = pow(albedo.rgb, float3(2.2));
-	
-	albedo.rgb = albedo.rgb * 0.05f; //ambient
-	
-	//albedo.rgb += albedo.rgb * light.lightColour.rgb * lambert; //diffuse light
-	
-	albedo.rgb += light.lightColour.rgb * sFactor; //specular light
-	
-	albedo.rgb = pow(albedo.rgb, float3(1.0 / 2.2f));
-	
-	albedo.a = albedo.a;
+	//return test + float4(answer,1);
 
-
-	float3x3 testmat = float3x3(1);
-	float3 testvec = float3(0);
-
-	float3 answer = mul(testmat, testvec);
-
-	return albedo + float4(answer,1);
+	return In.Colour;
 }  
