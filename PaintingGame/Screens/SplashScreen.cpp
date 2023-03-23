@@ -5,6 +5,7 @@ using namespace NCL;
 using namespace CSC8508;
 
 void SplashScreen::MenuFrame() {
+#ifdef _WIN32
 	ImGui::Begin("Painting Game");
 	if (ImGui::Button("Play Game")) {
 		command = ScreenCommand::TransitionToNextScreen;
@@ -13,6 +14,7 @@ void SplashScreen::MenuFrame() {
 		command = ScreenCommand::Exit;
 	}
 	ImGui::End();
+#endif
 }
 
 PushdownState::PushdownResult SplashScreen::onStateChange(PushdownState** newState) {
@@ -26,4 +28,14 @@ PushdownState::PushdownResult SplashScreen::onStateChange(PushdownState** newSta
 		default: 
 			return PushdownResult::NoChange;
 	}
+}
+
+void SplashScreen::TransitionTimer(float dt) {
+#ifdef __ORBIS__
+	totalTime += dt;
+
+	if (totalTime > 3.0f) {
+		command = ScreenCommand::TransitionToNextScreen;
+	}
+#endif
 }

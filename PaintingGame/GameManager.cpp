@@ -40,7 +40,7 @@ bool GameManager::RunGame(float dt) {
 
 	//gameAssets->ReloadDebug();
 	//renderer->BindDebugShader(gameAssets->GetShader("debugShader"));
-	((OGLRenderer*)renderer)->ResetDefaultContext();
+	//((OGLRenderer*)renderer)->ResetDefaultContext();
 	renderer->BindScreen(screenManager->GetActiveScreen());
 	renderer->Render();
 	calculateRenderingTime();

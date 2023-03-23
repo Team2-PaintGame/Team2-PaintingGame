@@ -14,6 +14,12 @@ namespace NCL {
 			Vector3 position;
 			Vector4 colour;
 			bool sent = false;
+
+			PaintSplat(Vector3 position, Vector4 colour, bool sent = false) {
+				this->position = position;
+				this->colour = colour;
+				this->sent = sent;
+			}
 		};
 
 		typedef std::function<void(GameObject*)> GameObjectFunc;
