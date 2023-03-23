@@ -1,0 +1,42 @@
+5
+30
+29
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x.......................x....x
+x.......................x....x
+x..xxxxxxxxxxxxxxxxxx..xxxx..x
+x..x......................x..x
+x..x......................x..x
+x..x..xxx..xxxxxxxxxxxxx..x..x
+x..x..x................x..x..x
+x..x..x................xxxx..x
+x..xxxx..xxxxx..xxxxx..x..x..x
+x..x..x..x..........x..x..x..x
+x..x..x..x..........x..x..x..x
+x..x..x..x..xx..xx..x..x..x..x
+x..x..x..x..x....x.....x..x..x
+x.....x..x..x....x.....x..x..x
+x.....x..x..x....x..x..x..x..x
+x..x..x..x..xx..xx..xxxx..x..x
+x..x..x..x..........x..x..x..x
+x..x..x..x..........x..x..x..x
+x..x..x..xxxxx...xxxx..x.....x
+x..x..x................x.....x
+x..x..x................x..x..x
+x..x..xxxxxxxx...xxxxxxx..x..x
+x..x......................x..x
+x..x......................x..x
+x..xxxxxxxxxxx...xxxxxxxxxx..x
+x.....x......................x
+x.....x......................x
+xxxxxxxxxxxxxx...xxxxxxxxxxxxx
+
+// X - wall
+// . - empty
+// R, G, B - doors of specific colour
+// r, g, b - keys of specific colour
+// U - goose
+// E - basic enemy
+// c - Collectable
+
+// Source: http://www.mikes-mazes.com/graphics/island.gif

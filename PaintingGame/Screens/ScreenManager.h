@@ -2,8 +2,8 @@
 #include "GameAssets.h"
 #include "SceneNode.h"
 #include "PushdownState.h"
-//#include <imgui_impl_win32.h>
-//#include <imgui_impl_opengl3.h>
+#include <imgui_impl_win32.h>
+#include <imgui_impl_opengl3.h>
 #include "PushdownMachine.h"
 #include <unordered_map>
 
@@ -11,6 +11,7 @@ namespace NCL::CSC8508 {
 	enum class ScreenType {
 		None,
 		SplashScreen,
+		LoadingScreen,
 		MainMenuScreen,
 		GameScreen,
 		GameWinScreen,
@@ -34,8 +35,9 @@ namespace NCL::CSC8508 {
 		BaseScreen* GetActiveScreen() const;
 		GameAssets* GetGameAssets() const { return assets; }
 		bool Update(float dt);
-	protected:
 		void LoadScreens();
+		void LoadLoadingScreen();
+	protected:
 		std::unordered_map<ScreenType, std::unique_ptr<BaseScreen>> screens;
 		std::unordered_map<ScreenType, std::unique_ptr<SceneNode>> screenSceneNodes;
 		GameAssets* assets;
@@ -55,9 +57,11 @@ namespace NCL::CSC8508 {
 		void RenderMenu();
 	protected:
 		virtual void MenuFrame() = 0;
+		virtual void DebugWindow() {};
 		virtual PushdownResult onStateChange(PushdownState** newState) = 0;
 		SceneNode* sceneNode = NULL;
 		bool isMenuDisplayed = true;
+		bool isDebugDisplayed = true;
 		ScreenCommand command = ScreenCommand::None;
 		ScreenManager* screenManager;
 		ScreenType screenType = ScreenType::None;

@@ -33,6 +33,8 @@ namespace NCL::CSC8508 {
 		int playerID;
 		Quaternion orientation;
 		Vector3 position;
+		bool startedShooting;
+		float gunPitch;
 
 		ClientPacket() {
 			type = Client_Update;
@@ -64,6 +66,8 @@ namespace NCL::CSC8508 {
 		int playerID;
 		Quaternion orientation;
 		Vector3 position;
+		bool startedShooting;
+		float gunPitch;
 
 		ServerPacket() {
 			type = Server_Update;

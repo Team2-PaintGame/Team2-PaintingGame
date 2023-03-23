@@ -4,7 +4,7 @@ using namespace NCL;
 using namespace CSC8508;
 
 void MainMenuScreen::MenuFrame() {
-	/*ImGui::Begin("Main Menu");
+	ImGui::Begin("Main Menu");
 	if (ImGui::Button("Single Player Game")) {
 		command = ScreenCommand::CreateSinglePlayerGame;
 	}
@@ -29,7 +29,7 @@ void MainMenuScreen::MenuFrame() {
 		}
 		ImGui::EndPopup();
 	}
-	ImGui::End();*/
+	ImGui::End();
 }
 
 PushdownState::PushdownResult MainMenuScreen::onStateChange(PushdownState** newState) {

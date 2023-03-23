@@ -74,42 +74,42 @@ void NetworkedGame::Update(float dt) {
 	timeToNextPacket -= dt;
 	if (timeToNextPacket < 0) {
 		if (thisServer) {
-			/*StringPacket serverPacket = "Server says hello!" + std::to_string(1);
-			thisServer->SendGlobalPacket(serverPacket);*/
 			std::cout << "Server: sending packet" << std::endl;
 			UpdateAsServer(dt);
+			justShot = false;
 		}
 		else if (thisClient) {
-			/*StringPacket clientPacket = "Client says hello!" + std::to_string(1);
-			thisClient->SendPacket(clientPacket);*/
 			std::cout << "Client: sending packet" << std::endl;
 			UpdateAsClient(dt);
+			justShot = false;
 		}
 		timeToNextPacket += 1.0f / 60.0f; //60hz server/client update
 	}
 
 	if ((thisClient && connected) || thisServer)
 	{
-		//ServerPlayer->GetCamera()->UpdateCamera(dt);
 		playerController->Update(dt);
+
+		if (thisServer)
+		{
+			justShot = ServerPlayer->GetGun()->didJustShoot() ? true : justShot;
+		}
+		else if (thisClient)
+		{
+			justShot = ClientPlayer->GetGun()->didJustShoot() ? true : justShot;
+		}
+
 		PaintingGame::Update(dt);
 	}
 }
 
 void NetworkedGame::UpdateAsServer(float dt) {
-	//packetsToSnapshot--;
-	//if (packetsToSnapshot < 0) {
-	//	BroadcastSnapshot(false);
-	//	packetsToSnapshot = 5;
-	//}
-	//else {
-	//	BroadcastSnapshot(true);
-	//}
-
 	ServerPacket packet;
 	packet.orientation = ServerPlayer->GetTransform().GetOrientation();
 	packet.position = ServerPlayer->GetTransform().GetPosition();
 	packet.playerID = ServerPlayerID;
+	packet.startedShooting = justShot;
+	packet.gunPitch = ServerPlayer->GetPitch();
 	thisServer->SendGlobalPacket(packet);
 	thisServer->UpdateServer();
 }
@@ -126,6 +126,8 @@ void NetworkedGame::UpdateAsClient(float dt) {
 		packet.orientation = ClientPlayer->GetTransform().GetOrientation();
 		packet.position = ClientPlayer->GetTransform().GetPosition();
 		packet.playerID = ClientPlayerID;
+		packet.startedShooting = justShot;
+		packet.gunPitch = ClientPlayer->GetPitch();
 		thisClient->SendPacket(packet);
 	}
 	thisClient->UpdateClient();
@@ -135,7 +137,7 @@ void NetworkedGame::ServerCreateClientPlayer(SpawnPacket* payload)
 {
 	// Server create client player and send packet
 	// back to client to create server character
-	ClientPlayer = CreatePlayer(payload->position, Team::Blue);
+	ClientPlayer = CreatePlayer(payload->position, Team::Blue, true);
 	ClientPlayer->GetTransform().SetPosition(payload->position);
 	ClientPlayerID = payload->playerID;
 	SpawnPacket packet;
@@ -148,7 +150,7 @@ void NetworkedGame::ServerCreateClientPlayer(SpawnPacket* payload)
 void NetworkedGame::ClientCreateServerPlayer(SpawnPacket* payload)
 {
 	// client creates server player
-	ServerPlayer = CreatePlayer(payload->position, Team::Red);
+	ServerPlayer = CreatePlayer(payload->position, Team::Red, true);
 	ServerPlayerID = payload->playerID;
 }
 
@@ -158,9 +160,14 @@ void NetworkedGame::EnactClientUpdatesOnServer(ClientPacket* payload)
 	if (ClientPlayer) {
 		ClientPlayer->GetTransform().SetOrientation(payload->orientation);
 		ClientPlayer->GetTransform().SetPosition(payload->position);
+		ClientPlayer->SetPitch(payload->gunPitch);
 
 		reactphysics3d::Transform newRBTransform = reactphysics3d::Transform(~payload->position, ~payload->orientation);
 		ClientPlayer->GetRigidBody()->setTransform(newRBTransform);
+		if (payload->startedShooting)
+		{
+			ClientPlayer->Shoot();
+		}
 	}
 }
 
@@ -170,9 +177,15 @@ void NetworkedGame::EnactServerUpdatesOnClient(ServerPacket* payload)
 	if (ServerPlayer) {
 		ServerPlayer->GetTransform().SetOrientation(payload->orientation);
 		ServerPlayer->GetTransform().SetPosition(payload->position);
+		ServerPlayer->SetPitch( payload->gunPitch);
 
 		reactphysics3d::Transform newRBTransform = reactphysics3d::Transform(~payload->position, ~payload->orientation);
 		ServerPlayer->GetRigidBody()->setTransform(newRBTransform);
+
+		if (payload->startedShooting)
+		{
+			ServerPlayer->Shoot();
+		}
 	}
 }
 
@@ -222,25 +235,25 @@ void NetworkedGame::UpdateMinimumState() {
 }
 
 void NetworkedGame::CreateSplatOnShoot() {
-	if (thisServer) {
-		if (playerController->Shoot()) {
-			SceneContactPoint* closestCollision = world->Raycast(ServerPlayer->GetShootRay());
-			if (closestCollision->isHit) {
-				world->AddPaintedPosition(closestCollision->hitPos);
+	//if (thisServer) {
+	//	if (playerController->Shoot()) {
+	//		SceneContactPoint* closestCollision = world->Raycast(ServerPlayer->GetShootRay());
+	//		if (closestCollision->isHit) {
+	//			world->AddPaintedPosition(closestCollision->hitPos);
 
-				//Broadcast Paint Position
-			}
-		}
-	}
-	if (thisClient) {
-		if (playerController->Shoot()) {
-			SceneContactPoint* closestCollision = world->Raycast(ClientPlayer->GetShootRay());
-			if (closestCollision->isHit) {
-				world->AddPaintedPosition(closestCollision->hitPos);
-				//Broadcast Paint Position
-			}
-		}
-	}
+	//			//Broadcast Paint Position
+	//		}
+	//	}
+	//}
+	//if (thisClient) {
+	//	if (playerController->Shoot()) {
+	//		SceneContactPoint* closestCollision = world->Raycast(ClientPlayer->GetShootRay());
+	//		if (closestCollision->isHit) {
+	//			world->AddPaintedPosition(closestCollision->hitPos);
+	//			//Broadcast Paint Position
+	//		}
+	//	}
+	//}
 }
 
 NCL::Player* NetworkedGame::SpawnNetworkedPlayer() {
@@ -252,6 +265,7 @@ NCL::Player* NetworkedGame::SpawnNetworkedPlayer() {
 	if (thisClient) {
 		// send to server that player has been spawned
 		ClientPlayer = AddPlayer(Vector3(115.0f, 15.0f, 55.0f), Team::Blue);
+	//	AddSecurityAI(Vector3(100, 5, 100), ServerPlayer, ClientPlayer);
 		ClientPlayerID = 2;
 		SpawnPacket packet;
 		packet.position = ClientPlayer->GetTransform().GetPosition();
@@ -265,10 +279,6 @@ NCL::Player* NetworkedGame::SpawnNetworkedPlayer() {
 Player* NetworkedGame::AddPlayer(Vector3 position, Team team) {
 	Player* player = CreatePlayer(position, team);
 	activeCameras.push_back(player->GetCamera());
-
-	FocusPoint* focusPoint = CreateFocusPoint();
-	focusPoint->SetPlayer(player);
-	world->AddGameObject(focusPoint);
 
 	return player;
 }
@@ -301,7 +311,7 @@ void NetworkedGame::ReceivePacket(int type, GamePacket* payload, int source) {
 		switch (payload->type) {
 		case Spawn_Player:
 			ServerCreateClientPlayer((SpawnPacket*) payload);
-			std::cout << "SPAWN Packet recieved ))))))))))))))";
+			std::cout << "SPAWN Packet recieved";
 			break;
 		case Client_Update:
 			EnactClientUpdatesOnServer((ClientPacket*) payload);

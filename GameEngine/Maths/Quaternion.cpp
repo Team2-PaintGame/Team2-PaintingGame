@@ -221,3 +221,36 @@ Vector3		Quaternion::operator *(const Vector3 &a)	const {
 	Quaternion newVec = *this * Quaternion(a.x, a.y, a.z, 0.0f) * Conjugate();
 	return Vector3(newVec.x, newVec.y, newVec.z);
 }
+
+#define m00 right.x
+#define m01 up.x
+#define m02 forward.x
+#define m10 right.y
+#define m11 up.y
+#define m12 forward.y
+#define m20 right.z
+#define m21 up.z
+#define m22 forward.z
+
+
+void OrthoNormalize(Vector3& a, Vector3& b) {
+	a = a.Normalised();
+	float dot = Vector3::Dot(b, a);
+	b -= a * dot;
+	b = b.Normalised();
+}
+
+Quaternion Quaternion::LookRotation(Vector3& lookAt, Vector3& upDirection) {
+	Vector3 forward = lookAt; Vector3 up = upDirection;
+	OrthoNormalize(forward, up);
+	Vector3 right = Vector3::Cross(up, forward);
+
+	Quaternion ret;
+	ret.w = sqrtf(1.0f + m00 + m11 + m22) * 0.5f;
+	float w4_recip = 1.0f / (4.0f * ret.w);
+	ret.x = (m21 - m12) * w4_recip;
+	ret.y = (m02 - m20) * w4_recip;
+	ret.z = (m10 - m01) * w4_recip;
+
+	return ret;
+}

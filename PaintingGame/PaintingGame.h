@@ -19,8 +19,7 @@ namespace NCL {
 		//typedef std::function<void(Camera*)> CameraFunc;
 		enum class Team {
 			Red,
-			Blue,
-			None
+			Blue
 		};
 		class PaintingGame : public SceneNode {
 		public:
@@ -34,11 +33,10 @@ namespace NCL {
 		protected:
 			virtual void InitWorld();
 			virtual void CreateSplatOnShoot() = 0;
-			Player* CreatePlayer(Vector3 position, Team team);
+			Player* CreatePlayer(Vector3 position, Team team, bool networked = false);
 			virtual Player* AddPlayer(Vector3 position, Team team) = 0;
-			FocusPoint* CreateFocusPoint();
 			Gun* CreateGun(Vector3 position, Team team);
-
+			virtual void AddSecurityAI(Vector3 position, PlayerBase* target1, PlayerBase* target2);
 			GameWorld* world;
 
 			bool useGravity = true;
@@ -53,6 +51,7 @@ namespace NCL {
 			std::vector<DirectionalLight> directionalLights;
 			std::vector<PointLight> pointLights;
 			std::vector<SpotLight> spotLights;
+			Ink* ink;
 
 			//container for cameras
 			std::vector<Camera*> activeCameras;

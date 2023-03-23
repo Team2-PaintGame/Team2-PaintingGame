@@ -24,6 +24,17 @@ void PlayerController::Update(float dt) {
 	fwdAxis.Normalise();
 	rightAxis.Normalise();
 
+	if (player->GetHasRespawned() == true)
+	{
+		player->SetRespawnTimer(dt);
+		if (player->GetRespawnTimer() >= 3.0)
+		{
+			player->ResetSpawnTimer();
+			player->SetHasRespawnedFalse();
+		}
+		return;
+	}
+	
 	float force = 5000.f;
 	float side_damping = 0.33f;
 
@@ -43,13 +54,11 @@ void PlayerController::Update(float dt) {
 		player->GetRigidBody()->applyWorldForceAtCenterOfMass(~rightAxis * force * (1 - side_damping));
 	}
 
-	player->GetGun()->SetActive(player->GetIsMoving());
+	//player->GetGun()->SetActive(player->GetIsMoving());
 
 	player->SetYawPitch(ViewDx(), ViewDy());
 	
 	if (Shoot()) {
 		player->Shoot();
 	}
-
-	//player->targetPosition = GetCursorPosition(dt);
 }

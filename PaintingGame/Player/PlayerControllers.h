@@ -37,9 +37,19 @@ namespace NCL {
 		float ViewDx() override {
 			return Window::GetMouse()->GetRelativePosition().x;
 		}
-		const Vector2& GetCursorPosition(float dt) override {
-			return Window::GetMouse()->GetAbsolutePosition() / (Window::GetWindow()->GetScreenSize() - 1);
-		}
+		//const Vector2& GetCursorPosition(float dt) override {
+
+		//	// these are not actual positions but the change between last frame and now
+		//	float speed = 2; //pixels per second
+		//	float h = speed * Window::GetMouse()->GetRelativePosition().x * dt;
+		//	float v = speed * Window::GetMouse()->GetRelativePosition().y * dt;
+
+		//	// add the changes to the actual cursor position
+		//	cursorPosition.x += h;
+		//	cursorPosition.y += v;
+
+		//	return cursorPosition;
+		//}
 	};
 
 	class XBoxController : public PlayerController {
@@ -59,10 +69,10 @@ namespace NCL {
 			return gamepad.leftStickX < 0.0f;
 		}
 		bool Shoot() override {
-			return false;
+			return gamepad.IsPressed(XINPUT_GAMEPAD_RIGHT_SHOULDER);
 		}
 		bool Pause() override {
-			return gamepad.GetButtonDown(VK_PAD_START);
+			return gamepad.IsPressed(XINPUT_GAMEPAD_START);
 		}
 
 		float ViewDy() override {
@@ -71,18 +81,18 @@ namespace NCL {
 		float ViewDx() override {
 			return gamepad.rightStickX;
 		}
-		const Vector2& GetCursorPosition(float dt) override {
-			// these are not actual positions but the change between last frame and now
-			float speed = 2; //pixels per second
-			float h = speed * gamepad.rightStickX * dt;
-			float v = speed * gamepad.rightStickY * dt;
+		//const Vector2& GetCursorPosition(float dt) override {
+		//	// these are not actual positions but the change between last frame and now
+		//	float speed = 2; //pixels per second
+		//	float h = speed * gamepad.rightStickX * dt;
+		//	float v = speed * gamepad.rightStickY * dt;
 
-			// add the changes to the actual cursor position
-			cursorPosition.x += h;
-			cursorPosition.y += v;
+		//	// add the changes to the actual cursor position
+		//	cursorPosition.x += h;
+		//	cursorPosition.y += v;
 
-			return cursorPosition;
-		}
+		//	return cursorPosition;
+		//}
 
 		void Connect() {
 			if (!gamepad.Refresh())
@@ -106,7 +116,6 @@ namespace NCL {
 			PlayerController::Update(dt);
 		}
 	protected:
-		Vector2 cursorPosition;
 		XBoxGamepad gamepad;
 		bool wasConnected = false;
 	};
@@ -161,25 +170,25 @@ namespace NCL {
 		float ViewDx() override {
 			return gamepad.GetAxis(1).x;
 		}
-		const Vector2& GetCursorPosition(float dt) override {
-			// these are not actual positions but the change between last frame and now
-			float speed = 2; //pixels per second
-			float h = speed * gamepad.GetAxis(1).x * dt;
-			float v = speed * gamepad.GetAxis(1).y * dt;
+		//const Vector2& GetCursorPosition(float dt) override {
+		//	// these are not actual positions but the change between last frame and now
+		//	float speed = 2; //pixels per second
+		//	float h = speed * gamepad.GetAxis(1).x * dt;
+		//	float v = speed * gamepad.GetAxis(1).y * dt;
 
-			// add the changes to the actual cursor position
-			cursorPosition.x += h;
-			cursorPosition.y += v;
+		//	// add the changes to the actual cursor position
+		//	cursorPosition.x += h;
+		//	cursorPosition.y += v;
 
-			return cursorPosition;
-		}
+		//	return cursorPosition;
+		//}
+
 		void Update(float dt) override
 		{
 			gamepad.Poll();
 			PlayerController::Update(dt);
 		}
 	protected:
-		Vector2 cursorPosition;
 		PS4::PS4Gamepad gamepad;
 	};
 

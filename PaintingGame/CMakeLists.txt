@@ -13,6 +13,7 @@ set(Header_Files
     "GameAssets.h"
     "NetworkedGame.h"
     "NetworkPlayer.h"
+    "EventListener.h"
 )
 else()
 set(Header_Files
@@ -22,6 +23,7 @@ set(Header_Files
     "GameManager.h"
     "PlatformConfigurations.h"
     "GameAssets.h"
+    "EventListener.h"
 )
 endif()
 source_group("Header Files" FILES ${Header_Files})
@@ -36,6 +38,7 @@ set(Source_Files
     "GameAssets.cpp"
     "NetworkedGame.cpp"
     "NetworkPlayer.cpp"
+    "EventListener.cpp"
 )
 else()
 set(Source_Files
@@ -45,6 +48,7 @@ set(Source_Files
     "PaintingGame.cpp"
     "GameManager.cpp"
     "GameAssets.cpp"
+    "EventListener.cpp"
 )
 endif()
 
@@ -60,7 +64,14 @@ set(GameObjects
     "./GameObjects/Ink.h"
     "./GameObjects/PaintingObject.h"
     "./GameObjects/HudElement.h"
+    "./GameObjects/HudElement.cpp"
     "./GameObjects/Gun.h"
+    "./GameObjects/SecurityGuard.h"
+    "./GameObjects/SecurityGuard.cpp"
+     "./GameObjects/Wall.h"
+     "./GameObjects/MuseumItem.h"
+
+    "./GameObjects/HUDOnLoad.h"
 )
 source_group("Game Objects" FILES ${GameObjects})
 
@@ -88,6 +99,8 @@ set(Screens
     "./Screens/MainMenuScreen.cpp" 
     "./Screens/GameScreen.h"
     "./Screens/GameScreen.cpp" 
+    "./Screens/LoadingScreen.h"
+    "./Screens/LoadingScreen.cpp" 
     "./Screens/ScreenManager.h"
     "./Screens/ScreenManager.cpp"
 )

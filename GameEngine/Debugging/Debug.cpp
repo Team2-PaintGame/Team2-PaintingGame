@@ -1,4 +1,6 @@
 #include "Debug.h"
+#include "Window.h"
+
 using namespace NCL;
 
 std::vector<Debug::DebugStringEntry>	Debug::stringEntries;
@@ -16,6 +18,31 @@ const Vector4 Debug::WHITE		= Vector4(1, 1, 1, 1);
 const Vector4 Debug::YELLOW		= Vector4(1, 1, 0, 1);
 const Vector4 Debug::MAGENTA	= Vector4(1, 0, 1, 1);
 const Vector4 Debug::CYAN		= Vector4(0, 1, 1, 1);
+
+int Debug::frames = 0;
+double Debug::startTime = 0;
+double Debug::currentTime = 0;
+bool Debug::first = true;
+float Debug::fps = 0.0f;
+float Debug::renderingTime = 0.0f;
+int Debug::numberOfParticals = 0;
+int Debug::numberOfGameObjects = 0;
+int Debug::numberOfPaints = 0;
+DWORD Debug::PageFaultCount = 0;
+size_t Debug::PeakWorkingSetSize = 0;
+size_t Debug::WorkingSetSize = 0;
+size_t Debug::QuotaPeakPagedPoolUsage = 0;
+size_t Debug::QuotaPagedPoolUsage = 0;
+size_t Debug::QuotaPeakNonPagedPoolUsage = 0;
+size_t Debug::QuotaNonPagedPoolUsage = 0;
+size_t Debug::PagefileUsage = 0;
+size_t Debug::PeakPagefileUsage = 0;
+
+DWORDLONG Debug::totalVirtualMemory = 0;
+DWORDLONG Debug::usedVirtualMemory = 0;
+DWORDLONG Debug::totalPhysMemory = 0;
+DWORDLONG Debug::usedphysMemory = 0;
+
 
 void Debug::Print(const std::string& text, const Vector2& pos, const Vector4& colour) {
 	DebugStringEntry newEntry;
@@ -93,4 +120,80 @@ const std::vector<Debug::DebugStringEntry>& Debug::GetDebugStrings() {
 
 const std::vector<Debug::DebugLineEntry>& Debug::GetDebugLines() {
 	return lineEntries;
+}
+
+void NCL::Debug::DrawFPS()
+{
+	if (first)
+	{
+		frames = 0;
+		startTime = Window::GetTimer()->GetTotalTimeSeconds();
+		first = false;
+	}
+	frames++;
+	currentTime = Window::GetTimer()->GetTotalTimeSeconds();
+	if (currentTime - startTime > 0.25 && frames > 10)
+	{
+		fps = (double)frames / (currentTime - startTime);
+		startTime = currentTime;
+		frames = 0;
+	}
+
+	//std::cout << "FPS: " << fps << "\n";
+
+	//Print("FPS: " + std::to_string(fps),10,1);
+}
+
+void NCL::Debug::ShowMemoryUsage(/*DWORD processID*/)
+{
+	//HANDLE hProcess;
+	PROCESS_MEMORY_COUNTERS pmc;
+
+	MEMORYSTATUSEX memInfo;
+	memInfo.dwLength = sizeof(MEMORYSTATUSEX);
+	GlobalMemoryStatusEx(&memInfo);
+
+	totalVirtualMemory = memInfo.ullTotalPageFile;
+	usedVirtualMemory = memInfo.ullTotalPageFile - memInfo.ullAvailPageFile;
+
+	totalPhysMemory = memInfo.ullTotalPhys;
+	usedphysMemory = memInfo.ullTotalPhys - memInfo.ullAvailPhys;
+
+	if (GetProcessMemoryInfo(GetCurrentProcess(), &pmc, sizeof(pmc)))
+	{
+		PageFaultCount = pmc.PageFaultCount;
+		PeakWorkingSetSize = pmc.PeakWorkingSetSize;
+		WorkingSetSize = pmc.WorkingSetSize;
+		QuotaPeakPagedPoolUsage = pmc.QuotaPeakPagedPoolUsage;
+		QuotaPagedPoolUsage = pmc.QuotaPagedPoolUsage;
+		QuotaPeakNonPagedPoolUsage = pmc.QuotaPeakNonPagedPoolUsage;
+		QuotaNonPagedPoolUsage = pmc.QuotaNonPagedPoolUsage;
+		PagefileUsage = pmc.PagefileUsage;
+		PeakPagefileUsage = pmc.PeakPagefileUsage;
+	}
+
+	//CloseHandle(hProcess);
+}
+
+void NCL::Debug::ShowNumberOfParticals(size_t nbParticals)
+{
+	numberOfParticals = nbParticals;
+	//Print("Number of particals Generated: " + std::to_string(nbParticals), 10, 5);
+}
+
+void NCL::Debug::ShowNumberOfGameObjects(size_t nbObjects)
+{
+	numberOfGameObjects = nbObjects;
+	//Print("No of GameObjects in world is: " + std::to_string(nbObjects), 10, 8);
+}
+
+void NCL::Debug::ShowNumberOfPaintedPositions(size_t nbPaints)
+{
+	numberOfPaints = nbPaints;
+	//Print("No of PaintedPositions in world is: " + std::to_string(nbPaints), 10, 10);
+}
+
+void NCL::Debug::ShowRenderTime(float time)
+{
+	renderingTime = time;
 }

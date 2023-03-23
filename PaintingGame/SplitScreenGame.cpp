@@ -44,6 +44,8 @@ void SplitScreenGame::InitPlayers() {
 	player2->GetCamera()->SetVpSize(0.5f);
 	player1->GetCamera()->SetVpStartPos(Vector2(0.0f, 0.0f));
 	player2->GetCamera()->SetVpStartPos(Vector2(0.5f, 0.0f));
+
+	AddSecurityAI(Vector3(100, 5, 100), player1, player2);
 }
 
 void SplitScreenGame::CreateSplatOnShoot() {
@@ -52,7 +54,8 @@ void SplitScreenGame::CreateSplatOnShoot() {
 		if (playerControllers[index]->Shoot()) {
 			SceneContactPoint* closestCollision = world->Raycast(player->GetShootRay());
 			if (closestCollision->isHit) {
-				world->AddPaintedPosition(closestCollision->hitPos);
+				//world->AddPaintedPosition(closestCollision->hitPos, player->GetTeamColour());
+				std::cout << "X: " << closestCollision->hitPos.x << "Y: " << closestCollision->hitPos.y << "Z: " << closestCollision->hitPos.z << "\n";
 			}
 		}
 		index++;
@@ -63,11 +66,6 @@ Player* SplitScreenGame::AddPlayer(Vector3 position,Team team) {
 	Player* player = CreatePlayer(position, team);
 	activeCameras.push_back(player->GetCamera());
 	players.push_back(player);
-
-	/*FocusPoint* focusPoint = CreateFocusPoint();
-	focusPoint->SetPlayer(player);
-	world->AddGameObject(focusPoint);*/
-
 	return player;
 }
 
@@ -77,6 +75,8 @@ void SplitScreenGame::Update(float dt) {
 		pc->Update(dt);
 	}
 	PaintingGame::Update(dt);
+	Debug::Print("Blue Team Score:" + std::to_string(world->GetTeamOneScore()), Vector2(5, 90));
+	Debug::Print("Red Team Score:" + std::to_string(world->GetTeamTwoScore()), Vector2(40, 90));
 }
 
 

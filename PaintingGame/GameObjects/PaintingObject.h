@@ -13,17 +13,20 @@ namespace NCL {
 	class PaintingObject : public GameObject {
 	public:
 		PaintingObject() = default;
-		PaintingObject(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh,
+		PaintingObject(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position,Quaternion orientation, MeshGeometry* mesh,
 			MeshMaterial* meshMat, ShaderBase* shader, int size, string objectName) : GameObject(physicsCommon, physicsWorld, objectName) {
 			transform
 				.SetScale(Vector3(size, size, size / 10))
-				.SetPosition(position);
+				.SetPosition(position)
+				.SetOrientation(orientation);
+				
 
 			renderObject = new RenderObject(&transform, mesh, shader);
 			renderObject->LoadMaterialTextures(meshMat);
 
 			boundingVolume = physicsCommon.createBoxShape(~transform.GetScale() / 2.0f);
-			reactphysics3d::Transform rp3d_transform(~position, rp3d::Quaternion::identity());
+		//	reactphysics3d::Transform rp3d_transform(~position, rp3d::Quaternion::identity());
+			reactphysics3d::Transform rp3d_transform(~position, ~orientation);
 
 			// Create a rigid body in the physics world
 			rigidBody = physicsWorld->createRigidBody(rp3d_transform);
