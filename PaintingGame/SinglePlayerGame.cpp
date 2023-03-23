@@ -36,6 +36,7 @@ Player* SinglePlayerGame::AddPlayer(Vector3 position, Team team) {
 
 void SinglePlayerGame::Update(float dt) {
 	playerController->Update(dt);
+	Window::GetWindow()->LockMouseToWindow(true);
 	CreateSplatOnShoot();
 	PaintingGame::Update(dt);
 	Debug::Print("Team 1 score:" + std::to_string(world->GetTeamOneScore()), Vector2(5, 90));

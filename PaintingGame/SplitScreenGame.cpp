@@ -74,6 +74,7 @@ void SplitScreenGame::Update(float dt) {
 		pc->Update(dt);
 	}
 	PaintingGame::Update(dt);
+	Window::GetWindow()->LockMouseToWindow(true);
 	Debug::Print("Blue Team Score:" + std::to_string(world->GetTeamOneScore()), Vector2(5, 90));
 	Debug::Print("Red Team Score:" + std::to_string(world->GetTeamTwoScore()), Vector2(60, 90));
 }

@@ -112,6 +112,7 @@ void NetworkedGame::UpdateAsServer(float dt) {
 	packet.gunPitch = ServerPlayer->GetPitch();
 	thisServer->SendGlobalPacket(packet);
 	thisServer->UpdateServer();
+	Window::GetWindow()->LockMouseToWindow(false);
 }
 
 void NetworkedGame::UpdateAsClient(float dt) {
@@ -131,6 +132,7 @@ void NetworkedGame::UpdateAsClient(float dt) {
 		thisClient->SendPacket(packet);
 	}
 	thisClient->UpdateClient();
+	Window::GetWindow()->LockMouseToWindow(false);
 }
 
 void NetworkedGame::ServerCreateClientPlayer(SpawnPacket* payload)
