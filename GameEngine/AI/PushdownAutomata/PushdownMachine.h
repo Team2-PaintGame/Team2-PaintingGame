@@ -10,10 +10,10 @@ namespace NCL {
 		public:
 			PushdownMachine(PushdownState* initialState);
 			~PushdownMachine();
-			void Reset();
 			bool Update(float dt);
 			PushdownState* GetActiveState() const { return activeState; }
 		protected:
+			void Reset(uint32_t minsize = 1);
 			PushdownState* activeState = NULL;
 			PushdownState* initialState = NULL;
 

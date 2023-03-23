@@ -36,7 +36,7 @@ PlayerBase::~PlayerBase() {
 	if (rigidBody) {
 		physicsWorld->destroyRigidBody(rigidBody);
 	}
-	physicsCommon.destroyCapsuleShape(dynamic_cast<rp3d::CapsuleShape*>(boundingVolume));
+	physicsCommon.destroyCapsuleShape((rp3d::CapsuleShape*)(boundingVolume));
 
 	delete camera;
 }

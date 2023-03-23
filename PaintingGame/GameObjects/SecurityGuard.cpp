@@ -74,36 +74,36 @@ namespace NCL::CSC8508 {
 
 	void SecurityGuard::Update(float dt)
 	{
-	//	if (isBlinded)
-	//	{
-	//		blindTimer += dt;
-	//		if (blindTimer > 5.0f)
-	//		{
-	//			blindTimer = 0.0f;
-	//			SetIsBlindedFalse();
-	//		}
-	//	}
-	//	animationController->Update(dt);
-	///*	DrawNavTris();
-	//	DisplayPathfinding();
-	//	DrawTriRoute();*/
-	//	if (state == Initialise) {
-	//		state = Ongoing;
-	//	}
-	//	if (state == Ongoing) {
-	//		state = rootSelector->Execute(dt);
-	//	}
-	//	if (state == Success) {
-	//		rootSelector->Reset();
-	//		state = Initialise;
-	//	}
-	//	if (state == Failure) {
-	//		state = Initialise;
-	//	}
-	//	if (ink) {
-	//		ink->SetLayer(Layer::Bubbles);
-	//		ink->GetTransform().SetPosition(transform.GetPosition()).SetOrientation(transform.GetOrientation());
-	//	}
+		if (isBlinded)
+		{
+			blindTimer += dt;
+			if (blindTimer > 5.0f)
+			{
+				blindTimer = 0.0f;
+				SetIsBlindedFalse();
+			}
+		}
+		animationController->Update(dt);
+		/*DrawNavTris();
+			DisplayPathfinding();
+		DrawTriRoute();*/
+		if (state == Initialise) {
+			state = Ongoing;
+		}
+		if (state == Ongoing) {
+			state = rootSelector->Execute(dt);
+		}
+		if (state == Success) {
+			rootSelector->Reset();
+			state = Initialise;
+		}
+		if (state == Failure) {
+			state = Initialise;
+		}
+		if (ink) {
+			ink->SetLayer(Layer::Bubbles);
+			ink->GetTransform().SetPosition(transform.GetPosition()).SetOrientation(transform.GetOrientation());
+		}
 	}
 
 	void SecurityGuard::InitBehaviorTree()
@@ -164,7 +164,7 @@ namespace NCL::CSC8508 {
 		goToPaint = new BehaviourAction("Go To Paint ", [&](float dt, BehaviourState state)->BehaviourState {
 			if (state == Initialise) {
 				//std::cout << "Go To Paint - Initialise\n";
-				if (gameWorld->GetNumPaintedPositions() >= 420)
+				if (gameWorld->GetNumPaintedPositions() >= 900)
 				{
 					//std::cout << "Theres too much paint!\n";
 					Vector3 paintPos = gameWorld->FindClosestPaintSplat(this->GetTransform().GetPosition());
@@ -209,7 +209,7 @@ namespace NCL::CSC8508 {
 						return Success;
 					}
 				}
-				if (gameWorld->CleanNearbyPaint(this->GetTransform().GetPosition(), 15))
+				if (gameWorld->CleanNearbyPaint(this->GetTransform().GetPosition(), 12))
 				{
 					ink->SetLayer(Layer::Bubbles);
 					BubbleEmission();
@@ -232,7 +232,7 @@ namespace NCL::CSC8508 {
 			else if (state == Ongoing)
 			{
 				Vector3 securityPos = this->GetTransform().GetPosition();
-				if (gameWorld->CleanNearbyPaint(securityPos, 30))
+				if (gameWorld->CleanNearbyPaint(securityPos, 20))
 				{
 					ink->SetLayer(Layer::Bubbles);
 					BubbleEmission();
@@ -314,7 +314,7 @@ namespace NCL::CSC8508 {
 				}
 				DetermineSpeed();
 				MoveSecurityGuard(direction);
-				if (gameWorld->CleanNearbyPaint(this->GetTransform().GetPosition(), 15))
+				if (gameWorld->CleanNearbyPaint(this->GetTransform().GetPosition(), 12))
 				{
 					ink->SetLayer(Layer::Bubbles);
 					BubbleEmission();
@@ -590,7 +590,7 @@ namespace NCL::CSC8508 {
 		float angle = Vector3::Dot(forward, direction);
 		angle = acos(angle / (forward.Length() * direction.Length()));
 		angle = angle * 180 / PI;
-		if (angle <= 180 && angle >= 100) { 
+		if (angle <= 180 && angle >= 130) { 
 			return true;
 		}
 		else {
@@ -711,50 +711,65 @@ namespace NCL::CSC8508 {
 		{
 			return;
 		}
-		if (numWaypoints == 1)
+		float distance = navigationPath->waypoints.back().Length();
+
+		if (distance <= 15)
 		{
 			force = slowForce;
 			return;
 		}
-		if (numWaypoints == 2 || numWaypoints == 3)
+		else
 		{
 			force = walkForce;
 			return;
 		}
-		
-		vector<Vector3>::iterator it = navigationPath->waypoints.end() - 1;
-		if (numWaypoints >= 4)
-		{
-			Vector3 nextThreeWaypoints[3];
-			int i = 0;
-			for (it ; it != navigationPath->waypoints.end() - 4; --it)
-			{
-				nextThreeWaypoints[i] = *it;
-				++i;
-			}
-			Vector3 playerPos = this->GetTransform().GetPosition();
-			Vector3 firstWaypointDirection, secondWaypointDirection, thirdWaypointDirection;
-			firstWaypointDirection = (nextThreeWaypoints[0] - playerPos).Normalised();
-			secondWaypointDirection = (nextThreeWaypoints[1] - playerPos).Normalised();
-			thirdWaypointDirection = (nextThreeWaypoints[2] - playerPos).Normalised();
 
-			if (firstWaypointDirection == secondWaypointDirection && secondWaypointDirection == thirdWaypointDirection) //Going in a straight line
-			{
-				force = runForce;
-				return;
-			}
 
-			if (firstWaypointDirection == secondWaypointDirection && secondWaypointDirection != thirdWaypointDirection) // third waypoint there is a turn
-			{
-				force = walkForce;
-				return;
-			}
-			if (firstWaypointDirection != secondWaypointDirection && secondWaypointDirection != thirdWaypointDirection) // second waypoint there is a turn
-			{
-				force = slowForce;
-				return;
-			}
-		}
+
+		//if (numWaypoints == 1)
+		//{
+		//	force = slowForce;
+		//	return;
+		//}
+		//if (numWaypoints == 2 || numWaypoints == 3)
+		//{
+		//	force = walkForce;
+		//	return;
+		//}
+		//
+		//vector<Vector3>::iterator it = navigationPath->waypoints.end() - 1;
+		//if (numWaypoints >= 4)
+		//{
+		//	Vector3 nextThreeWaypoints[3];
+		//	int i = 0;
+		//	for (it ; it != navigationPath->waypoints.end() - 4; --it)
+		//	{
+		//		nextThreeWaypoints[i] = *it;
+		//		++i;
+		//	}
+		//	Vector3 playerPos = this->GetTransform().GetPosition();
+		//	Vector3 firstWaypointDirection, secondWaypointDirection, thirdWaypointDirection;
+		//	firstWaypointDirection = (nextThreeWaypoints[0] - playerPos).Normalised();
+		//	secondWaypointDirection = (nextThreeWaypoints[1] - playerPos).Normalised();
+		//	thirdWaypointDirection = (nextThreeWaypoints[2] - playerPos).Normalised();
+
+		//	if (firstWaypointDirection == secondWaypointDirection && secondWaypointDirection == thirdWaypointDirection) //Going in a straight line
+		//	{
+		//		force = runForce;
+		//		return;
+		//	}
+
+		//	if (firstWaypointDirection == secondWaypointDirection && secondWaypointDirection != thirdWaypointDirection) // third waypoint there is a turn
+		//	{
+		//		force = walkForce;
+		//		return;
+		//	}
+		//	if (firstWaypointDirection != secondWaypointDirection && secondWaypointDirection != thirdWaypointDirection) // second waypoint there is a turn
+		//	{
+		//		force = slowForce;
+		//		return;
+		//	}
+		//}
 	}
 
 

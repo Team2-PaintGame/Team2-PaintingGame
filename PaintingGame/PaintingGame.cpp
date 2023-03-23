@@ -12,7 +12,9 @@
 #include "PaintingObject.h"
 #include "Ink.h"
 #include "EventListener.h"
-
+#include "GameTimer.h"
+#include "GameScreen.h"
+#include <glad/gl.h>
 
 
 using namespace NCL;
@@ -29,6 +31,17 @@ PaintingGame::PaintingGame(GameAssets* assets) {
 	//renderer->settings.debugRendererSettings.SetIsCollisionShapeDisplayed(true);
 	//renderer->settings.debugRendererSettings.SetIsBroadPhaseAABBDisplayed(true);
 	world->AddEventListener(new GameEventListener(&world->GetPhysicsWorld(), world));
+	timer = GameTimer();
+
+	maxSplats = 10000;
+
+	glGenBuffers(1, &paintSplatSSBO);
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, paintSplatSSBO);
+	glBufferData(GL_SHADER_STORAGE_BUFFER, maxSplats * sizeof(PaintSplat), NULL, GL_DYNAMIC_DRAW);
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 4, paintSplatSSBO);
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+	
+
 }
 
 PaintingGame::~PaintingGame() {
@@ -89,7 +102,9 @@ void PaintingGame::Update(float dt) {
 	world->UpdateWorld(dt);
 	world->CalculateNewScores();
 	physicsWorld->update(dt);
-
+	SendPaintSplatData();
+	gameTime -= dt;
+	Debug::Print(std::to_string((int)gameTime), Vector2(20, 5));
 }
 
 Player* PaintingGame::CreatePlayer(NCL::Maths::Vector3 position,Team team, bool networked) {
@@ -137,4 +152,50 @@ void PaintingGame::AddSecurityAI(NCL::CSC8508::Vector3 position, PlayerBase* tar
 	world->AddGameObject(new SecurityGuard(physicsCommon, physicsWorld, position, assets->GetMesh("AiMesh"), assets->GetMeshMaterial("AiMat"), assets->GetShader("THIRDskinningShader"), animations, 4, target1, target2, world, assets, "Security Guard"));
 	
 }
+
+void PaintingGame::SendPaintSplatData()
+{
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, paintSplatSSBO);
+
+	for (int i = 0; i < world->GetNumPaintedPositions(); i++) {
+		PaintSplat& splat = world->GetSplats()[i];
+		if (!splat.sent) {
+			int offset = i * sizeof(float) * 7;
+
+			glBufferSubData(GL_SHADER_STORAGE_BUFFER, offset, sizeof(float), &(splat.position.x));
+			glBufferSubData(GL_SHADER_STORAGE_BUFFER, offset + sizeof(float), sizeof(float), &(splat.position.y));
+			glBufferSubData(GL_SHADER_STORAGE_BUFFER, offset + 2 * sizeof(float), sizeof(float), &(splat.position.z));
+
+			glBufferSubData(GL_SHADER_STORAGE_BUFFER, offset + 3 * sizeof(float), sizeof(float), &(splat.colour.x));
+			glBufferSubData(GL_SHADER_STORAGE_BUFFER, offset + 4 * sizeof(float), sizeof(float), &(splat.colour.y));
+			glBufferSubData(GL_SHADER_STORAGE_BUFFER, offset + 5 * sizeof(float), sizeof(float), &(splat.colour.z));
+			glBufferSubData(GL_SHADER_STORAGE_BUFFER, offset + 6 * sizeof(float), sizeof(float), &(splat.colour.w));
+			splat.sent = true;
+		}
+	}
+
+	for (std::tuple<int,Vector4>& splat : world->splatsToChangeColour) {
+		int offset = std::get<0>(splat) * sizeof(float) * 7;
+		Vector4 colour = std::get<1>(splat);
+		glBufferSubData(GL_SHADER_STORAGE_BUFFER, offset + 3 * sizeof(float), sizeof(float), &(colour.x));
+		glBufferSubData(GL_SHADER_STORAGE_BUFFER, offset + 4 * sizeof(float), sizeof(float), &(colour.y));
+		glBufferSubData(GL_SHADER_STORAGE_BUFFER, offset + 5 * sizeof(float), sizeof(float), &(colour.z));
+		glBufferSubData(GL_SHADER_STORAGE_BUFFER, offset + 6 * sizeof(float), sizeof(float), &(colour.w));
+	}
+
+	for (std::tuple<int, Vector4>& splat : world->cleanedSplats) {
+		int offset = std::get<0>(splat) * sizeof(float) * 7;
+		Vector4 colour = std::get<1>(splat);
+		glBufferSubData(GL_SHADER_STORAGE_BUFFER, offset + 3 * sizeof(float), sizeof(float), &(colour.x));
+		glBufferSubData(GL_SHADER_STORAGE_BUFFER, offset + 4 * sizeof(float), sizeof(float), &(colour.y));
+		glBufferSubData(GL_SHADER_STORAGE_BUFFER, offset + 5 * sizeof(float), sizeof(float), &(colour.z));
+		glBufferSubData(GL_SHADER_STORAGE_BUFFER, offset + 6 * sizeof(float), sizeof(float), &(colour.w));
+	}
+
+
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+	world->splatsToChangeColour.clear();
+	world->cleanedSplats.clear();
+}
+
 

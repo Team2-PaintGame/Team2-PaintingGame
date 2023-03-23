@@ -163,22 +163,23 @@ void GameWorld::AddPaintedPosition(const Vector3& position, Vector4 team) {
 	else if (team == BlueTeamColour) {
 		colour = BlueTeamColour;
 	}
-	for (auto& element : paintedPositions)
+	for (int i = 0; i < GetNumPaintedPositions(); i++)
 	{
+		PaintSplat element = paintedPositions[i];
 		if ((element.colour == colour && element.position == position)) {
 			return;
 		}
 		else if (element.colour == colour && GetDistance(element.position, position) < 2) {
 			return;
 		}
-		else if (element.colour != colour && GetDistance(element.position, position) < 4) {
+		else if (element.colour != colour && GetDistance(element.position, position) < 10) {
 			if (colour == RedTeamColour) {
-				colour = BlueTeamColour;
+				element.colour = RedTeamColour;
 			}
 			else {
-				colour = RedTeamColour;
+				element.colour = BlueTeamColour;
 			}
-			element.colour = colour; 
+			splatsToChangeColour.push_back({ i, element.colour });
 			return;
 		}
 	}
@@ -193,7 +194,6 @@ bool GameWorld::CleanNearbyPaint(Vector3 SecurityPos, float range)
 		float distance = (SecurityPos - paintPos->position).Length();
 		if (distance < range)
 		{
-			
 			paintPos = paintedPositions.erase(paintPos);
 			hasCleaned = true;
 		}
@@ -213,7 +213,7 @@ Vector3 GameWorld::FindClosestPaintSplat(Vector3 position)
 	for (auto i : paintedPositions)
 	{
 		float distance = (i.position - position).Length();
-		if (distance < min)
+		if (distance < min && i.position.y < 10)
 		{
 			paintPos = i.position;
 		}

@@ -1,9 +1,9 @@
 #pragma once
 #include <Window.h>
-#include <Xinput.h>
 #include <XBoxGamepad.h>
 #include "PlayerController.h"
 #include <PS4Gamepad.h>
+#include "Vector2.h"
 
 namespace NCL {
 #ifdef _WIN32
@@ -138,29 +138,30 @@ namespace NCL {
 		}
 	};
 #endif
-#ifdef _ORBIS
+#ifdef __ORBIS__
 	class PS4Controller : public PlayerController {
 	public:
 		PS4Controller(Player* player) : PlayerController(player) {}
 
 		// Get the input for moving forward from the Xbox controller
 		bool MoveForward() override {
-			return gamepad.GetAxis(0).y > 0.0f;
+			return gamepad.GetAxis(0).y < 0.5f;
 		}
 		bool MoveBackward() override {
-			return gamepad.GetAxis(0).y < 0.0f;
+			return gamepad.GetAxis(0).y > -0.5f;
 		}
 		bool MoveRight() override {
-			return gamepad.GetAxis(0).x > 0.0f;
+			return gamepad.GetAxis(0).x > 0.5f;
 		}
 		bool MoveLeft() override {
-			return gamepad.GetAxis(0).x < 0.0f;
+			return gamepad.GetAxis(0).x < -0.5f;
 		}
 		bool Shoot() override {
-			return false;
+			return gamepad.GetButtonDown(gamepad.GetButton(0));
 		}
 		bool Pause() override {
 			//return gamepad.GetButtonDown(VK_PAD_START);
+			return false;
 		}
 
 		float ViewDy() override {
@@ -181,6 +182,12 @@ namespace NCL {
 
 		//	return cursorPosition;
 		//}
+
+		void Update(float dt) override
+		{
+			gamepad.Poll();
+			PlayerController::Update(dt);
+		}
 	protected:
 		PS4::PS4Gamepad gamepad;
 	};
@@ -188,7 +195,7 @@ namespace NCL {
 	// Concrete factory for creating PS4 Player Controller
 	class PS4ControllerFactory : public PlayerControllerFactory {
 	public:
-		PS4ControllerFactory() { Type::PS4; }
+		PS4ControllerFactory() { type = Type::PS4; }
 		PlayerController* createPlayerController(Player* player) override {
 			return new PS4Controller(player);
 		}

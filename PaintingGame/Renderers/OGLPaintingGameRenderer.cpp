@@ -37,12 +37,12 @@ void OGLPaintingGameRenderer::RenderFrame() {
 			SortObjectList();
 			RenderGameScreen();
 
-
+			NewRenderLines();
 			glDisable(GL_CULL_FACE); //Todo - text indices are going the wrong way...
 			glDisable(GL_BLEND);
 			glDisable(GL_DEPTH_TEST);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			NewRenderLines();
+			
 			NewRenderText();
 			glDisable(GL_BLEND);
 			glEnable(GL_DEPTH_TEST);
@@ -189,13 +189,13 @@ void OGLPaintingGameRenderer::RenderGameScreen() { //change this to RenderScreen
 void OGLPaintingGameRenderer::RenderPaintSplat(OGLShader* shader) {
 	GameWorld* world = boundScreen->GetSceneNode()->GetWorld();
 	if (world) {
-		world->OperateOnPaintedPositions(
+		/*world->OperateOnPaintedPositions(
 			[&](int index, Vector3& pos, Vector4& col) {
 				std::string i = std::to_string(index);
 				glUniform3fv(glGetUniformLocation(shader->GetProgramID(), ("paintedPos[" + i + "]").c_str()), 1, pos.array);
 				glUniform4fv(glGetUniformLocation(shader->GetProgramID(), ("paintedColor[" + i + "]").c_str()), 1, col.array);
 			}
-		);
+		);*/
 		int splatVectorSize = glGetUniformLocation(shader->GetProgramID(), "numOfSplats");
 		glUniform1i(splatVectorSize, world->GetNumPaintedPositions());
 	}

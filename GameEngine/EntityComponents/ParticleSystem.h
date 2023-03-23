@@ -157,7 +157,7 @@ namespace NCL {
 
 		emitter.SetTransform(&transform);
 
-		renderObject = new RenderObject(transforms, mesh, shader);
+		renderObject = new CSC8508::RenderObject(transforms, mesh, shader);
 		renderObject->SetInstanceCount(particles.size());
 		renderObject->SetIsInstanced(true);
 

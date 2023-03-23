@@ -5,6 +5,7 @@
 #include <imgui_impl_win32.h>
 #include <imgui_impl_opengl3.h>
 #include "PushdownMachine.h"
+#include <unordered_map>
 
 namespace NCL::CSC8508 {
 	enum class ScreenType {
@@ -13,7 +14,6 @@ namespace NCL::CSC8508 {
 		LoadingScreen,
 		MainMenuScreen,
 		GameScreen,
-		GameWinScreen,
 		GameOverScreen,
 	};
 	enum class ScreenCommand {

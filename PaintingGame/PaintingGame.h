@@ -28,8 +28,11 @@ namespace NCL {
 			virtual void Update(float dt);
 			void Restart() { InitWorld(); }
 			virtual GameWorld* GetWorld() const { return world; }
+			bool GetTimeOver() { return gameTime <= 0.0f; }
+			int GetWinner() { return world->CalculateWinningTeam(); }
 			virtual reactphysics3d::PhysicsWorld* GetPhysicsWorld() const override { return physicsWorld; }
 			virtual void OperateOnCameras(CameraFunc f);
+
 		protected:
 			virtual void InitWorld();
 			virtual void CreateSplatOnShoot() = 0;
@@ -37,10 +40,21 @@ namespace NCL {
 			virtual Player* AddPlayer(Vector3 position, Team team) = 0;
 			Gun* CreateGun(Vector3 position, Team team);
 			virtual void AddSecurityAI(Vector3 position, PlayerBase* target1, PlayerBase* target2);
+
 			GameWorld* world;
 
 			bool useGravity = true;
 			bool useFog = true;
+
+			GameTimer timer;
+			float gameTime = 40;
+
+			std::string gameOverString;
+
+			int maxSplats;
+			unsigned int paintSplatSSBO;
+			void SendPaintSplatData();
+
 
 			//Create a physics world 
 			reactphysics3d::PhysicsCommon physicsCommon;
