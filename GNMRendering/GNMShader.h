@@ -1,5 +1,5 @@
 #pragma once
-#ifdef _ORBIS
+#ifdef __ORBIS__
 #include "ShaderBase.h"
 #include "PS4MemoryAware.h"
 
@@ -25,7 +25,7 @@ namespace NCL::GNM {
 
 		static GNMShader* GenerateShader(const string& vertex, const string& pixel);
 
-		int		GetConstantBufferIndex(const string& name);
+		int		GetConstantBufferIndex(const string& name, const sce::Gnm::ShaderStage& shaderStage = Gnm::kShaderStageVs);
 		void	SubmitShaderSwitch(Gnmx::GnmxGfxContext& cmdList);
 
 	protected:

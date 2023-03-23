@@ -263,6 +263,15 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
 ################################################################################
 # Compile and link options
 ################################################################################
+if(WIN32) 
+    list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../Middleware/ReactPhysics3D/Win32") 
+else()
+    list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../Middleware/ReactPhysics3D/ORBIS") 
+endif() 
+
+#Import the ReactPhysics3D library 
+find_package(ReactPhysics3D REQUIRED)
+
 if(MSVC)
     target_compile_options(${PROJECT_NAME} PRIVATE
         $<$<CONFIG:Debug>:
@@ -286,14 +295,19 @@ if(MSVC)
             /OPT:ICF
         >
     )
+else()
+	target_compile_options(${PROJECT_NAME} PRIVATE
+        $<$<CONFIG:Debug>:
+            -O0
+        >
+        #-frtti;
+        -fexceptions;
+        -std=c++17;
+        #${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
+        #${DEFAULT_CXX_EXCEPTION_HANDLING};
+    )
+    include_directories("${CMAKE_PREFIX_PATH}/include")
 endif()
-
-if(WIN32) 
-    list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../Middleware/ReactPhysics3D") 
-endif() 
-
-#Import the ReactPhysics3D library 
-find_package(ReactPhysics3D REQUIRED)
 
 include_directories("./")
 include_directories("Maths/")

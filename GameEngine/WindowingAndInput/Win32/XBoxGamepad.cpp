@@ -1,6 +1,6 @@
+#ifdef _WIN32
 #include "XBoxGamepad.h"
 
-using namespace std;
 using namespace NCL;
 
 bool XBoxGamepad::GetButtonDown(unsigned int i)
@@ -81,3 +81,4 @@ bool XBoxGamepad::IsPressed(WORD button)
 {
 	return (state.Gamepad.wButtons & button) != 0;
 }
+#endif

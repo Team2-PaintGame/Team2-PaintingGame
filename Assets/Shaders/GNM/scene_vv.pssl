@@ -1,0 +1,51 @@
+
+ConstantBuffer RenderObjectData {
+	column_major float4x4 modelMatrix;
+	float3x3 inverseModel;
+	bool hasVertexColours;
+	float4 objectColour;
+	//column_major matrix shadowMatrix = float4x4(1.0f);
+};
+
+ConstantBuffer CameraData {
+	column_major matrix viewProjMatrix = matrix(1.0f);
+};
+
+struct VS_INPUT {
+	float3 Position		: POSITION0;
+	float2 UV			: TEXCOORD0;
+	float4 Colour		: TEXCOORD1;
+	float3 Normal		: NORMAL;
+	float3 Tangent		: TANGENT;
+};
+
+struct VS_OUTPUT {
+	float4 Position		: S_POSITION;
+	float2 UV			: TEXCOORD0;
+	float4 Colour		: TEXCOORD1;
+	float3 Normal		: NORMAL;
+	float3 WorldPos		: WPOS;   
+	//float4 ShadowProj	: TEXCOORD2;
+};
+
+VS_OUTPUT main(VS_INPUT Input) {
+	VS_OUTPUT Output; 
+	float4x4 mvp = mul(viewProjMatrix, modelMatrix);
+	//column_major float3x3 model3 = float3x3(modelMatrix[0].xyz, modelMatrix[1].xyz, modelMatrix[2].xyz);
+	float3x3 normalMatrix = transpose(inverseModel);
+	
+	Output.Position = mul(mvp, float4(Input.Position.xyz, 1));
+	Output.UV = Input.UV;
+
+	if(hasVertexColours) {
+		Output.Colour = objectColour * Input.Colour;
+	}
+	else {
+		Output.Colour = objectColour;
+	}
+
+	Output.Normal		= normalize(mul(normalMatrix, normalize(Input.Normal)));
+	Output.WorldPos		= mul(modelMatrix, float4(Input.Position.xyz, 1)).xyz;
+	//Output.ShadowProj 	= mul(shadowMatrix, float4(Input.Position.xyz, 1));
+	return Output;
+}

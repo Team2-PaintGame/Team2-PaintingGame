@@ -3,30 +3,54 @@ set(PROJECT_NAME PaintingGame)
 ################################################################################
 # Source groups
 ################################################################################
+if(WIN32)
 set(Header_Files
-    "NetworkedGame.h"
     "SplitScreenGame.h"
     "SinglePlayerGame.h"
+    "PaintingGame.h"
+    "GameManager.h"
+    "PlatformConfigurations.h"
+    "GameAssets.h"
+    "NetworkedGame.h"
     "NetworkPlayer.h"
+    "EventListener.h"
+)
+else()
+set(Header_Files
+    "SplitScreenGame.h"
+    "SinglePlayerGame.h"
     "PaintingGame.h"
     "GameManager.h"
     "PlatformConfigurations.h"
     "GameAssets.h"
     "EventListener.h"
 )
+endif()
 source_group("Header Files" FILES ${Header_Files})
 
+if(WIN32)
 set(Source_Files
     "Main.cpp"
-    "NetworkedGame.cpp"
     "SplitScreenGame.cpp"
     "SinglePlayerGame.cpp"
+    "PaintingGame.cpp"
+    "GameManager.cpp"
+    "GameAssets.cpp"
+    "NetworkedGame.cpp"
     "NetworkPlayer.cpp"
+    "EventListener.cpp"
+)
+else()
+set(Source_Files
+    "Main.cpp"
+    "SplitScreenGame.cpp"
+    "SinglePlayerGame.cpp"
     "PaintingGame.cpp"
     "GameManager.cpp"
     "GameAssets.cpp"
     "EventListener.cpp"
 )
+endif()
 
 if(USE_VULKAN)
 file(GLOB SHADER_FILES ${ASSET_ROOT}/Shaders/VK/*.*)
@@ -104,6 +128,7 @@ set(ImGui
 )
 source_group("ImGui Files" FILES ${ImGui})
 
+if(WIN32)
 set(ALL_FILES
     ${Header_Files}
     ${Source_Files}
@@ -113,6 +138,90 @@ set(ALL_FILES
     ${Screens}
     ${ImGui}
 )
+else()
+################################################################################
+# PS4 Setup
+################################################################################
+
+# Shaders
+file(GLOB GNM_SHADER_FILES ${ASSET_ROOT}Shaders/GNM/*.pssl)
+source_group("GNM Shader Files" FILES ${GNM_SHADER_FILES})
+# Textures
+file(GLOB_RECURSE Textures
+    ${ASSET_ROOT}Textures/*.jpg
+    ${ASSET_ROOT}Textures/*.jpeg
+    ${ASSET_ROOT}Textures/*.png
+    ${ASSET_ROOT}Textures/*.tga
+    ${ASSET_ROOT}Textures/*.JPG
+    ${ASSET_ROOT}Textures/*.JPEG
+    ${ASSET_ROOT}Textures/*.PNG
+    ${ASSET_ROOT}Textures/*.TGA
+)
+#message(${Textures})
+source_group("Textures" FILES ${Textures})
+set(ALL_FILES
+    ${Header_Files}
+    ${Source_Files}
+    ${GameObjects}
+    ${Player}
+    ${Renderers}
+    ${Screens}
+	${GNM_SHADER_FILES}
+    ${Textures}
+)
+
+# Shaders
+foreach (file ${GNM_SHADER_FILES})
+    get_filename_component(file_name ${file} NAME_WE)
+	get_filename_component(file_ext ${file} EXT)
+		
+	if( file_ext STREQUAL  ".pssl")
+		message("Compiling PSSL file: ${file}")
+		get_filename_component(file_dir ${file} DIRECTORY)
+		set_property(SOURCE ${file} PROPERTY VS_TOOL_OVERRIDE WavePsslc) 
+        #if(file_name MATCHES "(P|p?)ixel")
+		#    set_property(SOURCE ${file} PROPERTY VS_SETTINGS "Profile=sce_ps_orbis" "FileType=Document" "OutputFileName=${file_dir}/${file_name}.sb")
+        #else()
+        #    set_property(SOURCE ${file} PROPERTY VS_SETTINGS "Profile=sce_vs_vs_orbis" "FileType=Document" "OutputFileName=${file_dir}/${file_name}.sb")
+        #endif()
+        set_property(SOURCE ${file} PROPERTY VS_SETTINGS "FileType=Document" "OutputFileName=${file_dir}/${file_name}.sb")
+	endif()
+endforeach()
+
+# Textures
+set(IMG2GNF_TOOL_EXECUTEABLE "${SCE_ORBIS_SDK_DIR}/host_tools/bin/orbis-image2gnf")
+foreach (file ${Textures})
+	get_filename_component(file_name ${file} NAME_WE)
+	get_filename_component(file_ext ${file} EXT)
+	
+	if(file_ext STREQUAL ".jpg" OR 
+       file_ext STREQUAL ".jpeg" OR 
+	   file_ext STREQUAL ".png" OR 
+       file_ext STREQUAL ".tga" OR
+	   file_ext STREQUAL ".JPG" OR 
+       file_ext STREQUAL ".JPEG" OR 
+	   file_ext STREQUAL ".PNG" OR
+	   file_ext STREQUAL ".TGA")
+		
+       message("Reading Texture File:  ${file}")
+	   get_filename_component(file_dir ${file} DIRECTORY)
+	   get_filename_component(file_abs ${file} ABSOLUTE)
+       set(GNF_OUTPUT ${file_name}.gnf)
+	   set(GNF_ABS_INPUT ${file_abs})
+	   set(GNF_ABS_OUTPUT ${file_dir}/${GNF_OUTPUT})
+	   add_custom_command(
+	        OUTPUT ${GNF_ABS_OUTPUT}
+			
+			COMMENT "Converting ${file} to .gnf"
+			COMMAND ${IMG2GNF_TOOL_EXECUTEABLE} -i  ${GNF_ABS_INPUT} -o ${GNF_ABS_OUTPUT} -f Auto
+            MAIN_DEPENDENCY ${file}
+			VERBATIM
+	   )
+       list(APPEND GNF_FILES ${GNF_OUTPUT})   
+	endif()
+endforeach()
+
+endif()
 
 if(USE_VULKAN)
     set(ALL_FILES 
@@ -195,18 +304,18 @@ if(MSVC)
     )
 endif()
 
-target_precompile_headers(${PROJECT_NAME} PRIVATE
-    <vector>
-    <map>
-    <stack>
-    <string>
-    <list>
-    <thread>
-    <atomic>
-    <functional>
-    <iostream>
-    <set>
-)
+#target_precompile_headers(${PROJECT_NAME} PRIVATE
+#    <vector>
+#    <map>
+#    <stack>
+#    <string>
+#    <list>
+#    <thread>
+#     <atomic>
+#    <functional>
+#    <iostream>
+#    <set>
+#)
  
 if(USE_VULKAN)
 target_precompile_headers(${PROJECT_NAME} PRIVATE
@@ -251,7 +360,17 @@ if(MSVC)
             /OPT:ICF
         >
     )
+else()
+	target_compile_options(${PROJECT_NAME} PRIVATE
+        #-frtti;
+        -fexceptions;
+        -std=c++17;
+        #${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
+        #${DEFAULT_CXX_EXCEPTION_HANDLING};
+    )
+    include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../Middleware/ReactPhysics3D/ORBIS/include")
 endif()
+
 
 ################################################################################
 # Dependencies
@@ -293,8 +412,18 @@ include_directories("../GameEngine/AI/StateMachine/")
 include_directories("../Middleware/ImGui/")
 
 target_link_libraries(${PROJECT_NAME} LINK_PUBLIC GameEngine)
+if(WIN32)
 target_link_libraries(${PROJECT_NAME} LINK_PUBLIC OpenGLRendering)
 target_link_libraries(${PROJECT_NAME} LINK_PUBLIC Networking)
+else()
+target_link_libraries(${PROJECT_NAME} LINK_PUBLIC GNMRendering)
+#add_custom_target(
+#    GNM_SHADER_FILES
+#    DEPENDS ON ${GNF_FILES}
+#)
+
+#add_dependencies(${PROJECT_NAME} GNM_SHADER_FILES)
+endif()
 
 
 if(USE_VULKAN)
@@ -306,7 +435,6 @@ add_custom_target(
     SHADER_FILES
     DEPENDS ON ${SPIRV_BINARY_FILES}
 )
-
 add_dependencies(${PROJECT_NAME} SHADER_FILES)
 
 endif()

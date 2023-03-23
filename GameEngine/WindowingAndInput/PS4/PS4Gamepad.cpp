@@ -1,4 +1,4 @@
-#ifdef _ORBIS
+#ifdef __ORBIS__
 #include "PS4Gamepad.h"
 #include "pad.h"
 #include <sys\_defines\_sce_ok.h>

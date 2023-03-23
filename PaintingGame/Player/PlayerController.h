@@ -19,7 +19,8 @@ namespace NCL {
 
 		virtual float ViewDx() = 0;
 		virtual float ViewDy() = 0;
-		Vector2 GetCursorPosition(float dt);
+		Vector2 GetCursorPosition(float dt) { return Vector2(); }
+		virtual ~PlayerController() {}
 	protected:
 		Player* player;
 		Vector2 cursorPosition;

@@ -2,7 +2,7 @@
 #include <RendererBase.h>
 #include <AssetLoader.h>
 #include "OGLPaintingGameRenderer.h"
-#include <GNMRenderer.h>
+#include <GNMPaintingGameRenderer.h>
 #include <OGLAssetLoader.h>
 #include <GNMAssetLoader.h>
 #include "PlayerController.h"
@@ -21,7 +21,7 @@ namespace NCL {
 				//it can either be win32 or xbox depending on type of game selected
 #endif
 #ifdef __ORBIS__
-				rendererFactory = new GNMPaintingGameRendererRendererFactory();
+				rendererFactory = new GNMPaintingGameRendererFactory();
 				assetLoaderFactory = new Assets::GNMAssetLoaderFactory();
 				playerControllerFactory = new PS4ControllerFactory();
 #endif

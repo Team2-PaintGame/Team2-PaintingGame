@@ -1,4 +1,3 @@
-#pragma once
 #include "ScreenManager.h"
 #include "SplashScreen.h"
 #include "LoadingScreen.h"
@@ -12,17 +11,14 @@ using namespace CSC8508;
 
 ScreenManager::ScreenManager(GameAssets* assets) {
 	this->assets = assets;
-	LoadLoadingScreen();
 #ifdef _WIN32
+	LoadLoadingScreen();
 	machine = std::make_unique<PushdownMachine>((PushdownState*)GetScreen(ScreenType::LoadingScreen));
-	//machine = std::make_unique<PushdownMachine>((PushdownState*)GetScreen(ScreenType::SplashScreen));
-#else
-#ifdef _ORBIS // No loading sceen on ps4 because I don't want to
+#endif
+#ifdef __ORBIS__
 	LoadScreens();
-	machine = std::make_unique<PushdownMachine>((PushdownState*)GetScreen(ScreenType::SplashScreen));
-#endif // _Orbis
-#endif // _WIN32
-
+	machine = std::make_unique<PushdownMachine>((PushdownState*)GetScreen(ScreenType::GameScreen));
+#endif
 }
 
 void ScreenManager::LoadScreens() {

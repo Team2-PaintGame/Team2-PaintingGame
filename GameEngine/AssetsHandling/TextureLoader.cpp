@@ -8,7 +8,9 @@ https://research.ncl.ac.uk/game/
 */
 #include "TextureLoader.h"
 #include <iostream>
+#ifdef _WIN32
 #include <filesystem>
+#endif 
 #define STB_IMAGE_IMPLEMENTATION
 
 #include "./stb/stb_image.h"
@@ -25,9 +27,9 @@ bool TextureLoader::LoadTexture(const std::string& filename, char*& outData, int
 	if (filename.empty()) {
 		return false;
 	}
-
+#ifdef _WIN32
 	std::filesystem::path path(filename);
-	
+
 	std::string extension = path.extension().string();
 
 	bool isAbsolute = path.is_absolute();
@@ -35,6 +37,13 @@ bool TextureLoader::LoadTexture(const std::string& filename, char*& outData, int
 	auto it = fileHandlers.find(extension);
 
 	std::string realPath = isAbsolute ? filename : Assets::TEXTUREDIR + filename;
+#else
+	std::string extension = GetFileExtension(filename);
+
+	auto it = fileHandlers.find(extension);
+
+	std::string realPath = Assets::TEXTUREDIR + filename;
+#endif 
 
 	if (it != fileHandlers.end()) {
 		//There's a custom handler function for this, just use that
@@ -58,9 +67,18 @@ bool TextureLoader::LoadTextureGreyScale(const std::string& filename, unsigned c
 		return false;
 	}
 
+#ifdef _WIN32
 	std::filesystem::path path(filename);
 	bool isAbsolute = path.is_absolute();
 	std::string realPath = isAbsolute ? filename : Assets::TEXTUREDIR + filename;
+#else
+	std::string extension = GetFileExtension(filename);
+
+	std::string realPath = Assets::TEXTUREDIR + filename;
+#endif 
+
+
+
 
 	//By default, attempt to use stb image to get this texture
 	unsigned char* texData = stbi_load(realPath.c_str(), &width, &height, &channels, 1); //1 forces this to always be grey scale!
@@ -88,9 +106,15 @@ void TextureLoader::RegisterTextureLoadFunction(TextureLoadFunction f, const std
 }
 
 std::string TextureLoader::GetFileExtension(const std::string& fileExtension) {
+#ifdef _WIN32
+
 	auto p = std::filesystem::path(fileExtension);
 	auto ext = p.extension();
 	return ext.string();
+
+#else
+	return std::string();
+#endif
 }
 
 void TextureLoader::RegisterAPILoadFunction(APILoadFunction f) {
