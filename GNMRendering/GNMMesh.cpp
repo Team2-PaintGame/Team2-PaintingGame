@@ -15,7 +15,7 @@ GNMMesh::GNMMesh()	{
 
 GNMMesh::GNMMesh(const std::string& filename) : MeshGeometry(filename) {
 	indexType = sce::Gnm::IndexSize::kIndexSize32;
-	primitiveType = sce::Gnm::PrimitiveType::kPrimitiveTypeTriStrip;
+	primitiveType = sce::Gnm::PrimitiveType::kPrimitiveTypeTriList;
 }
 
 GNMMesh::~GNMMesh()	{

@@ -20,12 +20,16 @@ GNMPaintingGameRenderer::GNMPaintingGameRenderer(Window& w) : GNMRenderer(w) {
 
 	shaderVariables.cameraVariables = (CameraVariables*)onionAllocator->allocate(sizeof(CameraVariables), Gnm::kEmbeddedDataAlignment4);
 	shaderVariables.renderObjectVariables = (RenderObjectVariables*)onionAllocator->allocate(sizeof(RenderObjectVariables), Gnm::kEmbeddedDataAlignment4);
+	shaderVariables.fragmentVariables = (FragmentVariables*)onionAllocator->allocate(sizeof(FragmentVariables), Gnm::kEmbeddedDataAlignment4);
 
 	shaderBuffers.cameraBuffer.initAsConstantBuffer(shaderVariables.cameraVariables, sizeof(CameraVariables));
 	shaderBuffers.cameraBuffer.setResourceMemoryType(Gnm::kResourceMemoryTypeRO); // it's a constant buffer, so read-only is OK
 
 	shaderBuffers.objBuffer.initAsConstantBuffer(shaderVariables.renderObjectVariables, sizeof(RenderObjectVariables));
 	shaderBuffers.objBuffer.setResourceMemoryType(Gnm::kResourceMemoryTypeRO); // it's a constant buffer, so read-only is OK
+
+	shaderBuffers.fragmentBuffer.initAsConstantBuffer(shaderVariables.fragmentVariables, sizeof(FragmentVariables));
+	shaderBuffers.fragmentBuffer.setResourceMemoryType(Gnm::kResourceMemoryTypeRO); // it's a constant buffer, so read-only is OK
 	
 	//SetDebugStringBufferSizes(10000);
 	//SetDebugLineBufferSizes(1000);
@@ -82,7 +86,10 @@ void GNMPaintingGameRenderer::RenderGameScreen() { //change this to RenderScreen
 			currentGFXContext->setupScreenViewport(cam->GetVpStartPos().x * currentGNMBuffer->colourTarget.getWidth(), cam->GetVpStartPos().y * currentGNMBuffer->colourTarget.getWidth(), currentGNMBuffer->colourTarget.getWidth() * cam->GetVpSize().x, currentGNMBuffer->colourTarget.getHeight() * cam->GetVpSize().y, 0.5f, 0.5f);
 			
 			shaderVariables.cameraVariables->viewProjMatrix = cam->BuildProjectionMatrix() * cam->BuildViewMatrix();
-			shaderVariables.cameraVariables->cameraPos = cam->GetPosition();
+			shaderVariables.fragmentVariables->cameraPos = cam->GetPosition();
+			shaderVariables.fragmentVariables->lightColour = lightColour;
+			shaderVariables.fragmentVariables->lightPos = lightPosition;
+			shaderVariables.fragmentVariables->lightRadius = lightRadius;
 
 			for (const auto& i : activeObjects) {
 				//Primitive Setup State
@@ -107,11 +114,27 @@ void GNMPaintingGameRenderer::RenderGameScreen() { //change this to RenderScreen
 				currentGFXContext->setDepthStencilControl(dsc);
 
 				GNMShader* shader = (GNMShader*)(i)->GetShader();
-
+				//((GNMShader*)(i->GetShader()))->SubmitShaderSwitch(*currentGFXContext);
 				SendModelMatrices(shader, i);
-				//send color data
-				shaderVariables.renderObjectVariables->objectColour = i->GetColour();
-				shaderVariables.renderObjectVariables->hasVertexColours = !(*i).GetMesh()->GetColourData().empty();
+
+				if (i->IsRigged()) {
+					//vector<Matrix4> frameMatrices;
+					//i->GetFrameMatrices(frameMatrices);
+					//glUniformMatrix4fv(locations.jointsLocation, frameMatrices.size(), false, (float*)frameMatrices.data());
+				}
+				RenderPaintSplat(shader);
+				
+				SetShaderBufffers(shader);
+
+				if (i->GetDefaultTexture()) {
+					Gnm::Sampler trilinearSampler;
+					trilinearSampler.init();
+					trilinearSampler.setMipFilterMode(Gnm::kMipFilterModeLinear);
+
+					currentGFXContext->setTextures(Gnm::kShaderStagePs, 0, 1, &((GNMTexture*)(i->GetDefaultTexture()))->GetAPITexture());
+					currentGFXContext->setSamplers(Gnm::kShaderStagePs, 0, 1, &trilinearSampler);
+
+				}
 
 				if (i->isSingleTextured()) {
 					RenderWithDefaultTexture(i);
@@ -119,27 +142,6 @@ void GNMPaintingGameRenderer::RenderGameScreen() { //change this to RenderScreen
 				else {
 					RenderWithMultipleTexture(i);
 				}
-				if (i->IsRigged()) {
-					vector<Matrix4> frameMatrices;
-					i->GetFrameMatrices(frameMatrices);
-					//glUniformMatrix4fv(locations.jointsLocation, frameMatrices.size(), false, (float*)frameMatrices.data());
-				}
-				RenderPaintSplat(shader);
-				
-				
-				int objIndex = shader->GetConstantBufferIndex("RenderObjectData");
-				int camIndex = shader->GetConstantBufferIndex("CameraData");
-
-				currentGFXContext->setConstantBuffers(Gnm::kShaderStageVs, objIndex, 1, &shaderBuffers.objBuffer);
-				currentGFXContext->setConstantBuffers(Gnm::kShaderStageVs, camIndex, 1, &shaderBuffers.cameraBuffer);
-
-				Gnm::Sampler trilinearSampler;
-				trilinearSampler.init();
-				trilinearSampler.setMipFilterMode(Gnm::kMipFilterModeLinear);
-
-				currentGFXContext->setTextures(Gnm::kShaderStagePs, 0, 1, &((GNMTexture*)(i->GetDefaultTexture()))->GetAPITexture());
-				currentGFXContext->setSamplers(Gnm::kShaderStagePs, 0, 1, &trilinearSampler);
-
 				((GNMShader*)(i->GetShader()))->SubmitShaderSwitch(*currentGFXContext);
 				((GNMMesh*)(i->GetMesh()))->SubmitDraw(*currentGFXContext, Gnm::ShaderStage::kShaderStageVs);
 			}
@@ -178,6 +180,22 @@ void GNMPaintingGameRenderer::BuildObjectList() {
 	);
 }
 
+void GNMPaintingGameRenderer::SetShaderBufffers(GNMShader* shader) {
+	int objIndex = shader->GetConstantBufferIndex("RenderObjectData", Gnm::kShaderStageVs);
+	int camIndex = shader->GetConstantBufferIndex("CameraData", Gnm::kShaderStageVs);
+	int fragIndex = shader->GetConstantBufferIndex("FragmentData", Gnm::kShaderStagePs);
+
+	if (objIndex >= 0) {
+		currentGFXContext->setConstantBuffers(Gnm::kShaderStageVs, objIndex, 1, &shaderBuffers.objBuffer);
+	}
+	if (camIndex >= 0) {
+		currentGFXContext->setConstantBuffers(Gnm::kShaderStageVs, camIndex, 1, &shaderBuffers.cameraBuffer);
+	}
+	if (fragIndex >= 0) {
+		currentGFXContext->setConstantBuffers(Gnm::kShaderStagePs, fragIndex, 1, &shaderBuffers.fragmentBuffer);
+	}
+}
+
 void GNMPaintingGameRenderer::SortObjectList() {
 
 }
@@ -200,19 +218,31 @@ void GNMPaintingGameRenderer::SendModelMatrices(GNMShader* shader, const RenderO
 	}
 	else {
 		shaderVariables.renderObjectVariables->modelMatrix = r->GetTransform()->GetMatrix();
+		shaderVariables.renderObjectVariables->inverseModel = Matrix3(r->GetTransform()->GetMatrix().Inverse());
 	}
+	//send color data
+	shaderVariables.renderObjectVariables->objectColour = r->GetColour();
+	shaderVariables.renderObjectVariables->hasVertexColours = !(*r).GetMesh()->GetColourData().empty();
 }
 
 void GNMPaintingGameRenderer::RenderWithDefaultTexture(const RenderObject* r) {
 	/*unsigned int numInstances = r->GetInstanceCount();
-	glUniform1i(locations.hasTexLocation, r->GetDefaultTexture() ? 1 : 0);
-	BindMesh(r->GetMesh());
-	BindTextureToShader(r->GetDefaultTexture(), "mainTex", 0);
-	int layercount = r->GetMesh()->GetSubMeshCount();
+	Gnm::Sampler trilinearSampler;
+	trilinearSampler.init();
+	trilinearSampler.setMipFilterMode(Gnm::kMipFilterModeLinear);
+
+	currentGFXContext->setTextures(Gnm::kShaderStagePs, 0, 1, &((GNMTexture*)(r->GetDefaultTexture()))->GetAPITexture());
+	currentGFXContext->setSamplers(Gnm::kShaderStagePs, 0, 1, &trilinearSampler);
+	
+	((GNMShader*)(r->GetShader()))->SubmitShaderSwitch(*currentGFXContext);
+	((GNMMesh*)(r->GetMesh()))->SubmitDraw(*currentGFXContext, Gnm::ShaderStage::kShaderStageVs);*/
+
+	/*int layercount = r->GetMesh()->GetSubMeshCount();
 	int index = 0;
 	do {
 		DrawBoundMesh(index++, numInstances);
 	} while (index < layercount);*/
+
 }
 
 void GNMPaintingGameRenderer::RenderWithMultipleTexture(const RenderObject* r) {

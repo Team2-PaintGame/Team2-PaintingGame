@@ -2,6 +2,7 @@
 #ifdef __ORBIS__
 #include <GNMRenderer.h>
 #include "ScreenManager.h"
+#include <Matrix3.h>
 
 namespace NCL {
 	using namespace GNM;
@@ -18,22 +19,35 @@ namespace NCL {
 		struct ShaderBuffers {
 			Gnm::Buffer	cameraBuffer;
 			Gnm::Buffer objBuffer;
+			Gnm::Buffer fragmentBuffer;
 		};
 		
 		struct RenderObjectVariables {
 			Matrix4 modelMatrix;
+			Matrix3 inverseModel;
 			bool hasVertexColours;
 			Vector4 objectColour;
+			//Matrix4 shadowMatrix;
 		};
 
 		struct CameraVariables {
 			Matrix4 viewProjMatrix;
+		};
+
+		struct FragmentVariables {
+			Vector3	lightPos;
+			float	lightRadius;
+			Vector4	lightColour;
 			Vector3 cameraPos;
+			bool hasTexture;
+			//Vector3* paintedPos;
+			//int numOfSplats;
 		};
 
 		struct ShaderVariables {
 			CameraVariables* cameraVariables;
 			RenderObjectVariables* renderObjectVariables;
+			FragmentVariables* fragmentVariables;
 		};
 
 		class GNMPaintingGameRenderer : public GNMRenderer {
@@ -50,6 +64,7 @@ namespace NCL {
 
 			void RenderPaintSplat(GNMShader* shader);
 
+			void SetShaderBufffers(GNMShader* shader);
 			void BuildObjectList();
 			void SortObjectList();
 
