@@ -5,8 +5,8 @@
 #include "SimpleFont.h"
 #include <stdio.h>
 #ifdef _WIN32
-#include <Psapi.h>
 #include <windows.h>
+#include <Psapi.h>
 #endif // _WIN32
 
 
