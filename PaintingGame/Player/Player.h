@@ -6,7 +6,9 @@
 #include "Vector3.h"
 #include "Gun.h"
 #include "AnimationController.h"
+#ifdef _WIN32
 #include "../Audio/Sound.h"
+#endif
 
 namespace NCL {
 	using namespace Rendering;
@@ -55,7 +57,9 @@ namespace NCL {
 		Gun* gun = NULL;
 		int playerTeam; // 0 is Red, 1 is Blue
 		const Vector3 gunOffset = Vector3(0.5, 1, -4);
+#ifdef _WIN32
 		Sound* shootingSound;
+#endif
 		bool hasRespawned = false;
 		float respawnTimer = 0.0f;
 	};

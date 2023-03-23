@@ -1,3 +1,4 @@
+#ifdef _WIN32
 #pragma once
 #include <string>
 #include <AL/al.h>
@@ -16,11 +17,14 @@ public:
 private:
 	ALuint bufferID;
 	ALuint sourceID;
-	ALCdevice* device;
+	ALCdevice* device; 
 	ALCcontext* context;
 
 	bool initOpenAL();
 };
+
+#endif
+
 
 /*
 

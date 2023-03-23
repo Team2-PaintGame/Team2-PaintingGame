@@ -11,9 +11,11 @@
 #include "AnimationController.h"
 #include "PaintingObject.h"
 #include "Ink.h"
+#ifdef _WIN32
 #include "../Audio/SoundSystem.h"
 #include "../Audio/Sound.h"
 #include "../Audio/SoundEmitter.h"
+#endif
 #include <iostream>
 #include "EventListener.h"
 #include "GameTimer.h"
@@ -123,25 +125,15 @@ Player* PaintingGame::CreatePlayer(NCL::Maths::Vector3 position,Team team, bool 
 		player =  new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("blueMainCharMat"), assets->GetShader("SecondskinningShader"), animations, 5, 1, CreateGun(position, team), "Blue Player", networked);
 	}
 
-	std::string soundPath = "C:/Users/alwin/OneDrive/Documents/TeamProjectV4/Assets/Sounds/14615__man__canon.wav"; 
+#ifdef _WIN32
+	std::string soundPath = "C:/Users/alwin/OneDrive/Documents/TeamProjectV4/Assets/Sounds/14615__man__canon.wav";
 	Sound* shootingSound = new Sound(soundPath);
 	player->SetShootingSound(shootingSound);
-
+#endif // _WIN32
 	
 	world->AddGameObject(player);
 	return player;
 }
-
-/*
-	Sound::AddSound("H:/2022/csc8508/project/Assets/Sounds/41579__erdie__steps-on-stone01.wav");
-
-	s->SetSound(Sound::GetSound("H:/2022/csc8508/project/Assets/Sounds/41579__erdie__steps-on-stone01.wav"));
-	s->SetLooping(true);
-	s->SetTarget(player);
-	SoundSystem::GetSoundSystem()->SetListener(player);
-	SoundSystem::GetSoundSystem()->AddSoundEmitter(s);
-	SoundSystem::GetSoundSystem()->SetMasterVolume(1.0);
-	*/
 
 
 Gun* PaintingGame::CreateGun(Vector3 position, Team team) {
