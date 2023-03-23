@@ -6,6 +6,10 @@
 #include <fstream>
 #include <iostream>
 
+#ifdef __ORBIS__
+#include "GNMTexture.h"
+#endif // __ORBIS__
+
 using namespace NCL;
 using namespace NCL::Rendering;
 using std::ifstream;
@@ -80,7 +84,13 @@ void MeshMaterialEntry::LoadTextures() {
 		string filename = Assets::TEXTUREDIR + i.second.first;
 
 		stbi_set_flip_vertically_on_load(true);
+#ifdef _WIN32
 		TextureBase* t = TextureLoader::LoadAPITexture(filename);
+#endif // _WIN32
+#ifdef __ORBIS__
+		TextureBase* t = GNMTexture::LoadTextureFromFile(filename);
+#endif // __ORBIS__
+
 		stbi_set_flip_vertically_on_load(false);
 
 		i.second.second = t;

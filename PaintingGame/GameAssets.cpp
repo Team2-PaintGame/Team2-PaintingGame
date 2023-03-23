@@ -107,7 +107,7 @@ void GameAssets::LoadShaders() {
 	shaders.insert(std::make_pair("SecondskinningShader", loader->LoadShader("VertexShader_vv.sb", "PixelShader_p.sb")));
 	shaders.insert(std::make_pair("THIRDskinningShader", loader->LoadShader("VertexShader_vv.sb", "PixelShader_p.sb")));
 	shaders.insert(std::make_pair("screenShader", loader->LoadShader("screen_vv.sb", "simplePixel_p.sb")));
-	shaders.insert(std::make_pair("inkShader", loader->LoadShader("ink_vv.sb", "ink_p.sb")));
+	shaders.insert(std::make_pair("inkShader", loader->LoadShader("VertexShader_vv.sb", "PixelShader_p.sb")));
 	shaders.insert(std::make_pair("debugShader", loader->LoadShader("screen_vv.sb", "simplePixel_p.sb")));
 	shaders.insert(std::make_pair("hudShader", loader->LoadShader("hud_vv.sb", "simplePixel_p.sb")));
 #endif // __ORBIS__
