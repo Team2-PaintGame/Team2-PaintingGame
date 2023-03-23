@@ -1,5 +1,10 @@
 cmake_minimum_required(VERSION 3.16.0 FATAL_ERROR)
 
+if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
+	set(BUILD_PS4 ON)
+else()
+	set(BUILD_PS4 OFF)
+endif()
 set(CMAKE_SYSTEM_VERSION 10.0 CACHE STRING "" FORCE)
 
 project(PaintingGame CXX)
@@ -12,9 +17,9 @@ if(NOT CMAKE_VS_PLATFORM_NAME)
 endif()
 message("${CMAKE_VS_PLATFORM_NAME} architecture in use")
 
-if(NOT ("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64"))
-    message(FATAL_ERROR "${CMAKE_VS_PLATFORM_NAME} arch is not supported!")
-endif()
+#if(NOT ("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64"))
+   # message(FATAL_ERROR "${CMAKE_VS_PLATFORM_NAME} arch is not supported!")
+#endif()
 
 ################################################################################
 # Global configuration types
@@ -29,8 +34,11 @@ set(CMAKE_CONFIGURATION_TYPES
 # Global compiler options
 ################################################################################
 #set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD 23)
-
+if(MSVC)
+	set(CMAKE_CXX_STANDARD 23)
+else()
+	set(CMAKE_CXX_STANDARD 17)
+endif()
 ################################################################################
 # Nuget packages function stub.
 ################################################################################
@@ -58,19 +66,30 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 find_package(Vulkan)
 
 set(ASSET_ROOT "${CMAKE_SOURCE_DIR}/Assets/" CACHE STRING "" FORCE)
+if(WIN32)
 add_compile_definitions(ASSETROOTLOCATION="${ASSET_ROOT}") 
+else()
+add_compile_definitions(ASSETROOTLOCATION="/host/${ASSET_ROOT}") 
+endif()
 
 set(USE_VULKAN CACHE BOOL FORCE)
 if(USE_VULKAN)
     add_compile_definitions("USEVULKAN") 
 endif() 
+#if(BUILD_PS4)
+#    set(CMAKE_TOOLCHAIN_FILE "C:/Program Files (x86)/SCE/ORBIS/Tools/CMake/PS4.cmake")
+#endif()
+
 ################################################################################
 # Sub-projects
 ################################################################################
 add_subdirectory(GameEngine)
+if(WIN32)
 add_subdirectory(Networking)
 add_subdirectory(OpenGLRendering)
+else()
 add_subdirectory(GNMRendering)
+endif()
 add_subdirectory(PaintingGame)
 if(USE_VULKAN)
     add_subdirectory(VulkanRendering)

@@ -1,10 +1,6 @@
 #include <Window.h>
 #include "Debug.h"
-
 #include "PaintingGame.h"
-#include <imgui_impl_win32.h>
-#include <imgui_impl_opengl3.h>
-//#include <Win32Window.h>
 #include "GameManager.h"
 #include <windows.h>
 #include <stdio.h>
@@ -13,6 +9,9 @@
 using namespace NCL;
 using namespace CSC8508;
 
+/* Only Required for PS4 */
+unsigned int sceLibcHeapExtendedAlloc = 1;			/* Switch to dynamic allocation */
+size_t       sceLibcHeapSize = 1024 * 1024 * 1024;	/* Set up heap area upper limit as 256 MiB */
 
 int main() {
 	Window* w = Window::CreateGameWindow("Painting Game", 1280, 720);

@@ -52,6 +52,7 @@ void GameAssets::LoadMeshes() {
 	meshes.insert(std::make_pair("cubeMesh", loader->LoadMesh("cube.msh")));
 	meshes.insert(std::make_pair("mainChar", loader->LoadMesh("Aj_TPose.msh")));
 	meshes.insert(std::make_pair("sphereMesh", loader->LoadMesh("sphere.msh")));
+	meshes.insert(std::make_pair("capsuleMesh", loader->LoadMesh("capsule.msh")));
 	meshes.insert(std::make_pair("gunMesh", loader->LoadMesh("PaintingGun.msh")));
 	meshes.insert(std::make_pair("quadMesh", loader->LoadMesh(MeshType::Quad)));
 
@@ -85,10 +86,11 @@ void GameAssets::LoadTextures() {
 	textures.insert(std::make_pair("gunFocusTex", loader->LoadTexture("gunFocusPoint.png")));
 	textures.insert(std::make_pair("splashScreenTex", loader->LoadTexture("Screens/bg.png"))); 
 	textures.insert(std::make_pair("mainMenuScreenTex", loader->LoadTexture("Screens/bg2.png")));
-
+	textures.insert(std::make_pair("gameOverScreenTex", loader->LoadTexture("Screens/bg3.jpg")));
 }
 
 void GameAssets::LoadShaders() {
+#ifdef _WIN32
 	shaders.insert(std::make_pair("basicShader", loader->LoadShader("scene.vert", "scene.frag")));
 	shaders.insert(std::make_pair("terrainShader", loader->LoadShader("terrain.vert", "terrain.frag")));
 	shaders.insert(std::make_pair("skinningShader", loader->LoadShader("skinning.vert", "character.frag")));
@@ -98,6 +100,17 @@ void GameAssets::LoadShaders() {
 	shaders.insert(std::make_pair("inkShader", loader->LoadShader("ink.vert", "ink.frag")));
 	shaders.insert(std::make_pair("debugShader", loader->LoadShader("Debug.vert", "Debug.frag")));
 	shaders.insert(std::make_pair("hudShader", loader->LoadShader("hud.vert", "hud.frag")));
+#endif // _WIN32
+#ifdef __ORBIS__
+	shaders.insert(std::make_pair("basicShader", loader->LoadShader("VertexShader_vv.sb", "PixelShader_p.sb")));
+	shaders.insert(std::make_pair("skinningShader", loader->LoadShader("VertexShader_vv.sb", "PixelShader_p.sb")));
+	shaders.insert(std::make_pair("SecondskinningShader", loader->LoadShader("VertexShader_vv.sb", "PixelShader_p.sb")));
+	shaders.insert(std::make_pair("THIRDskinningShader", loader->LoadShader("VertexShader_vv.vert", "PixelShader_p.frag")));
+	shaders.insert(std::make_pair("screenShader", loader->LoadShader("screen_vv.sb", "simplePixel_p.sb")));
+	shaders.insert(std::make_pair("inkShader", loader->LoadShader("ink_vv.sb", "ink_p.sb")));
+	shaders.insert(std::make_pair("debugShader", loader->LoadShader("screen_vv.sb", "simplePixel_p.sb")));
+	shaders.insert(std::make_pair("hudShader", loader->LoadShader("hud_vv.sb", "simplePixel_p.sb")));
+#endif // __ORBIS__
 }
 
 void GameAssets::ReloadMeshes()

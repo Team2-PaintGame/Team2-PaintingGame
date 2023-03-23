@@ -6,7 +6,7 @@
 #endif
 
 #ifdef __ORBIS__
-#include "../Plugins/PlayStation4/PS4Window.h"
+#include "PS4Window.h"
 #endif
 
 #include "RendererBase.h"

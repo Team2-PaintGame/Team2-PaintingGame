@@ -1,5 +1,5 @@
 #pragma once
-#ifdef _ORBIS
+#ifdef __ORBIS__
 #include "RendererBase.h"
 #include "PS4MemoryAware.h"
 #include <gnm.h>
@@ -41,12 +41,13 @@ namespace NCL::GNM {
 		public RendererBase, public PS4MemoryAware
 	{
 	public:
-		GNMRenderer(PS4Window* window);
+		GNMRenderer(Window& window);
 		~GNMRenderer();
 
 	protected:
 		void	OnWindowResize(int w, int h) override;
 		void	BeginFrame()    override;
+		void	RenderFrame()    override;
 		void	EndFrame()		override;
 		void	SwapBuffers()	override;
 

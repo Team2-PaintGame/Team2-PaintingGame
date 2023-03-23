@@ -6,6 +6,7 @@
 #include "MeshGeometry.h"
 #include "ShaderBase.h"
 #include <AssetLoader.h>
+#include <unordered_map>
 
 namespace NCL {
 	using namespace Rendering;

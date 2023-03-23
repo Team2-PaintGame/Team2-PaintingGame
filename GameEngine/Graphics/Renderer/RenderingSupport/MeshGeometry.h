@@ -12,6 +12,7 @@ https://research.ncl.ac.uk/game/
 
 #include "Vector3.h"
 #include "Matrix2.h"
+#include "Maths.h"
 
 using std::vector;
 

@@ -10,7 +10,7 @@ namespace NCL {
 				screenType = ScreenType::GameScreen;
 			}
 			void OnAwake() override;
-			void OnAwake1(GameAssets* assets);
+			void OnSleep() override;
 			PushdownResult OnUpdate(float dt, PushdownState** newState) override;
 
 			static void OnLoad(GameScreen* gs, GameAssets* assets);

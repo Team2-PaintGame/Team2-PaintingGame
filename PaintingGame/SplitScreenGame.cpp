@@ -8,14 +8,10 @@ using namespace CSC8508;
 SplitScreenGame::SplitScreenGame(GameAssets* assets) : PaintingGame(assets) {
 	
 	players.reserve(maxPlayers);
-	if (!GameManager::sConfig.playerControllerFactory) {
+#ifdef _WIN32
 		GameManager::sConfig.playerControllerFactory = new Win32PlayerControllerFactory();
 		secondPlayerControllerFactory = new XBoxPlayerControllerFactory();
-	}
- 	else if (GameManager::sConfig.playerControllerFactory->GetType() != PlayerControllerFactory::Type::PS4) {
-		GameManager::sConfig.playerControllerFactory = new Win32PlayerControllerFactory();
-		secondPlayerControllerFactory = new XBoxPlayerControllerFactory();
-	}
+#endif
 	InitPlayers();
 }
 
@@ -31,8 +27,8 @@ SplitScreenGame::~SplitScreenGame() {
 void SplitScreenGame::InitPlayers() {
 	players.clear();
 	
-	Player* player1 = AddPlayer(Vector3(20.0f, 10.0f, 20.0f), Team::Red);
-	Player* player2 = AddPlayer(Vector3(30.0f, 10.0f, 20.0f), Team::Blue);
+	Player* player1 = AddPlayer(Vector3(13.0f, 4.2, 34.0f), Team::Blue);
+	Player* player2 = AddPlayer(Vector3(194.0f, 4.24f, 208.0f), Team::Red);
 
 	playerControllers.push_back(GameManager::sConfig.playerControllerFactory->createPlayerController(player1));
 	
@@ -59,7 +55,7 @@ void SplitScreenGame::CreateSplatOnShoot() {
 			SceneContactPoint* closestCollision = world->Raycast(player->GetShootRay());
 			if (closestCollision->isHit) {
 				//world->AddPaintedPosition(closestCollision->hitPos, player->GetTeamColour());
-				std::cout << "X: " << closestCollision->hitPos.x << "Y: " << closestCollision->hitPos.y << "Z: " << closestCollision->hitPos.z << "\n";
+				//std::cout << "X: " << closestCollision->hitPos.x << "Y: " << closestCollision->hitPos.y << "Z: " << closestCollision->hitPos.z << "\n";
 			}
 		}
 		index++;
@@ -74,13 +70,12 @@ Player* SplitScreenGame::AddPlayer(Vector3 position,Team team) {
 }
 
 void SplitScreenGame::Update(float dt) {
-
 	for (PlayerController* pc : playerControllers) {
 		pc->Update(dt);
 	}
 	PaintingGame::Update(dt);
 	Debug::Print("Blue Team Score:" + std::to_string(world->GetTeamOneScore()), Vector2(5, 90));
-	Debug::Print("Red Team Score:" + std::to_string(world->GetTeamTwoScore()), Vector2(40, 90));
+	Debug::Print("Red Team Score:" + std::to_string(world->GetTeamTwoScore()), Vector2(60, 90));
 }
 
 
