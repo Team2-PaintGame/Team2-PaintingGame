@@ -8,11 +8,11 @@
 namespace NCL::CSC8508 {
 	SecurityGuard::SecurityGuard(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position,
 		MeshGeometry* mesh, MeshMaterial* meshMaterial, ShaderBase* shader, const std::unordered_map<std::string, MeshAnimation*>& animations,
-		int size, GameObject* playerOne, GameObject* playerTwo, GameWorld* gameWorld, GameAssets* assets, std::string objectName)
+		int size, GameObject* playerOne, GameObject* playerTwo, GameWorld* gameWorld, GameAssets* assets, uint seed, std::string objectName)
 		: AnimatedObject(physicsCommon, physicsWorld, position, mesh, meshMaterial, shader, animations, size, objectName)
 	
 	{
-
+		srand(seed);
 		this->playerOne = playerOne;
 		this->playerTwo = playerTwo;
 		this->physicsWorld = physicsWorld;

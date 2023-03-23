@@ -24,7 +24,7 @@ PaintingGame::PaintingGame(GameAssets* assets) {
 	this->assets = assets;
 	physicsWorld = physicsCommon.createPhysicsWorld();
 	physicsWorld->setIsGravityEnabled(useGravity);
-	
+	seed = time(0);
 	world = new GameWorld(physicsWorld);
 	InitWorld();
 	//renderer->settings.SetIsDebugRenderingModeEnabled(true);
@@ -143,13 +143,13 @@ Gun* PaintingGame::CreateGun(NCL::Maths::Vector3 position, Team team) {
 	return gun;
 }
 
-void PaintingGame::AddSecurityAI(NCL::CSC8508::Vector3 position, PlayerBase* target1, PlayerBase* target2) // Vector3(-70.0f, 5.0f, 60.0f) // Change the hardcoded two targets
+void PaintingGame::AddSecurityAI(NCL::CSC8508::Vector3 position, PlayerBase* target1, PlayerBase* target2, uint32_t seed) // Vector3(-70.0f, 5.0f, 60.0f) // Change the hardcoded two targets
 {
 	std::unordered_map<std::string, MeshAnimation*> animations;
 	animations.insert(std::make_pair("idleAnimation", assets->GetMeshAnimation("AiIdleAnim")));
 	animations.insert(std::make_pair("moveAnimation", assets->GetMeshAnimation("AiRunAnim")));
 
-	world->AddGameObject(new SecurityGuard(physicsCommon, physicsWorld, position, assets->GetMesh("AiMesh"), assets->GetMeshMaterial("AiMat"), assets->GetShader("THIRDskinningShader"), animations, 4, target1, target2, world, assets, "Security Guard"));
+	world->AddGameObject(new SecurityGuard(physicsCommon, physicsWorld, position, assets->GetMesh("AiMesh"), assets->GetMeshMaterial("AiMat"), assets->GetShader("THIRDskinningShader"), animations, 4, target1, target2, world, assets, seed, "Security Guard"));
 	
 }
 

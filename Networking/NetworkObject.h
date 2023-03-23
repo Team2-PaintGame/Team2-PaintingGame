@@ -50,6 +50,7 @@ namespace NCL::CSC8508 {
 		int lastID;
 		int playerID;
 		Vector3	position;
+		uint32_t seed; ////
 
 		SpawnPacket() {
 			type = Spawn_Player;

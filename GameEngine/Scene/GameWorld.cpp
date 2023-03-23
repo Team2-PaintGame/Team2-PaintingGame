@@ -172,7 +172,7 @@ void GameWorld::AddPaintedPosition(const Vector3& position, Vector4 team) {
 		else if (element.colour == colour && GetDistance(element.position, position) < 2) {
 			return;
 		}
-		else if (element.colour != colour && GetDistance(element.position, position) < 10) {
+		else if (element.colour != colour && GetDistance(element.position, position) < 5) {
 			if (colour == RedTeamColour) {
 				element.colour = RedTeamColour;
 			}
