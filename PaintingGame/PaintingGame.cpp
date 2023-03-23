@@ -11,11 +11,16 @@
 #include "AnimationController.h"
 #include "PaintingObject.h"
 #include "Ink.h"
+#ifdef _WIN32
+#include "../Audio/SoundSystem.h"
+#include "../Audio/Sound.h"
+#include "../Audio/SoundEmitter.h"
+#endif
+#include <iostream>
 #include "EventListener.h"
 #include "GameTimer.h"
 #include "GameScreen.h"
 #include <glad/gl.h>
-
 
 using namespace NCL;
 using namespace CSC8508;
@@ -46,6 +51,7 @@ PaintingGame::PaintingGame(GameAssets* assets) {
 PaintingGame::~PaintingGame() {
 	delete world;
 	physicsCommon.destroyPhysicsWorld(physicsWorld);
+	//delete s;
 }
 
 void PaintingGame::OperateOnCameras(CameraFunc f) {
@@ -118,11 +124,18 @@ Player* PaintingGame::CreatePlayer(NCL::Maths::Vector3 position,Team team, bool 
 		player =  new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("blueMainCharMat"), assets->GetShader("SecondskinningShader"), animations, 5, 1, CreateGun(position, team), "Blue Player", networked);
 	}
 
+#ifdef _WIN32
+	std::string soundPath = "C:/Users/alwin/OneDrive/Documents/TeamProjectV4/Assets/Sounds/14615__man__canon.wav";
+	Sound* shootingSound = new Sound(soundPath);
+	player->SetShootingSound(shootingSound);
+#endif // _WIN32
+	
 	world->AddGameObject(player);
 	return player;
 }
 
-Gun* PaintingGame::CreateGun(NCL::Maths::Vector3 position, Team team) {
+
+Gun* PaintingGame::CreateGun(Vector3 position, Team team) {
 	Gun* gun;
 	
 	FocusPoint* reticle = new FocusPoint(physicsCommon, physicsWorld, assets->GetMesh("quadMesh"), assets->GetTexture("gunFocusTex"), assets->GetShader("hudShader"), Vector2(0.05));

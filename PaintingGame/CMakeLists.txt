@@ -371,6 +371,13 @@ else()
     include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../Middleware/ReactPhysics3D/ORBIS/include")
 endif()
 
+################################################################################
+# OpenAL config
+################################################################################
+include_directories("../Middleware/OpenAL/Win32/include")
+link_directories("../Middleware/OpenAL/Win32/lib/Debug/")
+
+target_link_libraries(${PROJECT_NAME} LINK_PUBLIC  ${CMAKE_SOURCE_DIR}/Middleware/OpenAL/Win32/lib/Debug/OpenAL32.lib)
 
 ################################################################################
 # Dependencies

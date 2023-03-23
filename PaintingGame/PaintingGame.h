@@ -9,6 +9,10 @@
 #include <PointLight.h>
 #include "SceneNode.h"
 #include "HudElement.h"
+#ifdef _WIN32
+#include "../Audio/SoundSystem.h"
+#endif
+
 
 class Gamepad;
 class AnimationController;

@@ -4,6 +4,7 @@
 #include "GameManager.h"
 #include <stdio.h>
 
+
 using namespace NCL;
 using namespace CSC8508;
 
@@ -19,6 +20,8 @@ int main() {
 		return -1;
 	}
 
+
+
 	w->ShowOSPointer(true);
 	w->LockMouseToWindow(true);
 	
@@ -32,6 +35,9 @@ int main() {
 			std::cout << "Skipping large time delta: " << dt << std::endl;
 			continue; //must have hit a breakpoint or something to have a 1 second frame time!
 		}
+
+	
+
 		w->SetTitle("Painting Game Frame time: " + std::to_string(1000.0f * dt));
 		if (!gameManager.RunGame(dt)) {
 			return 0;
