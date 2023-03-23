@@ -33,7 +33,7 @@ PaintingGame::PaintingGame(GameAssets* assets) {
 	world->AddEventListener(new GameEventListener(&world->GetPhysicsWorld(), world));
 	timer = GameTimer();
 
-	maxSplats = 1000;
+	maxSplats = 10000;
 
 	glGenBuffers(1, &paintSplatSSBO);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, paintSplatSSBO);
@@ -145,11 +145,11 @@ void PaintingGame::AddSecurityAI(NCL::CSC8508::Vector3 position, PlayerBase* tar
 void PaintingGame::SendPaintSplatData()
 {
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, paintSplatSSBO);
+
 	for (int i = 0; i < world->GetNumPaintedPositions(); i++) {
 		PaintSplat& splat = world->GetSplats()[i];
 		if (!splat.sent) {
 			int offset = i * sizeof(float) * 7;
-
 
 			glBufferSubData(GL_SHADER_STORAGE_BUFFER, offset, sizeof(float), &(splat.position.x));
 			glBufferSubData(GL_SHADER_STORAGE_BUFFER, offset + sizeof(float), sizeof(float), &(splat.position.y));
@@ -161,7 +161,6 @@ void PaintingGame::SendPaintSplatData()
 			glBufferSubData(GL_SHADER_STORAGE_BUFFER, offset + 6 * sizeof(float), sizeof(float), &(splat.colour.w));
 			splat.sent = true;
 		}
-		
 	}
 
 	for (std::tuple<int,Vector4>& splat : world->splatsToChangeColour) {
@@ -172,8 +171,20 @@ void PaintingGame::SendPaintSplatData()
 		glBufferSubData(GL_SHADER_STORAGE_BUFFER, offset + 5 * sizeof(float), sizeof(float), &(colour.z));
 		glBufferSubData(GL_SHADER_STORAGE_BUFFER, offset + 6 * sizeof(float), sizeof(float), &(colour.w));
 	}
+
+	for (std::tuple<int, Vector4>& splat : world->cleanedSplats) {
+		int offset = std::get<0>(splat) * sizeof(float) * 7;
+		Vector4 colour = std::get<1>(splat);
+		glBufferSubData(GL_SHADER_STORAGE_BUFFER, offset + 3 * sizeof(float), sizeof(float), &(colour.x));
+		glBufferSubData(GL_SHADER_STORAGE_BUFFER, offset + 4 * sizeof(float), sizeof(float), &(colour.y));
+		glBufferSubData(GL_SHADER_STORAGE_BUFFER, offset + 5 * sizeof(float), sizeof(float), &(colour.z));
+		glBufferSubData(GL_SHADER_STORAGE_BUFFER, offset + 6 * sizeof(float), sizeof(float), &(colour.w));
+	}
+
+
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 	world->splatsToChangeColour.clear();
+	world->cleanedSplats.clear();
 }
 
 

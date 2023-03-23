@@ -167,11 +167,12 @@ namespace NCL {
 			std::vector<PaintSplat>& GetSplats() { return paintedPositions; }
 
 			std::vector<std::tuple<int, Vector4>> splatsToChangeColour;
+			std::vector<std::tuple<int, Vector4>> cleanedSplats;
+			std::vector<PaintSplat> paintedPositions;
 
 		protected:
 			RaycastManager* raycastManager;
 			reactphysics3d::PhysicsWorld* physicsWorld = NULL;
-			std::vector<PaintSplat> paintedPositions;
 			
 			GameEventListener* eventListener;
 			std::vector<GameObject*> gameObjects;

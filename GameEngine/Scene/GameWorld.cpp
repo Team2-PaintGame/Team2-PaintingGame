@@ -106,8 +106,6 @@ void GameWorld::UpdateWorld(float dt) {
 	for (const auto& object : gameObjects) {
 		object->Update(dt);
 		object->UpdateTransform();
-		// send splat data 
-
 	}
 }
 
@@ -196,7 +194,6 @@ bool GameWorld::CleanNearbyPaint(Vector3 SecurityPos, float range)
 		float distance = (SecurityPos - paintPos->position).Length();
 		if (distance < range)
 		{
-			
 			paintPos = paintedPositions.erase(paintPos);
 			hasCleaned = true;
 		}

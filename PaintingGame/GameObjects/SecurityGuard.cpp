@@ -610,11 +610,11 @@ namespace NCL::CSC8508 {
 		Vector3 negdirection(-direction.x, -direction.y, -direction.z);
 		Quaternion rotation = Quaternion::LookRotation(negdirection, up);
 
-		//reactphysics3d::Transform transform = reactphysics3d::Transform(this->GetRigidBody()->getTransform().getPosition(), ~rotation);
-		//if (transform.isValid()) {
-		//	this->GetRigidBody()->setTransform(transform);
-		//}
-		//this->GetRigidBody()->applyWorldForceAtCenterOfMass(forceDirection * force);// '~' converts NCL Vector3 to reactphysics3d Vector3
+		reactphysics3d::Transform transform = reactphysics3d::Transform(this->GetRigidBody()->getTransform().getPosition(), ~rotation);
+		if (transform.isValid()) {
+			this->GetRigidBody()->setTransform(transform);
+		}
+		this->GetRigidBody()->applyWorldForceAtCenterOfMass(forceDirection * force);// '~' converts NCL Vector3 to reactphysics3d Vector3
 	}
 
 	float SecurityGuard::DistanceToTarget(Vector3 destination) 
