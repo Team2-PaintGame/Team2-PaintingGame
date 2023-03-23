@@ -143,9 +143,6 @@ Player* PaintingGame::CreatePlayer(NCL::Maths::Vector3 position,Team team, bool 
 	SoundSystem::GetSoundSystem()->SetMasterVolume(1.0);
 	*/
 
-FocusPoint* PaintingGame::CreateFocusPoint() {
-	return new FocusPoint(physicsCommon, physicsWorld, assets->GetMesh("quadMesh"), assets->GetTexture("gunFocusTex"), assets->GetShader("hudShader"), Vector2(0.05));
-}
 
 Gun* PaintingGame::CreateGun(Vector3 position, Team team) {
 	Gun* gun;
