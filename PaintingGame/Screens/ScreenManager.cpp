@@ -17,7 +17,7 @@ ScreenManager::ScreenManager(GameAssets* assets) {
 #endif
 #ifdef __ORBIS__
 	LoadScreens();
-	machine = std::make_unique<PushdownMachine>((PushdownState*)GetScreen(ScreenType::GameScreen));
+	machine = std::make_unique<PushdownMachine>((PushdownState*)GetScreen(ScreenType::SplashScreen));
 #endif
 }
 
@@ -34,8 +34,9 @@ void ScreenManager::LoadScreens() {
 
 void ScreenManager::LoadLoadingScreen() {
 	//screenSceneNodes.emplace(std::make_pair(ScreenType::LoadingScreen, std::make_unique<SceneNode>(assets->GetMesh("quadMesh"), assets->GetShader("screenShader"), assets->GetTexture("splashScreenTex"))));
-
+#ifdef _WIN32
 	screens.insert(std::make_pair(ScreenType::LoadingScreen, std::make_unique<LoadingScreen>(this, nullptr)));
+#endif
 }
 
 BaseScreen* NCL::CSC8508::ScreenManager::GetScreen(ScreenType screenType) const {
@@ -54,6 +55,7 @@ PushdownState::PushdownResult BaseScreen::OnUpdate(float dt, PushdownState** new
 	if (!isMenuDisplayed || bisNetworkedGame) {
 		sceneNode->Update(dt);
 	}
+	TransitionTimer(dt);
 	return onStateChange(newState);
 }
 
@@ -62,6 +64,7 @@ void BaseScreen::OnSleep() {
 }
 
 void BaseScreen::RenderMenu() {
+#ifdef _WIN32
 	// Start the Dear ImGui frame
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplWin32_NewFrame();
@@ -79,4 +82,5 @@ void BaseScreen::RenderMenu() {
 	// Rendering
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+#endif
 }

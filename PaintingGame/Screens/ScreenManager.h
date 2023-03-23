@@ -2,10 +2,12 @@
 #include "GameAssets.h"
 #include "SceneNode.h"
 #include "PushdownState.h"
-#include <imgui_impl_win32.h>
-#include <imgui_impl_opengl3.h>
 #include "PushdownMachine.h"
 #include <unordered_map>
+#ifdef _WIN32
+#include <imgui_impl_win32.h>
+#include <imgui_impl_opengl3.h>
+#endif // _WIN32
 
 namespace NCL::CSC8508 {
 	enum class ScreenType {
@@ -54,6 +56,7 @@ namespace NCL::CSC8508 {
 		SceneNode* GetSceneNode() const { return sceneNode; }
 		ScreenType GetScreenType() const { return screenType; }
 		void RenderMenu();
+		virtual void TransitionTimer(float dt) {}
 	protected:
 		virtual void MenuFrame() = 0;
 		virtual void DebugWindow() {};
@@ -64,6 +67,7 @@ namespace NCL::CSC8508 {
 		ScreenCommand command = ScreenCommand::None;
 		ScreenManager* screenManager;
 		ScreenType screenType = ScreenType::None;
+		float totalTime = 0;
 		bool bisNetworkedGame = false;
 	};
 }

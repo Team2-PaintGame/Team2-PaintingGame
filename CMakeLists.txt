@@ -80,6 +80,10 @@ endif()
 #    set(CMAKE_TOOLCHAIN_FILE "C:/Program Files (x86)/SCE/ORBIS/Tools/CMake/PS4.cmake")
 #endif()
 
+#set(OPENAL_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/../Middleware/OpenAL/Win32/lib/Debug")
+set(OPENAL_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/Middleware/OpenAL/Win32/lib/Debug" CACHE STRING "" FORCE)
+set(OPENAL_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Middleware/OpenAL/Win32/include" CACHE STRING "" FORCE)
+
 ################################################################################
 # Sub-projects
 ################################################################################

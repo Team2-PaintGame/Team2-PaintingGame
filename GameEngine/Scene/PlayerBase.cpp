@@ -68,6 +68,8 @@ void PlayerBase::SetMemberVariables(reactphysics3d::PhysicsCommon& physicsCommon
 	transform.SetScale(Vector3(size))
 			 .SetPosition(position);
 
+	spawnPosition = position;
+
 	renderObject = new RenderObject(&transform, mesh, shader);
 
 	//boundingVolume = physicsCommon.createBoxShape(~transform.GetScale() / 2.0f);

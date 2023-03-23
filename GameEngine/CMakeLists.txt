@@ -59,6 +59,18 @@ set(Asset_Handling
 )
 source_group("Asset Handling" FILES ${Asset_Handling})
 
+set(Audio
+    "./Audio/Sound.cpp"
+    "./Audio/Sound.h"
+    "./Audio/SoundEmitter.cpp"
+    "./Audio/SoundEmitter.h"
+    "./Audio/SoundManager.cpp"
+    "./Audio/SoundManager.h"
+    "./Audio/SoundSystem.cpp"
+    "./Audio/SoundSystem.h"
+)
+source_group("Audio" FILES ${Audio})
+
 set(Debugging
     "./Debugging/Debug.cpp"
     "./Debugging/Debug.h"
@@ -229,6 +241,7 @@ set(ALL_FILES
     ${Windowing_and_Input__Win32}
     ${Windowing_and_Input__PS4}
     ${Utils}
+    ${Audio}
 )
 
 #set_source_files_properties(${ALL_FILES} PROPERTIES LANGUAGE CXX)
@@ -306,8 +319,15 @@ else()
         #${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
         #${DEFAULT_CXX_EXCEPTION_HANDLING};
     )
-    include_directories("${CMAKE_PREFIX_PATH}/include")
 endif()
+
+if(WIN32) 
+    list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../Middleware/ReactPhysics3D/Win32") 
+	list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../Middleware/OpenAL/Win32") 
+    find_package(OpenAL REQUIRED)
+else()
+    list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../Middleware/ReactPhysics3D/ORBIS") 
+endif() 
 
 include_directories("./")
 include_directories("Maths/")
@@ -337,6 +357,15 @@ include_directories("../Middleware/ImGui/")
 set(ADDITIONAL_LIBRARY_DEPENDENCIES
     "ReactPhysics3D::ReactPhysics3D"
 )
+if(WIN32)
+target_link_libraries(${PROJECT_NAME} PUBLIC "${ADDITIONAL_LIBRARY_DEPENDENCIES}" "${OPENAL_LIBRARY}/OpenAL32.lib")
 
-target_link_libraries(${PROJECT_NAME} PUBLIC "${ADDITIONAL_LIBRARY_DEPENDENCIES}")
 
+################################################################################
+# OpenAL config
+################################################################################
+include_directories("../Middleware/OpenAL/Win32/include")
+link_directories("../Middleware/OpenAL/Win32/lib/Debug/")
+
+target_link_libraries(${PROJECT_NAME} LINK_PUBLIC  ${CMAKE_SOURCE_DIR}/Middleware/OpenAL/Win32/lib/Debug/OpenAL32.lib)
+endif()

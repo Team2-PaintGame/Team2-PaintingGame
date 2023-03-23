@@ -1,12 +1,15 @@
 #include "GameAssets.h"
 
+
+#include "Assets.h"
+
 using namespace NCL;
 using namespace Assets;
 
 GameAssets::GameAssets(Assets::AssetLoader* loader) {
 	this->loader = loader;
 
-#ifdef _ORBIS // Load without loading screen on ps4
+#ifdef __ORBIS__ // Load without loading screen on ps4
 	Load();
 #endif
 }
@@ -47,6 +50,7 @@ ShaderBase* NCL::GameAssets::GetShader(const std::string& identifier) const {
 	return shaders.count(identifier) ? shaders.at(identifier).get() : nullptr;
 }
 
+
 void GameAssets::LoadMeshes() {
 	meshes.insert(std::make_pair("floorMesh", loader->LoadMesh("BasicLVL1.msh")));
 	meshes.insert(std::make_pair("cubeMesh", loader->LoadMesh("cube.msh")));
@@ -56,7 +60,7 @@ void GameAssets::LoadMeshes() {
 	meshes.insert(std::make_pair("gunMesh", loader->LoadMesh("PaintingGun.msh")));
 	meshes.insert(std::make_pair("quadMesh", loader->LoadMesh(MeshType::Quad)));
 
-	meshes.insert(std::make_pair("AiMesh", loader->LoadMesh("X Bot.msh")));
+	meshes.insert(std::make_pair("AiMesh", loader->LoadMesh("X_Bot.msh")));
 }
 
 void GameAssets::LoadMeshMaterials() {
@@ -68,7 +72,7 @@ void GameAssets::LoadMeshMaterials() {
 	meshMaterials.insert(std::make_pair("screamPaintMat", loader->LoadMeshMaterial("screamPaint.mat")));
 	meshMaterials.insert(std::make_pair("sunflowersMat", loader->LoadMeshMaterial("sunflowers.mat")));
 	meshMaterials.insert(std::make_pair("gunMat", loader->LoadMeshMaterial("PaintingGun.mat")));
-	meshMaterials.insert(std::make_pair("AiMat", loader->LoadMeshMaterial("X Bot.mat")));
+	meshMaterials.insert(std::make_pair("AiMat", loader->LoadMeshMaterial("X_Bot.mat")));
 }
 
 void GameAssets::LoadMeshAnimations() {
@@ -105,7 +109,7 @@ void GameAssets::LoadShaders() {
 	shaders.insert(std::make_pair("basicShader", loader->LoadShader("VertexShader_vv.sb", "PixelShader_p.sb")));
 	shaders.insert(std::make_pair("skinningShader", loader->LoadShader("VertexShader_vv.sb", "PixelShader_p.sb")));
 	shaders.insert(std::make_pair("SecondskinningShader", loader->LoadShader("VertexShader_vv.sb", "PixelShader_p.sb")));
-	shaders.insert(std::make_pair("THIRDskinningShader", loader->LoadShader("VertexShader_vv.vert", "PixelShader_p.frag")));
+	shaders.insert(std::make_pair("THIRDskinningShader", loader->LoadShader("VertexShader_vv.sb", "PixelShader_p.sb")));
 	shaders.insert(std::make_pair("screenShader", loader->LoadShader("screen_vv.sb", "simplePixel_p.sb")));
 	shaders.insert(std::make_pair("inkShader", loader->LoadShader("ink_vv.sb", "ink_p.sb")));
 	shaders.insert(std::make_pair("debugShader", loader->LoadShader("screen_vv.sb", "simplePixel_p.sb")));

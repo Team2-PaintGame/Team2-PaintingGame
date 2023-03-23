@@ -1,4 +1,5 @@
 #pragma once
+#ifdef _WIN32
 #include "ScreenManager.h"
 #include "Quaternion.h"
 #include "Transform.h"
@@ -33,3 +34,4 @@ namespace NCL {
 
 	}
 }
+#endif

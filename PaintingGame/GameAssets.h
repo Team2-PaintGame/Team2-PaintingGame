@@ -18,12 +18,12 @@ namespace NCL {
 		MeshAnimation* GetMeshAnimation(const std::string& identifier) const;
 		TextureBase* GetTexture(const std::string& identifier) const;
 		ShaderBase* GetShader(const std::string& identifier) const;
+
 		void ReloadMeshes();
 		void ReloadShaders();
 		void ReloadDebug();
 
 		void Load();
-		//SoundBase* GetSound(const std::string& identifier);
 	protected:
 		Assets::AssetLoader* loader;
 		void LoadMeshes();
@@ -31,7 +31,6 @@ namespace NCL {
 		void LoadMeshAnimations();
 		void LoadTextures();
 		void LoadShaders();
-		//void LoadSounds();
 
 		std::unordered_map<std::string, std::unique_ptr<MeshGeometry>> meshes;
 		std::unordered_map<std::string, std::unique_ptr<MeshMaterial>> meshMaterials;
@@ -39,6 +38,6 @@ namespace NCL {
 
 		std::unordered_map<std::string, std::unique_ptr<TextureBase>> textures;
 		std::unordered_map<std::string, std::unique_ptr<ShaderBase>> shaders;
-		//std::unordered_map<std::string, std::unique_ptr<SoundBase>> sounds;
+
 	};
 }

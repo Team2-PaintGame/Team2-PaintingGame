@@ -11,11 +11,11 @@
 #include "AnimationController.h"
 #include "PaintingObject.h"
 #include "Ink.h"
+#include <iostream>
 #include "EventListener.h"
 #include "GameTimer.h"
 #include "GameScreen.h"
 #include <glad/gl.h>
-
 
 using namespace NCL;
 using namespace CSC8508;
@@ -35,18 +35,19 @@ PaintingGame::PaintingGame(GameAssets* assets) {
 
 	maxSplats = 10000;
 
+#ifdef _WIN32
 	glGenBuffers(1, &paintSplatSSBO);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, paintSplatSSBO);
 	glBufferData(GL_SHADER_STORAGE_BUFFER, maxSplats * sizeof(PaintSplat), NULL, GL_DYNAMIC_DRAW);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 4, paintSplatSSBO);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-	
-
+#endif
 }
 
 PaintingGame::~PaintingGame() {
 	delete world;
 	physicsCommon.destroyPhysicsWorld(physicsWorld);
+	//delete s;
 }
 
 void PaintingGame::OperateOnCameras(CameraFunc f) {
@@ -119,11 +120,13 @@ Player* PaintingGame::CreatePlayer(NCL::Maths::Vector3 position,Team team, bool 
 		player =  new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("blueMainCharMat"), assets->GetShader("SecondskinningShader"), animations, 5, 1, CreateGun(position, team), "Blue Player", networked);
 	}
 
+	
 	world->AddGameObject(player);
 	return player;
 }
 
-Gun* PaintingGame::CreateGun(NCL::Maths::Vector3 position, Team team) {
+
+Gun* PaintingGame::CreateGun(Vector3 position, Team team) {
 	Gun* gun;
 	
 	FocusPoint* reticle = new FocusPoint(physicsCommon, physicsWorld, assets->GetMesh("quadMesh"), assets->GetTexture("gunFocusTex"), assets->GetShader("hudShader"), Vector2(0.05));
@@ -155,6 +158,7 @@ void PaintingGame::AddSecurityAI(NCL::CSC8508::Vector3 position, PlayerBase* tar
 
 void PaintingGame::SendPaintSplatData()
 {
+#ifdef _WIN32
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, paintSplatSSBO);
 
 	for (int i = 0; i < world->GetNumPaintedPositions(); i++) {
@@ -196,6 +200,7 @@ void PaintingGame::SendPaintSplatData()
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 	world->splatsToChangeColour.clear();
 	world->cleanedSplats.clear();
+#endif
 }
 
 

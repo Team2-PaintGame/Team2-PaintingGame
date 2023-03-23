@@ -23,6 +23,8 @@ void Player::Update(float dt) {
 			gun->GetTransform().SetOrientation(Quaternion::EulerAnglesToQuaternion(pitch, euler.y, euler.z));
 		}
 	}
+
+
 }
 
 void Player::Shoot() {
@@ -34,6 +36,7 @@ void Player::Shoot() {
 		reactphysics3d::Vector3(endPos.x, endPos.y, endPos.z));
 	Debug::DrawLine(startPos, endPos, Vector4(1, 1, 1, 1), 3);*/
 	gun->Shoot();
+	Debug::DrawLine(startPos, endPos, Vector4(1, 1, 1, 1), 3);
 }
 
 void Player::SetMemberVariables(Gun* gun) {

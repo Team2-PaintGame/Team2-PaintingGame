@@ -7,6 +7,7 @@
 #include "Gun.h"
 #include "AnimationController.h"
 
+
 namespace NCL {
 	using namespace Rendering;
 	using namespace CSC8508;
@@ -37,6 +38,7 @@ namespace NCL {
 		virtual void Update(float dt);
 		virtual void Shoot();
 		const reactphysics3d::Ray& GetShootRay() const { return shootRay; }
+		Vector2 targetPosition;
 
 		int GetTeamColour() { return playerTeam; }
 		bool GetHasRespawned() { return hasRespawned; }

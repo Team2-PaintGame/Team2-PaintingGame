@@ -7,7 +7,7 @@
 namespace NCL {
 	class XBoxGamepad {
 	public:
-		XBoxGamepad() : deadzoneX(0.05f), deadzoneY(0.02f), leftStickX(0.0f), leftStickY(0.0f), rightStickX(0.0f), rightStickY(0.0f) {}
+		XBoxGamepad() : deadzoneX(0.2f), deadzoneY(0.2f), leftStickX(0.0f), leftStickY(0.0f), rightStickX(0.0f), rightStickY(0.0f) {}
 		XBoxGamepad(float dzX, float dzY) : deadzoneX(dzX), deadzoneY(dzY) {}
 
 		bool	GetButtonDown(unsigned int i);

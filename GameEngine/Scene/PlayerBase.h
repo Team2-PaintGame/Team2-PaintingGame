@@ -37,9 +37,14 @@ namespace NCL {
 		float GetYaw() const { return yaw; }
 		virtual void Shoot() {}
 
+		Vector3 GetSpawnPosition() {
+			return spawnPosition;
+		}
+
 	protected:
 		float	yaw = 0.0f;
 		float	pitch = 0.0f;
+		Vector3 spawnPosition;
 		void SetMemberVariables(reactphysics3d::PhysicsCommon& physicsCommon, reactphysics3d::PhysicsWorld* physicsWorld, Vector3 position, MeshGeometry* mesh, ShaderBase* shader, int size, bool networked);
 		Camera* camera = nullptr;
 		reactphysics3d::Ray ray = reactphysics3d::Ray(~Maths::Vector3(0), ~Maths::Vector3(0));

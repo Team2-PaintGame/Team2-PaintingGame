@@ -2,7 +2,9 @@
 #include "SinglePlayerGame.h"
 #include "SplitScreenGame.h"
 #include "GameOverScreen.h"
+#ifdef _WIN32
 #include "NetworkedGame.h"
+#endif
 #include "Window.h"
 
 using namespace NCL;
@@ -36,7 +38,6 @@ void NCL::CSC8508::GameScreen::OnSleep()
 void GameScreen::LoadGame(GameAssets* assets) {
 
 	delete sceneNode;
-
 	switch (command)
 	{
 	case ScreenCommand::CreateSinglePlayerGame:
@@ -47,6 +48,7 @@ void GameScreen::LoadGame(GameAssets* assets) {
 		sceneNode = new SplitScreenGame(assets);
 		bisNetworkedGame = false;
 		break;
+#ifdef _WIN32
 	case ScreenCommand::CreateNetworkedGameAsServer:
 		sceneNode = new NetworkedGame(assets);
 		((NetworkedGame*)(sceneNode))->StartAsServer();
@@ -57,6 +59,7 @@ void GameScreen::LoadGame(GameAssets* assets) {
 		((NetworkedGame*)(sceneNode))->StartAsClient(127, 0, 0, 1);
 		bisNetworkedGame = true;
 		break;
+#endif
 	default:
 		std::cout << "No instance of game could be created: No appropriate Command Selected." << std::endl;
 	}
@@ -78,6 +81,7 @@ PushdownState::PushdownResult GameScreen::OnUpdate(float dt, PushdownState** new
 }
 
 void GameScreen::MenuFrame() {
+#ifdef _WIN32
 	ImGui::Begin("Painting Game");
 	if (ImGui::Button("Resume")) {
 		isMenuDisplayed = false;
@@ -98,6 +102,7 @@ void GameScreen::MenuFrame() {
 		command = ScreenCommand::Exit;
 	}
 	ImGui::End();
+#endif
 }
 
 PushdownState::PushdownResult GameScreen::onStateChange(PushdownState** newState) {
@@ -118,6 +123,7 @@ PushdownState::PushdownResult GameScreen::onStateChange(PushdownState** newState
 
 void NCL::CSC8508::GameScreen::DebugWindow()
 {
+#ifdef _WIN32
 	ImGui::Begin("Debug Window");
 	ImGui::Text(("FPS: " + std::to_string(Debug::fps)).c_str());
 	ImGui::Text(("Rendertime: " + std::to_string(Debug::renderingTime) + " us").c_str());
@@ -150,6 +156,7 @@ void NCL::CSC8508::GameScreen::DebugWindow()
 		ImGui::EndPopup();
 	}
 	ImGui::End();
+#endif
 }
 
 void GameScreen::GamePauseCallback() {

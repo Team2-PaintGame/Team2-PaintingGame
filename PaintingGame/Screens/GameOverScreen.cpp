@@ -21,12 +21,14 @@ void GameOverScreen::OnAwake()
 }
 
 void GameOverScreen::MenuFrame() {
+#ifdef _WIN32
 	ImGui::Begin("Game Over!");
 	ImGui::Text(victory_string.c_str());
 	if (ImGui::Button("Exit")) {
 		command = ScreenCommand::Exit;
 	}
 	ImGui::End();
+#endif
 }
 
 PushdownState::PushdownResult GameOverScreen::OnUpdate(float dt, PushdownState** newState)
