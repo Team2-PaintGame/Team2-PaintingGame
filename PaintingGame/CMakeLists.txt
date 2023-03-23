@@ -99,6 +99,8 @@ set(Screens
     "./Screens/MainMenuScreen.cpp" 
     "./Screens/GameScreen.h"
     "./Screens/GameScreen.cpp" 
+    "./Screens/GameOverScreen.h"
+    "./Screens/GameOverScreen.cpp" 
     "./Screens/LoadingScreen.h"
     "./Screens/LoadingScreen.cpp" 
     "./Screens/ScreenManager.h"

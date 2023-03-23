@@ -6,7 +6,7 @@ namespace NCL {
 		{
 		public:
 			enum PushdownResult {
-				Push, Pop, NoChange
+				Push, Pop, NoChange, Reset1, Reset2
 			};
 			PushdownState()  {
 			}

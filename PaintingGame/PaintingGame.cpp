@@ -12,7 +12,8 @@
 #include "PaintingObject.h"
 #include "Ink.h"
 #include "EventListener.h"
-
+#include "GameTimer.h"
+#include "GameScreen.h"
 
 
 using namespace NCL;
@@ -29,6 +30,7 @@ PaintingGame::PaintingGame(GameAssets* assets) {
 	//renderer->settings.debugRendererSettings.SetIsCollisionShapeDisplayed(true);
 	//renderer->settings.debugRendererSettings.SetIsBroadPhaseAABBDisplayed(true);
 	world->AddEventListener(new GameEventListener(&world->GetPhysicsWorld(), world));
+	timer = GameTimer();
 }
 
 PaintingGame::~PaintingGame() {
@@ -69,7 +71,8 @@ void PaintingGame::Update(float dt) {
 	world->UpdateWorld(dt);
 	world->CalculateNewScores();
 	physicsWorld->update(dt);
-
+	gameTime -= dt;
+	Debug::Print(std::to_string((int)gameTime), Vector2(20, 5));
 }
 
 Player* PaintingGame::CreatePlayer(NCL::Maths::Vector3 position,Team team, bool networked) {

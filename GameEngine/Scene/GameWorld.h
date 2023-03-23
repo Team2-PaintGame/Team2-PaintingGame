@@ -137,6 +137,19 @@ namespace NCL {
 				SetTeamTwoScore(team2Score);
 			}
 
+			int CalculateWinningTeam() 
+			{
+				if (teamOneScore > teamTwoScore) {
+					return 1;
+				}
+				else if (teamTwoScore > teamOneScore) {
+					return 2;
+				}
+				else { // draw
+					return 3;
+				}
+			}
+
 			void SetTeamOneScore(int score) { teamOneScore = score; }
 
 			int GetTeamOneScore() { return teamOneScore; }
