@@ -1,4 +1,29 @@
 #pragma once
+#include <string>
+#include <AL/al.h>
+#include <AL/alc.h>
+
+
+class Sound {
+public:
+	Sound(const std::string& fileName);
+	~Sound();
+
+	void Play();
+	void Stop();
+
+
+private:
+	ALuint bufferID;
+	ALuint sourceID;
+	ALCdevice* device;
+	ALCcontext* context;
+
+	bool initOpenAL();
+};
+
+/*
+
 #include<string>
 #include<iostream>
 #include<fstream>
@@ -56,3 +81,4 @@ protected:
 
 	static map<string, Sound*> sounds;
 };
+*/

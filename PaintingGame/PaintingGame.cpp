@@ -6,6 +6,10 @@
 #include "AnimationController.h"
 #include "PaintingObject.h"
 #include "Ink.h"
+#include "../Audio/SoundSystem.h"
+#include "../Audio/Sound.h"
+#include "../Audio/SoundEmitter.h"
+#include <iostream>
 
 using namespace NCL;
 using namespace CSC8508;
@@ -25,7 +29,7 @@ PaintingGame::PaintingGame(GameAssets* assets) {
 PaintingGame::~PaintingGame() {
 	delete world;
 	physicsCommon.destroyPhysicsWorld(physicsWorld);
-	delete s;
+	//delete s;
 }
 
 void PaintingGame::OperateOnCameras(CameraFunc f) {
@@ -58,6 +62,8 @@ void PaintingGame::Update(float dt) {
 }
 
 Player* PaintingGame::CreatePlayer(Vector3 position,Team team) {
+
+
 	std::unordered_map<std::string, MeshAnimation*> animations;
 	animations.insert(std::make_pair("idleAnimation", assets->GetMeshAnimation("mainCharIdleAnim")));
 	animations.insert(std::make_pair("moveAnimation", assets->GetMeshAnimation("mainCharRunAnim")));
@@ -71,18 +77,25 @@ Player* PaintingGame::CreatePlayer(Vector3 position,Team team) {
 		player =  new Player(physicsCommon, physicsWorld, position, assets->GetMesh("mainChar"), assets->GetMeshMaterial("blueMainCharMat"), assets->GetShader("SecondskinningShader"), animations, 5, CreateGun(position, team));
 	}
 
-	Sound::AddSound("H:/2022/csc8508/project/Assets/Sounds/41579__erdie__steps-on-stone01.wav");
+	std::string soundPath = "C:/Users/alwin/OneDrive/Documents/TeamProjectV4/Assets/Sounds/14615__man__canon.wav"; 
+	Sound* shootingSound = new Sound(soundPath);
+	player->SetShootingSound(shootingSound);
+
 	
+	world->AddGameObject(player);
+	return player;
+}
+
+/*
+	Sound::AddSound("H:/2022/csc8508/project/Assets/Sounds/41579__erdie__steps-on-stone01.wav");
+
 	s->SetSound(Sound::GetSound("H:/2022/csc8508/project/Assets/Sounds/41579__erdie__steps-on-stone01.wav"));
 	s->SetLooping(true);
 	s->SetTarget(player);
 	SoundSystem::GetSoundSystem()->SetListener(player);
 	SoundSystem::GetSoundSystem()->AddSoundEmitter(s);
 	SoundSystem::GetSoundSystem()->SetMasterVolume(1.0);
-
-	world->AddGameObject(player);
-	return player;
-}
+	*/
 
 FocusPoint* PaintingGame::CreateFocusPoint() {
 	return new FocusPoint(physicsCommon, physicsWorld, assets->GetMesh("quadMesh"), assets->GetTexture("gunFocusTex"), assets->GetShader("hudShader"), Vector2(0.05));

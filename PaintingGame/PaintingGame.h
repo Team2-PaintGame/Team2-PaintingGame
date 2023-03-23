@@ -35,7 +35,7 @@ namespace NCL {
 			virtual reactphysics3d::PhysicsWorld* GetPhysicsWorld() const override { return physicsWorld; }
 			virtual void OperateOnCameras(CameraFunc f);
 
-			SoundEmitter* s = new SoundEmitter();
+			//SoundEmitter* s = new SoundEmitter();
 
 		protected:
 			virtual void InitWorld();

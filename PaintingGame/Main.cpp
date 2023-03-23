@@ -19,7 +19,7 @@ int main() {
 		return -1;
 	}
 
-	SoundSystem::Initialise();
+	//SoundSystem::Initialise();
 	//Sound::AddSound("H:/2022/csc8508/project/Assets/Sounds/14615__man__canon.wav");
 	//SoundEmitter* s = new SoundEmitter();
 
@@ -42,7 +42,7 @@ int main() {
 			continue; //must have hit a breakpoint or something to have a 1 second frame time!
 		}
 
-		SoundSystem::GetSoundSystem()->Update(dt);
+		//SoundSystem::GetSoundSystem()->Update(dt);
 
 		w->SetTitle("Painting Game Frame time: " + std::to_string(1000.0f * dt));
 		if (!gameManager.RunGame(dt)) 
@@ -50,7 +50,7 @@ int main() {
 	}
 
 	//Sound::DeleteSounds();
-	SoundSystem::Destroy();
+	//SoundSystem::Destroy();
 
 	Window::DestroyGameWindow();
 }

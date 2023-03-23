@@ -1,3 +1,4 @@
+/*
 #include "SoundSystem.h"
 
 SoundSystem * SoundSystem::instance = NULL;
@@ -196,6 +197,8 @@ OALSource* SoundSystem::GetSource() {
 	return NULL;
 	
 }
+
+*/
 
 
 

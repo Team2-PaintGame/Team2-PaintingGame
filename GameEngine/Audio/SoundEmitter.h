@@ -1,3 +1,4 @@
+/*
 #pragma once
 
 #include "Sound.h"
@@ -74,3 +75,5 @@ protected:
 	float timeLeft;
 	
 };
+
+*/

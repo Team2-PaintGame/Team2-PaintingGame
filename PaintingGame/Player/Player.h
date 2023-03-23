@@ -6,6 +6,7 @@
 #include "Vector3.h"
 #include "Gun.h"
 #include "AnimationController.h"
+#include "../Audio/Sound.h"
 
 namespace NCL {
 	using namespace Rendering;
@@ -26,11 +27,13 @@ namespace NCL {
 		virtual void Shoot();
 		const reactphysics3d::Ray& GetShootRay() const { return shootRay; }
 		Vector2 targetPosition;
+		void SetShootingSound(Sound* sound);
 	protected:
 		void SetMemberVariables(const std::unordered_map<std::string, MeshAnimation*>& animations, Gun* gun);
 		AnimationController* animationController = NULL;
 		reactphysics3d::Ray shootRay = reactphysics3d::Ray(~Maths::Vector3(0), ~Maths::Vector3(0));
 		Gun* gun = NULL;
 		const Vector3 gunOffset = Vector3(0.5, 1, -4);
+		Sound* shootingSound;
 	};
 }
