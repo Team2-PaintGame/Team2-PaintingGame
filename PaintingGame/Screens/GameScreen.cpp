@@ -1,6 +1,7 @@
 #include "GameScreen.h"
 #include "SinglePlayerGame.h"
 #include "SplitScreenGame.h"
+#include "GameOverScreen.h"
 #include "NetworkedGame.h"
 #include "Window.h"
 
@@ -21,18 +22,6 @@ void NCL::CSC8508::GameScreen::OnAwake()
 	Window::GetWindow()->LockMouseToWindow(true);
 }
 
-void GameScreen::OnAwake1(GameAssets* assets) {
-	//thread start 
-	isMenuDisplayed = false;
-	isDebugDisplayed = false;
-	LoadGame(assets);
-	sceneNode->GetPhysicsWorld()->setIsDebugRenderingEnabled(isDebugRenderingEnabled);
-	sceneNode->GetPhysicsWorld()->getDebugRenderer().setIsDebugItemDisplayed(reactphysics3d::DebugRenderer::DebugItem::COLLISION_SHAPE, true);
-	sceneNode->GetPhysicsWorld()->getDebugRenderer().setIsDebugItemDisplayed(reactphysics3d::DebugRenderer::DebugItem::COLLIDER_BROADPHASE_AABB, true);
-
-	Window::GetWindow()->LockMouseToWindow(true);
-
-}
 
 void GameScreen::LoadGame(GameAssets* assets) {
 
@@ -40,9 +29,9 @@ void GameScreen::LoadGame(GameAssets* assets) {
 
 	switch (command)
 	{
-	case ScreenCommand::CreateSinglePlayerGame: 
+	case ScreenCommand::CreateSinglePlayerGame:
 		sceneNode = new SinglePlayerGame(assets);
-	break;
+		break;
 	case ScreenCommand::CreateSplitScreenGame:
 		sceneNode = new SplitScreenGame(assets);
 		break;
@@ -64,6 +53,13 @@ PushdownState::PushdownResult GameScreen::OnUpdate(float dt, PushdownState** new
 		isMenuDisplayed = true;
 		sPauseCallback = false;
 	}
+
+	if (sceneNode && ((PaintingGame*)sceneNode)->GetTimeOver())
+	{
+		command = ScreenCommand::TransitionToNextScreen;
+	}
+
+
 	return BaseScreen::OnUpdate(dt, newState);
 }
 
@@ -75,13 +71,17 @@ void GameScreen::MenuFrame() {
 	if (ImGui::Button("Toggle Debug Lines")) {
 		isDebugRenderingEnabled = !isDebugRenderingEnabled;
 		sceneNode->GetPhysicsWorld()->setIsDebugRenderingEnabled(isDebugRenderingEnabled);
+		isMenuDisplayed = false;
 	}
 	if (ImGui::Button("Debug Window")) {
 		isDebugDisplayed = true;
 		isMenuDisplayed = false;
 	}
-	if (ImGui::Button("Quit Game")) {
+	if (ImGui::Button("Quit to Main Menu")) {
 		command = ScreenCommand::TransitionToPreviousScreen;
+	}
+	if (ImGui::Button("Quit Game")) {
+		command = ScreenCommand::Exit;
 	}
 	ImGui::End();
 }
@@ -89,8 +89,14 @@ void GameScreen::MenuFrame() {
 PushdownState::PushdownResult GameScreen::onStateChange(PushdownState** newState) {
 	//add game-over game-win checks here:
 	switch (command) {
+		case ScreenCommand::TransitionToNextScreen:
+			*newState = screenManager->GetScreen(ScreenType::GameOverScreen);
+			((GameOverScreen*)*newState)->SetWinner(((PaintingGame*)sceneNode)->GetWinner());
+			return PushdownResult::Push;
 		case ScreenCommand::TransitionToPreviousScreen:
 			return PushdownResult::Pop;
+		case ScreenCommand::Exit:
+			return PushdownResult::Reset1;
 		default:
 			return PushdownResult::NoChange;
 	}
@@ -100,10 +106,10 @@ void NCL::CSC8508::GameScreen::DebugWindow()
 {
 	ImGui::Begin("Debug Window");
 	ImGui::Text(("FPS: " + std::to_string(Debug::fps)).c_str());
-	ImGui::Text(("Rendertime: " + std::to_string(Debug::renderingTime) + " in us").c_str());
+	ImGui::Text(("Rendertime: " + std::to_string(Debug::renderingTime) + " us").c_str());
 	ImGui::Text(("Number of GameObjects: " + std::to_string(Debug::numberOfGameObjects)).c_str());
 	ImGui::Text(("Number of Paints: " + std::to_string(Debug::numberOfPaints)).c_str());
-	ImGui::Text(("Number of Particals: " + std::to_string(Debug::numberOfParticals)).c_str());
+	ImGui::Text(("Number of Particles: " + std::to_string(Debug::numberOfParticals)).c_str());
 	if (ImGui::Button("Memory Footprint")) {
 		ImGui::OpenPopup("MemoryFootprint");
 	}
@@ -130,11 +136,6 @@ void NCL::CSC8508::GameScreen::DebugWindow()
 		ImGui::EndPopup();
 	}
 	ImGui::End();
-}
-
-void NCL::CSC8508::GameScreen::OnLoad(GameScreen* gs, GameAssets* assets)
-{
-	gs->OnAwake1(assets);
 }
 
 void GameScreen::GamePauseCallback() {

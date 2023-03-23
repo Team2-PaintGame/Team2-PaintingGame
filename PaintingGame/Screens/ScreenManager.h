@@ -13,7 +13,6 @@ namespace NCL::CSC8508 {
 		LoadingScreen,
 		MainMenuScreen,
 		GameScreen,
-		GameWinScreen,
 		GameOverScreen,
 	};
 	enum class ScreenCommand {

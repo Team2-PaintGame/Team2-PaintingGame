@@ -67,20 +67,8 @@ void PaintingGame::Update(float dt) {
 	world->UpdateWorld(dt);
 	world->CalculateNewScores();
 	physicsWorld->update(dt);
-	gameTime -= (dt * 60)/100;
+	gameTime -= dt;
 	Debug::Print(std::to_string((int)gameTime), Vector2(20, 5));
-	if ((int)gameTime <= 0) {
-		int winner = world->CalculateWinningTeam();
-		if (winner == 1) {
-			Debug::Print("Well Done! the winning team was the Blue Team", Vector2(20, 20));
-		}
-		if (winner == 2) {
-			Debug::Print("Well Done! the winning team was the Red Team", Vector2(20, 20));
-		}
-		if (winner == 3) {
-			Debug::Print("Well Done! You Drew", Vector2(20, 20));
-		}
- 	}
 }
 
 Player* PaintingGame::CreatePlayer(NCL::Maths::Vector3 position,Team team) {

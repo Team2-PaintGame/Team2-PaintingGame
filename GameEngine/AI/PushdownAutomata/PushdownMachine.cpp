@@ -37,6 +37,12 @@ bool PushdownMachine::Update(float dt) {
 				activeState = newState;
 				activeState->OnAwake();
 			}break;
+			case PushdownState::Reset1: {
+				Reset();
+			} break;
+			case PushdownState::Reset2: { // Resets to leave 2 screens on machine
+				Reset(2);
+			} break;
 		}
 	}
 	else {
@@ -47,9 +53,9 @@ bool PushdownMachine::Update(float dt) {
 	return true;
 }
 
-void PushdownMachine::Reset()
+void PushdownMachine::Reset(uint32_t minsize)
 {
-	while (stateStack.size() > 1)
+	while (stateStack.size() > minsize)
 	{
 		activeState->OnSleep();
 		//delete activeState;
