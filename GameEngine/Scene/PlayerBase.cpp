@@ -105,7 +105,7 @@ void PlayerBase::CameraSpring(Camera* cam) {
 		 Vector3 newOffest = camera->GetMaxOffSet().Normalised() * (new_rotated_offset.Length() / 2 );
 //		 camera->SetOffsetFromPlayer(camera->GetMaxOffSet().Normalised() * new_rotated_offset.Length());
 		 camera->SetOffsetFromPlayer(newOffest);
-		 Debug::DrawLine(transform.GetPosition(), ray.point2, Vector4(1, 1, 1, 1), 0.50f);
+		// Debug::DrawLine(transform.GetPosition(), ray.point2, Vector4(1, 1, 1, 1), 0.50f);
 	 }
 	 else {
 		 camera->SetOffsetFromPlayer(camera->GetMaxOffSet());
