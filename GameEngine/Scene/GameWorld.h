@@ -2,6 +2,7 @@
 #include <random>
 #include <functional>
 #include <GameObject.h>
+#include <tuple>
 
 namespace NCL {
 	namespace CSC8508 {
@@ -12,6 +13,7 @@ namespace NCL {
 		struct PaintSplat {
 			Vector3 position;
 			Vector4 colour;
+			bool sent = false;
 		};
 
 		typedef std::function<void(GameObject*)> GameObjectFunc;
@@ -162,12 +164,16 @@ namespace NCL {
 			Vector3 FindClosestPaintSplat(Vector3 position);
 			int GetSizePaintedPositions();
 
+			std::vector<PaintSplat>& GetSplats() { return paintedPositions; }
+
+			std::vector<std::tuple<int, Vector4>> splatsToChangeColour;
+
 		protected:
 			RaycastManager* raycastManager;
 			reactphysics3d::PhysicsWorld* physicsWorld = NULL;
 			std::vector<PaintSplat> paintedPositions;
-			GameEventListener* eventListener;
 			
+			GameEventListener* eventListener;
 			std::vector<GameObject*> gameObjects;
 			std::vector<Constraint*> constraints;
 			bool shuffleConstraints;

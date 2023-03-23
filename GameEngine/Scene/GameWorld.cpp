@@ -106,6 +106,8 @@ void GameWorld::UpdateWorld(float dt) {
 	for (const auto& object : gameObjects) {
 		object->Update(dt);
 		object->UpdateTransform();
+		// send splat data 
+
 	}
 }
 
@@ -163,22 +165,23 @@ void GameWorld::AddPaintedPosition(const Vector3& position, Vector4 team) {
 	else if (team == BlueTeamColour) {
 		colour = BlueTeamColour;
 	}
-	for (auto& element : paintedPositions)
+	for (int i = 0; i < GetNumPaintedPositions(); i++)
 	{
+		PaintSplat element = paintedPositions[i];
 		if ((element.colour == colour && element.position == position)) {
 			return;
 		}
 		else if (element.colour == colour && GetDistance(element.position, position) < 2) {
 			return;
 		}
-		else if (element.colour != colour && GetDistance(element.position, position) < 4) {
+		else if (element.colour != colour && GetDistance(element.position, position) < 10) {
 			if (colour == RedTeamColour) {
-				colour = BlueTeamColour;
+				element.colour = RedTeamColour;
 			}
 			else {
-				colour = RedTeamColour;
+				element.colour = BlueTeamColour;
 			}
-			element.colour = colour; 
+			splatsToChangeColour.push_back({ i, element.colour });
 			return;
 		}
 	}

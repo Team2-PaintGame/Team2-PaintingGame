@@ -1,4 +1,4 @@
-#version 400 core
+#version 450 core
 
 uniform vec4 		objectColour;
 uniform sampler2D 	mainTex;
@@ -8,8 +8,17 @@ uniform vec3	lightPos;
 uniform float	lightRadius;
 uniform vec4	lightColour;
 
-uniform vec3 paintedPos[500];
-uniform vec4 paintedColor[500];
+//uniform vec3 paintedPos[500];
+//uniform vec4 paintedColor[500];
+
+struct PaintSplat {
+	float x, y, z;
+	float r, g, b, a;
+};
+
+layout(std430, binding = 4) buffer SplatSSBO {
+	PaintSplat splatData[];
+};
 
 //uniform vec4 paintColour;
 
@@ -83,9 +92,12 @@ void main(void)
 
 
 	for(int i = 0; i < numOfSplats;i++){
-		float distanceBetween = distance(paintedPos[i], IN.worldPos.xyz);
+		PaintSplat splat = splatData[i];
+		vec3 splatPos = vec3(splat.x,splat.y,splat.z);
+		vec4 splatColor = vec4(splat.r, splat.g, splat.b, splat.a);
+		float distanceBetween = distance(splatPos, IN.worldPos.xyz);
 		if (distanceBetween <= 5 - SplatNoise(IN.localPos.xyz)*(3+(0.1*(mod(i, 10))))){
-			albedo = paintedColor[i];
+			albedo = splatColor;
 		}
 	}
 	

@@ -30,6 +30,7 @@ namespace NCL {
 			virtual GameWorld* GetWorld() const { return world; }
 			virtual reactphysics3d::PhysicsWorld* GetPhysicsWorld() const override { return physicsWorld; }
 			virtual void OperateOnCameras(CameraFunc f);
+
 		protected:
 			virtual void InitWorld();
 			virtual void CreateSplatOnShoot() = 0;
@@ -44,6 +45,11 @@ namespace NCL {
 
 			GameTimer timer;
 			float gameTime = 5;
+
+			int maxSplats;
+			unsigned int paintSplatSSBO;
+			void SendPaintSplatData();
+
 
 			//Create a physics world 
 			reactphysics3d::PhysicsCommon physicsCommon;
