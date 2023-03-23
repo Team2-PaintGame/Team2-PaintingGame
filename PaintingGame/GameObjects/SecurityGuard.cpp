@@ -164,7 +164,7 @@ namespace NCL::CSC8508 {
 		goToPaint = new BehaviourAction("Go To Paint ", [&](float dt, BehaviourState state)->BehaviourState {
 			if (state == Initialise) {
 				//std::cout << "Go To Paint - Initialise\n";
-				if (gameWorld->GetNumPaintedPositions() >= 50)
+				if (gameWorld->GetNumPaintedPositions() >= 900)
 				{
 					//std::cout << "Theres too much paint!\n";
 					Vector3 paintPos = gameWorld->FindClosestPaintSplat(this->GetTransform().GetPosition());
