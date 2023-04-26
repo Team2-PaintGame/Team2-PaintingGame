@@ -14,7 +14,7 @@ size_t       sceLibcHeapSize = 1024 * 1024 * 1024;	/* Set up heap area upper lim
 
 int main() {
 	//Window* w = Window::CreateGameWindow("Painting Game", 1280, 720);
-	Window* w = Window::CreateGameWindow("Painting Game", 1920, 1080, true);
+	Window* w = Window::CreateGameWindow("Painting Game", 1920, 1080, false);
 	GameManager gameManager(w);
 	if (!w->HasInitialised()) {
 		return -1;
