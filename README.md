@@ -3,6 +3,6 @@
 ## Local Co-op
 ![Alt text](splatatthemuseumstuff/splitscreen.PNG "SplitScreen Game Mode")
 ## AI in action
-![Alt text](splatatthemuseumstuff/AIcleaningandpaintonmopalisa.PNG "AI cleaning the world")
+![Alt text](splatatthemuseumstuff/AIcleaningandpaintonmopalisa.PNG)
 ## Debug
-![Alt text](splatatthemuseumstuff/debug lines.PNG "DebugLines)
+![Alt text](splatatthemuseumstuff/debuglines.PNG "DebugLines")
